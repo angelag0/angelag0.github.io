@@ -5,7 +5,7 @@ taiwantrade ASTRA 產品介紹頁。靜態網站，可直接部署。
 ## 內容
 - `index.html` — 首頁
 - `support.js` — 頁面執行所需的 runtime
-- `ds/` — taiwantrade ASTRA 設計系統（樣式、字型、元件）
+- `ds/` — taiwantrade ASTRA 設計系統樣式與字型
 - `assets/` — 圖片、圖示、輪播截圖、影片
 - `.nojekyll` — 讓 GitHub Pages 原樣提供所有檔案
 
