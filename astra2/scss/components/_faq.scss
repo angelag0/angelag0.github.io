@@ -1,0 +1,82 @@
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:map';
+@use "../variable" as *; //變數
+@use "../basic/mixin" as *; //mixin
+
+.faqBox {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  height: 100%;
+
+  & > * {
+    flex-shrink: 0;
+  }
+
+  .faqTitle {
+    font-weight: 500;
+    font-size: Rem(18);
+    color: $gray900;
+    flex-shrink: 0;
+  }
+
+  .faqClass {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .listBox {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .item {
+    border: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid $gray300;
+    border-radius: $r16;
+    padding: 16px;
+
+    &.active {
+      .qBox {
+        font-weight: 500;
+
+        .icon {
+          transform: scaleY(-1);
+        }
+      }
+
+      .aBox {
+        display: block;
+      }
+    }
+  }
+
+  .qBox {
+    width: 100%;
+    color: $gray900;
+    display: flex;
+    text-align: left;
+    justify-content: space-between;
+    gap: 16px;
+    line-height: 1.6;
+    @include transition(0.3);
+    cursor: pointer;
+  }
+
+  .aBox {
+    width: 100%;
+    padding: 0 16px;
+    display: none;
+    color: $gray900;
+  }
+}

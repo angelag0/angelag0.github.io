@@ -1,0 +1,23 @@
+stages:
+  - deploy
+
+pages:
+  stage: deploy
+  tags:
+    - allUiRunner
+
+  script:
+    - git config --global --add safe.directory "$CI_PROJECT_DIR"
+    - rm -rf public
+    - mkdir -p public
+    # 把整個專案複製到 public，但排除 public 自己跟 .git
+    - rsync -av --exclude=public --exclude=.git ./ public/
+    # 如果首頁是 00.htm 或 index.htm，就生出 index.html
+    - if [ -f public/index.htm ] && [ ! -f public/index.html ]; then cp public/index.htm public/index.html; fi
+    - if [ -f public/00.htm ] && [ ! -f public/index.html ]; then cp public/00.htm public/index.html; fi
+
+  artifacts:
+    paths:
+      - public
+  only:
+    - main

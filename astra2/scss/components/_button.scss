@@ -1,0 +1,97 @@
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:map';
+@use "../variable" as *; //變數
+@use "../basic/mixin" as *; //mixin
+
+.icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-width: 24px;
+  }
+
+
+  &.add {
+    position: relative;
+    isolation: isolate;
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      background-color: #333;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      z-index: -1;
+    }
+  }
+}
+
+.btnOutline {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  font-size: Rem(14);
+  padding: 8px 16px;
+  border: 1px solid $gray700;
+  border-radius: $r8;
+  gap: 8px;
+  line-height: 1.6;
+  @include transition(0.3);
+
+  &:hover {
+    color: $brandBlue500;
+    border-color: $brandBlue500;
+  }
+}
+
+.btnSecondary {
+  min-height: 40px;
+  border-radius: $r8;
+  background: $gray900;
+  font-size: Rem(14);
+  color: #fff;
+  padding: 5px 16px;
+  line-height: 1.6;
+  @include transition(0.3);
+
+  &:disabled {
+    background: $gray300;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover {
+    color: #fff;
+    background: $brandBlue500;
+  }
+}
+
+.btnRed {
+  min-height: 40px;
+  border-radius: $r8;
+  background: $red500;
+  font-size: Rem(14);
+  color: #fff;
+  padding: 8px 16px;
+  @include transition(0.3);
+
+  &:disabled {
+    background: $gray500;
+    cursor: not-allowed;
+  }
+
+  // &:not(:disabled):hover {
+  //   background: $brandBlue500;
+  // }
+}

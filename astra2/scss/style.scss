@@ -1,0 +1,29 @@
+// 外部 CSS 套件
+@use '../vendor/swiper/swiper-bundle.min.css'; //swiper初始套件
+
+// 共通
+@use './basic/normalize';
+@use './basic/default';
+@use './basic/fontFamily'; //字型檔
+@use './components/sideMenu'; //
+@use './components/button'; //
+@use './components/chat'; ///
+@use './components/tab'; //
+@use './components/faq'; //
+@use './components/think'; //
+@use './components/popup'; //
+@use './components/search'; //
+@use './components/product'; //
+@use './components/supplier'; //
+@use './components/compare'; //
+@use './components/form'; //
+@use './components/pagination'; //
+
+@use './template/main'; //
+@use './pages/mp'; //
+@use './pages/inner'; //
+@use './pages/history'; //
+@use './pages/language'; //
+@use './pages/signin'; //
+@use './pages/inquiry'; //
+@use './pages/page404'; //CP

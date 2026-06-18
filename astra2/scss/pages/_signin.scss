@@ -1,0 +1,115 @@
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:map';
+@use "../variable" as *; //變數
+@use "../basic/mixin" as *; //mixin
+
+#signinPopup {
+  .popupOuter {
+    max-width: 360px;
+    max-height: none;
+    height: auto;
+  }
+
+  .tabOption {
+    button {
+      width: 50%;
+    }
+  }
+
+  .popupTitle {
+    img {
+      max-width: 100px;
+    }
+  }
+
+  .signinBox {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    a {
+      display: block;
+      padding: 4px 0;
+      font-size: Rem(14);
+      font-weight: 500;
+      color: $brandBlue500;
+      @include transition(0.3);
+
+      &:hover {
+        color: $gray900;
+      }
+    }
+  }
+
+  .formBox {
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    [type="submit"] {
+      width: 100%;
+      height: 40px;
+    }
+
+    .formList:has(.inputOption) {
+      height: 40px;
+    }
+  }
+
+  .snsBox {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px 24px;
+
+    span {
+      width: 100%;
+      text-align: center;
+    }
+
+    button {
+      width: 48px;
+      aspect-ratio: 1;
+      border: 1px solid $gray300;
+      border-radius: 50%;
+      line-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      @include transition(0.3);
+
+      img {
+        width: 24px;
+      }
+    }
+  }
+
+  .help {
+    text-align: center;
+    font-size: Rem(14);
+    color: $gray900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .linkBox {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+
+    a {
+      color: $gray700;
+      @include transition(0.3);
+      text-decoration: none;
+
+      &:hover {
+        color: $brandBlue500;
+      }
+    }
+  }
+}
