@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/themes.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/base.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/styles.css">
+  <script src="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/_ds_bundle.js"></script>
+  <style>
+    .sm-input:focus { outline: none; border-color: var(--sys-primary) !important; box-shadow: 0 0 0 3px var(--sys-primary-tint); }
+  </style>
+</helmet>
+<div style="font-family:var(--font-sans); color:var(--sys-text-strong);">
+
+  <sc-if value="{{ showList }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+        <h1 style="font-size:20px; font-weight:700; margin:0;">{{ moduleLabel }}</h1>
+        <sc-if value="{{ canCreate }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ openCreate }}" style="background:var(--sys-primary); color:#fff; border:none; border-radius:6px; padding:8px 20px; font-size:14px; font-weight:500; cursor:pointer;" style-hover="background:var(--sys-primary-mid);">+ 新增{{ moduleSingular }}</button>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ filterBarVisible }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+          <sc-for list="{{ filterInputs }}" as="f" hint-placeholder-count="2">
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <label style="font-size:12px; color:var(--sys-text-muted);">{{ f.label }}</label>
+              <input class="sm-input" type="text" placeholder="搜尋{{ f.label }}" value="{{ f.value }}" onChange="{{ f.onChange }}" style="padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; width:180px; font-family:inherit;" />
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; overflow:hidden;">
+        <table style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr style="background:var(--sys-surface-sunken); border-bottom:1px solid var(--sys-border);">
+              <sc-for list="{{ config_columns }}" as="col" hint-placeholder-count="5">
+                <th style="text-align:left; padding:12px 16px; font-size:13px; font-weight:600; color:var(--sys-text-strong); white-space:nowrap;">{{ col.label }}</th>
+              </sc-for>
+              <th style="padding:12px 16px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ rows }}" as="row" hint-placeholder-count="6">
+              <tr style="border-bottom:1px solid var(--sys-border);" style-hover="background:var(--sys-surface-sunken);">
+                <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="5">
+                  <td style="padding:12px 16px; font-size:14px; color:var(--sys-text-strong); white-space:nowrap;">
+                    <sc-if value="{{ cell.isLink }}"><a href="#" onClick="{{ row.onOpenDetail }}" style="color:var(--sys-primary); font-weight:600;">{{ cell.value }}</a></sc-if>
+                    <sc-if value="{{ cell.isBadge }}"><span style="background:{{ cell.badgeBg }}; color:{{ cell.badgeText }}; font-family:var(--font-num); font-size:12px; font-weight:500; padding:2px 8px; border-radius:4px; white-space:nowrap;">{{ cell.value }}</span></sc-if>
+                    <sc-if value="{{ cell.isPlain }}"><span>{{ cell.value }}</span></sc-if>
+                  </td>
+                </sc-for>
+                <td style="padding:12px 16px; text-align:right; white-space:nowrap;">
+                  <button onClick="{{ row.onOpenDetail }}" style="background:none; border:none; color:var(--sys-primary); font-size:13px; font-weight:500; cursor:pointer; padding:4px 8px;">檢視</button>
+                  <sc-if value="{{ canCreate }}" hint-placeholder-val="{{ true }}"><button onClick="{{ row.onOpenEdit }}" style="background:none; border:none; color:var(--sys-text-muted); font-size:13px; font-weight:500; cursor:pointer; padding:4px 8px;">編輯</button></sc-if>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+        <sc-if value="{{ emptyState }}">
+          <div style="padding:48px; text-align:center; color:var(--sys-text-faint); font-size:14px;">尚無資料</div>
+        </sc-if>
+        <div style="padding:12px 16px; border-top:1px solid var(--sys-border); font-size:13px; color:var(--sys-text-muted);">共 {{ rowCount }} 筆</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showForm }}">
+    <div style="max-width:720px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px; font-size:13px; color:var(--sys-text-muted);">
+        <a href="#" onClick="{{ backToList }}" style="color:var(--sys-primary);">{{ moduleLabel }}</a><span>/</span><span style="color:var(--sys-text-strong); font-weight:600;">{{ formModeLabel }}{{ moduleSingular }}</span>
+      </div>
+      <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+        <sc-for list="{{ formFieldsView }}" as="ff" hint-placeholder-count="5">
+          <div style="display:flex; gap:16px; margin-bottom:16px; align-items:flex-start;">
+            <label style="width:140px; min-width:140px; font-size:13px; font-weight:600; color:var(--sys-text-strong); padding-top:9px;">{{ ff.label }}<sc-if value="{{ ff.required }}"><span style="color:var(--sys-error);"> *</span></sc-if></label>
+            <div style="flex:1;">
+              <sc-if value="{{ ff.isText }}"><input class="sm-input" type="text" value="{{ ff.value }}" onChange="{{ ff.onChange }}" style="width:100%; padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; font-family:inherit;" /></sc-if>
+              <sc-if value="{{ ff.isNumber }}"><input class="sm-input" type="number" value="{{ ff.value }}" onChange="{{ ff.onChange }}" style="width:100%; padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; font-family:inherit;" /></sc-if>
+              <sc-if value="{{ ff.isSelect }}">
+                <select class="sm-input" value="{{ ff.value }}" onChange="{{ ff.onChange }}" style="width:100%; padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; font-family:inherit; background:var(--sys-surface-card);">
+                  <option value="">請選擇...</option>
+                  <sc-for list="{{ ff.options }}" as="opt" hint-placeholder-count="3">
+                    <option value="{{ opt.value }}">{{ opt.label }}</option>
+                  </sc-for>
+                </select>
+              </sc-if>
+              <sc-if value="{{ ff.errorMsg }}"><div style="color:var(--sys-error); font-size:12px; margin-top:4px;">{{ ff.errorMsg }}</div></sc-if>
+            </div>
+          </div>
+        </sc-for>
+        <div style="display:flex; gap:10px; margin-top:20px; padding-top:20px; border-top:1px solid var(--sys-border);">
+          <button onClick="{{ saveForm }}" style="background:var(--sys-primary); color:#fff; border:none; border-radius:6px; padding:8px 20px; font-size:14px; font-weight:500; cursor:pointer;" style-hover="background:var(--sys-primary-mid);">儲存</button>
+          <button onClick="{{ backToList }}" style="background:var(--sys-surface-card); color:var(--sys-text-strong); border:1px solid var(--sys-border); border-radius:6px; padding:8px 20px; font-size:14px; font-weight:500; cursor:pointer;" style-hover="background:var(--sys-surface-sunken);">取消</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showDetail }}">
+    <div style="max-width:720px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px; font-size:13px; color:var(--sys-text-muted);">
+        <a href="#" onClick="{{ backToList }}" style="color:var(--sys-primary);">{{ moduleLabel }}</a><span>/</span><span style="color:var(--sys-text-strong); font-weight:600;">{{ detailTitle }}</span>
+      </div>
+      <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+          <h2 style="font-size:16px; font-weight:600; margin:0;">{{ detailTitle }}</h2>
+          <sc-if value="{{ canCreate }}" hint-placeholder-val="{{ true }}"><button onClick="{{ editCurrent }}" style="background:var(--sys-surface-card); color:var(--sys-primary); border:1px solid var(--sys-primary); border-radius:6px; padding:6px 16px; font-size:13px; font-weight:500; cursor:pointer;">編輯</button></sc-if>
+        </div>
+        <sc-for list="{{ detailFields }}" as="d" hint-placeholder-count="5">
+          <div style="display:flex; padding:10px 0; border-bottom:1px solid var(--sys-surface-row);">
+            <div style="width:160px; min-width:160px; font-size:13px; font-weight:600; color:var(--sys-text-muted);">{{ d.label }}</div>
+            <div style="flex:1; font-size:14px; color:var(--sys-text-strong);">
+              <sc-if value="{{ d.isBadge }}"><span style="background:{{ d.badgeBg }}; color:{{ d.badgeText }}; font-family:var(--font-num); font-size:12px; font-weight:500; padding:2px 8px; border-radius:4px;">{{ d.value }}</span></sc-if>
+              <sc-if value="{{ d.isPlain }}"><span>{{ d.value }}</span></sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { dataMod: null, view: 'list', selectedId: null, filters: {}, formMode: 'create', formData: {}, formErrors: {} };
+
+  async componentDidMount() {
+    const mod = await import('./entities-data.js');
+    const initial = { dataMod: mod, view: 'list', filters: {} };
+    if (this.props.deepLinkId) { initial.view = 'detail'; initial.selectedId = this.props.deepLinkId; }
+    this.setState(initial);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.moduleKey !== this.props.moduleKey) {
+      this.setState({ view: this.props.deepLinkId ? 'detail' : 'list', selectedId: this.props.deepLinkId || null, filters: {}, formErrors: {} });
+    } else if (this.props.deepLinkId && prevProps.deepLinkId !== this.props.deepLinkId) {
+      this.setState({ view: 'detail', selectedId: this.props.deepLinkId });
+    }
+  }
+
+  getConfig() {
+    const mod = this.state.dataMod;
+    if (!mod) return null;
+    return mod.SIMPLE_MODULES[this.props.moduleKey];
+  }
+
+  openCreate = () => { this.setState({ view: 'form', formMode: 'create', formData: {}, formErrors: {} }); };
+  openEdit = (id) => {
+    const cfg = this.getConfig();
+    const rec = cfg.data.find(r => r[cfg.idField] === id);
+    this.setState({ view: 'form', formMode: 'edit', selectedId: id, formData: Object.assign({}, rec), formErrors: {} });
+  };
+  openDetail = (id) => { this.setState({ view: 'detail', selectedId: id }); };
+  backToList = (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ view: 'list' }); };
+  editCurrent = () => { this.openEdit(this.state.selectedId); };
+
+  setFilter = (field, val) => { this.setState({ filters: Object.assign({}, this.state.filters, { [field]: val }) }); };
+  setFormField = (field, val) => { this.setState({ formData: Object.assign({}, this.state.formData, { [field]: val }) }); };
+
+  saveForm = () => {
+    const cfg = this.getConfig();
+    const errors = {};
+    cfg.formFields.forEach(ff => {
+      if (ff.required && !this.state.formData[ff.field]) errors[ff.field] = '此欄位為必填';
+    });
+    if (Object.keys(errors).length) { this.setState({ formErrors: errors }); return; }
+    const mod = this.state.dataMod;
+    if (this.state.formMode === 'create') {
+      const newId = mod.nextId(cfg.idPrefix || 'REC', cfg.data);
+      const rec = Object.assign({ [cfg.idField]: newId }, this.state.formData);
+      cfg.data.push(rec);
+      this.setState({ view: 'detail', selectedId: newId });
+    } else {
+      const idx = cfg.data.findIndex(r => r[cfg.idField] === this.state.selectedId);
+      if (idx >= 0) cfg.data[idx] = Object.assign({}, cfg.data[idx], this.state.formData);
+      this.setState({ view: 'detail' });
+    }
+  };
+
+  renderVals() {
+    const mod = this.state.dataMod;
+    const cfg = this.getConfig();
+    if (!mod || !cfg) {
+      return { showList: false, showForm: false, showDetail: false, rows: [], filterInputs: [], config_columns: [], formFieldsView: [], detailFields: [] };
+    }
+
+    const canCreate = !cfg.readOnly;
+    const filters = this.state.filters || {};
+    const filterInputs = cfg.filters.map(f => ({
+      field: f.field, label: f.label, value: filters[f.field] || '',
+      onChange: (e) => this.setFilter(f.field, e.target.value),
+    }));
+
+    let dataRows = cfg.data;
+    if (this.props.filterCaseId) dataRows = dataRows.filter(r => r.caseId === this.props.filterCaseId);
+    dataRows = dataRows.filter(r => cfg.filters.every(f => {
+      const q = (filters[f.field] || '').trim().toLowerCase();
+      if (!q) return true;
+      const disp = String(mod.resolveRef(f.field, r[f.field]) ?? '').toLowerCase();
+      return disp.includes(q);
+    }));
+
+    const rows = dataRows.map(r => {
+      const cells = cfg.columns.map(col => {
+        let value = r[col.field];
+        if (col.type === 'ref') value = mod.resolveRef(col.field, value);
+        else if (col.type === 'currency') value = mod.fmtCurrency(value);
+        else if (col.type === 'bool') value = value ? col.trueLabel : col.falseLabel;
+        const isBadge = col.type === 'badge' || col.type === 'bool';
+        let badgeBg, badgeText;
+        if (col.type === 'badge') {
+          const c = mod.getBadgeColor(r[col.field]);
+          badgeBg = mod.BADGE_COLORS[c].bg; badgeText = mod.BADGE_COLORS[c].text;
+        } else if (col.type === 'bool') {
+          const c = r[col.field] ? col.trueColor : col.falseColor;
+          badgeBg = mod.BADGE_COLORS[c].bg; badgeText = mod.BADGE_COLORS[c].text;
+        }
+        return {
+          isLink: col.type === 'link', isBadge, isPlain: !isBadge && col.type !== 'link',
+          value: (value === null || value === undefined || value === '') ? '—' : value,
+          badgeBg, badgeText,
+        };
+      });
+      const idVal = r[cfg.idField];
+      return {
+        key: idVal, cells,
+        onOpenDetail: (e) => { if (e && e.preventDefault) e.preventDefault(); this.openDetail(idVal); },
+        onOpenEdit: (e) => { if (e && e.preventDefault) e.preventDefault(); this.openEdit(idVal); },
+      };
+    });
+
+    const fd = this.state.formData || {};
+    const formFieldsView = cfg.formFields.map(ff => {
+      const common = { field: ff.field, label: ff.label, required: !!ff.required, value: fd[ff.field] ?? '', errorMsg: (this.state.formErrors || {})[ff.field] || '', onChange: (e) => this.setFormField(ff.field, e.target.value) };
+      if (ff.widget === 'select') return Object.assign({}, common, { isSelect: true, options: ff.options.map(o => ({ value: o, label: o })) });
+      if (ff.widget === 'select-case') return Object.assign({}, common, { isSelect: true, options: mod.cases.map(c => ({ value: c.id, label: c.id + ' ' + c.name })) });
+      if (ff.widget === 'select-equipment') {
+        const list = ff.filterType ? mod.equipment.filter(e => e.equipmentType === ff.filterType) : mod.equipment;
+        return Object.assign({}, common, { isSelect: true, options: list.map(e => ({ value: e.id, label: e.modelName })) });
+      }
+      if (ff.widget === 'select-substance') return Object.assign({}, common, { isSelect: true, options: mod.substances.map(s => ({ value: s.id, label: s.name })) });
+      if (ff.widget === 'select-methodgroup') return Object.assign({}, common, { isSelect: true, options: mod.methodGroups.map(m => ({ value: m.id, label: m.methodVersion + '（' + m.desorbent + '）' })) });
+      if (ff.widget === 'number') return Object.assign({}, common, { isNumber: true });
+      return Object.assign({}, common, { isText: true });
+    });
+
+    let detailFields = [];
+    let detailTitle = '';
+    const rec = cfg.data.find(r => r[cfg.idField] === this.state.selectedId);
+    if (rec) {
+      detailTitle = rec.name || rec.itemName || rec[cfg.idField];
+      const seen = {};
+      const allFieldDefs = [];
+      cfg.columns.forEach(col => { if (!seen[col.field]) { seen[col.field] = true; allFieldDefs.push(col); } });
+      cfg.formFields.forEach(ff => { if (!seen[ff.field]) { seen[ff.field] = true; allFieldDefs.push({ field: ff.field, label: ff.label, type: 'text' }); } });
+      detailFields = allFieldDefs.map(col => {
+        let value = rec[col.field];
+        if (['caseId', 'clientId', 'equipmentId', 'substanceId', 'methodGroupId'].includes(col.field)) value = mod.resolveRef(col.field, value);
+        else if (col.type === 'currency') value = mod.fmtCurrency(value);
+        else if (col.type === 'bool') value = value ? col.trueLabel : col.falseLabel;
+        const isBadge = col.type === 'badge';
+        let badgeBg, badgeText;
+        if (isBadge) { const c = mod.getBadgeColor(rec[col.field]); badgeBg = mod.BADGE_COLORS[c].bg; badgeText = mod.BADGE_COLORS[c].text; }
+        return { label: col.label, isBadge, isPlain: !isBadge, value: (value === null || value === undefined || value === '') ? '—' : value, badgeBg, badgeText };
+      });
+    }
+
+    return {
+      showList: this.state.view === 'list',
+      showForm: this.state.view === 'form',
+      showDetail: this.state.view === 'detail' && !!rec,
+      moduleLabel: cfg.label, moduleSingular: cfg.singular, canCreate,
+      filterBarVisible: cfg.filters.length > 0,
+      filterInputs,
+      config_columns: cfg.columns,
+      rows, rowCount: rows.length, emptyState: rows.length === 0,
+      openCreate: this.openCreate, backToList: this.backToList, editCurrent: this.editCurrent, saveForm: this.saveForm,
+      formModeLabel: this.state.formMode === 'create' ? '新增' : '編輯',
+      formFieldsView,
+      detailTitle, detailFields,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

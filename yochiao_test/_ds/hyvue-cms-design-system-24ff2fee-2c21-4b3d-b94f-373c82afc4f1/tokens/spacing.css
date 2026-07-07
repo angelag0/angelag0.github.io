@@ -1,0 +1,54 @@
+/* ============================================================
+   HyVue CMS — Spacing, radius, shadow & layout tokens
+   Base spacing unit is 4px. Cards round at 12px; the app shell
+   (sidebar, drawers) rounds at 24px; pills/avatars use full.
+   ============================================================ */
+
+:root {
+  /* ---- Spacing scale (4px base) ---- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;   /* default gap between dashboard blocks */
+  --space-6:  24px;   /* card padding */
+  --space-7:  30px;   /* shell padding */
+  --space-8:  40px;
+  --space-10: 48px;
+  --space-12: 60px;
+  --space-16: 80px;
+
+  /* ---- Radius ---- */
+  --radius-sm:   4px;
+  --radius-def:  8px;
+  --radius-med:  12px;   /* cards */
+  --radius-lg:   24px;   /* app shell / drawers */
+  --radius-full: 120px;  /* pills, avatars, icon buttons */
+
+  /* ---- Border widths ---- */
+  --border-thin: 1px;
+  --border-med:  2px;
+
+  /* ---- Elevation / shadows ---- */
+  /* Subtle resting card on the spec surface */
+  --shadow-20: 0 1px 3px 0 rgba(12, 17, 28, 0.04),
+               0 1px 2px 0 rgba(12, 17, 28, 0.08);
+  /* Standard dashboard card */
+  --shadow-card: 0 2px 8px 0 rgba(34, 34, 34, 0.10);
+  /* Raised: floating sidebar, menus, popovers */
+  --shadow-40: 0 4px 16px -4px rgba(34, 34, 34, 0.30);
+  /* Overlay: dialogs, large menus */
+  --shadow-60: 0 25px 50px -20px rgba(34, 34, 34, 0.25);
+  /* Inset hairline (table cells / tree) */
+  --shadow-inset: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+
+  /* ---- Focus ring ---- */
+  --focus-ring: 0 0 0 3px var(--ref-opacity-blue-20);
+
+  /* ---- Layout dimensions ---- */
+  --sidebar-w:          300px;
+  --sidebar-collapsed-w: 88px;
+  --control-h:          56px;   /* top-bar icon buttons */
+  --field-h:            48px;   /* form inputs */
+  --content-pad:        30px;
+}

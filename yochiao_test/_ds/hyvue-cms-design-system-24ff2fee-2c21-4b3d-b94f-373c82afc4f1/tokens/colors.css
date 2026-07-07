@@ -1,0 +1,118 @@
+/* ============================================================
+   HyVue CMS — Color tokens
+   Three layers:
+     --ref-*   raw palette values (never use directly in UI)
+     --sys-*   semantic system aliases (theme-aware)
+     --c-*     short convenience aliases for everyday use
+   The default theme is "Blue". Green / Red / Purple theme
+   overrides live in themes.css.
+   ============================================================ */
+
+:root {
+  /* ---- Reference palette : Neutrals ---- */
+  --ref-neutral-0:   rgb(17, 17, 17);    /* #111111 darkest text   */
+  --ref-neutral-10:  rgb(51, 51, 51);    /* #333333 heading text   */
+  --ref-neutral-20:  rgb(85, 85, 85);    /* #555555 body text      */
+  --ref-neutral-30:  rgb(105, 112, 125); /* #69707D muted text     */
+  --ref-neutral-40:  rgb(151, 163, 182); /* #97A3B6 placeholder    */
+  --ref-neutral-60:  rgb(222, 224, 227); /* #DEE0E3 borders        */
+  --ref-neutral-70:  rgb(241, 241, 241); /* #F1F1F1 hairline / row */
+  --ref-neutral-80:  rgb(248, 248, 248); /* #F8F8F8 app surface    */
+  --ref-neutral-90:  rgb(248, 250, 252); /* #F8FAFC spec surface   */
+  --ref-neutral-100: rgb(255, 255, 255); /* #FFFFFF white          */
+
+  /* ---- Reference palette : Primary (deep blue) ---- */
+  --ref-primary-30: rgb(1, 77, 146);     /* #014D92 primary action */
+  --ref-primary-50: rgb(4, 99, 184);     /* #0463B8 primary mid    */
+  --ref-primary-70: rgb(230, 238, 246);  /* #E6EEF6 primary tint   */
+
+  /* ---- Reference palette : Secondary (bright blue / teal) ---- */
+  --ref-secondary-20:  rgb(0, 85, 160);    /* #0055A0 */
+  --ref-secondary-40:  rgb(45, 98, 179);   /* #2D62B3 */
+  --ref-secondary-60:  rgb(5, 123, 183);   /* #057BB7 brand blue   */
+  --ref-secondary-80:  rgb(128, 203, 215); /* #80CBD7 brand teal   */
+  --ref-secondary-100: rgb(235, 240, 249); /* #EBF0F9 tonal fill   */
+
+  /* ---- Reference palette : Status ---- */
+  --ref-info-30:    rgb(0, 82, 155);     /* #00529B */
+  --ref-info-70:    rgb(231, 243, 255);  /* #E7F3FF */
+  --ref-success-30: rgb(0, 117, 75);     /* #00754B */
+  --ref-success-70: rgb(238, 248, 228);  /* #EEF8E4 */
+  --ref-warning-30: rgb(194, 62, 0);     /* #C23E00 */
+  --ref-warning-70: rgb(250, 236, 230);  /* #FAECE6 */
+  --ref-error-30:   rgb(196, 0, 0);      /* #C40000 */
+  --ref-error-70:   rgb(255, 237, 241);  /* #FFEDF1 */
+
+  /* ---- Brand gradient stops ---- */
+  --ref-gradient-a: rgb(45, 98, 179);    /* #2D62B3 */
+  --ref-gradient-b: rgb(5, 123, 183);    /* #057BB7 */
+  --ref-gradient-c: rgb(128, 203, 215);  /* #80CBD7 */
+
+  /* ---- Opacity overlays ---- */
+  --ref-opacity-black-30: rgba(17, 17, 17, 0.30);
+  --ref-opacity-blue-10:  rgba(1, 86, 162, 0.10);
+  --ref-opacity-blue-20:  rgba(1, 86, 162, 0.20);
+  --ref-opacity-white-20: rgba(255, 255, 255, 0.20);
+  --ref-opacity-white-40: rgba(255, 255, 255, 0.40);
+  --ref-opacity-white-80: rgba(255, 255, 255, 0.80);
+
+  /* =========================================================
+     System (semantic) aliases — theme-aware
+     ========================================================= */
+  --sys-primary:        var(--ref-primary-30);
+  --sys-primary-mid:    var(--ref-primary-50);
+  --sys-primary-tint:   var(--ref-primary-70);
+  --sys-secondary:      var(--ref-secondary-60);
+  --sys-secondary-deep: var(--ref-secondary-40);
+  --sys-secondary-teal: var(--ref-secondary-80);
+  --sys-tonal:          var(--ref-secondary-100);
+
+  --sys-link:           var(--ref-secondary-60);
+  --sys-link-hover:     var(--ref-primary-30);
+
+  --sys-gradient-a:     var(--ref-gradient-a);
+  --sys-gradient-b:     var(--ref-gradient-b);
+  --sys-gradient-c:     var(--ref-gradient-c);
+  --sys-brand-gradient: linear-gradient(120deg, var(--sys-gradient-a) 0%, var(--sys-gradient-b) 55%, var(--sys-gradient-c) 100%);
+
+  /* Text */
+  --sys-text-strong:  var(--ref-neutral-0);
+  --sys-text:         var(--ref-neutral-10);
+  --sys-text-body:    var(--ref-neutral-20);
+  --sys-text-muted:   var(--ref-neutral-30);
+  --sys-text-faint:   var(--ref-neutral-40);
+  --sys-text-onfill:  var(--ref-neutral-100);
+
+  /* Surfaces */
+  --sys-surface-app:   var(--ref-neutral-80);
+  --sys-surface-card:  var(--ref-neutral-100);
+  --sys-surface-sunken:var(--ref-neutral-90);
+  --sys-surface-row:   var(--ref-neutral-70);
+
+  /* Lines */
+  --sys-border:        var(--ref-neutral-60);
+  --sys-border-strong: var(--ref-neutral-40);
+
+  /* Status — darkness = text/icon, lightness = fill */
+  --sys-info:        var(--ref-info-30);
+  --sys-info-fill:   var(--ref-info-70);
+  --sys-success:     var(--ref-success-30);
+  --sys-success-fill:var(--ref-success-70);
+  --sys-warning:     var(--ref-warning-30);
+  --sys-warning-fill:var(--ref-warning-70);
+  --sys-error:       var(--ref-error-30);
+  --sys-error-fill:  var(--ref-error-70);
+
+  /* =========================================================
+     Short convenience aliases
+     ========================================================= */
+  --c-primary:   var(--sys-primary);
+  --c-accent:    var(--sys-secondary);
+  --c-text:      var(--sys-text);
+  --c-body:      var(--sys-text-body);
+  --c-muted:     var(--sys-text-muted);
+  --c-bg:        var(--sys-surface-app);
+  --c-card:      var(--sys-surface-card);
+  --c-border:    var(--sys-border);
+  --c-link:      var(--sys-link);
+}

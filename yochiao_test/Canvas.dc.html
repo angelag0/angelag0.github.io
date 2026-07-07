@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/themes.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/base.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/styles.css">
+  <script src="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/_ds_bundle.js"></script>
+  <style>
+    html, body { margin:0; height:100%; background:var(--sys-surface-app); }
+    .yc-navitem::-webkit-scrollbar { width:6px; }
+  </style>
+</helmet>
+
+<div style="display:flex; height:100vh; width:100%; box-sizing:border-box; background:var(--sys-surface-app); font-family:var(--font-sans); overflow:hidden;">
+
+  <aside style="width:300px; min-width:300px; margin:16px 0 16px 16px; background:var(--sys-surface-card); border-radius:var(--radius-lg); box-shadow:var(--shadow-40); display:flex; flex-direction:column; overflow:hidden;">
+    <div style="display:flex; align-items:center; gap:12px; padding:22px 20px 18px; border-bottom:1px solid var(--sys-border);">
+      <div style="width:36px; height:36px; border-radius:var(--radius-def); background:var(--sys-brand-gradient); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <span style="color:#fff; font:var(--type-h4); font-weight:var(--fw-bold);">友</span>
+      </div>
+      <div style="display:flex; flex-direction:column; line-height:1.25; min-width:0;">
+        <span style="font:var(--type-h4); font-weight:var(--fw-bold); color:var(--sys-text-strong); letter-spacing:var(--ls-tight); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">友喬監測 E化系統</span>
+        <span style="font:12px var(--font-num); color:var(--sys-text-muted);">Workplace Monitoring</span>
+      </div>
+    </div>
+
+    <div style="flex:1; overflow-y:auto; padding:14px 12px;" class="yc-navitem">
+      <sc-for list="{{ navSections }}" as="sec" hint-placeholder-count="6">
+        <div style="margin-bottom:18px;">
+          <div style="font:11px var(--font-sans); font-weight:var(--fw-bold); letter-spacing:var(--ls-wide); color:var(--sys-text-faint); text-transform:uppercase; padding:0 10px 8px;">{{ sec.section }}</div>
+          <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="2">
+            <button onClick="{{ it.onClick }}" style="width:100%; box-sizing:border-box; display:flex; align-items:center; gap:10px; padding:10px 10px 10px 16px; margin-bottom:2px; border:none; border-left:3px solid {{ it.barColor }}; border-radius:var(--radius-def); background:{{ it.bg }}; color:{{ it.color }}; font:var(--type-body-sm); font-weight:{{ it.weight }}; letter-spacing:var(--ls-tight); text-align:left; cursor:pointer;" style-hover="background:var(--sys-tonal);">
+              <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ it.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:10px; padding:16px 18px; border-top:1px solid var(--sys-border);">
+      <x-import component-from-global-scope="HyVueCMSDesignSystem_24ff2f.Avatar" name="陳建宏" size="38" status="online" hint-size="38px,38px"></x-import>
+      <div style="flex:1; min-width:0; line-height:1.3;">
+        <div style="font:var(--type-body-sm); font-weight:var(--fw-bold); color:var(--sys-text-strong); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">陳建宏</div>
+        <div style="font:11px var(--font-sans); color:var(--sys-text-muted);">甲級監測人員</div>
+      </div>
+      <button onClick="{{ onLogoutClick }}" style="border:none; background:none; color:var(--sys-text-muted); font:var(--type-body-sm); font-weight:var(--fw-bold); cursor:pointer; padding:6px 8px; border-radius:var(--radius-def);" style-hover="background:var(--sys-surface-sunken); color:var(--sys-error);">登出</button>
+    </div>
+  </aside>
+
+  <div style="flex:1; min-width:0; display:flex; flex-direction:column;">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:0 30px; height:64px; flex-shrink:0;">
+      <div style="display:flex; align-items:center; gap:8px; font:var(--type-body-sm); letter-spacing:var(--ls-tight);">
+        <sc-for list="{{ crumbs }}" as="cr" hint-placeholder-count="3">
+          <span style="display:flex; align-items:center; gap:8px;">
+            <sc-if value="{{ cr.showSep }}" hint-placeholder-val="{{ true }}"><span style="color:var(--sys-text-faint);">&rsaquo;</span></sc-if>
+            <span style="color:{{ cr.color }}; font-weight:{{ cr.weight }};">{{ cr.label }}</span>
+          </span>
+        </sc-for>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button aria-label="通知" style="width:40px; height:40px; border-radius:var(--radius-full); border:1px solid var(--sys-border); background:var(--sys-surface-card); color:var(--sys-text-body); font:var(--type-body-sm); font-weight:var(--fw-bold); cursor:pointer;" style-hover="background:var(--sys-surface-sunken);">通</button>
+        <button aria-label="設定" style="width:40px; height:40px; border-radius:var(--radius-full); border:1px solid var(--sys-border); background:var(--sys-surface-card); color:var(--sys-text-body); font:var(--type-body-sm); font-weight:var(--fw-bold); cursor:pointer;" style-hover="background:var(--sys-surface-sunken);">設</button>
+        <button aria-label="帳號" style="width:40px; height:40px; border-radius:var(--radius-full); border:1px solid var(--sys-border); background:var(--sys-surface-card); color:var(--sys-text-body); font:var(--type-body-sm); font-weight:var(--fw-bold); cursor:pointer;" style-hover="background:var(--sys-surface-sunken);">帳</button>
+      </div>
+    </div>
+
+    <div style="flex:1; min-height:0; overflow-y:auto; padding:0 30px 30px;">
+      <sc-if value="{{ showDashboard }}" hint-placeholder-val="{{ true }}">
+        <dc-import name="Dashboard" on-navigate="{{ onNavigate }}" hint-size="100%,600px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ showCase }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="CaseModule" deep-link-id="{{ deepLinkId }}" on-navigate="{{ onNavigate }}" hint-size="100%,600px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ showSimple }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="SimpleModule" module-key="{{ currentModuleKey }}" deep-link-id="{{ deepLinkId }}" filter-case-id="{{ filterCaseId }}" on-navigate="{{ onNavigate }}" hint-size="100%,600px"></dc-import>
+      </sc-if>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+
+class Component extends DCLogic {
+  state = { dataMod: null, navKey: 'dashboard', deepLinkId: null, filterCaseId: null };
+
+  async componentDidMount() {
+    const mod = await import('./entities-data.js');
+    this.setState({ dataMod: mod });
+  }
+
+  handleNavigate = (key, opts) => {
+    opts = opts || {};
+    this.setState({ navKey: key, deepLinkId: opts.deepLinkId || null, filterCaseId: opts.filterCaseId || null });
+  };
+
+  pickNav = (key) => () => {
+    this.setState({ navKey: key, deepLinkId: null, filterCaseId: null });
+  };
+
+  renderVals() {
+    const mod = this.state.dataMod;
+    if (!mod) {
+      return { navSections: [], crumbs: [{ label: '載入中', showSep: false, color: 'var(--sys-text-muted)', weight: 'var(--fw-regular)' }], showDashboard: false, showCase: false, showSimple: false, onNavigate: this.handleNavigate };
+    }
+    const { NAV_SECTIONS } = mod;
+    const navKey = this.state.navKey;
+
+    let currentItem = null, currentSectionLabel = '';
+    NAV_SECTIONS.forEach(sec => {
+      sec.items.forEach(it => {
+        if (it.key === navKey) { currentItem = it; currentSectionLabel = sec.section; }
+      });
+    });
+
+    const navSections = NAV_SECTIONS.map(sec => ({
+      section: sec.section,
+      items: sec.items.map(it => {
+        const active = it.key === navKey;
+        return {
+          key: it.key, label: it.label, active,
+          bg: active ? 'var(--sys-tonal)' : 'transparent',
+          barColor: active ? 'var(--sys-primary)' : 'transparent',
+          color: active ? 'var(--sys-primary)' : 'var(--sys-text-body)',
+          weight: active ? 'var(--fw-bold)' : 'var(--fw-medium)',
+          onClick: this.pickNav(it.key),
+        };
+      }),
+    }));
+
+    const kind = currentItem ? currentItem.kind : 'dashboard';
+    const currentModuleKey = kind === 'simple' ? currentItem.moduleKey : kind;
+
+    const crumbLabels = ['友喬監測系統', currentSectionLabel || '總覽', currentItem ? currentItem.label : '案件進度儀表板'];
+    const crumbs = crumbLabels.map((label, i) => ({
+      label, showSep: i > 0,
+      color: i === crumbLabels.length - 1 ? 'var(--sys-text)' : 'var(--sys-text-muted)',
+      weight: i === crumbLabels.length - 1 ? 'var(--fw-bold)' : 'var(--fw-regular)',
+    }));
+
+    return {
+      navSections,
+      crumbs,
+      showDashboard: kind === 'dashboard',
+      showCase: kind === 'case',
+      showSimple: kind === 'quotation' || kind === 'samplingRecord' || kind === 'sample' || kind === 'simple',
+      currentModuleKey,
+      deepLinkId: this.state.deepLinkId,
+      filterCaseId: this.state.filterCaseId,
+      onNavigate: this.handleNavigate,
+      onLogoutClick: () => {},
+    };
+  }
+}
+
+</script>
+</body>
+</html>

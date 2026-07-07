@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/themes.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/base.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/styles.css">
+  <script src="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/_ds_bundle.js"></script>
+</helmet>
+<div style="font-family:var(--font-sans);">
+  <h1 style="font-size:20px; font-weight:700; color:var(--sys-text-strong); margin:0 0 20px;">案件進度儀表板</h1>
+
+  <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px;">
+    <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+      <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+        <div style="font-size:13px; font-weight:600; color:var(--sys-text-muted); margin-bottom:8px;">{{ k.label }}</div>
+        <div style="font-size:32px; font-weight:700; color:{{ k.color }}; font-family:var(--font-num);">{{ k.value }}</div>
+        <div style="font-size:12px; color:var(--sys-text-faint); margin-top:4px;">{{ k.sub }}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1.1fr 1.4fr; gap:20px; align-items:start;">
+    <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+      <h2 style="font-size:16px; font-weight:600; margin:0 0 16px;">案件狀態分布</h2>
+      <sc-for list="{{ stageBars }}" as="s" hint-placeholder-count="6">
+        <div style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;"><span style="color:var(--sys-text-strong); font-weight:500;">{{ s.stage }}</span><span style="color:var(--sys-text-muted); font-family:var(--font-num);">{{ s.count }}</span></div>
+          <div style="background:var(--sys-surface-row); border-radius:4px; height:8px; overflow:hidden;">
+            <div style="height:100%; border-radius:4px; width:{{ s.widthPct }}%; background:{{ s.barColor }};"></div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+      <h2 style="font-size:16px; font-weight:600; margin:0 0 16px;">待辦提醒</h2>
+      <sc-if value="{{ hasReminders }}" hint-placeholder-val="{{ true }}">
+        <sc-for list="{{ reminders }}" as="r" hint-placeholder-count="4">
+          <a href="#" onClick="{{ r.onClick }}" style="display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid var(--sys-surface-row); text-decoration:none; color:inherit;">
+            <span style="width:8px; height:8px; border-radius:50%; background:{{ r.dotColor }}; margin-top:5px; flex-shrink:0;"></span>
+            <span style="font-size:14px; color:var(--sys-text-strong); line-height:1.5;">{{ r.text }}</span>
+          </a>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{ noReminders }}">
+        <div style="color:var(--sys-text-faint); font-size:14px; padding:12px 0;">目前沒有待辦提醒。</div>
+      </sc-if>
+    </div>
+  </div>
+
+  <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; margin-top:20px; overflow:hidden;">
+    <div style="padding:16px 20px 0;"><h2 style="font-size:16px; font-weight:600; margin:0 0 12px;">近期案件</h2></div>
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:var(--sys-surface-sunken); border-bottom:1px solid var(--sys-border); border-top:1px solid var(--sys-border);">
+          <th style="text-align:left; padding:10px 20px; font-size:13px; font-weight:600; color:var(--sys-text-strong);">案件名稱</th>
+          <th style="text-align:left; padding:10px 20px; font-size:13px; font-weight:600; color:var(--sys-text-strong);">客戶</th>
+          <th style="text-align:left; padding:10px 20px; font-size:13px; font-weight:600; color:var(--sys-text-strong);">監測日期</th>
+          <th style="text-align:left; padding:10px 20px; font-size:13px; font-weight:600; color:var(--sys-text-strong);">狀態</th>
+        </tr>
+      </thead>
+      <tbody>
+        <sc-for list="{{ recentCases }}" as="c" hint-placeholder-count="6">
+          <tr style="border-bottom:1px solid var(--sys-border);" style-hover="background:var(--sys-surface-sunken);">
+            <td style="padding:12px 20px; font-size:14px;"><a href="#" onClick="{{ c.onClick }}" style="color:var(--sys-primary); font-weight:600;">{{ c.name }}</a></td>
+            <td style="padding:12px 20px; font-size:14px; color:var(--sys-text-strong);">{{ c.clientName }}</td>
+            <td style="padding:12px 20px; font-size:14px; color:var(--sys-text-strong); font-family:var(--font-num);">{{ c.date }}</td>
+            <td style="padding:12px 20px;"><span style="background:{{ c.badgeBg }}; color:{{ c.badgeText }}; font-family:var(--font-num); font-size:12px; font-weight:500; padding:2px 8px; border-radius:4px;">{{ c.statusLabel }}</span></td>
+          </tr>
+        </sc-for>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { dataMod: null };
+
+  async componentDidMount() {
+    const mod = await import('./entities-data.js');
+    this.setState({ dataMod: mod });
+  }
+
+  goCase = (id) => (e) => { if (e && e.preventDefault) e.preventDefault(); this.props.onNavigate('case', { deepLinkId: id }); };
+  goQuotation = (id) => (e) => { if (e && e.preventDefault) e.preventDefault(); this.props.onNavigate('quotation', { deepLinkId: id }); };
+  goSampleForCase = (caseId) => (e) => { if (e && e.preventDefault) e.preventDefault(); this.props.onNavigate('sample', { filterCaseId: caseId }); };
+
+  renderVals() {
+    const mod = this.state.dataMod;
+    if (!mod) return { ready: false, kpis: [], stageBars: [], reminders: [], hasReminders: false, noReminders: true, recentCases: [] };
+    const { cases, quotations, flowCalibrations, noiseCalibrations, samples, clients, getSampleResult, BADGE_COLORS, getBadgeColor, byId, CASE_STAGES } = mod;
+
+    const inProgress = cases.filter(c => ['已排程', '採樣中', '檢測中'].includes(c.status)).length;
+    const pendingQuotations = quotations.filter(q => q.status === '已送出').length;
+    const calAlerts = flowCalibrations.filter(f => f.errorOver5Pct).length + noiseCalibrations.filter(n => !n.calibratedTo114).length;
+    const pendingSamples = samples.filter(s => s.status === '檢測中' && !getSampleResult(s.id));
+
+    const kpis = [
+      { label: '進行中案件', value: inProgress, sub: '已排程／採樣中／檢測中', color: 'var(--sys-primary)' },
+      { label: '待核准報價單', value: pendingQuotations, sub: '已送出，等待客戶核准', color: 'var(--sys-warning)' },
+      { label: '校正異常提醒', value: calAlerts, sub: '流速誤差逾5%／噪音未達114dBA', color: 'var(--sys-error)' },
+      { label: '待回填檢測結果', value: pendingSamples.length, sub: '樣品已送檢，尚無結果', color: 'var(--sys-text-muted)' },
+    ];
+
+    const stageCounts = CASE_STAGES.map(stage => ({ stage, count: cases.filter(c => c.status === stage).length }));
+    const maxCount = Math.max(1, ...stageCounts.map(s => s.count));
+    const stageBars = stageCounts.map(s => {
+      const color = getBadgeColor(s.stage);
+      return { stage: s.stage, count: s.count, widthPct: Math.max(4, Math.round((s.count / maxCount) * 100)), barColor: BADGE_COLORS[color].text };
+    });
+
+    const reminders = [];
+    flowCalibrations.filter(f => f.errorOver5Pct).forEach(f => {
+      const c = byId(cases, f.caseId);
+      reminders.push({ id: 'fc-' + f.id, dotColor: 'var(--sys-error)', text: '案件 ' + f.caseId + '｜' + (c ? c.name : '') + ' 流速校正誤差逾5%，建議重新校正', onClick: this.goCase(f.caseId) });
+    });
+    noiseCalibrations.filter(n => !n.calibratedTo114).forEach(n => {
+      const c = byId(cases, n.caseId);
+      reminders.push({ id: 'nc-' + n.id, dotColor: 'var(--sys-error)', text: '案件 ' + n.caseId + '｜' + (c ? c.name : '') + ' 噪音計未校正至114dBA，請確認儀器', onClick: this.goCase(n.caseId) });
+    });
+    const pendingByCase = {};
+    pendingSamples.forEach(s => { pendingByCase[s.caseId] = (pendingByCase[s.caseId] || 0) + 1; });
+    Object.keys(pendingByCase).forEach(caseId => {
+      const c = byId(cases, caseId);
+      reminders.push({ id: 'sm-' + caseId, dotColor: 'var(--sys-warning)', text: '案件 ' + caseId + '｜' + (c ? c.name : '') + ' 有 ' + pendingByCase[caseId] + ' 筆樣品待回填檢測結果', onClick: this.goSampleForCase(caseId) });
+    });
+    quotations.filter(q => q.status === '已送出').forEach(q => {
+      const cl = byId(clients, q.clientId);
+      reminders.push({ id: 'qt-' + q.id, dotColor: 'var(--sys-primary)', text: '報價單 ' + q.id + '｜' + (cl ? cl.name : '') + ' 已送出，等待核准', onClick: this.goQuotation(q.id) });
+    });
+
+    const today = new Date('2026-07-07T00:00:00');
+    const recentCases = cases.slice()
+      .sort((a, b) => Math.abs(new Date(a.monitoringDate.replace(' ', 'T')) - today) - Math.abs(new Date(b.monitoringDate.replace(' ', 'T')) - today))
+      .slice(0, 7)
+      .map(c => {
+        const cl = byId(clients, c.clientId);
+        const color = getBadgeColor(c.status);
+        return { id: c.id, name: c.name, clientName: cl ? cl.name : '', date: c.monitoringDate, statusLabel: c.status, badgeBg: BADGE_COLORS[color].bg, badgeText: BADGE_COLORS[color].text, onClick: this.goCase(c.id) };
+      });
+
+    return { ready: true, kpis, stageBars, reminders, hasReminders: reminders.length > 0, noReminders: reminders.length === 0, recentCases };
+  }
+}
+
+</script>
+</body>
+</html>

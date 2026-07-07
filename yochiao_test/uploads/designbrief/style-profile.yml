@@ -1,0 +1,33 @@
+audit:
+  id: PREVIEW-20260707-002
+  skill: rapt-design-brief
+  generated_at: "2026-07-07"
+  source_artifacts:
+    - docs/ssot/hapdl/（33 個 .hapdl.yaml）
+    - docs/ssot/dbml/schema.dbml
+    - docs/ssot/haarm/yochiao_app.haarm.yaml
+  output_artifact: docs/generate/designbrief/design-brief.md
+  status: ok
+  stats:
+    pages: 33
+    entities: 21
+    roles: 4
+    file_size_kb: 51.4
+    sections: [Design System, Page Navigation Map, Page Specifications, Generation Instructions]
+  assumptions:
+    - Design System（色彩/字型/間距）為 script 預設 profile，非業主品牌規範；正式視覺需以友喬 CI（公司 logo/網站 www.yochiao.com.tw）覆寫。
+    - 頁面語言 zh-hant；欄位 label/badge/enum 取自 DBML label 與 seeds 值域。
+    - Sample data 為合成範例，非真實客戶資料（避免帶入 source 中的實際廠商個資）。
+  findings:
+    - id: PREVIEW-FIND-003
+      route: NOTE_ONLY
+      can_fix: false
+      artifact: docs/generate/designbrief/design-brief.md
+      location: Design System
+      summary: 色彩與字型為佔位 profile；提交 Claude Design 前建議先確認友喬品牌色。
+    - id: PREVIEW-FIND-004
+      route: NOTE_ONLY
+      can_fix: false
+      artifact: docs/ssot/hapdl
+      location: sampling-record-form（行動裝置情境）
+      summary: 現場採樣頁面於會議中提及行動裝置操作，haPDL 未標注 responsive/mobile 需求；設計時建議以行動優先處理該頁。

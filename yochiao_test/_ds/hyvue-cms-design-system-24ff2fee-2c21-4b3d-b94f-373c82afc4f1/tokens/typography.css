@@ -1,0 +1,65 @@
+/* ============================================================
+   HyVue CMS — Typography tokens
+   Primary face   : Noto Sans TC  (CJK + Latin body & headings)
+   Accent / numeric: Helvetica    (latin display, figures, labels)
+   Heading scale (px / line-height):
+     H-LG 48/48 · H1 32/40 · H2 26/32 · H3 20/28 · H4 18/24
+   Body scale (CJK-comfortable line height):
+     18/36 · 16/32 · 14/28 · 12/18
+   ============================================================ */
+
+:root {
+  /* ---- Families ---- */
+  --font-sans: "Noto Sans TC", "Noto Sans", -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-accent: Helvetica, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-num: Helvetica, "Helvetica Neue", Arial, sans-serif;
+
+  /* ---- Weights ---- */
+  --fw-regular: 400; /* @kind font */
+  --fw-medium:  500; /* @kind font */
+  --fw-bold:    700; /* @kind font */
+  --fw-black:   900; /* @kind font */
+
+  /* ---- Size scale (px) ---- */
+  --fs-12: 12px;
+  --fs-14: 14px;
+  --fs-16: 16px;
+  --fs-18: 18px;
+  --fs-20: 20px;
+  --fs-24: 24px;
+  --fs-26: 26px;
+  --fs-28: 28px;
+  --fs-32: 32px;
+  --fs-40: 40px;
+  --fs-48: 48px;
+
+  /* ---- Line-height scale (px) ---- */
+  --lh-18: 18px;
+  --lh-24: 24px;
+  --lh-28: 28px;
+  --lh-32: 32px;
+  --lh-36: 36px;
+  --lh-40: 40px;
+  --lh-48: 48px;
+
+  /* ---- Letter spacing (px — tuned for CJK) ---- */
+  --ls-tight: 0.6px;
+  --ls-med:   1.2px;
+  --ls-wide:  1.8px;
+
+  /* =========================================================
+     Semantic type roles — shorthand: font / size-lh
+     ========================================================= */
+  --type-h-lg:  var(--fw-black) var(--fs-48) / var(--lh-48) var(--font-sans);
+  --type-h1:    var(--fw-bold) var(--fs-32) / var(--lh-40) var(--font-sans);
+  --type-h2:    var(--fw-bold) var(--fs-26) / var(--lh-32) var(--font-sans);
+  --type-h3:    var(--fw-bold) var(--fs-20) / var(--lh-28) var(--font-sans);
+  --type-h4:    var(--fw-bold) var(--fs-18) / var(--lh-24) var(--font-sans);
+
+  --type-body-lg:      var(--fw-regular) var(--fs-18) / var(--lh-36) var(--font-sans);
+  --type-body:         var(--fw-regular) var(--fs-16) / var(--lh-32) var(--font-sans);
+  --type-body-sm:      var(--fw-regular) var(--fs-14) / var(--lh-28) var(--font-sans);
+  --type-caption:      var(--fw-regular) var(--fs-12) / var(--lh-18) var(--font-sans);
+  --type-label:        var(--fw-bold) var(--fs-14) / var(--lh-24) var(--font-sans);
+}
