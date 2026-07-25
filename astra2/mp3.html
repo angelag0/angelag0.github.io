@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <main>
+        <div class="sideMenu">
+          <div class="content">
+            <div class="top">
+              <div class="logo"><img src="./images/logo.png" alt="" /></div>
+              <button class="sideBtn">
+                <i class="icon"><img src="./images/icon/dock_to_right.svg" alt="" /></i>
+              </button>
+            </div>
+            <nav class="menu">
+              <ul>
+                <li>
+                  <button type="button" class="newChat">
+                    <i class="icon add"><img src="./images/icon/add.svg" alt="" /></i><span>New chat</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button">
+                    <i class="icon"><img src="./images/icon/comic_bubble.svg" alt="" /></i><span>History</span>
+                  </button>
+                </li>
+                <li>
+                  <button type="button">
+                    <i class="icon"><img src="./images/icon/favorite.svg" alt="" /></i><span>Favorites</span>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+            <div class="recent">
+              <div class="title">Recent</div>
+              <div class="list">No recent chats</div>
+            </div>
+          </div>
+        </div>
+        <div class="mainBox">
+          <nav class="mainTopMenu">
+            <div class="languageMenu">
+              <button type="button" class="languageBtn">
+                <i class="icon"><img src="./images/icon/language.svg" alt="" /></i><span>Language</span>
+              </button>
+              <div class="content">
+                <ul>
+                  <li><a href="#">English</a></li>
+                  <li><a href="#">繁體中文</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="currencyMenu">
+              <button type="button" class="currencyBtn">
+                <i class="icon"><img src="./images/icon/currency.svg" alt="" /></i><span>USD</span>
+              </button>
+              <div class="content">
+                <span>Select the currency</span>
+                <div class="select">
+                  <select name>
+                    <option value="">USD - US Dollar</option>
+                    <option value="">AUD - Australian Dollar</option>
+                    <option value="">CAD - Canadian Dollar</option>
+                    <option value="">CHF - Swiss Franc</option>
+                    <option value="">CNY - Yuan Renminbi</option>
+                    <option value="">EUR - Euro</option>
+                    <option value="">GBP - Pound Sterling</option>
+                    <option value="">HKD - Hong Kong Dollar</option>
+                    <option value="">IDR - Rupiah</option>
+                    <option value="">JPY - Yen</option>
+                    <option value="">KRW - Won</option>
+                    <option value="">MYR - Malaysian Ringgit</option>
+                    <option value="">NZD - New Zealand Dollar</option>
+                    <option value="">PHP - Philippine Peso</option>
+                    <option value="">SGD - Singapore Dollar</option>
+                    <option value="">THB - Baht</option>
+                    <option value="">TWD - New Taiwan Dollar</option>
+                    <option value="">VND - Dong</option>
+                    <!---->
+                  </select>
+                </div>
+                <button type="submit" class="btnSecondary">Save</button>
+              </div>
+            </div>
+
+            <div class="profileMenu">
+              <button type="button" class="profileBtn">
+                <i class="icon"><img src="./images/icon/account.svg" alt="" /></i>
+              </button>
+              <div class="content">
+                <ul>
+                  <li>
+                    <button type="button" class="help">
+                      <i class="icon"><img src="./images/icon/help.svg" alt="" /></i><span>Help Center</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="signin">
+                      <i class="icon"><img src="./images/icon/person.svg" alt="" /></i><span>Sign in</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="signout">
+                      <i class="icon"><img src="./images/icon/person_add.svg" alt="" /></i><span>Sign up</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+          <div class="mainContent">
+            <div class="mobileMenuTop">
+              <button class="sideBtn">
+                <i class="icon"><img src="./images/icon/dock_to_right.svg" alt="" /></i>
+              </button>
+              <div class="logo"><img src="./images/logo.png" alt="" /></div>
+            </div>
+            <div class="contentBox">
+              <div class="mainPage">
+                <div class="outer">
+                  <div class="mpTitle">Smart Sourcing, Taiwan Quality</div>
+                  <div class="textAreaBox">
+                    <!-- 一般文字輸入 -->
+                    <div class="autoResizeHeight">
+                      <textarea maxlength="5000" name="" id="" placeholder="What are you looking for?"></textarea>
+                    </div>
+                    <!-- 一般文字輸入欄位 -->
+                    <div class="controlBox">
+                      <button type="button" class="img">
+                        <i class="icon"><img src="./images/icon/img.svg" alt="" /></i>
+                      </button>
+                      <div class="imgSearchInfo">Image Search</div>
+                      <div class="submit">
+                        <button type="submit" disabled>
+                          <i class="icon"><img src="./images/icon/arrow.svg" alt="" /></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="promptList">
+                    <div class="item">
+                      <button type="button">
+                        <div class="prompt">
+                          <span>Locate manufacturers to produce </span>
+                          <span class="autoResizeInput">quantity</span>
+                          <span> units of </span>
+                          <span class="autoResizeInput">custom product description</span>
+                          <span>.</span>
+                        </div>
+                        <div class="send">
+                          <i class="icon"><img src="./images/icon/arrow.svg" alt="" /></i>
+                        </div>
+                      </button>
+                    </div>
+                    <div class="item">
+                      <button type="button">
+                        <div class="prompt">
+                          <span>Analyze current market trends in </span>
+                          <span class="autoResizeInput">product category</span>
+                          <span> units of.</span>
+                        </div>
+                        <div class="send">
+                          <i class="icon"><img src="./images/icon/arrow.svg" alt="" /></i>
+                        </div>
+                      </button>
+                    </div>
+                    <div class="item">
+                      <button type="button">
+                        <div class="prompt">
+                          <span>Identify the best-matching </span>
+                          <span class="autoResizeInput">product type</span>
+                          <span> based on features </span>
+                          <span class="autoResizeInput">like price, style, etc.</span>
+                        </div>
+                        <div class="send">
+                          <i class="icon"><img src="./images/icon/arrow.svg" alt="" /></i>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="moreContent">
+                    <span>Explore use case</span>
+                    <i class="icon"><img src="./images/icon/arrpw_double.svg" alt="" /></i>
+                  </div>
+                </div>
+
+                <div class="caseStudy b3">
+                  <div class="item">
+                    <div class="title">
+                      <span>Product search</span>
+                      <button type="button">
+                        <i class="icon"><img src="./images/icon/arrow_to_right.svg" alt="" /></i>
+                      </button>
+                    </div>
+                    <div class="con">Frozen Passion Fruit Concentrate.</div>
+                    <div class="pic"><img src="./images/demo/p4.jpg" alt="" /></div>
+                  </div>
+                  <div class="item">
+                    <div class="title">
+                      <span>Supplier search</span>
+                      <button type="button">
+                        <i class="icon"><img src="./images/icon/arrow_to_right.svg" alt="" /></i>
+                      </button>
+                    </div>
+                    <div class="con">Seeking ISO 13485 certified medical device manufacturers.</div>
+                    <div class="pic"><img src="./images/demo/p5.jpg" alt="" /></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="./js/main.js"></script>
+  </body>
+</html>

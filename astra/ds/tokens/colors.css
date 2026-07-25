@@ -1,0 +1,87 @@
+/* ============================================================
+   taiwantrade ASTRA — Color tokens
+   Source of truth: scss/_variable.scss in the taiwantrade AI codebase.
+   ASTRA is the AI sourcing assistant; the product UI is a calm, near-
+   monochrome canvas (white + warm grays) where a single trade blue and a
+   purple→cyan "ASTRA" gradient carry all the brand energy.
+   ============================================================ */
+
+:root {
+  /* ---- Brand blue (primary) ---- */
+  --blue-700: #0156A2;        /* $colorPrimary — core trade blue */
+  --blue-600: #0F5C9F;        /* $brandBlue500 — interactive blue (hover/links) */
+  --blue-500: #5f95e7;        /* $colorSecondary — lighter supportive blue */
+  --blue-100: #F0F6FB;        /* $brandBlue100 — tinted chip/tag surface */
+  --blue-700-dark: #024e92;   /* primary pressed */
+
+  /* ---- ASTRA gradient (logo / hero accent) ----
+     Purple-magenta → blue wordmark, plus the soft blob gradient used,
+     blurred, behind the home canvas. */
+  --astra-violet: #7b3ff2;
+  --astra-magenta: #b13bd6;
+  --astra-blue: #2f6fe0;
+  --astra-cyan: #8ee3ff;
+  --astra-gradient: linear-gradient(100deg, #b13bd6 0%, #7b3ff2 38%, #2f6fe0 100%); /* @kind color */
+  --astra-blob: radial-gradient(circle at 30% 40%, #8ee3ff 0%, #7088cc 60%, #546699 100%); /* @kind color */
+
+  /* ---- Neutrals (warm gray ramp) ---- */
+  --gray-900: #333333;        /* $gray900 — primary text */
+  --gray-700: #666666;        /* $gray700 — body / secondary text */
+  --gray-500: #999999;        /* $gray500 — muted / meta text */
+  --gray-300: #cccccc;        /* $gray300 — borders, disabled fills */
+  --gray-100: #e5e5e5;        /* $gray100 — hairlines, hover fills */
+  --gray-50:  #f2f2f2;        /* $gray50 — chip / inset surface */
+  --gray-bg:  #fbfbfb;        /* $grayBg — page / product-tile surface */
+  --sidebar-bg: #f5f7f9;      /* sidebar panel surface */
+  --black: #111111;           /* $colorWordDark */
+  --white: #ffffff;
+
+  /* ---- Semantic: danger / accent red ---- */
+  --red-500: #E5001B;         /* $red500 — destructive, required marks */
+  --red-100: #FFE3E6;         /* $red100 */
+  --price-drop: #ff411b;      /* discount / price-down accent */
+  --eco-green: #308900;       /* certification / eco product tag */
+
+  /* ---- Notice palette (status banners) ---- */
+  --notice-neutral-fg: #333333;
+  --notice-neutral-bg: #DEE0E3;
+  --notice-info-fg: #00529B;
+  --notice-info-bg: #CFE5FC;
+  --notice-success-fg: #00754B;
+  --notice-success-bg: #CDF3E6;
+  --notice-warning-fg: #C23E00;
+  --notice-warning-bg: #FAECE6;
+  --notice-error-fg: #C40000;
+  --notice-error-bg: #FDD7DE;
+
+  /* ============================================================
+     Semantic aliases — prefer these in components
+     ============================================================ */
+  --color-primary: var(--blue-700);
+  --color-primary-hover: var(--blue-600);
+  --color-accent: var(--blue-600);
+
+  --text-strong: var(--gray-900);
+  --text-body: var(--gray-700);
+  --text-muted: var(--gray-500);
+  --text-on-primary: var(--white);
+  --text-link: var(--blue-600);
+
+  --surface-page: var(--gray-bg);
+  --surface-card: var(--white);
+  --surface-inset: var(--gray-50);
+  --surface-sidebar: var(--sidebar-bg);
+  --surface-tag: var(--blue-100);
+  --surface-hover: var(--gray-100);
+
+  --border-subtle: var(--gray-100);
+  --border-default: var(--gray-300);
+  --border-strong: var(--gray-700);
+  --border-focus: var(--blue-600);
+
+  /* Dark control (primary action button) — note ASTRA uses a near-black
+     fill that shifts to brand blue on hover, not a solid-blue button. */
+  --control-fill: var(--gray-900);
+  --control-fill-hover: var(--blue-600);
+  --control-fill-disabled: var(--gray-300);
+}

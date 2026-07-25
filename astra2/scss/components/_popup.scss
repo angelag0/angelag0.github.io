@@ -1,0 +1,126 @@
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:map';
+@use "../variable" as *; //變數
+@use "../basic/mixin" as *; //mixin
+
+.popup {
+  padding: 16px;
+  background: rgba(#000, 0.4);
+  content: '';
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+
+  .popupTitle {
+    font-weight: 700;
+    font-size: Rem(18);
+    padding: 8px 0;
+    color: $gray900;
+  }
+
+  .popupOuter {
+    background: #fff;
+    border-radius: $r16;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    z-index: 9;
+    max-width: 640px;
+    max-height: 80vh;
+    width: calc(100vh - 32px);
+
+    @include screen('mobile') {
+      max-height: calc(100vh - 32px);
+    }
+
+    &.sm {
+      max-width: 300px;
+
+      .btnSecondary {
+        width: 100%;
+      }
+
+      .notice {
+        text-align: center;
+        font-size: Rem(14);
+
+        a {
+          color: $brandBlue500;
+        }
+      }
+    }
+
+    &.xs {
+      width: auto;
+
+      &:has(.loading) {
+        border-radius: 50%;
+        padding: 10px;
+      }
+    }
+  }
+
+  .popupContent {
+    overflow-y: auto;
+    flex-grow: 1;
+
+    a {
+      color: $brandBlue500;
+      @include transition(0.3);
+
+      &:hover {
+        color: $gray900;
+      }
+    }
+
+    .tabBox {
+      height: 100%;
+    }
+  }
+
+  .btnBox {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    border-top: $gray100 1px solid;
+    padding-top: 16px;
+    flex-shrink: 0;
+
+    @include screen('mobile') {
+      button {
+        flex-grow: 1;
+      }
+    }
+  }
+}
+
+
+#filterPopup {
+
+  .filterListBox {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+  }
+
+  .filterList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: $gray900;
+    flex-shrink: 0;
+  }
+
+  .list {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}

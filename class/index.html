@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>課程小幫手</title>
+<style>
+:root{
+  --paper:#FFFDF8; --card:#FFFFFF; --ink:#2B2620; --muted:#6E6558; --line:#E4DED2;
+  --blue:#0F5CA8; --seal:#B3402F; --heart:#C2413B; --heart-bg:#FCEBEA;
+  --warn:#B3261E; --warn-bg:#FBEAE8; --ok:#1E7A46; --ok-bg:#E9F5EE; --tap:52px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:rgba(15,92,168,.15)}
+html{font-size:19px}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.45;padding-bottom:calc(84px + env(safe-area-inset-bottom));}
+button{font-family:inherit}
+
+header{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:2px solid var(--line);
+  padding:10px 14px 8px;}
+header h1{margin:0;font-size:1.25rem;font-weight:800;letter-spacing:.06em}
+header h1 small{display:block;font-size:.68rem;font-weight:500;color:var(--muted);letter-spacing:.12em}
+
+#toolbar{position:sticky;top:64px;z-index:19;background:var(--paper);padding:10px 14px 8px;border-bottom:1px solid var(--line)}
+.tool-row{display:flex;gap:8px}
+.tool-row>button{flex:1;min-height:var(--tap);border-radius:14px;font-size:1rem;font-weight:700;
+  border:2px solid var(--line);background:var(--card);color:var(--ink);}
+.tool-row>button.active-filter{border-color:var(--blue);color:var(--blue)}
+#filterPanel{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px;margin-top:10px;}
+#filterPanel h4{margin:0 0 8px;font-size:.95rem;color:var(--muted);font-weight:700}
+#filterPanel section+section{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{flex:1;min-height:var(--tap);border-radius:12px;font-size:1rem;font-weight:700;
+  border:2px solid var(--line);background:var(--paper);color:var(--ink);white-space:nowrap;padding:6px 10px;}
+.seg button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.daychips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.daychips button{width:52px;height:52px;border-radius:50%;font-size:1.15rem;font-weight:800;
+  border:2px solid var(--line);background:var(--paper);color:var(--ink);}
+.daychips button[aria-pressed="true"]{background:var(--seal);border-color:var(--seal);color:#fff}
+.monthchips{display:flex;gap:8px;flex-wrap:wrap}
+.monthchips button{min-height:48px;padding:6px 14px;border-radius:24px;font-size:.95rem;font-weight:700;
+  border:2px solid var(--line);background:var(--paper);color:var(--ink);}
+.monthchips button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+#btnClearFilter{width:100%;margin-top:16px;min-height:var(--tap);border-radius:12px;
+  border:2px solid var(--line);background:var(--paper);font-size:1rem;font-weight:700;color:var(--muted);}
+
+main{padding:4px 14px 20px}
+.section-title{margin:18px 2px 6px;font-size:.9rem;font-weight:800;color:var(--muted);letter-spacing:.08em}
+
+/* ---- 精簡卡片 ---- */
+.card{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:12px 14px 10px;margin-top:10px;}
+.card.liked{border-color:var(--heart)}
+.c-title{margin:0;font-size:1.06rem;font-weight:800;line-height:1.35}
+.c-title a{color:inherit;text-decoration:none}
+.c-id{font-size:.78rem;color:var(--muted);font-weight:600}
+.c-days{margin-top:8px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:.95rem;font-weight:700}
+.stamp{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;
+  border:2px solid var(--seal);color:var(--seal);font-weight:800;font-size:.92rem;background:#FFF9F5;}
+.c-range{margin-left:6px;font-weight:800;font-size:.98rem}
+.c-unit{margin-top:6px;font-size:.8rem;color:var(--muted)}
+.c-meta{margin-top:3px;font-size:.86rem;color:var(--muted)}
+.su-open{color:var(--ok);font-weight:800}
+.su-closed{color:var(--warn);font-weight:700}
+.c-actions{display:flex;gap:8px;margin-top:10px}
+.c-actions>*{flex:1;min-height:48px;border-radius:12px;font-size:.92rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:3px;text-decoration:none;}
+.btn-like{border:2px solid var(--line);background:var(--paper);color:var(--ink)}
+.btn-like.on{border-color:var(--heart);background:var(--heart-bg);color:var(--heart)}
+.btn-hide{border:2px solid var(--line);background:var(--paper);color:var(--muted)}
+.btn-open{border:2px solid var(--blue);background:var(--blue);color:#fff}
+.btn-unhide{border:2px solid var(--ok);background:var(--ok-bg);color:var(--ok)}
+
+.group{border-radius:18px;padding:2px 8px 10px;margin-top:14px}
+.group.clash{background:var(--warn-bg);border:2px solid #EBC3BF}
+.group.free{background:var(--ok-bg);border:2px solid #BFDCCB}
+.group-head{font-size:.92rem;font-weight:800;padding:9px 6px 2px}
+.group.clash .group-head{color:var(--warn)}
+.group.free .group-head{color:var(--ok)}
+.group .card{margin-top:8px}
+.notice{margin:10px 0 0;padding:11px 13px;border-radius:14px;background:#FFF6DE;border:2px solid #EAD9A6;font-size:.9rem;color:#6B5518;}
+.empty{text-align:center;color:var(--muted);padding:56px 24px;font-size:1rem;line-height:1.8;}
+.empty .big{font-size:2.2rem}
+
+#tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;background:var(--card);
+  border-top:2px solid var(--line);padding-bottom:env(safe-area-inset-bottom);}
+#tabbar button{flex:1;border:none;background:none;padding:8px 0 10px;font-size:.82rem;font-weight:700;
+  color:var(--muted);position:relative;min-height:64px;}
+#tabbar button .ic{display:block;font-size:1.45rem;line-height:1.2}
+#tabbar button.on{color:var(--blue)}
+#tabbar button.on::after{content:"";position:absolute;top:0;left:22%;right:22%;height:4px;border-radius:0 0 4px 4px;background:var(--blue);}
+#tabbar .badge{position:absolute;top:4px;right:calc(50% - 30px);background:var(--heart);color:#fff;
+  border-radius:10px;font-size:.68rem;padding:1px 6px;font-weight:800;}
+
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));z-index:50;
+  background:var(--ink);color:#fff;border-radius:14px;padding:12px 18px;font-size:.95rem;opacity:0;
+  pointer-events:none;transition:opacity .25s;max-width:88%;text-align:center;}
+#toast.show{opacity:.96}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header><h1>課程小幫手<small>產業人才投資方案・臺北市 52 堂課</small></h1></header>
+
+<div id="toolbar">
+  <div class="tool-row">
+    <button id="btnSort">排序：開課早的在前</button>
+    <button id="btnFilter">篩選星期 ▾</button>
+  </div>
+  <div id="filterPanel" hidden>
+    <section>
+      <h4>星期幾</h4>
+      <div class="seg" id="dayMode">
+        <button data-mode="all" aria-pressed="true">全部顯示</button>
+        <button data-mode="only" aria-pressed="false">只看選的</button>
+        <button data-mode="exclude" aria-pressed="false">避開選的</button>
+      </div>
+      <div class="daychips" id="dayChips"></div>
+    </section>
+    <section>
+      <h4>開課月份</h4>
+      <div class="monthchips" id="monthChips"></div>
+    </section>
+    <button id="btnClearFilter">清除全部篩選</button>
+  </div>
+</div>
+
+<main id="list"></main>
+
+<nav id="tabbar">
+  <button data-tab="all" class="on"><span class="ic">📋</span>全部課程</button>
+  <button data-tab="liked"><span class="ic">❤️</span>有興趣<span class="badge" id="likedBadge" hidden></span></button>
+  <button data-tab="hidden"><span class="ic">🗂</span>已隱藏</button>
+</nav>
+
+<div id="toast"></div>
+
+<script>
+/* ============ 課程資料（52 堂；su=報名開始日, se=報名截止日, 皆中午12點） ============ */
+const COURSES = [{"id":"173528","name":"寵物照護技能職能訓練班第01期","unit":"臺北市寵物服務員職業工會","start":"2026-08-15","end":"2026-09-19","days":[6],"hours":"36","su":"2026-07-16","se":"2026-08-12"},{"id":"173535","name":"寵物營養安全與照護實務班第02期","unit":"臺北市寵物服務員職業工會","start":"2026-10-17","end":"2026-11-28","days":[6],"hours":"36","su":"2026-09-17","se":"2026-10-14"},{"id":"173416","name":"居家水電修繕技術實戰班","unit":"臺北市衛浴器材服務職業工會","start":"2026-08-16","end":"2026-09-20","days":[7],"hours":"42","su":"2026-07-17","se":"2026-08-13"},{"id":"173405","name":"居家水電安裝與修繕技術班","unit":"台北市職業總工會","start":"2026-12-13","end":"2027-01-31","days":[7],"hours":"42","su":"2026-11-13","se":"2026-12-10"},{"id":"174405","name":"Dialux evo照明設計班","unit":"財團法人自強工業科學基金會","start":"2026-09-11","end":"2026-11-27","days":[5],"hours":"30","su":"2026-08-12","se":"2026-09-08"},{"id":"173065","name":"居家修繕應用實務班","unit":"台北市營建土木職業工會","start":"2026-12-02","end":"2026-12-23","days":[1,3,5],"hours":"30","su":"2026-11-02","se":"2026-11-29"},{"id":"172954","name":"園藝栽培技術班","unit":"台北市園藝花卉業職業工會","start":"2026-09-04","end":"2026-10-30","days":[5],"hours":"42","su":"2026-08-05","se":"2026-09-01"},{"id":"172956","name":"園藝作物盆栽班","unit":"台北市園藝花卉業職業工會","start":"2026-10-06","end":"2026-11-17","days":[2],"hours":"42","su":"2026-09-06","se":"2026-10-03"},{"id":"172958","name":"園藝栽培應用班","unit":"台北市園藝花卉業職業工會","start":"2026-11-16","end":"2026-12-30","days":[1,3],"hours":"42","su":"2026-10-17","se":"2026-11-13"},{"id":"172967","name":"文創花藝設計班","unit":"台北市園藝花卉業職業工會","start":"2026-09-11","end":"2026-10-30","days":[5],"hours":"18","su":"2026-08-12","se":"2026-09-08"},{"id":"173025","name":"短片美學創作及品牌塑造實務班","unit":"台北市電影戲劇業職業工會","start":"2026-10-17","end":"2026-11-28","days":[6],"hours":"30","su":"2026-09-17","se":"2026-10-14"},{"id":"173572","name":"台灣意象文創商品設計實務班第01期","unit":"社團法人台灣藝術創作學會","start":"2026-11-03","end":"2026-12-11","days":[2,5],"hours":"36","su":"2026-10-04","se":"2026-10-31"},{"id":"173512","name":"中南部及東部山林步道導遊培訓班","unit":"社團法人新北市觀光導遊協會","start":"2026-12-06","end":"2027-01-24","days":[7],"hours":"42","su":"2026-11-06","se":"2026-12-03"},{"id":"173510","name":"台灣地質礦產旅遊資源導覽培訓班","unit":"社團法人新北市觀光導遊協會","start":"2026-10-20","end":"2026-12-01","days":[2],"hours":"45","su":"2026-09-20","se":"2026-10-17"},{"id":"173472","name":"台北故宮導覽班","unit":"社團法人中華民國第二專長協會","start":"2026-08-06","end":"2026-09-19","days":[4,6],"hours":"42","su":"2026-07-19","se":"2026-08-03"},{"id":"173564","name":"在地人文藝術導覽應用實務班第01期","unit":"社團法人台灣藝術創作學會","start":"2026-08-04","end":"2026-09-04","days":[2,5],"hours":"30","su":"2026-07-15","se":"2026-08-01"},{"id":"172950","name":"花藝設計應用班","unit":"台北市園藝花卉業職業工會","start":"2026-11-10","end":"2026-12-31","days":[2,4],"hours":"48","su":"2026-10-11","se":"2026-11-07"},{"id":"173482","name":"芳香精油調製班","unit":"社團法人中華第二專長發展協會","start":"2026-11-07","end":"2027-01-23","days":[6],"hours":"54","su":"2026-10-08","se":"2026-11-04"},{"id":"173856","name":"芳香精油調製進階班","unit":"社團法人臺灣文化創意產業發展協會","start":"2026-11-01","end":"2026-12-13","days":[7],"hours":"42","su":"2026-09-30","se":"2026-10-29"},{"id":"173380","name":"環保精油手工皂實作班","unit":"臺北市美容美髮用品從業人員職業工會","start":"2026-11-01","end":"2027-01-10","days":[7],"hours":"54","su":"2026-10-02","se":"2026-10-29"},{"id":"173328","name":"芳香精油調製班","unit":"大臺北產業總工會","start":"2026-10-05","end":"2026-11-23","days":[1],"hours":"42","su":"2026-09-05","se":"2026-10-02"},{"id":"173144","name":"商業花藝專業打造班","unit":"社團法人中華民國第二專長職能發展協會","start":"2026-10-05","end":"2026-11-23","days":[1],"hours":"42","su":"2026-09-05","se":"2026-10-02"},{"id":"172952","name":"花藝盆栽創作應用班","unit":"台北市園藝花卉業職業工會","start":"2026-09-10","end":"2026-11-03","days":[2,4],"hours":"47","su":"2026-08-11","se":"2026-09-07"},{"id":"172961","name":"時尚花藝商品設計班","unit":"台北市園藝花卉業職業工會","start":"2026-09-09","end":"2026-11-09","days":[1,3],"hours":"47","su":"2026-08-10","se":"2026-09-06"},{"id":"173412","name":"天然手工皂設計與衛浴空間潔淨配方調製班","unit":"臺北市衛浴器材服務職業工會","start":"2026-08-26","end":"2026-10-07","days":[3],"hours":"42","su":"2026-07-27","se":"2026-08-23"},{"id":"173517","name":"芳香精油調製班","unit":"社團法人臺北市第二專長發展協會","start":"2026-08-23","end":"2026-10-04","days":[7],"hours":"42","su":"2026-07-24","se":"2026-08-20"},{"id":"173383","name":"當代花藝創新實務班","unit":"大臺北職業總工會","start":"2026-08-10","end":"2026-09-21","days":[1],"hours":"42","su":"2026-07-27","se":"2026-08-07"},{"id":"173421","name":"皮革工藝製作與歐式立體浮雕技巧班","unit":"全國產職業總工會","start":"2026-09-11","end":"2026-12-25","days":[5],"hours":"84","su":"2026-08-12","se":"2026-09-08"},{"id":"172923","name":"皮革皮雕製作實務班第08期","unit":"台北市商品包膜人員職業工會","start":"2026-09-05","end":"2026-12-26","days":[6],"hours":"90","su":"2026-08-06","se":"2026-09-02"},{"id":"173171","name":"羊毛氈小物設計創作班","unit":"臺北市才藝教學服務人員職業工會","start":"2026-08-31","end":"2026-12-28","days":[1],"hours":"45","su":"2026-08-01","se":"2026-08-28"},{"id":"173514","name":"藍染工藝商品實作班","unit":"財團法人水源地文教基金會","start":"2026-08-16","end":"2026-10-04","days":[7],"hours":"42","su":"2026-07-17","se":"2026-08-13"},{"id":"173521","name":"護膚及淨膚保養品調製實務班","unit":"財團法人水源地文教基金會","start":"2026-10-17","end":"2026-12-12","days":[6],"hours":"42","su":"2026-09-16","se":"2026-10-14"},{"id":"173011","name":"傳統整復推拿基礎生理與解剖及基礎經絡理論訓練班第01期","unit":"社團法人中華民國民俗調理教育發展協會","start":"2026-12-20","end":"2027-01-31","days":[7],"hours":"54","su":"2026-11-20","se":"2026-12-17"},{"id":"173016","name":"經絡調理保健技能實務班","unit":"社團法人中華民國腳底按摩協會","start":"2026-11-07","end":"2026-11-28","days":[6],"hours":"24","su":"2026-10-07","se":"2026-11-04"},{"id":"173773","name":"經絡保健運動班第01期","unit":"中華民國經絡鬆筋整體健康協會","start":"2026-10-24","end":"2026-12-19","days":[6],"hours":"54","su":"2026-09-24","se":"2026-10-21"},{"id":"173706","name":"傳統整復推拿實務D班第02期","unit":"新北市骨節整復職業工會","start":"2026-10-04","end":"2026-12-13","days":[7],"hours":"96","su":"2026-09-04","se":"2026-10-01"},{"id":"173014","name":"芳香精油調配保健應用技能實務班第02期","unit":"中華整體美學交流協會","start":"2026-09-09","end":"2026-11-25","days":[3],"hours":"72","su":"2026-08-10","se":"2026-09-06"},{"id":"172933","name":"民俗調理業傳統整復推拿技術員(基礎生理與解剖學教育暨基礎經絡理論)班","unit":"台北市接骨服務職業工會","start":"2026-09-06","end":"2026-12-06","days":[7],"hours":"54","su":"2026-08-07","se":"2026-09-03"},{"id":"173359","name":"芳香調理課程班第03期","unit":"社團法人亞太流行時尚產業發展協會","start":"2026-09-03","end":"2026-12-10","days":[4],"hours":"90","su":"2026-08-04","se":"2026-08-31"},{"id":"173030","name":"芳香調理（頭部/頸部/肩部紓壓）實務應用班","unit":"社團法人中華亞太國際美學教育認證協會","start":"2026-08-22","end":"2026-11-14","days":[6],"hours":"54","su":"2026-07-20","se":"2026-08-19"},{"id":"173691","name":"傳統整復推拿實務A班第02期","unit":"新北市骨節整復職業工會","start":"2026-08-09","end":"2026-10-31","days":[6,7],"hours":"112","su":"2026-07-26","se":"2026-08-06"},{"id":"173400","name":"芳香調理課程班第04期","unit":"社團法人亞太流行時尚產業發展協會","start":"2026-08-14","end":"2026-12-04","days":[5],"hours":"90","su":"2026-07-15","se":"2026-08-11"},{"id":"173154","name":"房屋買賣法律與稅務活用班第01期","unit":"社團法人台灣不動產經紀房訊交流協會","start":"2026-09-19","end":"2026-11-07","days":[6],"hours":"30","su":"2026-08-20","se":"2026-09-16"},{"id":"173279","name":"樂齡健康活動指導員實務班第03期","unit":"社團法人中華民國勞動力發展協會","start":"2026-08-23","end":"2026-10-11","days":[7],"hours":"47","su":"2026-07-27","se":"2026-08-20"},{"id":"173293","name":"套房設計裝修與租賃管理訓練班第07期","unit":"社團法人中華活力職能發展協會","start":"2026-08-20","end":"2026-09-17","days":[4],"hours":"35","su":"2026-07-21","se":"2026-08-17"},{"id":"173425","name":"專業攝影實務應用班","unit":"社團法人台灣視覺傳達設計協會","start":"2026-11-05","end":"2027-01-28","days":[4],"hours":"69","su":"2026-10-06","se":"2026-11-02"},{"id":"173389","name":"攝影實務應用班","unit":"社團法人台灣視覺創意設計協會","start":"2026-10-03","end":"2026-12-12","days":[6],"hours":"63","su":"2026-09-03","se":"2026-09-30"},{"id":"173302","name":"AI室內設計應用訓練班第02期","unit":"社團法人中華活力職能發展協會","start":"2026-09-09","end":"2026-10-07","days":[3],"hours":"35","su":"2026-08-10","se":"2026-09-06"},{"id":"173403","name":"生成式AI影像創作與運用班第02期","unit":"社團法人中華國際新住民領導人總會","start":"2026-09-01","end":"2026-10-13","days":[2],"hours":"42","su":"2026-08-02","se":"2026-08-29"},{"id":"173394","name":"攝影職能培訓班","unit":"社團法人台灣視覺創意設計協會","start":"2026-08-18","end":"2026-10-27","days":[2],"hours":"63","su":"2026-07-19","se":"2026-08-15"},{"id":"173289","name":"手機影像製作與剪輯AI輔助應用班第02期","unit":"社團法人中華影視造型文化創意協會","start":"2026-08-16","end":"2026-11-15","days":[7],"hours":"66","su":"2026-07-19","se":"2026-08-13"},{"id":"172999","name":"AI視覺手機攝錄影實務班第02期","unit":"社團法人中華文創形象管理協會","start":"2026-08-16","end":"2026-11-15","days":[7],"hours":"66","su":"2026-07-19","se":"2026-08-13"}];
+const byId={}; COURSES.forEach(c=>byId[c.id]=c);
+const IDS = COURSES.map(c=>c.id);
+const linkOf = id => "https://ojt.wda.gov.tw/ClassSearch/Detail?PlanType=1&OCID=" + id;
+const DAY_CH = ["","一","二","三","四","五","六","日"];
+const SORT_LABEL={asc:"排序：開課早的在前",desc:"排序：開課晚的在前",day:"排序：照星期（一→日）"};
+
+/* ============ 儲存 ============ */
+const KEY="courseHelper_v1";
+const store={
+  async load(){
+    if (window.storage){ try{ const r=await window.storage.get(KEY); if(r&&r.value) return JSON.parse(r.value);}catch(e){} }
+    try{ const v=localStorage.getItem(KEY); if(v) return JSON.parse(v); }catch(e){}
+    return null;
+  },
+  async save(d){
+    const v=JSON.stringify(d);
+    if (window.storage){ try{ await window.storage.set(KEY,v);}catch(e){} }
+    try{ localStorage.setItem(KEY,v); }catch(e){}
+  }
+};
+let S={ liked:[], hidden:[], ui:{ tab:"all", sortMode:"asc", dayMode:"all", selDays:[], selMonths:[] } };
+let saveTimer=null;
+function persist(){ clearTimeout(saveTimer); saveTimer=setTimeout(()=>store.save(S),250); }
+
+/* ============ 小工具 ============ */
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  clearTimeout(t._tm); t._tm=setTimeout(()=>t.classList.remove("show"),2200);
+}
+function esc(s){ return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function rocDate(iso){ const [y,m,d]=iso.split("-").map(Number); return (y-1911)+"/"+m+"/"+d; }
+function localDate(iso){ const [y,m,d]=iso.split("-").map(Number); return new Date(y,m-1,d); }
+
+/* 報名狀態：以手機當下日期換算（報名皆為中午12點開放/截止） */
+function signupText(c){
+  const now=new Date();
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const diff=Math.round((localDate(c.su)-today)/86400000);
+  if (diff>1)  return '<b>'+diff+'</b> 天後可報名';
+  if (diff===1) return '明天可報名';
+  if (diff===0) return '<span class="su-open">今天開放報名</span>';
+  if (today.getTime()>localDate(c.se).getTime()) return '<span class="su-closed">報名已截止</span>';
+  return '<span class="su-open">開放報名中</span>';
+}
+
+/* ============ 篩選 / 排序 ============ */
+function passFilter(c){
+  const ui=S.ui;
+  if (ui.dayMode!=="all" && ui.selDays.length){
+    const hit=c.days.some(d=>ui.selDays.includes(d));
+    if (ui.dayMode==="only" && !hit) return false;
+    if (ui.dayMode==="exclude" && hit) return false;
+  }
+  if (ui.selMonths.length && !ui.selMonths.includes(c.start.slice(0,7))) return false;
+  return true;
+}
+function sortIds(ids){
+  return ids.slice().sort((a,b)=>{
+    const A=byId[a],B=byId[b];
+    if (S.ui.sortMode==="day" && A.days[0]!==B.days[0]) return A.days[0]-B.days[0];
+    if (A.start!==B.start) return S.ui.sortMode==="desc" ? (A.start>B.start?-1:1) : (A.start<B.start?-1:1);
+    return IDS.indexOf(a)-IDS.indexOf(b);
+  });
+}
+
+/* ============ 衝堂：期間重疊＋同一天上課 ============ */
+function clash(a,b){
+  const A=byId[a],B=byId[b];
+  if (A.start>B.end || B.start>A.end) return false;
+  return A.days.some(d=>B.days.includes(d));
+}
+/* 一組互卡的課裡，最多能同時報幾堂 */
+function maxCompat(ids){
+  const n=ids.length; if(n>12) return 1;
+  let best=1;
+  for(let m=1;m<(1<<n);m++){
+    const pick=[]; for(let i=0;i<n;i++) if(m&(1<<i)) pick.push(ids[i]);
+    if(pick.length<=best) continue;
+    let ok=true;
+    for(let i=0;i<pick.length&&ok;i++)
+      for(let j=i+1;j<pick.length;j++) if(clash(pick[i],pick[j])){ok=false;break;}
+    if(ok) best=pick.length;
+  }
+  return best;
+}
+function conflictGroups(ids){
+  const parent={}; ids.forEach(i=>parent[i]=i);
+  const find=x=>parent[x]===x?x:(parent[x]=find(parent[x]));
+  for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++)
+    if(clash(ids[i],ids[j])) parent[find(ids[i])]=find(ids[j]);
+  const g={}; ids.forEach(i=>{const r=find(i);(g[r]=g[r]||[]).push(i);});
+  return Object.values(g);
+}
+
+/* ============ 卡片 ============ */
+function cardHTML(id, mode){
+  const c=byId[id];
+  const liked=S.liked.includes(id);
+  const st=c.days.map(d=>'<span class="stamp">'+DAY_CH[d]+'</span>').join("");
+  let actions;
+  if (mode==="hidden"){
+    actions='<button class="btn-unhide" onclick="unhide(\''+id+'\')">↩ 取消隱藏</button>'+
+            '<a class="btn-open" href="'+linkOf(id)+'" target="_blank" rel="noopener">看課程內容</a>';
+  } else {
+    const likeLabel = mode==="liked" ? '💔 沒興趣了' : (liked?'❤️ 有興趣':'♡ 有興趣');
+    actions='<button class="btn-like'+(liked?' on':'')+'" onclick="toggleLike(\''+id+'\')">'+likeLabel+'</button>'+
+            '<button class="btn-hide" onclick="hideCourse(\''+id+'\')">🚫 隱藏</button>'+
+            '<a class="btn-open" href="'+linkOf(id)+'" target="_blank" rel="noopener">看課程內容</a>';
+  }
+  return '<article class="card'+(liked&&mode!=="hidden"?' liked':'')+'">'+
+    '<h3 class="c-title"><a href="'+linkOf(id)+'" target="_blank" rel="noopener">'+esc(c.name)+' <span class="c-id">（'+id+'）</span></a></h3>'+
+    '<div class="c-days">每週 '+st+'<span class="c-range">'+rocDate(c.start)+'－'+rocDate(c.end)+'</span></div>'+
+    '<div class="c-unit">'+esc(c.unit)+'</div>'+
+    '<div class="c-meta">'+esc(c.hours)+' 小時｜'+signupText(c)+'</div>'+
+    '<div class="c-actions">'+actions+'</div></article>';
+}
+
+/* ============ 分頁畫面 ============ */
+function render(){
+  document.querySelectorAll("#tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.tab===S.ui.tab));
+  const badge=document.getElementById("likedBadge");
+  const likedVisible=S.liked.filter(id=>!S.hidden.includes(id));
+  badge.hidden=likedVisible.length===0; badge.textContent=likedVisible.length;
+  document.getElementById("toolbar").style.display=(S.ui.tab==="all")?"":"none";
+  const el=document.getElementById("list");
+  if (S.ui.tab==="all") el.innerHTML=renderAll();
+  if (S.ui.tab==="liked") el.innerHTML=renderLiked();
+  if (S.ui.tab==="hidden") el.innerHTML=renderHidden();
+}
+function renderAll(){
+  const show=IDS.filter(id=>!S.hidden.includes(id) && passFilter(byId[id]));
+  if (!show.length)
+    return '<div class="empty"><div class="big">🔍</div>目前的篩選條件下沒有課程。<br>可以按「清除全部篩選」看全部課程。</div>';
+  const filtering=(S.ui.dayMode!=="all"&&S.ui.selDays.length)||S.ui.selMonths.length;
+  return (filtering?'<div class="section-title">符合條件的課程（'+show.length+' 堂）</div>':"")+
+         sortIds(show).map(id=>cardHTML(id,"all")).join("");
+}
+function renderLiked(){
+  const liked=S.liked.filter(id=>!S.hidden.includes(id));
+  const hiddenLiked=S.liked.length-liked.length;
+  const tail = hiddenLiked>0
+    ? '<div class="section-title">另有 '+hiddenLiked+' 堂收藏的課目前被隱藏，取消隱藏後會回到這裡</div>' : "";
+  if (!liked.length)
+    return '<div class="empty"><div class="big">♡</div>還沒有收藏任何課程。<br>在「全部課程」點 <b>♡ 有興趣</b>，喜歡的課就會集中到這裡，<br>並自動把上課時間衝突的課排在一起。</div>'+tail;
+  const groups=conflictGroups(liked);
+  groups.sort((g1,g2)=>g2.length-g1.length || (byId[g1[0]].start<byId[g2[0]].start?-1:1));
+  let html='<div class="notice">💡 官方規定：上課時段重疊的課程<b>只能報名一堂</b>。同一天上課、期間又重疊的課，已放進同一個紅框。</div>';
+  groups.forEach(g=>{
+    const ids=sortIds(g);
+    if (g.length>1){
+      const best=maxCompat(ids);
+      const head = best===1
+        ? '⚠️ 這 '+g.length+' 堂課會衝堂，只能選一堂'
+        : '⚠️ 這 '+g.length+' 堂課時間互相卡到，最多只能同時報 '+best+' 堂';
+      html+='<div class="group clash"><div class="group-head">'+head+'</div>'+
+            ids.map(id=>cardHTML(id,"liked")).join("")+'</div>';
+    } else {
+      html+='<div class="group free"><div class="group-head">✅ 和其他收藏的課不衝突，可以報名</div>'+
+            cardHTML(ids[0],"liked")+'</div>';
+    }
+  });
+  return html+tail;
+}
+function renderHidden(){
+  if (!S.hidden.length)
+    return '<div class="empty"><div class="big">🗂</div>沒有隱藏的課程。<br>在課程卡片按「🚫 隱藏」，沒興趣的課就會收到這裡，<br>隨時可以取消隱藏。</div>';
+  return '<div class="section-title">已隱藏 '+S.hidden.length+' 堂課</div>'+
+         S.hidden.map(id=>cardHTML(id,"hidden")).join("");
+}
+
+/* ============ 動作 ============ */
+function toggleLike(id){
+  const i=S.liked.indexOf(id);
+  if(i>=0){S.liked.splice(i,1);toast("已取消收藏");}
+  else{S.liked.push(id);toast("已加入「有興趣」❤️");}
+  persist(); render();
+}
+function hideCourse(id){
+  if(!S.hidden.includes(id))S.hidden.push(id);
+  persist(); render(); toast("已隱藏，到下方「已隱藏」可以找回");
+}
+function unhide(id){
+  S.hidden=S.hidden.filter(x=>x!==id);
+  persist(); render(); toast("已取消隱藏");
+}
+
+/* ============ 工具列 ============ */
+document.getElementById("btnSort").onclick=function(){
+  const order=["asc","desc","day"];
+  S.ui.sortMode=order[(order.indexOf(S.ui.sortMode)+1)%order.length];
+  this.textContent=SORT_LABEL[S.ui.sortMode];
+  persist(); render();
+};
+document.getElementById("btnFilter").onclick=function(){
+  const p=document.getElementById("filterPanel");
+  p.hidden=!p.hidden;
+  this.textContent=p.hidden?"篩選星期 ▾":"收合篩選 ▴";
+};
+function buildFilterUI(){
+  const chips=document.getElementById("dayChips");
+  chips.innerHTML="";
+  for(let d=1;d<=7;d++){
+    const b=document.createElement("button");
+    b.textContent=DAY_CH[d];
+    b.setAttribute("aria-pressed",S.ui.selDays.includes(d));
+    b.onclick=()=>{
+      const i=S.ui.selDays.indexOf(d);
+      if(i>=0)S.ui.selDays.splice(i,1); else S.ui.selDays.push(d);
+      b.setAttribute("aria-pressed",S.ui.selDays.includes(d));
+      if(S.ui.dayMode==="all"&&S.ui.selDays.length) setDayMode("only");
+      persist(); render(); markFilterBtn();
+    };
+    chips.appendChild(b);
+  }
+  document.querySelectorAll("#dayMode button").forEach(b=>{
+    b.setAttribute("aria-pressed",b.dataset.mode===S.ui.dayMode);
+    b.onclick=()=>{ setDayMode(b.dataset.mode); persist(); render(); markFilterBtn(); };
+  });
+  const box=document.getElementById("monthChips");
+  box.innerHTML="";
+  [...new Set(COURSES.map(c=>c.start.slice(0,7)))].sort().forEach(m=>{
+    const [y,mo]=m.split("-").map(Number);
+    const b=document.createElement("button");
+    b.textContent=(y-1911)+"年"+mo+"月開課";
+    b.setAttribute("aria-pressed",S.ui.selMonths.includes(m));
+    b.onclick=()=>{
+      const i=S.ui.selMonths.indexOf(m);
+      if(i>=0)S.ui.selMonths.splice(i,1); else S.ui.selMonths.push(m);
+      b.setAttribute("aria-pressed",S.ui.selMonths.includes(m));
+      persist(); render(); markFilterBtn();
+    };
+    box.appendChild(b);
+  });
+}
+function setDayMode(m){
+  S.ui.dayMode=m;
+  document.querySelectorAll("#dayMode button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.mode===m));
+}
+document.getElementById("btnClearFilter").onclick=()=>{
+  S.ui.dayMode="all"; S.ui.selDays=[]; S.ui.selMonths=[];
+  buildFilterUI(); persist(); render(); markFilterBtn(); toast("已清除篩選");
+};
+function markFilterBtn(){
+  const active=(S.ui.dayMode!=="all"&&S.ui.selDays.length)||S.ui.selMonths.length;
+  document.getElementById("btnFilter").classList.toggle("active-filter",!!active);
+}
+document.querySelectorAll("#tabbar button").forEach(b=>{
+  b.onclick=()=>{ S.ui.tab=b.dataset.tab; persist(); render(); window.scrollTo(0,0); };
+});
+
+/* ============ 啟動 ============ */
+(async function init(){
+  const saved=await store.load();
+  if(saved){
+    S.liked=(saved.liked||[]).filter(x=>IDS.includes(x));
+    S.hidden=(saved.hidden||[]).filter(x=>IDS.includes(x));
+    S.ui=Object.assign(S.ui,saved.ui||{});
+    if(!S.ui.sortMode) S.ui.sortMode=(saved.ui&&saved.ui.sortAsc===false)?"desc":"asc";
+    if(!["all","liked","hidden"].includes(S.ui.tab)) S.ui.tab="all";
+  }
+  document.getElementById("btnSort").textContent=SORT_LABEL[S.ui.sortMode]||SORT_LABEL.asc;
+  buildFilterUI(); markFilterBtn(); render();
+  /* 跨日自動更新「x天後可報名」 */
+  setInterval(()=>{ if(S.ui.tab==="all"||S.ui.tab==="liked") render(); }, 3600000);
+})();
+</script>
+</body>
+</html>

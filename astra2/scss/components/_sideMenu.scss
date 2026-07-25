@@ -1,0 +1,611 @@
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:map';
+@use "../variable" as *; //變數
+@use "../basic/mixin" as *; //mixin
+
+.sideMenu {
+  width: 280px;
+  align-items: stretch;
+  @include transition(0.3);
+  background: #F5F7F9;
+  flex-shrink: 0;
+  z-index: 10;
+  // position: fixed;
+  height: 100vh;
+  height: 100dvh;
+  left: 0;
+  top: 0;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+
+  @include screen('tablet') {
+    width: 0;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9;
+  }
+
+  .content {
+    // padding: 80px 20px 20px;
+    padding: 20px 20px 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+
+    @include screen('tablet') {
+      pointer-events: none;
+      min-height: 100%;
+      height: auto;
+    }
+
+    @include screen('mobile') {
+      gap: 15px;
+    }
+  }
+
+  .icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  a,
+  button {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    color: $gray700;
+    border-radius: $r8;
+    cursor: pointer;
+    @include transition(0.3);
+
+    &.active,
+    &:hover {
+      background: $gray100;
+    }
+
+    span {
+      display: block;
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    @include liReset;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    // position: fixed;
+    top: 0px;
+    left: 0;
+    // padding: 16px 20px 16px 20px;
+    // width: 280px;
+    width: 100%;
+    flex-shrink: 0;
+    background: #F5F7F9;
+    @include transition(0.3);
+    z-index: 9;
+
+    @include screen('tablet') {
+      opacity: 0;
+      pointer-events: none;
+      width: 56px;
+    }
+
+    .logo {
+      line-height: 0;
+      z-index: 9;
+      @include transition(0);
+      height: 72px;
+
+      img {
+        height: 100%;
+      }
+    }
+
+    .sideBtn {
+      width: fit-content;
+      flex-shrink: 0;
+      z-index: 8;
+    }
+  }
+
+  .menu {
+    overflow: hidden;
+    flex-shrink: 0;
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      @include screen('mobile') {
+        gap: 5px;
+      }
+
+      li {
+        white-space: nowrap;
+      }
+    }
+
+    a,
+    button {
+      display: flex;
+      height: 40px;
+    }
+
+    .newChat {
+      font-size: Rem(18);
+      font-weight: 500;
+      color: $gray900;
+    }
+  }
+
+  .recent {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 120px;
+    @include transition(0.3);
+    overflow: hidden;
+
+    @include screen('tablet') {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .title {
+      flex-shrink: 0;
+      color: $gray900;
+      font-weight: 700;
+    }
+
+    .list {
+      overflow-y: auto;
+      min-height: 40px;
+      padding: 10px;
+
+      &:has(ul) {
+        padding: 0;
+      }
+    }
+
+    // a,
+    // button {
+    //   display: flex;
+    //   height: 40px;
+    //   font-size: Rem(14);
+    //   padding: 0 8px;
+    //   overflow: hidden;
+    //   text-overflow: ellipsis;
+    //   @include lineClamp(1);
+    //   color: #666;
+    //   flex-shrink: 0;
+    // }
+
+    li {
+      display: flex;
+      height: 40px;
+      font-size: Rem(14);
+      color: #666;
+      flex-shrink: 0;
+      padding-right: 8px;
+      align-items: stretch;
+      @include transition(0.3);
+      border-radius: $r8;
+
+      button:not(.deleteBtn),
+      a:not(.deleteBtn) {
+        overflow: hidden;
+        @include lineClamp(1);
+        padding: 0 8px;
+      }
+
+      .deleteBtn {
+        width: 20px;
+        padding: 0;
+        flex-shrink: 0;
+        display: none;
+        filter: brightness(0);
+        opacity: 0.6;
+
+        i {
+          width: 14px;
+        }
+
+        &:hover {
+          background: transparent;
+        }
+      }
+
+      &:hover {
+        background: #e5e5e5;
+
+        .deleteBtn {
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
+
+    .viewMore {
+      padding: 0;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+
+    .loaderBox {
+      padding-left: 0;
+      margin-top: 10px;
+    }
+  }
+
+  .bottomMenu {
+    flex-shrink: 0;
+    margin-top: auto;
+
+    @include screen('tablet') {
+      display: none;
+    }
+
+    li {
+      position: relative;
+    }
+
+    a,
+    button {
+      display: flex;
+      text-decoration: none;
+      color: $gray900;
+
+      span {
+        padding: 5px 0;
+        flex-shrink: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        @include lineClamp(1);
+      }
+    }
+
+
+    li:has(.profile.active) {
+      .profileMenu {
+        display: block;
+      }
+    }
+
+    .profileMenu {
+      position: absolute;
+      bottom: calc(100% + 5px);
+      width: 100%;
+      left: 0;
+      background: #fff;
+      border-radius: $r8;
+      box-shadow: 0 0px 8px rgba(0, 0, 0, 0.1);
+      display: none;
+
+      a,
+      button {
+        padding-right: 10px;
+        width: 100%;
+        display: flex;
+        height: 52px;
+      }
+    }
+
+    .profile {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      font-weight: 700;
+      font-size: Rem(14);
+      color: $gray900;
+      border-radius: $r8;
+      @include transition(0.3);
+      overflow: hidden;
+
+      .avatar {
+        width: 40px;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        flex-shrink: 0;
+
+        .icon {
+          display: flex !important;
+        }
+
+        .name {
+          border-radius: 50%;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: $gray100;
+          font-size: Rem(13);
+          text-align: center;
+          overflow: hidden;
+        }
+      }
+
+      .icon {
+        margin-left: auto;
+      }
+
+      &.active {
+        background: $gray100;
+      }
+    }
+
+    ul {
+      gap: 10px;
+    }
+  }
+
+  &.active {
+    width: 280px;
+    overflow-y: auto;
+
+    .top {
+      @include screen('tablet') {
+        opacity: 1;
+        pointer-events: unset;
+        width: 100%;
+        display: flex;
+      }
+    }
+
+    .recent {
+      opacity: 1;
+      pointer-events: unset;
+    }
+
+    .content {
+      pointer-events: unset;
+    }
+
+    .bottomMenu {
+      display: block;
+    }
+
+    @include screen('tabletMin') {
+      width: 56px;
+
+      .content {
+        padding: 20px 8px 20px 8px;
+      }
+
+      ul {
+        li {
+          justify-content: center;
+        }
+      }
+
+      .top {
+        // width: 56px;
+        // padding: 16px 8px 16px 8px;
+        justify-content: center;
+      }
+
+      .logo {
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+      }
+
+      // a,
+      // button {
+      //   display: block;
+
+      //   & > span {
+      //     display: none;
+      //     white-space: nowrap;
+      //   }
+      // }
+
+      .recent {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      // .bottomMenu {
+      //   // li {
+      //   //   display: none;
+      //   // }
+
+      //   // li:has(.signin),
+      //   // li:has(.signout),
+      //   // li:has(.profileMenu) {
+      //   //   display: block;
+      //   // }
+
+      //   .profileMenu {
+      //     min-width: 200px;
+
+      //     span {
+      //       display: block;
+      //     }
+      //   }
+
+      //   .profile {
+
+      //     .icon {
+      //       display: none;
+      //     }
+      //   }
+      // }
+    }
+  }
+}
+
+main {
+  &:has(.ansBox.absolute) {
+    .chatBox {
+      display: none;
+    }
+  }
+
+  // @include screen('tabletMin') {
+  //   padding-left: 280px;
+  // }
+
+  // &:has(.ansBox:not(.absolute)) {
+
+  //   @include screen('tabletMin') {
+  //     // padding-left: 56px;
+
+  //     .sideMenu {
+  //       &:not(.active) {
+  //         width: 56px;
+
+  //         .top {
+  //           width: 40px;
+  //           // padding: 16px 8px 16px 8px;
+  //         }
+
+  //         .content {
+  //           // padding: 80px 8px 20px;
+  //           padding: 20px 8px 20px;
+  //         }
+
+  //         ul {
+  //           li {
+  //             justify-content: center;
+  //           }
+  //         }
+
+  //         .top {
+  //           justify-content: center;
+  //         }
+
+  //         .logo {
+  //           opacity: 0;
+  //           pointer-events: none;
+  //           position: absolute;
+  //         }
+
+  //         a,
+  //         button {
+  //           display: flex;
+
+  //           & > span {
+  //             display: none;
+  //             white-space: nowrap;
+  //           }
+  //         }
+
+  //         .recent {
+  //           opacity: 0;
+  //           pointer-events: none;
+  //         }
+
+  //         .bottomMenu {
+
+  //           li:not(:last-child) {
+  //             display: none;
+  //           }
+
+  //           .profileMenu {
+  //             min-width: 200px;
+
+  //             span {
+  //               display: block;
+  //             }
+  //           }
+
+  //           .profile {
+
+  //             .icon {
+  //               display: none;
+  //             }
+  //           }
+  //         }
+  //       }
+
+  //       &.active {
+  //         width: 280px;
+
+  //         .top {
+  //           // width: 280px;
+  //           justify-content: space-between;
+  //           // padding: 16px 20px 16px 20px;
+  //         }
+
+  //         // .content {
+  //         //   padding: 80px 20px 20px;
+  //         // }
+
+
+  //         .logo {
+  //           opacity: 1;
+  //           pointer-events: unset;
+  //           position: relative;
+  //         }
+
+  //         // a,
+  //         // button {
+  //         //   & > span {
+  //         //     display: none;
+  //         //     white-space: nowrap;
+  //         //   }
+  //         // }
+
+  //         .recent {
+  //           opacity: 1;
+  //           pointer-events: unset;
+  //         }
+
+  //         .content {
+  //           pointer-events: unset;
+  //         }
+
+  //         .bottomMenu {
+  //           display: block;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+
+  // &:has(.sideMenu.active) {
+  //   @include screen('tabletMin') {
+  //     padding-left: 56px;
+  //   }
+  // }
+  &:has(.sideMenu.active) {
+    @include screen('tablet') {
+      &::before {
+        content: '';
+        inset: 0;
+        position: fixed;
+        background: #000;
+        opacity: 0.2;
+        z-index: 9;
+      }
+    }
+  }
+}

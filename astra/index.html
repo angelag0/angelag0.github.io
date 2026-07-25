@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="ext-resource-dependency" content="assets/slides/slide1.jpg" data-resource-id="slide1" />
+<meta name="ext-resource-dependency" content="assets/slides/slide2.jpg" data-resource-id="slide2" />
+<meta name="ext-resource-dependency" content="assets/slides/slide3.jpg" data-resource-id="slide3" />
+<meta name="ext-resource-dependency" content="assets/slides/slide4.jpg" data-resource-id="slide4" />
+<meta name="ext-resource-dependency" content="assets/slides/slide5.jpg" data-resource-id="slide5" />
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="tg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#8E2DE2"/>
+        <stop offset="1" stop-color="#0156A2"/>
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" rx="22" fill="url(#tg)"/>
+    <text x="50" y="62" font-family="Roboto, Arial, sans-serif" font-size="34" font-weight="700" fill="#fff" text-anchor="middle" letter-spacing="1">AS</text>
+  </svg>
+</template>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="ds/tokens/fonts.css">
+  <link rel="stylesheet" href="ds/tokens/colors.css">
+  <link rel="stylesheet" href="ds/tokens/typography.css">
+  <link rel="stylesheet" href="ds/tokens/spacing.css">
+  <link rel="stylesheet" href="ds/tokens/base.css">
+  <link rel="stylesheet" href="ds/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { font-family: "Noto Sans TC", var(--font-body); color: var(--gray-900); background: #fff; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    .grad { background: var(--astra-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    @keyframes astraBlob { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(36px,-28px) scale(1.08); } 100% { transform: translate(0,0) scale(1); } }
+    @keyframes caretBlink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+  </style>
+</helmet>
+
+<div style="background: #fff;">
+
+  <!-- ============ NAV ============ -->
+  <header style="position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--gray-100);">
+    <nav style="max-width: 1180px; margin: 0 auto; height: 72px; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
+      <a href="https://astra.taiwantrade.com/" style="display: flex; align-items: center;">
+        <img src="assets/logo.png" alt="taiwantrade ASTRA" style="height: 58px; width: auto; display: block;">
+      </a>
+      <div style="display: flex; align-items: center; gap: 4px; font-size: 15px; color: var(--gray-700);">
+        <a href="#pain" style="padding: 8px 14px; border-radius: var(--radius-8); white-space: nowrap; text-decoration: none; transition: color .3s, background .3s;" style-hover="color: var(--blue-700); background: var(--blue-100); text-decoration: none;">ASTRA懂你</a>
+        <a href="#features" style="padding: 8px 14px; border-radius: var(--radius-8); white-space: nowrap; text-decoration: none; transition: color .3s, background .3s;" style-hover="color: var(--blue-700); background: var(--blue-100); text-decoration: none;">解決方案</a>
+        <a href="#value" style="padding: 8px 14px; border-radius: var(--radius-8); white-space: nowrap; text-decoration: none; transition: color .3s, background .3s;" style-hover="color: var(--blue-700); background: var(--blue-100); text-decoration: none;">適用對象</a>
+        <a href="#tech" style="padding: 8px 14px; border-radius: var(--radius-8); white-space: nowrap; text-decoration: none; transition: color .3s, background .3s;" style-hover="color: var(--blue-700); background: var(--blue-100); text-decoration: none;">技術優勢</a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="position: relative;">
+          <button onClick="{{ toggleLang }}" style="display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 14px; border: 1px solid var(--gray-300); border-radius: var(--radius-8); background: #fff; color: var(--gray-900); font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; transition: all .3s;" style-hover="border-color: var(--blue-600); color: var(--blue-600);">
+            <img src="assets/icons/language.svg" alt="" style="width: 18px; height: 18px;">
+            <span>正體中文</span>
+            <span style="width: 0; height: 0; margin-left: 2px; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid currentColor;"></span>
+          </button>
+          <sc-if value="{{ langOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position: absolute; top: calc(100% + 8px); right: 0; min-width: 168px; background: #fff; border: 1px solid var(--gray-300); border-radius: var(--radius-8); box-shadow: 0 0 8px rgba(0,0,0,0.16); padding: 6px; z-index: 60; display: flex; flex-direction: column; gap: 2px;">
+              <button onClick="{{ closeLang }}" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; padding: 9px 12px; border: none; background: var(--blue-100); color: var(--blue-700); border-radius: var(--radius-8); font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; text-align: left;">正體中文<img src="assets/icons/check_circle.svg" alt="" style="width: 16px; height: 16px;"></button>
+              <button onClick="{{ closeLang }}" style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 12px; border: none; background: #fff; color: var(--gray-900); border-radius: var(--radius-8); font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; text-align: left; transition: background .3s;" style-hover="background: var(--gray-bg);">English</button>
+            </div>
+          </sc-if>
+        </div>
+        <a href="https://astra.taiwantrade.com/" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 5px 16px; border-radius: var(--radius-8); border: 1px solid transparent; background: var(--gray-900); color: #fff; font-size: 14px; font-weight: 500; line-height: 1.6; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .3s, color .3s;" style-hover="background: var(--blue-600); color: #fff;">立即體驗 ASTRA</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section id="top" style="position: relative; overflow: hidden; min-height: 84vh; display: flex; flex-direction: column; justify-content: center; background: radial-gradient(1100px 520px at 50% -140px, rgba(112,136,204,0.30), rgba(112,136,204,0) 68%), radial-gradient(760px 420px at 20% -80px, rgba(166,148,224,0.26), rgba(166,148,224,0) 62%), radial-gradient(820px 440px at 82% -60px, rgba(142,227,255,0.26), rgba(142,227,255,0) 62%), #ffffff;">
+    <div style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;">
+      <img src="assets/mpbg1.svg" alt="" style="position: absolute; top: -320px; left: 6%; width: 640px; opacity: 0.10; filter: blur(44px); animation: astraBlob 200s ease-in-out infinite;">
+      <img src="assets/mpbg2.svg" alt="" style="position: absolute; top: -260px; right: 8%; width: 620px; opacity: 0.10; filter: blur(44px); animation: astraBlob 200s ease-in-out infinite reverse;">
+    </div>
+    <div style="position: relative; z-index: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 96px 32px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+      <h1 style="margin: 0; min-height: 1.12em; font-size: 60px; line-height: 1.12; font-weight: 900; letter-spacing: -0.01em; color: var(--gray-900); max-width: 900px; text-wrap: balance;"><span class="grad" ref="{{ heroTextRef }}">找台灣好物？問 ASTRA 就對了</span><span aria-hidden="true" ref="{{ caretRef }}" style="display: inline-block; width: 5px; height: 0.82em; margin-left: 8px; vertical-align: -0.02em; background: var(--astra-gradient); border-radius: 2px; animation: caretBlink 1.05s steps(1) infinite;"></span></h1>
+      <p style="margin: 20px 0 0; font-size: 28px; line-height: 1.35; font-weight: 700; color: var(--gray-900); max-width: none; white-space: nowrap;">24 小時在線的 AI 跨國貿易顧問，為你精準媒合全台供應商。</p>
+      <div style="margin-top: 64px; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+        <a href="https://astra.taiwantrade.com/" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 24px; border-radius: var(--radius-8); border: 1px solid transparent; background: var(--gray-900); color: #fff; font-size: 16px; font-weight: 500; line-height: 1.6; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .3s, color .3s;" style-hover="background: var(--blue-600); color: #fff;">立即體驗 ASTRA</a>
+        <a href="#how" style="display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 24px; border-radius: var(--radius-8); border: 1px solid var(--gray-300); background: #fff; color: var(--gray-900); font-size: 16px; font-weight: 500; text-decoration: none; transition: all .3s;" style-hover="border-color: var(--blue-600); color: var(--blue-700); background: var(--blue-100); text-decoration: none;">看它怎麼運作</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MONEY SHOT (high-contrast key visual) ============ -->
+  <section id="how" style="position: relative; background: var(--gray-bg); border-top: 1px solid var(--gray-100); scroll-margin-top: 80px;">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 80px 32px 88px;">
+      <div style="text-align: center; max-width: 760px; margin: 0 auto 40px;">
+        <h2 style="margin: 0; font-size: 38px; line-height: 1.2; font-weight: 900; letter-spacing: -0.01em; color: var(--gray-900);">自然對話，<span class="grad">讓 AI 顧問為你精準定位</span></h2>
+        <p style="{{ capStyle }}">{{ capText }}</p>
+      </div>
+
+      <!-- ============ SLIDER ============ -->
+      <div ref="{{ sliderRef }}" style="position: relative; max-width: 1200px; margin: 0 auto;">
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <button onClick="{{ prev }}" aria-label="上一張" style="flex: 0 0 auto; width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid var(--blue-600); background: #fff; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background .3s, border-color .3s, box-shadow .3s; -webkit-tap-highlight-color: transparent;" style-hover="background: var(--blue-100); border-color: var(--blue-700); box-shadow: 0 0 16px rgba(1,86,162,0.22);">
+            <img src="assets/icons/arrow.svg" alt="上一張" style="width: 20px; height: 20px; transform: rotate(-90deg); filter: brightness(0) saturate(100%) invert(24%) sepia(86%) saturate(1812%) hue-rotate(190deg) brightness(94%) contrast(101%);">
+          </button>
+          <div style="flex: 1; min-width: 0; position: relative; background: #fff; border: 1px solid var(--gray-300); border-radius: var(--radius-16); box-shadow: 0 0 28px rgba(0,0,0,0.10); overflow: hidden;">
+            <div style="display: flex; transition: {{ trackTransition }}; transform: {{ trackTransform }};">
+              <sc-for list="{{ slides }}" as="slide">
+                <div role="img" aria-label="{{ slide.alt }}" style="{{ slide.style }}"></div>
+              </sc-for>
+            </div>
+          </div>
+          <button onClick="{{ next }}" aria-label="下一張" style="flex: 0 0 auto; width: 50px; height: 50px; border-radius: 50%; border: 1.5px solid var(--blue-600); background: #fff; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background .3s, border-color .3s, box-shadow .3s; -webkit-tap-highlight-color: transparent;" style-hover="background: var(--blue-100); border-color: var(--blue-700); box-shadow: 0 0 16px rgba(1,86,162,0.22);">
+            <img src="assets/icons/arrow.svg" alt="下一張" style="width: 20px; height: 20px; transform: rotate(90deg); filter: brightness(0) saturate(100%) invert(24%) sepia(86%) saturate(1812%) hue-rotate(190deg) brightness(94%) contrast(101%);">
+          </button>
+        </div>
+        <div style="margin-top: 22px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <sc-for list="{{ dots }}" as="dot" hint-placeholder-count="5">
+            <button onClick="{{ dot.onClick }}" aria-label="切換投影片" style="height: 8px; padding: 0; border: none; cursor: pointer; border-radius: var(--radius-pill); transition: width .35s ease, background .35s ease; width: {{ dot.w }}; background: {{ dot.bg }};"></button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="margin-top: 18px; text-align: center; font-size: 12px; color: var(--gray-500);">＊此為 ASTRA 實際操作截圖。</div>
+    </div>
+  </section>
+
+  <!-- ============ PAIN POINTS ============ -->
+  <section id="pain" style="background: #fff;">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 88px 32px;">
+      <div style="text-align: center; max-width: 680px; margin: 0 auto;">
+        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 19px; font-weight: 700; letter-spacing: 0.04em; color: var(--blue-600);"><span style="width: 9px; height: 9px; border-radius: 50%; background: var(--astra-gradient);"></span>ASTRA懂你</span>
+        <h2 style="margin: 14px 0 0; font-size: 38px; line-height: 1.2; font-weight: 900; letter-spacing: -0.01em; color: var(--gray-900);"><span class="grad">找到對的供應商</span>，不該花好幾天</h2>
+        <p style="margin: 16px 0 0; font-size: 18px; line-height: 1.7; color: var(--gray-700);">跨境採購，多半卡在這三道老關卡。</p>
+      </div>
+      <div style="margin-top: 44px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+        <div style="background: var(--gray-bg); border-radius: var(--radius-16); padding: 28px;">
+          <div style="display: inline-flex; align-items: center; gap: 12px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--astra-gradient);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.02em;">01</span><span style="font-size: 15px; font-weight: 700; color: var(--blue-600); letter-spacing: 0.06em;">痛點</span></div>
+          <h3 style="margin: 16px 0 0; font-size: 20px; font-weight: 700; color: var(--gray-900);">關鍵字搜不到</h3>
+          <p style="margin: 10px 0 0; font-size: 15px; line-height: 1.7; color: var(--gray-700);">同一個零件，各國叫法不同。用字一有落差，最適合的供應商就被埋沒。</p>
+        </div>
+        <div style="background: var(--gray-bg); border-radius: var(--radius-16); padding: 28px;">
+          <div style="display: inline-flex; align-items: center; gap: 12px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--astra-gradient);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.02em;">02</span><span style="font-size: 15px; font-weight: 700; color: var(--blue-600); letter-spacing: 0.06em;">痛點</span></div>
+          <h3 style="margin: 16px 0 0; font-size: 20px; font-weight: 700; color: var(--gray-900);">規格比對費時</h3>
+          <p style="margin: 10px 0 0; font-size: 15px; line-height: 1.7; color: var(--gray-700);">工業規格、ISO／CE 認證、客製需求，逐頁查、人工比，動輒耗上數天。</p>
+        </div>
+        <div style="background: var(--gray-bg); border-radius: var(--radius-16); padding: 28px;">
+          <div style="display: inline-flex; align-items: center; gap: 12px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--astra-gradient);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.02em;">03</span><span style="font-size: 15px; font-weight: 700; color: var(--blue-600); letter-spacing: 0.06em;">痛點</span></div>
+          <h3 style="margin: 16px 0 0; font-size: 20px; font-weight: 700; color: var(--gray-900);">詢價流程冗長</h3>
+          <p style="margin: 10px 0 0; font-size: 15px; line-height: 1.7; color: var(--gray-700);">填一張結構化詢價單（RFQ）曠日廢時，拖長交期，商機也跟著流失。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section id="features" style="background: var(--gray-bg);">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 88px 32px 32px; text-align: center;">
+      <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 19px; font-weight: 700; letter-spacing: 0.04em; color: var(--blue-600);"><span style="width: 9px; height: 9px; border-radius: 50%; background: var(--astra-gradient);"></span>解決方案</span>
+      <h2 style="margin: 14px 0 0; font-size: 40px; line-height: 1.18; font-weight: 900; letter-spacing: -0.01em; color: var(--gray-900);"><span class="grad">一場對話</span>，搞定採購</h2>
+      <p style="margin: 16px auto 0; font-size: 18px; line-height: 1.7; color: var(--gray-700); max-width: 560px;">不必開一堆網頁、不必比規格。把需求說出來，剩下交給 ASTRA。</p>
+    </div>
+
+    <!-- FEATURE 1 -->
+    <div style="max-width: 1180px; margin: 0 auto; padding: 36px 32px; display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 56px; align-items: center;">
+      <div>
+        <div style="display: inline-flex; align-items: center; gap: 12px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--astra-gradient);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.02em;">01</span><span style="font-size: 15px; font-weight: 700; color: var(--blue-600); letter-spacing: 0.06em;">語意搜尋</span></div>
+        <h3 style="margin: 16px 0 0; font-size: 30px; line-height: 1.25; font-weight: 900; color: var(--gray-900);">像聊天般自然</h3>
+        <p style="margin: 14px 0 0; font-size: 17px; line-height: 1.75; color: var(--gray-700);">不用精確型號。只需用日常商務語言：「我想找適用於BMW轎車的懸吊系統三角架，要有ISO:9001認證」 ASTRA 就拆解成結構化需求，依契合度排出最適結果。</p>
+        <ul style="margin: 22px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px;">
+          <li style="display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--gray-900);"><img src="assets/icons/check_circle.svg" alt="" style="width: 20px; height: 20px;">讀懂複雜商務長句</li>
+          <li style="display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--gray-900);"><img src="assets/icons/check_circle.svg" alt="" style="width: 20px; height: 20px;">標示契合度與符合理由</li>
+        </ul>
+      </div>
+      <!-- @media-slot feature-1 -->
+      <div style="position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-16); border: 1px solid var(--gray-300); background: var(--gray-bg); overflow: hidden; box-shadow: var(--shadow-card);">
+        <video ref="{{ vid1Ref }}" src="assets/videos/feature-semantic.mp4" loop muted playsInline preload="metadata" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;"></video>
+      </div>
+    </div>
+
+    <!-- FEATURE 2 -->
+    <div style="max-width: 1180px; margin: 0 auto; padding: 36px 32px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 56px; align-items: center;">
+      <!-- @media-slot feature-2 -->
+      <div style="position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--radius-16); border: 1px solid var(--gray-300); background: var(--gray-bg); overflow: hidden; box-shadow: var(--shadow-card);">
+        <video ref="{{ vid2Ref }}" src="https://gv.videocdn.alibaba.com/icbu_gv_atlas_up/video_target/gv9d-d2fde267-a1ab2d16-9c2cf7d3-6e9f/trans/aidc/wqgwfc-h264-hd.mp4" loop muted playsInline preload="metadata" crossorigin="anonymous" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;"></video>
+      </div>
+      <div>
+        <div style="display: inline-flex; align-items: center; gap: 12px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--astra-gradient);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.02em;">02</span><span style="font-size: 15px; font-weight: 700; color: var(--blue-600); letter-spacing: 0.06em;">智慧推薦</span></div>
+        <h3 style="margin: 16px 0 0; font-size: 30px; line-height: 1.25; font-weight: 900; color: var(--gray-900);">邊聊，邊挖出你真正的需求</h3>
+        <p style="margin: 14px 0 0; font-size: 17px; line-height: 1.75; color: var(--gray-700);">還沒定案也沒關係。 ASTRA 可以和你多次來回討論，探索台灣採購趨勢或優勢產業，協助你釐清方向，並主動推薦標章廠商與經濟部輔導的優質企業。</p>
+        <ul style="margin: 22px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px;">
+          <li style="display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--gray-900);"><img src="assets/icons/check_circle.svg" alt="" style="width: 20px; height: 20px;">多輪對話探索潛在需求</li>
+          <li style="display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--gray-900);"><img src="assets/icons/check_circle.svg" alt="" style="width: 20px; height: 20px;">推薦標章與優質廠商</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FEATURE 3 -->
+    <div style="max-width: 1180px; margin: 0 auto; padding: 36px 32px 32px; display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 56px; align-items: center;">
+      <div>
+        <div style="display: inline-flex; align-items: center; gap: 12px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--astra-gradient);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.02em;">03</span><span style="font-size: 15px; font-weight: 700; color: var(--blue-600); letter-spacing: 0.06em;">自動詢價</span></div>
+        <h3 style="margin: 16px 0 0; font-size: 30px; line-height: 1.25; font-weight: 900; color: var(--gray-900);">對話結束，詢價單已寫好</h3>
+        <p style="margin: 14px 0 0; font-size: 17px; line-height: 1.75; color: var(--gray-700);">需求一明確，ASTRA 立刻把對話整理成一份規格嚴謹、條理分明的專業詢價單（RFQ）。你只需確認，就能一鍵發送給媒合廠商。</p>
+        <ul style="margin: 22px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px;">
+          <li style="display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--gray-900);"><img src="assets/icons/check_circle.svg" alt="" style="width: 20px; height: 20px;">對話自動轉成標準化規格</li>
+          <li style="display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--gray-900);"><img src="assets/icons/check_circle.svg" alt="" style="width: 20px; height: 20px;">一鍵發送給媒合廠商</li>
+        </ul>
+      </div>
+      <!-- @media-slot feature-3 -->
+      <div style="position: relative; width: 100%; aspect-ratio: 16 / 10; border-radius: var(--radius-16); border: 2px dashed #9cc4e8; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; box-shadow: var(--shadow-card);">
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:var(--radius-pill);background:var(--astra-gradient);color:#fff;font-size:12px;font-weight:700;letter-spacing:0.04em;">示意動畫</div>
+        <div style="font-size: 16px; font-weight: 700; color: var(--blue-700);">AI Generation → 詢價欄位內容生成</div>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VALUE: TWO AUDIENCES (stacked bands) ============ -->
+  <section id="value" style="background: #fff;">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 88px 32px;">
+      <div style="text-align: center; max-width: 640px; margin: 0 auto 44px;">
+        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 19px; font-weight: 700; letter-spacing: 0.04em; color: var(--blue-600);"><span style="width: 9px; height: 9px; border-radius: 50%; background: var(--astra-gradient);"></span>適用對象</span>
+        <h2 style="margin: 14px 0 0; font-size: 38px; line-height: 1.2; font-weight: 900; letter-spacing: -0.01em; color: var(--gray-900);">讓對的雙方，<span class="grad">在數秒內相遇</span></h2>
+      </div>
+
+      <!-- band: buyers (tinted) -->
+      <div style="background: var(--blue-100); border-radius: var(--radius-16); padding: 40px; display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: center;">
+        <div>
+          <div style="display: inline-flex; align-items: center; gap: 12px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--astra-gradient);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.02em;">01</span><span style="font-size: 15px; font-weight: 700; color: var(--blue-600); letter-spacing: 0.06em;">給國際買主</span></div>
+          <h3 style="margin: 16px 0 0; font-size: 26px; line-height: 1.3; font-weight: 900; color: var(--gray-900);">媒合到詢價一次搞定</h3>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;">
+          <div>
+            <div style="font-size: 17px; font-weight: 700; color: var(--blue-700);">精準媒合</div>
+            <p style="margin: 8px 0 0; font-size: 14px; line-height: 1.7; color: var(--gray-700);">突破字面限制，精準解析複雜採購意圖，對接最契合的供應商。</p>
+          </div>
+          <div>
+            <div style="font-size: 17px; font-weight: 700; color: var(--blue-700);">零秒商務</div>
+            <p style="margin: 8px 0 0; font-size: 14px; line-height: 1.7; color: var(--gray-700);">將原本需要數天查驗、比對供應商的繁瑣流程，縮短至數秒鐘的對話。</p>
+          </div>
+          <div>
+            <div style="font-size: 17px; font-weight: 700; color: var(--blue-700);">無縫溝通</div>
+            <p style="margin: 8px 0 0; font-size: 14px; line-height: 1.7; color: var(--gray-700);">自動生成結構化的詢價單（RFQ），標準化<span style="color: var(--gray-700);">專業採購規格。</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- band: suppliers (white, bordered) -->
+      <div style="margin-top: 24px; background: #fff; border: 1px solid var(--gray-300); border-radius: var(--radius-16); box-shadow: var(--shadow-card); padding: 40px; display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: center;">
+        <div>
+          <div style="display: inline-flex; align-items: center; gap: 12px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--astra-gradient);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.02em;">02</span><span style="font-size: 15px; font-weight: 700; color: var(--blue-600); letter-spacing: 0.06em;">給台灣供應商</span></div>
+          <h3 style="margin: 16px 0 0; font-size: 26px; line-height: 1.3; font-weight: 900; color: var(--gray-900);">讓買主主動找上你</h3>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px;">
+          <div>
+            <div style="font-size: 17px; font-weight: 700; color: var(--blue-700);">精準商機導入</div>
+            <p style="margin: 8px 0 0; font-size: 14px; line-height: 1.7; color: var(--gray-700);">不再收到盲目群發詢價，而是規格明確、採購意向強烈的高品質商機。</p>
+          </div>
+          <div>
+            <div style="font-size: 17px; font-weight: 700; color: var(--blue-700);">提升國際能見度</div>
+            <p style="margin: 8px 0 0; font-size: 14px; line-height: 1.7; color: var(--gray-700);">讓台灣優質中小企業，能憑藉「技術與規格實力」被 AI 精準精選並推薦。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TECH ============ -->
+  <section id="tech" style="background: var(--gray-bg);">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 88px 32px;">
+      <div style="text-align: center; max-width: 640px; margin: 0 auto;">
+        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 19px; font-weight: 700; letter-spacing: 0.04em; color: var(--blue-600);"><span style="width: 9px; height: 9px; border-radius: 50%; background: var(--astra-gradient);"></span>技術優勢</span>
+        <h2 style="margin: 14px 0 0; font-size: 38px; line-height: 1.2; font-weight: 900; letter-spacing: -0.01em; color: var(--gray-900);">為什麼 ASTRA <span class="grad">媒合得更準</span></h2>
+      </div>
+      <div style="margin-top: 48px; max-width: 920px; margin-left: auto; margin-right: auto; border-top: 1px solid var(--gray-300);">
+        <div style="padding: 40px 0; border-bottom: 1px solid var(--gray-300);">
+          <div style="display: inline-flex; align-items: center; gap: 12px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--astra-gradient);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.02em;">01</span><span style="font-size: 15px; font-weight: 700; color: var(--blue-600); letter-spacing: 0.06em;">語意解析</span></div>
+          <h3 style="margin: 16px 0 0; font-size: 24px; line-height: 1.3; font-weight: 900; color: var(--gray-900);">不靠關鍵字，讀懂真實採購意圖</h3>
+          <p style="margin: 12px 0 0; font-size: 16px; line-height: 1.8; color: var(--gray-700); max-width: 760px;">即使是包含情境、用途、規格的複雜長句，ASTRA 也能拆解出核心品項與需求，從龐大資料庫精準命中——這是傳統關鍵字搜尋做不到的事。</p>
+        </div>
+        <div style="padding: 40px 0; border-bottom: 1px solid var(--gray-300);">
+          <div style="display: inline-flex; align-items: center; gap: 12px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--astra-gradient);color:#fff;font-size:14px;font-weight:700;letter-spacing:0.02em;">02</span><span style="font-size: 15px; font-weight: 700; color: var(--blue-600); letter-spacing: 0.06em;">可信來源</span></div>
+          <h3 style="margin: 16px 0 0; font-size: 24px; line-height: 1.3; font-weight: 900; color: var(--gray-900);">每一筆推薦，都來自可信來源</h3>
+          <p style="margin: 12px 0 0; font-size: 16px; line-height: 1.8; color: var(--gray-700); max-width: 760px;">背靠台灣經貿網深耕多年的結構化企業與產品資料庫，推薦來源皆出自台灣經貿網、台灣國際專業展，或經濟部輔導之產業公協會，確保採購來源安全、高品質。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA (simple, accio-style) ============ -->
+  <section style="position: relative; overflow: hidden; background: radial-gradient(1100px 640px at 50% 32%, rgba(112,136,204,0.26), rgba(112,136,204,0) 70%), radial-gradient(720px 460px at 20% 88%, rgba(166,148,224,0.20), rgba(166,148,224,0) 64%), radial-gradient(780px 480px at 82% 90%, rgba(142,227,255,0.20), rgba(142,227,255,0) 64%), linear-gradient(180deg, #ffffff 0%, #f7fafd 100%); border-top: 1px solid var(--gray-100);">
+    <div style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;">
+      <img src="assets/mpbg1.svg" alt="" style="position: absolute; bottom: -300px; left: 50%; transform: translateX(-50%); width: 820px; opacity: 0.16; filter: blur(42px); animation: astraBlob 200s ease-in-out infinite;">
+    </div>
+    <div style="position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 100px 32px 112px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+      
+      <h2 style="margin: 16px 0 0; font-size: 56px; line-height: 1.12; font-weight: 900; letter-spacing: -0.01em; color: var(--gray-900);"><span class="grad">立即體驗 ASTRA</span></h2>
+      <p style="margin: 20px 0 0; font-size: 28px; line-height: 1.35; font-weight: 700; color: var(--gray-900); max-width: none; white-space: nowrap;">想要找台灣的產品還是供應商呢？現在就試試讓 ASTRA 為你分析</p>
+
+      <a href="https://astra.taiwantrade.com/" style="display: block; text-decoration: none; margin-top: 40px; width: 100%; max-width: 680px; background: #fff; border: 1px solid var(--gray-300); border-radius: var(--radius-16); box-shadow: 0 0 28px rgba(0,0,0,0.10); text-align: left; position: relative; cursor: pointer; transition: border-color .3s, box-shadow .3s, transform .3s;" style-hover="border-color: var(--blue-600); box-shadow: 0 0 28px rgba(1,86,162,0.22); transform: translateY(-2px);">
+        <div style="padding: 16px; min-height: 100px;">
+          <div style="font-size: 16px; line-height: 1.5; color: var(--gray-500);">想要尋找什麼？</div>
+        </div>
+        <div style="padding: 4px; display: flex; align-items: center;">
+          <span style="width: 40px; height: 40px; border-radius: 8px 8px 8px 16px; display: inline-flex; align-items: center; justify-content: center; margin-right: auto; transition: background .3s;"><img src="assets/icons/img.svg" alt="" style="width: 24px; height: 24px;"></span>
+          <span style="padding: 8px; margin-left: auto; display: inline-flex; align-items: center;"><span style="width: 28px; height: 28px; border-radius: var(--radius-8); background: var(--gray-900); display: inline-flex; align-items: center; justify-content: center; transition: background .3s;"><img src="assets/icons/arrow.svg" alt="" style="width: 18px; height: 18px; filter: brightness(0) invert(1);"></span></span>
+        </div>
+      </a>
+
+      <div style="margin-top: 32px;">
+        <a href="https://astra.taiwantrade.com/" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 24px; border-radius: var(--radius-8); border: 1px solid transparent; background: var(--gray-900); color: #fff; font-size: 16px; font-weight: 500; line-height: 1.6; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .3s, color .3s;" style-hover="background: var(--blue-600); color: #fff;">看更多案例</a>
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- ============ FOOTER (minimal bar) ============ -->
+  <footer style="background: var(--gray-bg); border-top: 1px solid var(--gray-100);">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 26px 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+      <a href="https://astra.taiwantrade.com/" style="display: flex; align-items: center;"><img src="assets/logo.png" alt="taiwantrade ASTRA" style="height: 58px; width: auto; display: block;"></a>
+      <div style="font-size: 13px; color: var(--gray-500);">© {{ year }} 中華民國對外貿易發展協會（TAITRA）. All rights reserved.</div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  SLIDES = [
+    { src: this._res('slide1', 'assets/slides/slide1.jpg'), alt: '產品搜尋結果', caption: '只要說出需求，分析和比規格交給 ASTRA 就好。' },
+    { src: this._res('slide2', 'assets/slides/slide2.jpg'), alt: '供應商搜尋結果', caption: '專業 AI 顧問，給你最完整的台灣優質供應商報告。' },
+    { src: this._res('slide3', 'assets/slides/slide3.jpg'), alt: '產品比較', caption: '比較功能，幫助你精打細算。' },
+    { src: this._res('slide4', 'assets/slides/slide4.jpg'), alt: '收藏清單', caption: '專屬產品及供應商，一鍵收藏。' },
+    { src: this._res('slide5', 'assets/slides/slide5.jpg'), alt: '聯繫供應商詢價', caption: 'AI 把關，輕鬆詢價，聯繫供應商 0 時差。' },
+  ];
+  _res(id, fallback) {
+    return (typeof window !== 'undefined' && window.__resources && window.__resources[id]) || fallback;
+  }
+  // pos runs over the EXTENDED track: [cloneOfLast, ...real(0..n-1), cloneOfFirst]
+  // real slide r sits at pos r+1. pos 0 and n+1 are clones used for seamless wrap.
+  state = { langOpen: false, pos: 1, anim: true, capText: this.SLIDES[0].caption, capVis: true };
+  heroTextRef = React.createRef();
+  caretRef = React.createRef();
+  sliderRef = React.createRef();
+  vid1Ref = React.createRef();
+  vid2Ref = React.createRef();
+  _capReal = 0;
+  get N() { return this.SLIDES.length; }
+  _realFromPos(pos) {
+    const n = this.N;
+    if (pos === 0) return n - 1;
+    if (pos === n + 1) return 0;
+    return pos - 1;
+  }
+  goReal(r) { this._animateTo(r + 1); }
+  step(delta) { this._animateTo(this.state.pos + delta); }
+  _animateTo(pos) {
+    const n = this.N;
+    this._fadeCaption(this._realFromPos(pos));
+    this.setState({ pos: pos, anim: true });
+    if (this._snapTimer) clearTimeout(this._snapTimer);
+    if (pos === n + 1) {
+      this._snapTimer = setTimeout(() => this.setState({ pos: 1, anim: false }), 580);
+    } else if (pos === 0) {
+      this._snapTimer = setTimeout(() => this.setState({ pos: n, anim: false }), 580);
+    }
+    this._restartAuto();
+  }
+  _fadeCaption(real) {
+    if (real === this._capReal) return;
+    this._capReal = real;
+    this.setState({ capVis: false });
+    if (this._capTimer) clearTimeout(this._capTimer);
+    this._capTimer = setTimeout(() => {
+      this.setState({ capText: this.SLIDES[real].caption, capVis: true });
+    }, 240);
+  }
+  _restartAuto() {
+    if (this._slideTimer) clearInterval(this._slideTimer);
+    this._slideTimer = setInterval(() => {
+      if (this._paused) return;
+      this._animateTo(this.state.pos + 1);
+    }, 5000);
+  }
+  componentDidMount() {
+    const el = this.heroTextRef.current;
+    if (!el) return;
+    const chars = Array.from(el.textContent);
+    let i = 0;
+    el.textContent = '';
+    this._twTimer = setInterval(() => {
+      i++;
+      el.textContent = chars.slice(0, i).join('');
+      if (i >= chars.length) {
+        clearInterval(this._twTimer); this._twTimer = null;
+        const caret = this.caretRef.current;
+        if (caret) { caret.style.transition = 'opacity .4s'; caret.style.opacity = '0'; setTimeout(() => { if (caret) caret.style.display = 'none'; }, 450); }
+      }
+    }, 105);
+    [this.vid1Ref, this.vid2Ref].forEach((r) => {
+      const v = r && r.current;
+      if (!v) return;
+      v.muted = true; v.loop = true; v.playsInline = true;
+      const tryPlay = () => v.play().catch(() => {});
+      tryPlay();
+      v.addEventListener('canplay', tryPlay, { once: true });
+    });
+    this._restartAuto();
+    const sl = this.sliderRef.current;
+    if (sl) {
+      this._onEnter = () => { this._paused = true; };
+      this._onLeave = () => { this._paused = false; };
+      sl.addEventListener('mouseenter', this._onEnter);
+      sl.addEventListener('mouseleave', this._onLeave);
+    }
+  }
+  componentWillUnmount() {
+    if (this._twTimer) clearInterval(this._twTimer);
+    if (this._slideTimer) clearInterval(this._slideTimer);
+    if (this._snapTimer) clearTimeout(this._snapTimer);
+    if (this._capTimer) clearTimeout(this._capTimer);
+  }
+  renderVals() {
+    const n = this.N;
+    const pos = this.state.pos;
+    const real = this._realFromPos(pos);
+    // extended track: clone of last, all real, clone of first
+    const ext = [this.SLIDES[n - 1]].concat(this.SLIDES, [this.SLIDES[0]]).map(s => ({
+      alt: s.alt,
+      style: {
+        flex: '0 0 100%', minWidth: 0, aspectRatio: '1915 / 907',
+        backgroundImage: 'url("' + s.src + '")', backgroundSize: 'cover',
+        backgroundPosition: 'center top', backgroundColor: 'var(--gray-bg)',
+      },
+    }));
+    const dots = this.SLIDES.map((s, i) => ({
+      onClick: () => this.goReal(i),
+      w: i === real ? '30px' : '8px',
+      bg: i === real ? 'var(--astra-blue)' : 'var(--gray-300)',
+    }));
+    const capStyle = {
+      margin: '16px auto 0', minHeight: '1.7em', maxWidth: '640px',
+      fontSize: '19px', lineHeight: 1.7, fontWeight: 700,
+      color: 'var(--blue-700)', textAlign: 'center',
+      opacity: this.state.capVis ? 1 : 0, transition: 'opacity .24s ease',
+    };
+    return {
+      year: new Date().getFullYear(),
+      heroTextRef: this.heroTextRef,
+      caretRef: this.caretRef,
+      langOpen: this.state.langOpen,
+      toggleLang: () => this.setState(s => ({ langOpen: !s.langOpen })),
+      closeLang: () => this.setState({ langOpen: false }),
+      sliderRef: this.sliderRef,
+      vid1Ref: this.vid1Ref,
+      vid2Ref: this.vid2Ref,
+      slides: ext,
+      capText: this.state.capText,
+      capStyle: capStyle,
+      trackTransform: 'translateX(-' + (pos * 100) + '%)',
+      trackTransition: this.state.anim ? 'transform .55s cubic-bezier(.4,0,.2,1)' : 'none',
+      dots: dots,
+      prev: () => this.step(-1),
+      next: () => this.step(1),
+    };
+  }
+}
+</script>
+</body>
+</html>

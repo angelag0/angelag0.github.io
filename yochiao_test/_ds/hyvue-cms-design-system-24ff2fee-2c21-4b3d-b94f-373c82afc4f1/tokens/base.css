@@ -1,0 +1,48 @@
+/* ============================================================
+   HyVue CMS — Base reset / element defaults
+   Lightweight, token-bound. Only applies to bare elements so it
+   never fights component styles.
+   ============================================================ */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  font: var(--type-body);
+  letter-spacing: var(--ls-tight);
+  color: var(--sys-text);
+  background: var(--sys-surface-app);
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  color: var(--sys-text);
+  letter-spacing: var(--ls-med);
+}
+h1 { font: var(--type-h1); }
+h2 { font: var(--type-h2); }
+h3 { font: var(--type-h3); }
+h4 { font: var(--type-h4); }
+
+p { margin: 0; }
+
+a {
+  color: var(--sys-link);
+  text-decoration: none;
+}
+a:hover { color: var(--sys-link-hover); }
+
+button { font-family: inherit; }
+
+::selection {
+  background: var(--ref-opacity-blue-20);
+}

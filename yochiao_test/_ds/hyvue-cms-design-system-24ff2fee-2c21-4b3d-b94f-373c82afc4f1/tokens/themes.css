@@ -1,0 +1,52 @@
+/* ============================================================
+   HyVue CMS — Theme variants
+   The CMS ships four accent themes. Blue is the default (defined
+   in colors.css). Apply a variant by setting a data attribute on
+   <html> or any container:  <html data-theme="green">
+   Only the brand/accent ramp changes; neutrals & status stay put.
+   ============================================================ */
+
+[data-theme="green"] {
+  --sys-primary:        rgb(31, 120, 72);   /* #1F7848 */
+  --sys-primary-mid:    rgb(68, 170, 85);   /* #44AA55 */
+  --sys-primary-tint:   rgb(229, 247, 235); /* #E5F7EB */
+  --sys-secondary:      rgb(51, 165, 156);  /* #33A59C */
+  --sys-secondary-deep: rgb(26, 134, 76);   /* #1A864C */
+  --sys-secondary-teal: rgb(134, 217, 188); /* #86D9BC */
+  --sys-tonal:          rgb(242, 251, 246); /* #F2FBF6 */
+  --sys-link:           rgb(73, 183, 124);
+  --sys-link-hover:     rgb(31, 120, 72);
+  --sys-gradient-a:     rgb(31, 120, 72);
+  --sys-gradient-b:     rgb(51, 165, 156);
+  --sys-gradient-c:     rgb(134, 217, 175);
+}
+
+[data-theme="red"] {
+  --sys-primary:        rgb(108, 30, 30);   /* #6C1E1E */
+  --sys-primary-mid:    rgb(162, 58, 58);   /* #A23A3A */
+  --sys-primary-tint:   rgb(248, 236, 235); /* #F8ECEB */
+  --sys-secondary:      rgb(207, 79, 79);   /* #CF4F4F */
+  --sys-secondary-deep: rgb(108, 30, 30);   /* #6C1E1E */
+  --sys-secondary-teal: rgb(216, 125, 109); /* #D87D6D */
+  --sys-tonal:          rgb(253, 246, 245); /* #FDF6F5 */
+  --sys-link:           rgb(207, 79, 79);
+  --sys-link-hover:     rgb(108, 30, 30);
+  --sys-gradient-a:     rgb(108, 30, 30);
+  --sys-gradient-b:     rgb(207, 79, 79);
+  --sys-gradient-c:     rgb(216, 125, 109);
+}
+
+[data-theme="purple"] {
+  --sys-primary:        rgb(142, 13, 112);  /* #8E0D70 */
+  --sys-primary-mid:    rgb(207, 62, 171);  /* #CF3EAB */
+  --sys-primary-tint:   rgb(248, 235, 246); /* #F8EBF6 */
+  --sys-secondary:      rgb(206, 61, 134);  /* #CE3D86 */
+  --sys-secondary-deep: rgb(145, 26, 118);  /* #911A76 */
+  --sys-secondary-teal: rgb(221, 96, 129);  /* #DD6081 */
+  --sys-tonal:          rgb(255, 242, 250); /* #FFF2FA */
+  --sys-link:           rgb(206, 61, 134);
+  --sys-link-hover:     rgb(142, 13, 112);
+  --sys-gradient-a:     rgb(142, 13, 112);
+  --sys-gradient-b:     rgb(206, 61, 134);
+  --sys-gradient-c:     rgb(221, 96, 129);
+}

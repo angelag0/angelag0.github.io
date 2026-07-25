@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/themes.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/tokens/base.css">
+  <link rel="stylesheet" href="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/styles.css">
+  <script src="_ds/hyvue-cms-design-system-24ff2fee-2c21-4b3d-b94f-373c82afc4f1/_ds_bundle.js"></script>
+</helmet>
+<div style="font-family:var(--font-sans); color:var(--sys-text-strong);">
+
+  <sc-if value="{{ showList }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+        <h1 style="font-size:20px; font-weight:700; margin:0;">案件列表</h1>
+        <button onClick="{{ openCreate }}" style="background:var(--sys-primary); color:#fff; border:none; border-radius:6px; padding:8px 20px; font-size:14px; font-weight:500; cursor:pointer;" style-hover="background:var(--sys-primary-mid);">+ 新增案件</button>
+      </div>
+      <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:12px; color:var(--sys-text-muted);">客戶</label>
+          <input type="text" placeholder="搜尋客戶" value="{{ filterClient }}" onChange="{{ onFilterClient }}" style="padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; width:180px; font-family:inherit;" />
+        </div>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:12px; color:var(--sys-text-muted);">案件狀態</label>
+          <select value="{{ filterStatus }}" onChange="{{ onFilterStatus }}" style="padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; width:160px; font-family:inherit; background:var(--sys-surface-card);">
+            <option value="">全部</option>
+            <sc-for list="{{ stageOptions }}" as="s" hint-placeholder-count="6"><option value="{{ s }}">{{ s }}</option></sc-for>
+          </select>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:12px; color:var(--sys-text-muted);">監測日期</label>
+          <input type="text" placeholder="搜尋日期，如 2026-06" value="{{ filterDate }}" onChange="{{ onFilterDate }}" style="padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; width:180px; font-family:inherit;" />
+        </div>
+      </div>
+
+      <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; overflow:hidden;">
+        <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr style="background:var(--sys-surface-sunken); border-bottom:1px solid var(--sys-border);">
+              <th style="text-align:left; padding:12px 16px; font-size:13px; font-weight:600;">案件編號</th>
+              <th style="text-align:left; padding:12px 16px; font-size:13px; font-weight:600;">案件名稱</th>
+              <th style="text-align:left; padding:12px 16px; font-size:13px; font-weight:600;">客戶</th>
+              <th style="text-align:left; padding:12px 16px; font-size:13px; font-weight:600;">監測日期</th>
+              <th style="text-align:left; padding:12px 16px; font-size:13px; font-weight:600;">案件狀態</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ rows }}" as="row" hint-placeholder-count="6">
+              <tr style="border-bottom:1px solid var(--sys-border);" style-hover="background:var(--sys-surface-sunken);">
+                <td style="padding:12px 16px; font-size:14px; white-space:nowrap;"><a href="#" onClick="{{ row.onOpenDetail }}" style="color:var(--sys-primary); font-weight:600;">{{ row.id }}</a></td>
+                <td style="padding:12px 16px; font-size:14px; white-space:nowrap;">{{ row.name }}</td>
+                <td style="padding:12px 16px; font-size:14px; white-space:nowrap;">{{ row.clientName }}</td>
+                <td style="padding:12px 16px; font-size:14px; font-family:var(--font-num); white-space:nowrap;">{{ row.monitoringDate }}</td>
+                <td style="padding:12px 16px; white-space:nowrap;"><span style="background:{{ row.badgeBg }}; color:{{ row.badgeText }}; font-family:var(--font-num); font-size:12px; font-weight:500; padding:2px 8px; border-radius:4px; white-space:nowrap;">{{ row.status }}</span></td>
+                <td style="padding:12px 16px; text-align:right; white-space:nowrap;">
+                  <button onClick="{{ row.onOpenDetail }}" style="background:none; border:none; color:var(--sys-primary); font-size:13px; font-weight:500; cursor:pointer;">檢視</button>
+                  <button onClick="{{ row.onOpenEdit }}" style="background:none; border:none; color:var(--sys-text-muted); font-size:13px; font-weight:500; cursor:pointer;">編輯</button>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+        </div>
+        <sc-if value="{{ emptyState }}"><div style="padding:48px; text-align:center; color:var(--sys-text-faint); font-size:14px;">尚無資料</div></sc-if>
+        <div style="padding:12px 16px; border-top:1px solid var(--sys-border); font-size:13px; color:var(--sys-text-muted);">共 {{ rowCount }} 筆</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showForm }}">
+    <div style="max-width:720px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px; font-size:13px; color:var(--sys-text-muted);">
+        <a href="#" onClick="{{ backToList }}" style="color:var(--sys-primary);">案件列表</a><span>/</span><span style="color:var(--sys-text-strong); font-weight:600;">{{ formModeLabel }}案件</span>
+      </div>
+      <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+        <div style="display:flex; gap:16px; margin-bottom:16px;">
+          <label style="width:140px; min-width:140px; font-size:13px; font-weight:600; padding-top:9px;">案件名稱 <span style="color:var(--sys-error);">*</span></label>
+          <div style="flex:1;">
+            <input type="text" value="{{ formName }}" onChange="{{ onFormName }}" style="width:100%; padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; font-family:inherit;" />
+            <sc-if value="{{ errName }}"><div style="color:var(--sys-error); font-size:12px; margin-top:4px;">{{ errName }}</div></sc-if>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px; margin-bottom:16px;">
+          <label style="width:140px; min-width:140px; font-size:13px; font-weight:600; padding-top:9px;">客戶 <span style="color:var(--sys-error);">*</span></label>
+          <div style="flex:1;">
+            <select value="{{ formClientId }}" onChange="{{ onFormClientId }}" style="width:100%; padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; font-family:inherit; background:var(--sys-surface-card);">
+              <option value="">請選擇...</option>
+              <sc-for list="{{ clientOptions }}" as="c" hint-placeholder-count="5"><option value="{{ c.value }}">{{ c.label }}</option></sc-for>
+            </select>
+            <sc-if value="{{ errClient }}"><div style="color:var(--sys-error); font-size:12px; margin-top:4px;">{{ errClient }}</div></sc-if>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px; margin-bottom:16px;">
+          <label style="width:140px; min-width:140px; font-size:13px; font-weight:600; padding-top:9px;">監測日期</label>
+          <div style="flex:1;"><input type="text" placeholder="YYYY-MM-DD HH:mm" value="{{ formDate }}" onChange="{{ onFormDate }}" style="width:100%; padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; font-family:inherit;" /></div>
+        </div>
+        <div style="display:flex; gap:16px; margin-bottom:16px;">
+          <label style="width:140px; min-width:140px; font-size:13px; font-weight:600; padding-top:9px;">監測地址</label>
+          <div style="flex:1;"><input type="text" value="{{ formAddress }}" onChange="{{ onFormAddress }}" style="width:100%; padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; font-family:inherit;" /></div>
+        </div>
+        <div style="display:flex; gap:16px; margin-bottom:16px;">
+          <label style="width:140px; min-width:140px; font-size:13px; font-weight:600; padding-top:9px;">現場聯絡人</label>
+          <div style="flex:1;"><input type="text" value="{{ formContact }}" onChange="{{ onFormContact }}" style="width:100%; padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; font-family:inherit;" /></div>
+        </div>
+        <div style="display:flex; gap:16px; margin-bottom:16px;">
+          <label style="width:140px; min-width:140px; font-size:13px; font-weight:600; padding-top:9px;">案件狀態</label>
+          <div style="flex:1;">
+            <select value="{{ formStatus }}" onChange="{{ onFormStatus }}" style="width:100%; padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; font-family:inherit; background:var(--sys-surface-card);">
+              <sc-for list="{{ stageOptions }}" as="s" hint-placeholder-count="6"><option value="{{ s }}">{{ s }}</option></sc-for>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px; margin-bottom:16px;">
+          <label style="width:140px; min-width:140px; font-size:13px; font-weight:600; padding-top:9px;">備註</label>
+          <div style="flex:1;"><textarea value="{{ formNotes }}" onChange="{{ onFormNotes }}" rows="3" style="width:100%; padding:8px 12px; border:1px solid var(--sys-border); border-radius:6px; font-size:14px; font-family:inherit; resize:vertical;"></textarea></div>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:20px; padding-top:20px; border-top:1px solid var(--sys-border);">
+          <button onClick="{{ saveForm }}" style="background:var(--sys-primary); color:#fff; border:none; border-radius:6px; padding:8px 20px; font-size:14px; font-weight:500; cursor:pointer;" style-hover="background:var(--sys-primary-mid);">儲存</button>
+          <button onClick="{{ backToList }}" style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:6px; padding:8px 20px; font-size:14px; font-weight:500; cursor:pointer;" style-hover="background:var(--sys-surface-sunken);">取消</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showDetail }}">
+    <div>
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px; font-size:13px; color:var(--sys-text-muted);">
+        <a href="#" onClick="{{ backToList }}" style="color:var(--sys-primary);">案件列表</a><span>/</span><span style="color:var(--sys-text-strong); font-weight:600;">{{ d_name }}</span>
+      </div>
+
+      <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px; margin-bottom:20px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <h1 style="font-size:20px; font-weight:700; margin:0;">{{ d_name }}</h1>
+            <span style="font-family:var(--font-num); font-size:12px; color:var(--sys-text-muted);">{{ d_id }}</span>
+          </div>
+          <button onClick="{{ editCurrent }}" style="background:var(--sys-surface-card); color:var(--sys-primary); border:1px solid var(--sys-primary); border-radius:6px; padding:6px 16px; font-size:13px; font-weight:500; cursor:pointer;">編輯</button>
+        </div>
+        <div style="font-size:14px; color:var(--sys-text-muted); margin-bottom:24px;">{{ d_clientName }} ・ {{ d_monitoringDate }}</div>
+
+        <div style="display:flex; align-items:flex-start; margin-bottom:20px;">
+          <sc-for list="{{ stageSteps }}" as="st" hint-placeholder-count="6">
+            <div style="display:flex; align-items:flex-start; flex:1;">
+              <div style="display:flex; flex-direction:column; align-items:center; gap:6px; width:76px;">
+                <div style="width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; background:{{ st.circleBg }}; color:{{ st.circleText }}; border:2px solid {{ st.circleBorder }}; box-sizing:border-box;">{{ st.num }}</div>
+                <div style="font-size:12px; color:{{ st.labelColor }}; font-weight:{{ st.labelWeight }}; white-space:nowrap; text-align:center;">{{ st.label }}</div>
+              </div>
+              <sc-if value="{{ st.showLine }}" hint-placeholder-val="{{ true }}"><div style="flex:1; height:2px; background:{{ st.lineColor }}; margin:13px 4px 0;"></div></sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ hasNextStage }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ advanceStage }}" style="background:var(--sys-success); color:#fff; border:none; border-radius:6px; padding:8px 20px; font-size:14px; font-weight:500; cursor:pointer;" style-hover="background:var(--sys-success);">推進至「{{ nextStageLabel }}」</button>
+        </sc-if>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+        <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+          <h2 style="font-size:16px; font-weight:600; margin:0 0 14px;">基本資料</h2>
+          <div style="display:flex; padding:8px 0; border-bottom:1px solid var(--sys-surface-row);"><div style="width:120px; font-size:13px; color:var(--sys-text-muted); font-weight:600;">客戶</div><div style="flex:1; font-size:14px;">{{ d_clientName }}</div></div>
+          <div style="display:flex; padding:8px 0; border-bottom:1px solid var(--sys-surface-row);"><div style="width:120px; font-size:13px; color:var(--sys-text-muted); font-weight:600;">監測日期</div><div style="flex:1; font-size:14px; font-family:var(--font-num);">{{ d_monitoringDate }}</div></div>
+          <div style="display:flex; padding:8px 0; border-bottom:1px solid var(--sys-surface-row);"><div style="width:120px; font-size:13px; color:var(--sys-text-muted); font-weight:600;">監測地址</div><div style="flex:1; font-size:14px;">{{ d_address }}</div></div>
+          <div style="display:flex; padding:8px 0; border-bottom:1px solid var(--sys-surface-row);"><div style="width:120px; font-size:13px; color:var(--sys-text-muted); font-weight:600;">現場聯絡人</div><div style="flex:1; font-size:14px;">{{ d_contactPerson }}</div></div>
+          <div style="display:flex; padding:8px 0; border-bottom:1px solid var(--sys-surface-row);"><div style="width:120px; font-size:13px; color:var(--sys-text-muted); font-weight:600;">建立人員</div><div style="flex:1; font-size:14px;">{{ d_createdBy }}</div></div>
+          <div style="display:flex; padding:8px 0;"><div style="width:120px; font-size:13px; color:var(--sys-text-muted); font-weight:600;">備註</div><div style="flex:1; font-size:14px; color:var(--sys-text-muted);">{{ d_notes }}</div></div>
+        </div>
+
+        <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <h2 style="font-size:16px; font-weight:600; margin:0;">報價單</h2>
+            <a href="#" onClick="{{ goQuotation }}" style="font-size:13px; color:var(--sys-primary); font-weight:500;">{{ quotationLinkLabel }} →</a>
+          </div>
+          <sc-if value="{{ hasQuotation }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span style="font-family:var(--font-num); font-size:13px; color:var(--sys-text-muted);">{{ q_id }}</span>
+              <span style="background:{{ q_badgeBg }}; color:{{ q_badgeText }}; font-family:var(--font-num); font-size:12px; font-weight:500; padding:2px 8px; border-radius:4px;">{{ q_status }}</span>
+            </div>
+            <div style="font-size:24px; font-weight:700; color:var(--sys-text-strong);">{{ q_total }}</div>
+            <div style="font-size:12px; color:var(--sys-text-faint); margin-top:4px;">{{ q_priceType }} ・ {{ q_lineCount }} 項</div>
+          </sc-if>
+          <sc-if value="{{ noQuotation }}"><div style="color:var(--sys-text-faint); font-size:14px;">尚未建立報價單。</div></sc-if>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
+        <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+          <h2 style="font-size:16px; font-weight:600; margin:0 0 10px;">採前作業</h2>
+          <div style="font-size:13px; color:var(--sys-text-muted); margin-bottom:6px;">採前表狀態：<span style="font-weight:600; color:var(--sys-text-strong);">{{ preSheetStatus }}</span></div>
+          <div style="font-size:13px; color:var(--sys-text-muted); margin-bottom:12px;">採樣點規劃：<span style="font-weight:600; color:var(--sys-text-strong);">{{ planItemCount }} 區／共 {{ planPointTotal }} 點</span></div>
+          <a href="#" onClick="{{ goPreSheet }}" style="font-size:13px; color:var(--sys-primary); font-weight:500;">採前表 →</a>
+          <span style="margin:0 6px; color:var(--sys-border);">|</span>
+          <a href="#" onClick="{{ goPlanItems }}" style="font-size:13px; color:var(--sys-primary); font-weight:500;">採樣點規劃 →</a>
+        </div>
+
+        <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+          <h2 style="font-size:16px; font-weight:600; margin:0 0 10px;">現場採樣記錄 <span style="font-size:10px; background:var(--sys-primary); color:#fff; padding:1px 6px; border-radius:4px; font-family:var(--font-num); vertical-align:middle;">MOBILE</span></h2>
+          <div style="font-size:13px; color:var(--sys-text-muted); margin-bottom:12px;">已記錄 <span style="font-weight:600; color:var(--sys-text-strong);">{{ samplingRecordCount }}</span> 筆監測點</div>
+          <a href="#" onClick="{{ goSamplingRecord }}" style="font-size:13px; color:var(--sys-primary); font-weight:500;">查看採樣記錄 →</a>
+        </div>
+
+        <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+          <h2 style="font-size:16px; font-weight:600; margin:0 0 10px;">校正記錄</h2>
+          <div style="font-size:13px; color:var(--sys-text-muted); margin-bottom:6px;">流速校正：<span style="font-weight:600; color:var(--sys-text-strong);">{{ flowCalCount }}</span> 筆<sc-if value="{{ hasFlowCalError }}"><span style="color:var(--sys-error); font-weight:600;"> ・誤差逾5%</span></sc-if></div>
+          <div style="font-size:13px; color:var(--sys-text-muted); margin-bottom:12px;">噪音校正：<span style="font-weight:600; color:var(--sys-text-strong);">{{ noiseCalCount }}</span> 筆<sc-if value="{{ hasNoiseCalError }}"><span style="color:var(--sys-error); font-weight:600;"> ・未達114dBA</span></sc-if></div>
+          <a href="#" onClick="{{ goFlowCal }}" style="font-size:13px; color:var(--sys-primary); font-weight:500;">流速校正 →</a>
+          <span style="margin:0 6px; color:var(--sys-border);">|</span>
+          <a href="#" onClick="{{ goNoiseCal }}" style="font-size:13px; color:var(--sys-primary); font-weight:500;">噪音校正 →</a>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px;">
+        <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+            <h2 style="font-size:16px; font-weight:600; margin:0;">樣品與檢測結果</h2>
+            <a href="#" onClick="{{ goSamples }}" style="font-size:13px; color:var(--sys-primary); font-weight:500;">查看樣品 →</a>
+          </div>
+          <div style="font-size:13px; color:var(--sys-text-muted);">共 <span style="font-weight:600; color:var(--sys-text-strong);">{{ sampleCount }}</span> 件樣品，已完成 <span style="font-weight:600; color:var(--sys-success);">{{ sampleDoneCount }}</span> 件</div>
+        </div>
+
+        <div style="background:var(--sys-surface-card); border:1px solid var(--sys-border); border-radius:8px; padding:20px;">
+          <h2 style="font-size:16px; font-weight:600; margin:0 0 10px;">監測記錄表產出</h2>
+          <sc-if value="{{ hasRecordSheet }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size:13px; color:var(--sys-text-muted); margin-bottom:12px;">產出於 {{ rs_generatedAt }}（{{ rs_generatedBy }}）</div>
+            <a href="#" onClick="{{ goRecordSheet }}" style="font-size:13px; color:var(--sys-primary); font-weight:500;">查看記錄表 →</a>
+          </sc-if>
+          <sc-if value="{{ noRecordSheetReady }}">
+            <div style="font-size:13px; color:var(--sys-text-muted); margin-bottom:12px;">所有樣品皆已完成檢測，可產出監測記錄表。</div>
+            <button onClick="{{ generateRecordSheet }}" style="background:var(--sys-primary); color:#fff; border:none; border-radius:6px; padding:8px 20px; font-size:14px; font-weight:500; cursor:pointer;" style-hover="background:var(--sys-primary-mid);">產出監測記錄表</button>
+          </sc-if>
+          <sc-if value="{{ noRecordSheetNotReady }}">
+            <div style="font-size:13px; color:var(--sys-text-faint);">案件尚未完成，暫無法產出記錄表。</div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { dataMod: null, view: 'list', selectedId: null, filterClient: '', filterStatus: '', filterDate: '', formMode: 'create', formData: {}, formErrors: {} };
+
+  async componentDidMount() {
+    const mod = await import('./entities-data.js');
+    const initial = { dataMod: mod };
+    if (this.props.deepLinkId) { initial.view = 'detail'; initial.selectedId = this.props.deepLinkId; } else { initial.view = 'list'; }
+    this.setState(initial);
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.deepLinkId !== this.props.deepLinkId) {
+      if (this.props.deepLinkId) this.setState({ view: 'detail', selectedId: this.props.deepLinkId });
+      else this.setState({ view: 'list' });
+    }
+  }
+
+  openCreate = () => this.setState({ view: 'form', formMode: 'create', formData: { status: '草稿' }, formErrors: {} });
+  openEdit = (id) => {
+    const mod = this.state.dataMod;
+    const rec = mod.cases.find(c => c.id === id);
+    this.setState({ view: 'form', formMode: 'edit', selectedId: id, formData: Object.assign({}, rec), formErrors: {} });
+  };
+  openDetail = (id) => this.setState({ view: 'detail', selectedId: id });
+  backToList = (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ view: 'list' }); };
+  editCurrent = () => this.openEdit(this.state.selectedId);
+
+  setFilterClient = (e) => this.setState({ filterClient: e.target.value });
+  setFilterStatus = (e) => this.setState({ filterStatus: e.target.value });
+  setFilterDate = (e) => this.setState({ filterDate: e.target.value });
+  setFormField = (field, val) => this.setState({ formData: Object.assign({}, this.state.formData, { [field]: val }) });
+
+  saveForm = () => {
+    const mod = this.state.dataMod;
+    const fd = this.state.formData;
+    const errors = {};
+    if (!fd.name) errors.name = '此欄位為必填';
+    if (!fd.clientId) errors.clientId = '此欄位為必填';
+    if (Object.keys(errors).length) { this.setState({ formErrors: errors }); return; }
+    if (this.state.formMode === 'create') {
+      const newId = mod.nextId('CS', mod.cases);
+      const rec = Object.assign({ id: newId, status: fd.status || '草稿', createdBy: '陳建宏', notes: '' }, fd);
+      mod.cases.push(rec);
+      this.setState({ view: 'detail', selectedId: newId });
+    } else {
+      const idx = mod.cases.findIndex(c => c.id === this.state.selectedId);
+      if (idx >= 0) mod.cases[idx] = Object.assign({}, mod.cases[idx], fd);
+      this.setState({ view: 'detail' });
+    }
+  };
+
+  advanceStage = () => {
+    const mod = this.state.dataMod;
+    const rec = mod.cases.find(c => c.id === this.state.selectedId);
+    const idx = mod.CASE_STAGES.indexOf(rec.status);
+    if (idx >= 0 && idx < mod.CASE_STAGES.length - 1) rec.status = mod.CASE_STAGES[idx + 1];
+    this.forceUpdate();
+  };
+
+  generateRecordSheet = () => {
+    const mod = this.state.dataMod;
+    const caseId = this.state.selectedId;
+    const newId = mod.nextId('RS', mod.recordSheets);
+    mod.recordSheets.push({ id: newId, caseId, generatedAt: '2026-07-07 10:00', generatedBy: '陳建宏', exportedAt: '2026-07-07 10:05' });
+    this.forceUpdate();
+  };
+
+  nav = (key, opts) => (e) => { if (e && e.preventDefault) e.preventDefault(); this.props.onNavigate(key, opts || {}); };
+
+  renderVals() {
+    const mod = this.state.dataMod;
+    if (!mod) return { showList: false, showForm: false, showDetail: false, rows: [], stageOptions: [], clientOptions: [], stageSteps: [] };
+    const { cases, clients, byId, getBadgeColor, BADGE_COLORS, fmtCurrency, getCaseBundle, CASE_STAGES } = mod;
+
+    let list = cases.slice();
+    if (this.state.filterClient) {
+      const q = this.state.filterClient.toLowerCase();
+      list = list.filter(c => { const cl = byId(clients, c.clientId); return (cl ? cl.name : '').toLowerCase().includes(q); });
+    }
+    if (this.state.filterStatus) list = list.filter(c => c.status === this.state.filterStatus);
+    if (this.state.filterDate) { const q = this.state.filterDate.toLowerCase(); list = list.filter(c => c.monitoringDate.toLowerCase().includes(q)); }
+
+    const rows = list.map(c => {
+      const cl = byId(clients, c.clientId);
+      const color = getBadgeColor(c.status);
+      return {
+        id: c.id, name: c.name, clientName: cl ? cl.name : '—', monitoringDate: c.monitoringDate, status: c.status,
+        badgeBg: BADGE_COLORS[color].bg, badgeText: BADGE_COLORS[color].text,
+        onOpenDetail: (e) => { if (e && e.preventDefault) e.preventDefault(); this.openDetail(c.id); },
+        onOpenEdit: (e) => { if (e && e.preventDefault) e.preventDefault(); this.openEdit(c.id); },
+      };
+    });
+
+    const fd = this.state.formData || {};
+    const clientOptions = clients.map(c => ({ value: c.id, label: c.name }));
+    const stageOptions = CASE_STAGES;
+
+    let detailVals = {};
+    const rec = cases.find(c => c.id === this.state.selectedId);
+    if (rec) {
+      const bundle = getCaseBundle(rec.id);
+      const currentIdx = CASE_STAGES.indexOf(rec.status);
+      const stageSteps = CASE_STAGES.map((stage, i) => {
+        const current = i === currentIdx, future = i > currentIdx;
+        return {
+          num: i + 1, label: stage,
+          circleBg: future ? '#fff' : 'var(--sys-primary)', circleText: future ? 'var(--sys-text-faint)' : '#fff', circleBorder: future ? 'var(--sys-border)' : 'var(--sys-primary)',
+          labelColor: future ? 'var(--sys-text-faint)' : 'var(--sys-text-strong)', labelWeight: current ? 700 : 600,
+          showLine: i < CASE_STAGES.length - 1, lineColor: i < currentIdx ? 'var(--sys-primary)' : 'var(--sys-border)',
+        };
+      });
+      const hasNextStage = currentIdx >= 0 && currentIdx < CASE_STAGES.length - 1;
+
+      const q = bundle.quotation;
+      const qColor = q ? getBadgeColor(q.status) : null;
+      const flowErr = bundle.flowCalibrations.some(f => f.errorOver5Pct);
+      const noiseErr = bundle.noiseCalibrations.some(n => !n.calibratedTo114);
+      const sampleDone = bundle.samples.filter(s => s.status === '已完成').length;
+      const caseFinishedEnough = ['已完成', '已結案'].includes(rec.status);
+
+      detailVals = {
+        d_id: rec.id, d_name: rec.name, d_clientName: bundle.client ? bundle.client.name : '—', d_monitoringDate: rec.monitoringDate,
+        d_address: rec.address || '—', d_contactPerson: rec.contactPerson || '—', d_createdBy: rec.createdBy || '—', d_notes: rec.notes || '—',
+        stageSteps, hasNextStage, nextStageLabel: hasNextStage ? CASE_STAGES[currentIdx + 1] : '', advanceStage: this.advanceStage,
+        hasQuotation: !!q, noQuotation: !q,
+        q_id: q ? q.id : '', q_status: q ? q.status : '', q_badgeBg: q ? BADGE_COLORS[qColor].bg : '', q_badgeText: q ? BADGE_COLORS[qColor].text : '',
+        q_total: q ? fmtCurrency(q.totalAmount) : '', q_priceType: q ? q.priceTypeCode : '', q_lineCount: q ? q.lineItems.length : 0,
+        quotationLinkLabel: q ? '查看報價單' : '前往建立',
+        goQuotation: this.nav('quotation', q ? { deepLinkId: q.id } : { filterCaseId: rec.id }),
+        preSheetStatus: bundle.preSamplingSheet ? bundle.preSamplingSheet.status : '尚未建立',
+        planItemCount: bundle.planItems.length, planPointTotal: bundle.planItems.reduce((s, p) => s + (p.pointCount || 0), 0),
+        goPreSheet: this.nav('preSamplingSheet', { filterCaseId: rec.id }),
+        goPlanItems: this.nav('samplingPlanItem', { filterCaseId: rec.id }),
+        samplingRecordCount: bundle.samplingRecords.length,
+        goSamplingRecord: this.nav('samplingRecord', { filterCaseId: rec.id }),
+        flowCalCount: bundle.flowCalibrations.length, hasFlowCalError: flowErr,
+        noiseCalCount: bundle.noiseCalibrations.length, hasNoiseCalError: noiseErr,
+        goFlowCal: this.nav('flowCalibrationRecord', { filterCaseId: rec.id }),
+        goNoiseCal: this.nav('noiseCalibrationRecord', { filterCaseId: rec.id }),
+        sampleCount: bundle.samples.length, sampleDoneCount: sampleDone,
+        goSamples: this.nav('sample', { filterCaseId: rec.id }),
+        hasRecordSheet: !!bundle.recordSheet,
+        rs_generatedAt: bundle.recordSheet ? bundle.recordSheet.generatedAt : '', rs_generatedBy: bundle.recordSheet ? bundle.recordSheet.generatedBy : '',
+        goRecordSheet: bundle.recordSheet ? this.nav('monitoringRecordSheet', { deepLinkId: bundle.recordSheet.id }) : (() => {}),
+        noRecordSheetReady: !bundle.recordSheet && caseFinishedEnough,
+        noRecordSheetNotReady: !bundle.recordSheet && !caseFinishedEnough,
+        generateRecordSheet: this.generateRecordSheet,
+      };
+    }
+
+    return Object.assign({
+      showList: this.state.view === 'list', showForm: this.state.view === 'form', showDetail: this.state.view === 'detail' && !!rec,
+      rows, rowCount: rows.length, emptyState: rows.length === 0,
+      filterClient: this.state.filterClient, filterStatus: this.state.filterStatus, filterDate: this.state.filterDate,
+      onFilterClient: this.setFilterClient, onFilterStatus: this.setFilterStatus, onFilterDate: this.setFilterDate,
+      openCreate: this.openCreate, backToList: this.backToList, editCurrent: this.editCurrent, saveForm: this.saveForm,
+      formModeLabel: this.state.formMode === 'create' ? '新增' : '編輯',
+      formName: fd.name || '', formClientId: fd.clientId || '', formDate: fd.monitoringDate || '', formAddress: fd.address || '', formContact: fd.contactPerson || '', formStatus: fd.status || '草稿', formNotes: fd.notes || '',
+      onFormName: (e) => this.setFormField('name', e.target.value), onFormClientId: (e) => this.setFormField('clientId', e.target.value),
+      onFormDate: (e) => this.setFormField('monitoringDate', e.target.value), onFormAddress: (e) => this.setFormField('address', e.target.value),
+      onFormContact: (e) => this.setFormField('contactPerson', e.target.value), onFormStatus: (e) => this.setFormField('status', e.target.value), onFormNotes: (e) => this.setFormField('notes', e.target.value),
+      errName: (this.state.formErrors || {}).name || '', errClient: (this.state.formErrors || {}).clientId || '',
+      clientOptions, stageOptions,
+    }, detailVals);
+  }
+}
+
+</script>
+</body>
+</html>

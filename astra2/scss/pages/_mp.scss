@@ -1,0 +1,250 @@
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:map';
+@use "../variable" as *; //變數
+@use "../basic/mixin" as *; //mixin
+
+.mainPage {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+
+  @include screen('tablet') {
+    justify-content: flex-start;
+  }
+
+  .outer {
+    width: 100%;
+    max-width: $domWidth;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    @include screen('mobile') {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    & > * {
+      flex-shrink: 0;
+    }
+
+    .moreContent {
+      margin-top: auto;
+      margin-top: 30px;
+      margin-bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+
+      @include screen('mobileMin') {
+        display: none;
+      }
+
+      i {
+        animation: moveUp 2s infinite;
+      }
+
+      @keyframes moveUp {
+        0% {
+          transform: translateY(0);
+        }
+
+        50% {
+          transform: translateY(-30%);
+        }
+
+        100% {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+
+  .mpTitle {
+    margin-top: 8.35vw;
+    font-size: Rem(36);
+    color: $gray900;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.25;
+    margin-bottom: 24px;
+
+    @include screen('mobile') {
+      margin-top: 134px;
+    }
+
+    @include screen('xsMobile') {
+      margin-top: 70px;
+      font-size: Rem(30);
+    }
+  }
+
+  .inputWidthTester {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+    visibility: hidden;
+    display: block;
+    white-space: pre;
+    font-size: Rem(16);
+    padding: 6px 4px;
+    letter-spacing: 0;
+  }
+
+  .allAutoResizeTextarea,
+  .autoResizeInput {
+    color: $brandBlue500;
+    background: color.mix($brandBlue500, #fff, 5);
+    border-radius: 4px;
+    // padding: 0 4px;
+    position: relative;
+    display: inline-block;
+
+    &:has(.input),
+    &:has(input) {
+      // padding: 0 4px;
+      min-height: 26px;
+    }
+
+    .input,
+    input {
+      border: none;
+      background: transparent;
+      color: $brandBlue500;
+      display: inline-block;
+      border: none;
+      padding: 6px 4px;
+      min-height: unset;
+      font-size: Rem(16);
+      caret-color: $brandBlue500;
+
+      &::placeholder {
+        color: color.mix($brandBlue500, #fff, 40%);
+      }
+
+      &:focus {
+        border: none;
+        outline: none;
+      }
+    }
+
+    textarea {
+      min-height: 0 !important;
+      height: auto;
+    }
+  }
+
+  .promptList {
+    margin-top: 16px;
+    margin-bottom: 10vh;
+
+    @include screen('mobile') {
+      margin-bottom: 0;
+    }
+
+    .item button {
+      width: 100%;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      gap: 8px;
+      border-bottom: $gray100 1px solid;
+    }
+
+    .send {
+      flex-shrink: 0;
+
+      img {
+        filter: invert(1);
+        opacity: 0.4;
+      }
+    }
+  }
+
+  .caseStudy {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+    gap: 16px;
+    flex-shrink: 0;
+    padding-bottom: 50px;
+
+    &.b3 {
+      .item {
+        width: itemWidth(16, 3);
+
+        @include screen('mobile') {
+          width: itemWidth(16, 2);
+        }
+
+        @include screen('xsMobile') {
+          width: itemWidth(16, 1);
+        }
+      }
+    }
+
+    &.b2 {
+      .item {
+        width: itemWidth(16, 2);
+
+        @include screen('xsMobile') {
+          width: itemWidth(16, 1);
+        }
+      }
+    }
+
+    .item {
+      width: itemWidth(16, 3);
+      background: #fff;
+      padding: 16px;
+      border-radius: $r16;
+      overflow: hidden;
+      box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.1);
+      border: 1px solid #CCC;
+
+      .title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 5px;
+
+        span {
+          display: block;
+          color: $brandBlue500;
+          font-size: Rem(14);
+          font-weight: 500;
+          padding: 4px 8px;
+          border-radius: $r8;
+          background: $brandBlue100;
+        }
+      }
+
+      .con {
+        font-size: Rem(18);
+        line-height: 1.4;
+        height: 75px;
+        color: $gray900;
+        @include lineClamp(3);
+        margin-bottom: 8px;
+      }
+
+      .pic {
+        border-radius: 16px;
+        overflow: hidden;
+        aspect-ratio: 360/240;
+        border: 1px solid #eee;
+      }
+    }
+  }
+}

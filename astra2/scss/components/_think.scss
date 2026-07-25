@@ -1,0 +1,162 @@
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:map';
+@use "../variable" as *; //變數
+@use "../basic/mixin" as *; //mixin
+
+.thinkBox {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 8;
+
+  &.active {
+    .status {
+      .icon:last-child {
+        transform: scaleY(-1);
+      }
+    }
+
+    .thinkList {
+      display: flex;
+    }
+  }
+
+  .thinkStatus {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    position: relative;
+    flex-wrap: wrap;
+
+    .status {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .thinkList {
+    padding: 8px 2px;
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    flex-grow: 1;
+    overflow-y: auto;
+
+    .item {
+      display: flex;
+      align-items: flex-start;
+      position: relative;
+      padding-left: 32px;
+      font-size: Rem(14);
+      flex-shrink: 0;
+
+      &::before {
+        content: '';
+        flex-shrink: 0;
+        width: 8px;
+        height: 8px;
+        left: 8px;
+        top: 8px;
+        aspect-ratio: 1;
+        display: block;
+        background: $gray500;
+        border-radius: 50%;
+        position: absolute;
+      }
+
+      &::after {
+        content: '';
+        width: 1px;
+        background: $gray500;
+        display: block;
+        left: 11.5px;
+        top: 24px;
+        bottom: 0px;
+        position: absolute;
+      }
+
+      &.active {
+
+        &::before,
+        &::after {
+          background: $gray900;
+        }
+      }
+
+      .content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .title {
+        color: $gray900;
+      }
+
+      .description {
+        color: $gray700;
+
+        p {
+          margin: 0;
+          padding: 0;
+        }
+
+        .picList {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .pic {
+          max-width: 150px;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+      }
+
+      .loading {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .shortLine {
+        width: 30%;
+        min-width: 100px;
+      }
+
+      .longLine {
+        content: '';
+        width: 50%;
+        min-width: 150px;
+        order: 3;
+        display: block;
+      }
+
+      .shortLine,
+      .longLine {
+        border-radius: 4px;
+        height: 20px;
+        line-height: 1;
+        background: #F6F6F6;
+        background: linear-gradient(to right, #e7e7e7 8%, #eeeeee 18%, #e7e7e7 33%);
+        background-size: 200%;
+        animation: placeHolderShimmer 2s infinite;
+      }
+
+      @keyframes placeHolderShimmer {
+        0% {
+          background-position: 100% 0;
+        }
+
+        100% {
+          background-position: -100% 100%;
+        }
+      }
+    }
+  }
+}

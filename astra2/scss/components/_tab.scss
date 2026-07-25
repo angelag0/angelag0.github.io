@@ -1,0 +1,56 @@
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:map';
+@use "../variable" as *; //變數
+@use "../basic/mixin" as *; //mixin
+
+.tabBox {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  // overflow: hidden;
+  flex-grow: 1;
+
+
+  .tabOption {
+    width: 100%;
+    max-width: $domWidth;
+    margin: 0 auto;
+    display: flex;
+    border-bottom: 1px solid $gray300;
+    flex-shrink: 0;
+
+    a,
+    button {
+      padding: 8px 16px;
+      color: $gray700;
+      border-bottom: 2px solid transparent;
+      @include transition(0.3);
+
+      &.active {
+        color: $gray900;
+        font-weight: 500;
+        border-color: $gray900;
+      }
+    }
+  }
+
+  .tabContent {
+    height: 100%;
+    display: none;
+
+    &.active {
+      display: block;
+    }
+  }
+
+  .tabContentBox {
+    flex-grow: 1;
+  }
+
+  .tabContent {
+    height: 100%;
+    // overflow: hidden;
+  }
+}

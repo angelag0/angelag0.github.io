@@ -1,0 +1,30 @@
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:map';
+@use "../variable" as *; //變數
+@use "../basic/mixin" as *; //mixin
+
+.innerPage {
+  .ansBox {
+    &:has(.showMore) {
+      &::before {
+        content: '';
+        position: absolute;
+        z-index: 10;
+        inset: 0;
+        display: block;
+        background: linear-gradient(to top, rgba(255, 255, 255, 1) 5%, rgba(255, 255, 255, 0.5) 100%);
+      }
+    }
+
+    .showMore {
+      font-weight: 500;
+      position: absolute;
+      z-index: 11;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      padding: 9px;
+    }
+  }
+}

@@ -1,0 +1,59 @@
+/* ============================================================
+   taiwantrade ASTRA — Spacing, radius, shadow & motion tokens
+   The product is built on an 8px rhythm with a 24px "comfortable gap"
+   used between major panels (sidebar ↔ canvas, chat ↔ answer). Corners
+   come in three sizes (4 / 8 / 16) and shadows are soft, even, ambient
+   glows — never hard drop shadows.
+   ============================================================ */
+
+:root {
+  /* ---- Spacing scale (8px rhythm + half-steps) ---- */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;     /* primary panel gap ($flexTemplateGap) */
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ---- Radius ---- */
+  --radius-4: 4px;     /* $r4 — chips, small controls, inner elements */
+  --radius-8: 8px;     /* $r8 — buttons, inputs, tiles (default) */
+  --radius-16: 16px;   /* $r16 — cards, chat bubbles, the composer */
+  --radius-pill: 50px; /* select / toggle pills */
+  --radius-full: 9999px;
+
+  /* ---- Borders ---- */
+  --border-width: 1px;
+  --border-width-strong: 2px;
+
+  /* ---- Shadows (soft ambient glows) ---- */
+  --shadow-card: 0 0 8px 0 rgba(0, 0, 0, 0.1);     /* tiles, case-study cards */
+  --shadow-pop: 0 0 8px 0 rgba(0, 0, 0, 0.16);     /* menus, popovers */
+  --shadow-panel: 0 0 15px 0 rgba(0, 0, 0, 0.1);   /* modals, raised panels */
+  --shadow-sidebar: 0 0 15px 0 rgba(0, 0, 0, 0.2); /* sidebar elevation */
+  --shadow-hover: 0 0 10px 0 rgba(0, 0, 0, 0.2);   /* product tile hover */
+  --shadow-tooltip: 5px 5px 5px 0 rgba(0, 0, 0, 0.1);
+
+  /* ---- Layout ---- */
+  --sidebar-width: 280px;
+  --content-max: 800px;       /* $domWidth — composer / canvas column */
+  --topbar-height: 72px;
+  --control-height: 40px;     /* default button / menu-control height */
+  --tap-target: 44px;
+
+  /* ---- Motion ---- */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1); /* @kind other */
+  --duration-fast: 0.15s; /* @kind other */
+  --duration: 0.3s; /* @kind other */ /* the product's universal transition */
+  --transition-base: all 0.3s var(--ease-standard);
+
+  /* Convenience aliases mirroring the source SCSS names */
+  --r4: var(--radius-4);
+  --r8: var(--radius-8);
+  --r16: var(--radius-16);
+}

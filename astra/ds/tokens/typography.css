@@ -1,0 +1,46 @@
+/* ============================================================
+   taiwantrade ASTRA — Typography tokens
+   Roboto is the latin UI face (Noto Sans TC for Traditional Chinese in
+   production). Base size 16px. The product favours regular/medium weights;
+   700 is reserved for product titles, prices and emphasis. Type is set
+   tight (1.2–1.6) and never tiny — 14px is the smallest UI size.
+   ============================================================ */
+
+:root {
+  /* ---- Families ---- */
+  --font-sans: 'Roboto', Arial, 'PingFang TC', '微軟正黑體', 'Microsoft JhengHei',
+    'Apple LiGothic Medium', sans-serif;
+  --font-cjk: 'Noto Sans TC', 'Roboto', 'PingFang TC', '微軟正黑體',
+    'Microsoft JhengHei', sans-serif;
+  --font-body: var(--font-sans);
+
+  /* ---- Weights ---- */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+  --weight-black: 900;
+
+  /* ---- Type scale (px; rem-equivalent at 16px base) ---- */
+  --text-hero: 36px;     /* home headline "Smart Sourcing, Taiwan Quality" */
+  --text-h1: 30px;       /* small-screen hero */
+  --text-h2: 20px;       /* chat / panel titles */
+  --text-h3: 18px;       /* block titles, product blurbs */
+  --text-lg: 16px;       /* base body, inputs */
+  --text-base: 16px;
+  --text-sm: 14px;       /* secondary text, buttons, meta */
+  --text-xs: 13px;       /* fine print, detail rows */
+  --text-2xs: 12px;      /* country / sub-meta */
+  --text-micro: 11px;    /* certification chips */
+
+  /* ---- Line heights ---- */
+  --leading-tight: 1.2;
+  --leading-snug: 1.25;
+  --leading-title: 1.4;
+  --leading-body: 1.6;
+  --leading-relaxed: 1.75;
+
+  /* ---- Letter spacing ---- */
+  --tracking-normal: 0;
+  --tracking-tight: -0.01em;
+}
