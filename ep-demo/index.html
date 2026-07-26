@@ -6,6 +6,20 @@
 <title>EP 企業網新版型 Demo｜V1 × V2</title>
 <style>
 /* ================================================================
+   ★ 本檔＝白底版正式版（2026-07-27 實驗定案轉正，文件同步＝ＵＸ３ 共27）：
+     報價確認新版型須以「白底黑字」設計，故將 V1 四個深帶（關於我們 #1F1F1F／
+     多媒體 #222／數據統計 #1F1F1F／CTA一 #222）一律改為 #F5F5F5 淺灰帶，
+     文字與按鈕回歸白底黑字階；頁尾維持純黑（使用者裁示）。
+     留檔對照：index-gray.html（0725 淺色版＝深帶灰階）／index-dark.html（深色原版）。
+     檔內以下原設計註解未逐條同步，深帶相關描述以本段、下列修訂與實際 CSS 為準。
+   ★ 0727 二修（使用者裁示）：①搜尋鈕去黑底只留放大鏡 ②查看全文／聯繫我們／訂閱
+     三鈕改白底黑字描邊（hover 黑白反轉） ③產品 tab 槽 #000→#F5F5F5、滑塊白→黑
+     ④CTA一改淺色食物照滿版背景（img/cta-1-bg.jpg＝Pexels 7489006）＋白 .72 遮罩。
+   ★ 0727 三修（使用者裁示）：V2 CTA一 面板也上同張照片＋黑 .72 遮罩（白字可讀）；
+     自此 V2 與正式版的差異僅 CTA一 一處，其餘區塊仍照舊。
+   ★ 0727 四修：V2 查看全文／聯繫我們／訂閱 三鈕降非CTA 描邊膠囊（查看全文＝深面板上
+     透明底白描邊、hover 白實心；聯訂兩鈕＝白底黑描邊、hover 黑白反轉，與 V1 二修對稱）。
+   ================================================================
    EP 企業網新版型骨架 Demo（2026-07-24 第二輪總修：軸線貫徹＋圓角定案＋間距行高階梯）
    結構鐵則：兩款皮共用同一份 DOM；class 沿用系統現況
    （webHeader / menu / bigBanner / iStage / pdQueue / newsBlock /
@@ -28,14 +42,15 @@
      所有區塊（含 adv／iStage 兩個 div 區塊）共用同一個 sec-pad＝上下留白全頁一致
    【共】語言規則＝以「中文語系現況頁」為基準照抄（raw-input/…網別主頁-企業網-tw.html）：
      主導覽＝主頁／關於我們⌄／產品⌄／新聞／網上商城／聯繫我們（僅 2、3 項帶 chevron＝現況）
-     工具列順序照 tw 頁 DOM＝正中⌄／查看我的最愛／TWD⌄／｜／Hi, 會員帳號✉34⌄／登出／我的最愛⌄／購物車
+     工具列照舊站現況改寫（0725 共23）＝正體中文⌄／加入我的最愛／TWD⌄／登入／我的最愛⌄／0 商品
+     （無分隔線與數字徽章；愛心與購物車＝15px 線條 SVG）
      搜尋 placeholder＝快速搜尋｜聯繫我們・有問題嗎?讓我們來協助您｜電子郵件更新・對此店家有興趣?｜訂閱
      新聞按鈕＝More（★中文語系現況仍為英文＝照抄；不一致列訪談確認）｜關於我們按鈕＝查看全文
      版權列＝Powered by＋網站導航＋© 2002-2026 中華民國對外貿易發展協會。版權所有，翻印必究
    【共】排版軸線（0724 第二輪定案）：V1＝Xometry T 字（section 層＝標題／副標／區塊級
      CTA／整組內容一律置中；卡片內部文字一律左＝T 字圖證 XO-2/XO-4）；V2＝全左對齊。
-     結構紅線例外（兩版共同）：主導覽整列靠左、表單欄位標籤靠左、頁尾群組＝功能列、
-     大圖輪播文字疊圖上（V1 置中、V2 左下＝皮膚層）。
+     結構紅線例外：表單欄位標籤靠左（兩版）、主導覽整列靠左（V2；V1 0725 改置中＝共23）、
+     頁尾群組＝功能列、大圖輪播文字疊圖上（V1 置中、V2 左下＝皮膚層）。
    【共】骨皮分界（0724 定案）：骨＝HTML 結構（DOM 節點、元件內部資訊順序、控制項存在、
      系統字串文字內容）不可動；皮＝CSS（色彩、字級、圓角、陰影、對齊與位置）＝本次設計
      範圍，依各版軸線統一設計、毋須逐條照現況。唯一骨層議題＝More／查看全文字樣
@@ -135,7 +150,7 @@
      CTA二 → 數據統計（深）→ 聯絡表單 → 頁尾（黑）＝深淺交錯節奏；
      demo 順序＝敘事與節奏安排，非現況頁面順序（現況影音在最頂），列簡報備註
    ・分段＝滿版底色切段：色帶 0 圓角、區塊間不畫線；深色帶分散不相鄰、佔比 25–35%
-     （白底黑字為主視覺＝confirm p4 定案；深底是重音不是基調）
+     （白底黑字為主視覺＝2客戶需求4 定案；深底是重音不是基調）
    ・白白相鄰不加灰、不畫線＝Xometry 圖證（原站白區相鄰全靠「留白 88×2＋置中 H2 大標」
      分段；H2 36px＝字級系統裡最強的新段落訊號）；若客戶要求更明確的分段，
      備選＝淺灰交錯（將犧牲統計帶唯一性與白基調，列訪談備案不主動提）
@@ -353,7 +368,7 @@ body{margin:0;background:#fff;color:#222;
 .v .adv a{display:block}
 .v .adv .ph{aspect-ratio:1540/300}  /* 0725 裁示：高度壓窄（原現況比 1540/385） */
 
-/* ── 產品展示（N01：標題列加 tab＝報價 3.1.2；tab 位置＝標題列（兩版同結構），樣式＝皮膚層；
+/* ── 產品展示（產品tab：標題列加 tab＝報價 3.1.2；tab 位置＝標題列（兩版同結構），樣式＝皮膚層；
       overlay 品名→價格靠左＝現況紅線＋T 字卡內規則） ── */
 .v .pdQueue .section-head{display:flex;align-items:center;gap:28px;margin-bottom:28px;flex-wrap:wrap}
 .v .pdQueue .section-head h2{margin:0}
@@ -373,7 +388,7 @@ body{margin:0;background:#fff;color:#222;
 .v .pdQueue .priceSet{display:flex;gap:6px;align-items:baseline;font-size:var(--fs-body)}
 .v .pdQueue .priceSet .currency{opacity:.85}
 
-/* ── 多媒體輪播（N02：YT Short；無左右箭頭＝現況紅線；一次僅顯示 1 則；來源膠囊保留） ── */
+/* ── 多媒體輪播（多媒short：YT Short；無左右箭頭＝現況紅線；一次僅顯示 1 則；來源膠囊保留） ── */
 .v .iStage{padding:var(--sec-pad) 0}
 .v .iStage .showArea{position:relative}
 .v .iStage .showList{list-style:none;padding:0;margin:0}
@@ -392,7 +407,7 @@ body{margin:0;background:#fff;color:#222;
 .v .iStage .showList li.is-short .ph{aspect-ratio:9/16;height:520px;width:auto;border-radius:0}
 .v .iStage .showList li.is-short .ph::after{color:rgba(255,255,255,.62)}
 
-/* ── 圖文模板新範本（N03：數據統計＋CTA×2＝新設計元件，走各版軸線；
+/* ── 圖文模板新範本（圖文新範本：數據統計＋CTA×2＝新設計元件，走各版軸線；
       間距：eyebrow→標題 16、標題→lead 16、lead→按鈕 28） ── */
 .v .statBlock .stats{list-style:none;padding:0;margin:0;
   display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
@@ -406,7 +421,7 @@ body{margin:0;background:#fff;color:#222;
 .v .ctaB .inner{display:grid;grid-template-columns:.85fr 1.15fr;gap:var(--gap-2col);align-items:center}
 .v .ctaB .ctaImg .ph{aspect-ratio:4/3}
 
-/* ── 聯絡我們表單（N04＝現行公司商機表單全欄位；分組＝填寫表單／聯絡人資訊；
+/* ── 聯絡我們表單（表單元件＝現行公司商機表單全欄位；分組＝填寫表單／聯絡人資訊；
       V1＝上下分組全展開、V2＝分組收合 accordion；電話＝桌機複製／行動直撥 ── */
 .v .contactForm .cfInfo{margin-bottom:28px;max-width:640px}
 .v .contactForm h2{margin:0 0 16px}
@@ -517,39 +532,38 @@ body{margin:0;background:#fff;color:#222;
 /* 標記統一右上、V1＝方圓角 6（HOT 與折扣同款）；原價＝深底輔階（overlay 白字上） */
 .v1 .pdQueue .discountLabel{border-radius:6px}
 .v1 .pdQueue .oldPrice{color:rgba(255,255,255,.62)}
-/* 關於我們＝敘事層 → 滿版出血 #1F1F1F（0 圓角）；整組置中（T 字）；深底唯一按鈕＝反白實心 */
-.v1 .aboutUs{background:#1F1F1F}
-.v1 .aboutUs h2{color:#fff}
+/* 關於我們＝敘事層 → 滿版出血 #F5F5F5 淺灰帶（0 圓角；白底版：報價「白底黑字」要求）；
+   整組置中（T 字）；文字與按鈕回歸白底階＝共用層（h2 黑／內文 #333／黑實心鈕） */
+.v1 .aboutUs{background:#F5F5F5}
 .v1 .aboutUs article{max-width:900px;margin:0 auto;text-align:center}
-.v1 .aboutUs article > div:not(.more){color:rgba(255,255,255,.62);margin:0 auto}
-.v1 .aboutUs .more a{background:#fff;color:#111;border-color:#fff}
+.v1 .aboutUs article > div:not(.more){margin:0 auto}
+/* 白底版二修：查看全文／聯繫我們／訂閱 三鈕改白底黑字（黑描邊沿用按鈕通則 1.5px）；
+   hover 與 More 鈕一致＝黑底白字反轉 */
+.v1 .aboutUs .more a,.v1 .contacts button{background:#fff;color:#111}
+.v1 .aboutUs .more a:hover,.v1 .contacts button:hover{background:#111;color:#fff}
 /* 產品展示：標題與 tab 置中堆疊（T 字）；tab＝深色槽 8＋白實心滑塊 6（Xometry 分段控制器，
    形狀依方圓角系統轉譯）；卡片 hover 與新聞卡一致 */
 .v1 .pdQueue .section-head{flex-direction:column;align-items:center;gap:24px}
-.v1 .pdQueue .tablist{background:#000;border-radius:8px;padding:5px}
-.v1 .pdQueue .tablist button{color:rgba(255,255,255,.62)}
-.v1 .pdQueue .tablist button[aria-selected="true"]{background:#fff;color:#111}
+/* 白底版二修：tab 槽去黑底＝#F5F5F5 淺槽＋黑實心滑塊白字（雙重編碼不變、明暗反轉）；
+   未選字回歸共用層 #777 */
+.v1 .pdQueue .tablist{background:#F5F5F5;border-radius:8px;padding:5px}
+.v1 .pdQueue .tablist button[aria-selected="true"]{background:#111;color:#fff}
 .v1 .pdQueue .pdImg{border-radius:12px}
 .v1 .pdQueue .list > li:hover{transform:translateY(-4px)}
 .v1 .pdQueue .list > li:hover .pdImg{box-shadow:0 4px 16px rgba(0,0,0,.08);border-color:transparent}
-/* 多媒體輪播＝滿版出血 #000 帶（深色不可收窄成圓角卡）；影片框容器寬圓角 16 置帶內；
-   platformTag＝深底白描邊、圓角 6；圓點深底白（裸置：落在色帶上不需容器） */
-.v1 .iStage{background:#222}
+/* 多媒體輪播＝滿版出血 #F5F5F5 淺灰帶（白底版）；影片框容器寬圓角 16 置帶內；
+   platformTag 回歸統一深浮層 rgba(0,0,0,.62)＝共用層（與播放鍵同值，淺底上可讀）；
+   圓點回歸白底雙態 #D4D4D4／#111＝共用層 */
+.v1 .iStage{background:#F5F5F5}
 .v1 .iStage .showList li.is-short .videoBox{background:transparent;min-height:540px;border-radius:0}
-.v1 .iStage .platformTag{background:transparent;border:1px solid rgba(255,255,255,.55)}
-.v1 .iStage .indicator li{background:rgba(255,255,255,.35)}
-.v1 .iStage .indicator li.now{background:#fff}
-/* 圖文模板新範本（新元件＝T 字置中）：統計＝滿版淺灰帶；CTA一＝深色滿版；CTA二＝白底分欄欄內置中 */
-/* 數據統計＝深底（0725 裁示：品牌實力重音、聚光燈式展示；#1F1F1F＝佐證層與敘事同階；
-   新順序保證與其他深帶不相鄰） */
-.v1 .statBlock{background:#1F1F1F}
-.v1 .statBlock .num{color:#fff}
-.v1 .statBlock .lab{color:rgba(255,255,255,.62)}
-.v1 .ctaA{background:#222}
-.v1 .ctaA .eyebrow{color:rgba(255,255,255,.62)}
-.v1 .ctaA h2{color:#fff}
-.v1 .ctaA .lead{color:rgba(255,255,255,.62)}
-.v1 .ctaA .btn{background:#fff;color:#111;border-color:#fff}
+/* 圖文模板新範本（新元件＝T 字置中）：統計＝淺灰帶；CTA一＝淺色照片滿版；CTA二＝白底分欄欄內置中 */
+/* 數據統計＝#F5F5F5 淺灰帶（白底版：原 0725 深底裁示依報價「白底黑字」調整）；
+   文字與按鈕回歸白底階＝共用層（數字黑／標籤 #777／h2 黑／lead #333／黑實心鈕） */
+.v1 .statBlock{background:#F5F5F5}
+/* 白底版二修：CTA一＝淺色食物照滿版背景（img/cta-1-bg.jpg＝Pexels 7489006 包餃子淺色調，
+   貼 ANKO 食品機械情境）＋白 .72 遮罩保黑字可讀 */
+.v1 .ctaA{background:linear-gradient(rgba(255,255,255,.72),rgba(255,255,255,.72)),
+  url(img/cta-1-bg.jpg) center/cover no-repeat}
 .v1 .ctaB .ctaText{text-align:center}
 .v1 .ctaB .lead{margin-left:auto;margin-right:auto}
 /* 聯絡我們表單（新元件＝V1 方案「上下分組全展開」）：說明＋電話置中在上（T 字）、
@@ -564,7 +578,9 @@ body{margin:0;background:#fff;color:#222;
 .v1 .contactSet .webFooter p{justify-content:center}
 /* 搜尋框／鈕與社群鈕轉方圓角（0724 五輪：正圓只留圓點本體，正圓＝V2 專屬語彙） */
 .v1 .topZone .search input[type=text]{border-radius:8px}
-.v1 .topZone .search input[type=button]{border-radius:6px}
+/* 白底版二修：搜尋鈕去黑底、只留放大鏡（鈕透明、icon 轉黑；點擊區不變） */
+.v1 .topZone .search input[type=button]{border-radius:6px;background:transparent}
+.v1 .topZone .search .searchIcon{background:var(--ink)}
 .v1 .contactSet .others li a{border-radius:10px}
 
 /* ================================================================
@@ -593,6 +609,11 @@ body{margin:0;background:#fff;color:#222;
 .v2 .newsBlock > .wrap,.v2 .contacts.alone > .wrap,.v2 .pdQueue > .wrap,
 .v2 .ctaB > .wrap,.v2 .contactForm > .wrap{background:var(--surface)}
 .v2 .aboutUs > .wrap,.v2 .ctaA > .wrap,.v2 .statBlock > .wrap{background:#262626}
+/* 白底版三修（使用者裁示）：V2 CTA一 面板上照片＝同 V1 用圖（cta-1-bg.jpg），
+   黑 .72 遮罩（與 V1 白 .72 對稱＝照片透出程度一致）保白字可讀、面板仍屬深階；
+   圓角 28 由面板 border-radius 自然剪裁背景 */
+.v2 .ctaA > .wrap{background:linear-gradient(rgba(0,0,0,.72),rgba(0,0,0,.72)),
+  url(img/cta-1-bg.jpg) center/cover no-repeat}
 .v2 .statBlock .num{color:#fff}
 .v2 .statBlock .lab{color:rgba(255,255,255,.62)}
 /* 全左軸線：聯繫與訂閱整組靠左（對齊＝皮層，依 V2 軸線）；兩卡 50/50 撐滿面板（0725 裁示） */
@@ -631,8 +652,13 @@ body{margin:0;background:#fff;color:#222;
    聯繫與訂閱：淺灰面板、膠囊按鈕、左對齊堆疊；行動卡＝白卡浮起無框 */
 .v2 .aboutUs h2{color:#fff}
 .v2 .aboutUs article > div:not(.more){color:rgba(255,255,255,.62)}
-.v2 .aboutUs .more a{border-radius:999px;background:#fff;color:#111;border-color:#fff}
-.v2 .contacts.alone button{border-radius:999px}
+/* 白底版四修（使用者裁示）：三鈕降非CTA＝描邊膠囊（次要動作；實心留給真 CTA）。
+   查看全文（深面板上）＝透明底白描邊白字（深底描邊 .55＝共04）；hover 白實心反轉 */
+.v2 .aboutUs .more a{border-radius:999px;background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
+.v2 .aboutUs .more a:hover{background:#fff;color:#111;border-color:#fff}
+/* 聯繫我們／訂閱（淺面板白卡上）＝白底黑字黑描邊；hover 黑白反轉（與 V1 對稱） */
+.v2 .contacts.alone button{border-radius:999px;background:#fff;color:#111}
+.v2 .contacts.alone button:hover{background:#111;color:#fff}
 .v2 .contacts.alone .contactUs,.v2 .contacts.alone .emailUpdate{border:0}
 /* 產品展示：tab＝文字底線式；卡片白底浮起 */
 .v2 .pdQueue .tablist{gap:18px}
@@ -954,7 +980,7 @@ function markup(){
 
   <!-- ══════════ 現有元件・採新設計 ══════════ -->
 
-  <!-- 多媒體輪播 iStage（N02：YT Short 直式；無左右箭頭、一次僅顯示 1 則；區塊無標題 → 標示畫在佔位圖上；
+  <!-- 多媒體輪播 iStage（多媒short：YT Short 直式；無左右箭頭、一次僅顯示 1 則；區塊無標題 → 標示畫在佔位圖上；
        0725 順序裁示：移至聯繫與訂閱之後、產品展示之前） -->
   <div class="iStage">
     <div class="wrap">
@@ -980,7 +1006,7 @@ function markup(){
     </div>
   </div>
 
-  <!-- 產品展示 pdQueue（N01：標題列分頁 tab、區塊名稱可自訂；卡片結構照現況） -->
+  <!-- 產品展示 pdQueue（產品tab：標題列分頁 tab、區塊名稱可自訂；卡片結構照現況） -->
   <section class="pdQueue ckSlide">
     <div class="wrap">
       <div class="section-head">
@@ -1039,7 +1065,7 @@ function markup(){
 
   <!-- ══════════ 全新元件 ══════════ -->
 
-  <!-- 聯絡我們表單 contactForm（N04＝現行公司商機表單全欄位、不精簡；現行表單無 Email 欄＝
+  <!-- 聯絡我們表單 contactForm（表單元件＝現行公司商機表單全欄位、不精簡；現行表單無 Email 欄＝
        與不放 Email 定案一致；V1＝上下分組全展開／V2＝分組收合 accordion（點組標題）；
        必填＝標籤後置半形*；稱謂「Miss-tw」＝現況語系鍵未翻譯，demo 以 Miss 呈現（列開發修正）；
        收件人列＝詳頁情境，首頁省略 -->
