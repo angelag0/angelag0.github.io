@@ -3,205 +3,639 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EP 企業網新版型 Demo｜V1 × V2</title>
+<title>EP 企業網新版型 Demo｜V1黑 × V1白 × V2 × V3</title>
 <style>
 /* ================================================================
-   ★ 本檔＝白底版正式版（2026-07-27 實驗定案轉正，文件同步＝ＵＸ３ 共27）：
-     報價確認新版型須以「白底黑字」設計，故將 V1 四個深帶（關於我們 #1F1F1F／
-     多媒體 #222／數據統計 #1F1F1F／CTA一 #222）一律改為 #F5F5F5 淺灰帶，
-     文字與按鈕回歸白底黑字階；頁尾維持純黑（使用者裁示）。
-     留檔對照：index-gray.html（0725 淺色版＝深帶灰階）／index-dark.html（深色原版）。
-     檔內以下原設計註解未逐條同步，深帶相關描述以本段、下列修訂與實際 CSS 為準。
-   ★ 0727 二修（使用者裁示）：①搜尋鈕去黑底只留放大鏡 ②查看全文／聯繫我們／訂閱
-     三鈕改白底黑字描邊（hover 黑白反轉） ③產品 tab 槽 #000→#F5F5F5、滑塊白→黑
-     ④CTA一改淺色食物照滿版背景（img/cta-1-bg.jpg＝Pexels 7489006）＋白 .72 遮罩。
-   ★ 0727 三修（使用者裁示）：V2 CTA一 面板也上同張照片＋黑 .72 遮罩（白字可讀）；
-     自此 V2 與正式版的差異僅 CTA一 一處，其餘區塊仍照舊。
-   ★ 0727 四修：V2 查看全文／聯繫我們／訂閱 三鈕降非CTA 描邊膠囊（查看全文＝深面板上
-     透明底白描邊、hover 白實心；聯訂兩鈕＝白底黑描邊、hover 黑白反轉，與 V1 二修對稱）。
-   ================================================================
-   EP 企業網新版型骨架 Demo（2026-07-24 第二輪總修：軸線貫徹＋圓角定案＋間距行高階梯）
-   結構鐵則：兩款皮共用同一份 DOM；class 沿用系統現況
-   （webHeader / menu / bigBanner / iStage / pdQueue / newsBlock /
-     aboutUs / contacts / adv / contactSet / webFooter）
-
-   ─────────────────────────────────────────────
-   全頁統一設計規則（含理由；V1／V2 共用者標「共」）
-   ─────────────────────────────────────────────
-   【共】字級只有 5 級＝48／36／27／20／15，等比 ×0.75
-     H1 48＝大圖輪播主標（DOM 為 h4＝現況紅線，視覺層級 H1）、統計數字
-     H2 36＝所有區塊標題｜H3 27＝保留級（本頁無 H3 內容，留給內頁層級；0724 六輪：
-     電話自 H3 降至 H4，不與區塊標題搶量體）
-     H4 20＝卡片標題、品名、副標、CTA 說明、表單組標題、聯絡電話｜內文 15＝其餘一切文字
-     字級只編碼「標題層級」；輔助層次用色階（#333/#777）與字重（400/500/700），不靠縮小字級
-   【共】行高只有 4 檔：標題 1.2／卡片標題 1.45／內文一律 1.7／按鈕與控制項 1.2
-   【共】間距階梯 8／16／28／44／56／88（不用階梯外的任意值）：
-     標籤↔欄位 8｜eyebrow→標題、欄位間 16｜標題→內容、卡文邊距、More 上距 28｜
-     頁尾群組間 44｜兩欄欄距 56｜V1 區塊上下留白 88／V2＝28（0725 二裁：V2 面板自帶
-     邊界與內距 44，區塊留白可壓最緊、緊湊面板流＝與 V1 大留白呼吸成對比軸）
-     所有區塊（含 adv／iStage 兩個 div 區塊）共用同一個 sec-pad＝上下留白全頁一致
-   【共】語言規則＝以「中文語系現況頁」為基準照抄（raw-input/…網別主頁-企業網-tw.html）：
-     主導覽＝主頁／關於我們⌄／產品⌄／新聞／網上商城／聯繫我們（僅 2、3 項帶 chevron＝現況）
-     工具列照舊站現況改寫（0725 共23）＝正體中文⌄／加入我的最愛／TWD⌄／登入／我的最愛⌄／0 商品
-     （無分隔線與數字徽章；愛心與購物車＝15px 線條 SVG）
-     搜尋 placeholder＝快速搜尋｜聯繫我們・有問題嗎?讓我們來協助您｜電子郵件更新・對此店家有興趣?｜訂閱
-     新聞按鈕＝More（★中文語系現況仍為英文＝照抄；不一致列訪談確認）｜關於我們按鈕＝查看全文
-     版權列＝Powered by＋網站導航＋© 2002-2026 中華民國對外貿易發展協會。版權所有，翻印必究
-   【共】排版軸線（0724 第二輪定案）：V1＝Xometry T 字（section 層＝標題／副標／區塊級
-     CTA／整組內容一律置中；卡片內部文字一律左＝T 字圖證 XO-2/XO-4）；V2＝全左對齊。
-     結構紅線例外：表單欄位標籤靠左（兩版）、主導覽整列靠左（V2；V1 0725 改置中＝共23）、
-     頁尾群組＝功能列、大圖輪播文字疊圖上（V1 置中、V2 左下＝皮膚層）。
-   【共】骨皮分界（0724 定案）：骨＝HTML 結構（DOM 節點、元件內部資訊順序、控制項存在、
-     系統字串文字內容）不可動；皮＝CSS（色彩、字級、圓角、陰影、對齊與位置）＝本次設計
-     範圍，依各版軸線統一設計、毋須逐條照現況。唯一骨層議題＝More／查看全文字樣
-     （系統字串），demo 照現況照抄，統一寫法列訪談確認。
-     規則性差異（皮層設計決策，非不一致）：①輪播箭頭兩種定位＝大圖滿寬無外側空間、
-     卡列外側避免壓卡。
-     「與現況呈現不同」的皮層決策（簡報注明）：②頁中聯繫與訂閱＝卡片化（兩張行動卡，
-     DOM 不動）；③V2 產品卡＝品名價格移圖下兩段式（overlay absolute→static＝CSS；
-     V1 保留現況 overlay 疊圖＝兩版可比）；④標記（HOT／折扣）統一置卡片右上、
-     折扣卡價格上下兩行（十一輪定案；現況 HOT 在圖下緣左端外溢＝簡報對照說明）。
-   【共】按鈕統一：內距 12×28、字級 15／600；主要動作＝實心、次要動作＝描邊；
-     按鈕文字不帶箭頭字元（「→」只留給翻頁控制）
-   【共】視覺權重排序（0724 七輪定案，一切線與色的母規則）：內容 ＞ 行動 ＞ 導航。
-     內容（卡片、面板）＝淺邊界線承載；行動（按鈕）＝最深描邊或實心＝頁面焦點；
-     導航控制項（輪播箭頭、圓點、tab）＝輔助角色，不得比內容重——
-     可點性由「位置慣例」承擔（列側箭頭、列下圓點＝通用慣例），不靠深描邊搶權重
-   【共】線條系統（七輪修訂）：
-     粗細 3 檔：1px＝邊界與分隔｜1.5px＝按鈕描邊｜2px＝狀態指示（tab／導覽作用中底線）
-     白底顏色 3 階：分隔、容器邊界、導航控制項邊框＝--line（V1 #E5E5E5／V2 #ECECEC）｜
-     輸入類邊線＝#D4D4D4（比容器線深一階：可輸入的框要更明顯）｜
-     按鈕描邊與狀態線＝#111（1.5px／2px 專用；#111 不再給導航控制項）
-     深底顏色 2 階：分隔＝rgba(255,255,255,.15)｜控制項與按鈕描邊＝rgba(255,255,255,.55)
-     （深底無淺容器線可用——.15 壓在照片上不可辨，故深底控制項統一 .55）
-   【共】文字色階（七輪定案，全站只有這些值）：
-     白底 3 階＝標題 ink-strong｜內文 body(#333/#3A3A3A)｜輔助（說明、hint、placeholder、
-     日期）muted(#777/#8A8A8A)——ink(#111)＝元件色（按鈕底、描邊、導覽字），不是文字階
-     深底 2 階＝主 #FFF｜輔 rgba(255,255,255,.62)（說明、內文、徽章字、版權、佔位標示、
-     未選 tab 字，一個值取代原 #C8C8C8／#9A9A9A／#B5B5B5／#B6BBC2——黑底上對比仍逾 AA）
-   【共】浮層與陰影（七輪補）：浮在照片上的深色浮層（播放鍵、來源膠囊、大圖圓點容器）
-     底色統一 rgba(0,0,0,.62)；陰影 alpha 統一 V1＝.08 單一態、V2＝rest .07／hover .12／
-     深底 hover .3（blur 隨元件尺寸，透明度不隨意）；徽章底統一白 .12。
-     圖上文字保護遮罩兩式（文字越小保護越深）：大圖漸層 .05→.45、產品 overlay 0→.78。
-     佔位圖材質＝#CFCFCF／#EFEFEF／#BDBDBD 漸層三值專用（上線為真實圖片，非 UI 色）；
-     皮膚切換器＝demo 外殼，不列入色彩系統
-   【共】外框公式：所有區塊外框寬＝min(1200px, 視窗−60px) 置中
-     （.wrap{width:calc(100% - 60px);max-width:1200px}）＝任何視窗寬度全區塊左右緣逐 px 對齊
-   【共】圓點指示器（七輪修訂）：填色雙態、不描邊（描邊點＝多一種線用途，砍除）——
-     白底：作用中 #111 實心／非作用 #D4D4D4 實心｜深底：作用中 #FFF／非作用 rgba(255,255,255,.35)
-     （雙態對比夠強且位置慣例明確，無 disabled 誤讀疑慮；V2 作用中另加長度變化）；
-     位置兩種＝現況紅線（大圖在圖內、卡片列在外）；容器規則＝「浮在照片上的控制項需要
-     容器補償」（大圖圓點的深色容器＝與輪播箭頭浮鈕同一條規則），落在白底或色帶上＝裸置
-   【共】頁首＝系統框架：兩版共用白底；V1 hover 字色加深／V2 hover 底線（同 tab 語彙）。
-   【共】頁尾＝單一黑塊（0724 四輪定案：資訊不切零碎，含版權列全部收進一塊黑底；
-     V1 滿版黑帶／V2 黑面板）。內部四層由上而下：行動（聯繫＋訂閱）→ 信任（認證徽章）→
-     識別（社群＋QR）→ 法遵（版權），層間以 1px rgba(255,255,255,.15) 細線分隔
-     （＝現況橘色 5px 滿版分隔線的黑白對應：同一大區塊內部次分層可用線，03 §7.10）。
-     排版＝流式換行（徽章與社群數量隨廠商而變，wrap＝數量少也不空）；
-     對齊依各版軸線（「頁尾＝功能列例外」作廢）：V1 各層置中（QR 隨群組）／V2 各層左起、
-     QR 錨右。層次三層（0724 九輪定案）：行動＋識別（聯繫我們／訂閱兩鈕在社群左側，
-     左→右＝行動→識別→QR 權重遞減）→ 信任（徽章）→ 法遵（版權）；
-     頁尾＝入口層非說明層：行動鈕只顯示按鈕（標題與說明留在 DOM、CSS 隱藏）。
-     行動鈕＝可開關設定（與 A13 啟用開關同概念，屬我方提案列訪談）：V1 示範開啟、
-     V2 示範關閉。內距：黑塊內上 44／層間 16／下 12（九輪修 bug：原 contacts <section>
-     誤吃全站 section 88 內距致頂部空洞，結構移除後歸正）。
-     頁尾深底文字只有 2 階（七輪併階）：標題 #FFF 700｜其餘一切（說明、徽章字、版權、
-     連結）＝rgba(255,255,255,.62) 400——讓白色實心按鈕成為行動層唯一焦點；
-     全頁尾按鈕只有一種（白實心）；徽章字實際上線為圖章
-   【共】佔位圖標示：只放在無其他文字的區塊（橫幅廣告＝紅線禁文字節點、多媒體輪播＝無標題）
-   【共】表單＝公司商機表單**全欄位、不精簡**（報價 3.1.4「inquiry company 商機表單」P0；
-     客戶啟動會議原話「聯絡我們元件會加上表單＞＞此元件為公司商機」＝口頭記錄）：
-     欄位照現行商機表單照抄、分兩組（0724 五輪定案）＝**填寫表單**（主題*／消息*
-     〔快捷選項 Request price 等放在消息框內＝照現行〕／數量＋選取單位／預估購買金額／
-     產品關鍵字／附件〔一般欄位層級，3 檔 10MB〕）→ **聯絡人資訊**（姓名*＋稱謂同行
-     〔RWD 不足才換行〕／公司名稱*／國家*／公司網站＋不存在／商務電話＋分機／手機號碼）
-     → 推薦勾選 → 送出；「收件人」列＝詳頁情境省略；「更改將自動儲存」句移除。
-     ★現行商機表單無 Email 欄（會員制）＝與「不放 Email」定案完全一致。
-     ★現行中文語系稱謂顯示「Miss-tw」＝語系鍵未翻譯（現況 bug），demo 以「Miss」呈現，列開發修正。
-     ★現行有兩頁功能類似、樣式不同的表單（suppliers/detail 詢價 vs contact/supplier），
-     欄位以何者為準＝列訪談「欄位參考確認」；demo 先照 suppliers/detail 版。
-     完整表單較長 → 兩版各示範一種 UI 方案：V1＝上下分組全展開、
-     V2＝分組收合（accordion：點組標題收合／展開該組；上線預設收合＝我方建議，列訪談）。
-     標籤在欄位上方靠左；必填＝標籤後置「*」（半形、黑、700），選填不標示；
-     提示文字放 placeholder；錯誤檢查空間＝欄位下方預留（錯誤態：邊框轉黑視覺 2px＋
-     黑 700 訊息＋前置驚嘆號，demo 不展示）；「紅色*」列訪談確認；
-     送出＝實心主要動作、min-width 200（V1 置中／V2 靠左，滿寬規則作廢：全欄位寬表單
-     滿寬鈕過長，改照現行表單置中鈕邏輯）
-   【共】電話（0724 定案）：號碼即按鈕（描邊＝次要動作，內含通話 icon＋號碼）；
-     尺寸＝號碼 H4 20／700、icon 20、內距 12×24（六輪降階：中等突出即可，不搶標題量體）；
-     顯示＝台灣市話格式 (02)2123-4567、tel: 連結用 E.164（+886221234567）；
-     桌機點按＝複製號碼（含「已複製」回饋）、行動裝置點按＝tel: 直撥；
-     副註「桌機點按複製號碼｜行動裝置點按直撥」；icon＝行動裝置通用通話筒 icon
-   【共】兩欄區塊（CTA樣式二＋聯絡表單）欄比 0.85:1.15、欄距 56；說明欄左、主內容右；
-     兩欄一律垂直置中（CTA二與聯絡表單同一條規則）
-
-   ── V1 Xometry 黑白轉譯（元素自 Xometry 實頁蒸餾；0724 圓角定案＝方圓角系統） ──
-   ・底色＝跟著內容的任務走（★兩版共用同一張對照表＝0725 十二輪定案；固定對照、
-     不為視覺變化隨機交錯；Xometry 圖證 03〈壹〉§1）：
-     看資訊（規格、清單、卡片瀏覽）＝白／淺底（內容與圖片為主角、易讀）｜
-     講故事、展示實力與要求行動（品牌敘事、沉浸媒體、數據實力、轉換 CTA、收尾）＝深底
-     （聚焦＋重音；數據深底＝0725 使用者裁示：品牌實力聚光燈式展示，原淺底論證作廢）。
-     兩版對照（同清單、不同呈現）：關於我們＝敘事（V1 滿版 #1F1F1F／V2 深面板 #111）｜
-     影音＝沉浸（V1 滿版 #000／V2 深容器）｜數據＝實力（V1 滿版 #1F1F1F 佐證層／
-     V2 深面板）｜CTA一＝轉換（V1 #000）｜頁尾＝收尾（滿版黑）｜其餘＝看資訊白／淺面板。
-     深色不相鄰紀律由 0725 區塊順序保證（深帶交錯、中間必隔淺區塊）
-   【共】區塊順序（0725 使用者裁示，兩版共同）：大圖輪播 → 公司新聞 → 橫幅廣告 →
-     關於我們（深）→ 聯繫與訂閱 → 多媒體輪播（深）→ 產品展示 → CTA一（深）→
-     CTA二 → 數據統計（深）→ 聯絡表單 → 頁尾（黑）＝深淺交錯節奏；
-     demo 順序＝敘事與節奏安排，非現況頁面順序（現況影音在最頂），列簡報備註
-   ・分段＝滿版底色切段：色帶 0 圓角、區塊間不畫線；深色帶分散不相鄰、佔比 25–35%
-     （白底黑字為主視覺＝2客戶需求4 定案；深底是重音不是基調）
-   ・白白相鄰不加灰、不畫線＝Xometry 圖證（原站白區相鄰全靠「留白 88×2＋置中 H2 大標」
-     分段；H2 36px＝字級系統裡最強的新段落訊號）；若客戶要求更明確的分段，
-     備選＝淺灰交錯（將犧牲統計帶唯一性與白基調，列訪談備案不主動提）
-   ・統計帶＝#F4F5F7 滿版（全站唯一用途）
-   ・圓角＝方圓角系統，只有 6／8／10／12／16 五個值：
-     6＝小元件（tab 滑塊、platformTag、HOT、徽章數字、認證徽章、輸入框、搜尋鈕）｜
-     8＝按鈕、tab 槽、大圖圓點容器、搜尋框｜10＝輪播箭頭方圓鈕、社群方圓鈕｜
-     12＝內容卡與內容圖｜16＝大型滿寬媒體
-     ★正圓只保留「圓點本體」（幾何本質）——0724 五輪定案：搜尋框與社群鈕的圓形
-     屬 CSS 皮層，V1 一併轉方圓角（正圓＝V2 專屬語彙，兩版徹底分離）
-   ・tab＝深色槽＋白色實心滑塊（Xometry 分段控制器圖證；形狀轉譯為方圓角 8/6 以貫徹系統）
-   ・邊框陰影擇一：白底白卡＝1px 框無影；唯一例外＝浮在照片上的輪播箭頭（框＋影並用）
-   ・hover：卡片上浮 4px＋淡影（邊框退場）；導覽與純文字連結＝字色加深
-   ・深底文字階：標題 #FFF／內文 #C8C8C8／次要 #9A9A9A
-   ・導覽 1px 底線＝sticky 態示意
-
-   ── V2 柔性面板（元素自設計師參考右三欄精煉；圓角＝正圓系統） ──
-   ・分段＝每區塊一塊圓角面板（nomal.jp／PRO STOCKS 圖證）；面板＝內容單元專用；
-     頁首與版權列＝系統框架不面板；一個面板＝一個元件（面板邊界＝元件邊界）
-   ・圓角＝正圓系統：容器 28／卡片 20／卡內圖與欄位 14／行動類與標籤膠囊 999／
-     箭頭與圓徽章正圓——全站曲率一致偏圓
-   ・深色單一 #111＝關於我們、影音、CTA一、數據（內縮容器）＋頁尾（滿版帶＝0725 裁示：
-     對應頁首、系統框架首尾皆滿版，內容單元才用面板）；與 V1 共用同一張底色任務對照表；
-     容器內主要動作反白實心、次要動作與箭頭白描邊
-   ・輪播箭頭位置統一「騎在外框邊線上」（0725 二裁：中心壓面板／媒體邊緣；
-     V1 維持現況兩種定位＝兩案並陳）；聯繫與訂閱兩卡 50/50 撐滿面板
-   ・tab＝文字底線式（PRO STOCKS Latest 底線圖證）；主導覽 hover 同用底線＝語彙不孤立
-   ・陰影＝風格：卡片柔影＋hover 浮起 6px（只給可點卡片）
-   ・卡片標記：HOT 與折扣＝右上膠囊黑標同款（0724 十一輪統一；↗ 鈕已撤場、
-     可點性＝整卡點擊＋hover 浮起；原「↗ 保留 vs 拿掉」訪談項撤銷）
-   ・標記類出處＝現況原始碼：HOT＝labelHot（資料驅動）；折扣＝oldPrice＋discountPrice＋
-     discountLabel（台式折數，現況值如「5」；02 舊記「B06 無折扣標」係樣本無資料，待更新）
-   ・banner 文字左下（nomal hero 圖證）；HOT 位置照現況紅線外溢卡左界（形狀膠囊＝皮膚）
+   ★ 本檔＝四版合一正式 Demo（2026-07-27 晚間裁示打包）：
+     V1黑／V1白＝index-Xometry.html 雙皮（Xometry 蒸餾結構、色值 V1 黑白版白名單，
+       類名改 .vx／.vx1／.vx2）＝取代原 V1；
+     V2＝index-舊.html 柔性面板皮（舊共用骨架，類名改 .vo／.vo2）；
+     V3＝原 index-v3.html 的 V3A 編輯字報（同舊骨架，類名改 .vo3；
+       V3B 緊湊資訊／V3C 聚光展示已依裁示刪除）。
+     四版共用同一份 DOM 產生器（檔尾 script＝舊正式版逐字），骨皮分界鐵則不變。
+     規格書：ClaudeDesign-V1.md（Xometry 雙皮）／ClaudeDesign-V2.md／ClaudeDesign-V3.md。
+     留檔對照：index-舊.html（原 V1白底+V2 正式版）／index-Xometry.html／
+     index-dark.html／index-gray.html。
    ================================================================ */
+/* ================================================================
+   index-Xometry.html｜V1 骨架 × Xometry 蒸餾結構 × V1 黑白版色值（V1黑／V1白 兩皮）
+   ────────────────────────────────────────────────────────────────
+   ■ 本檔定位
+     客戶反饋「V1 版型不像 Xometry」→ 本檔把 index.html 的 DOM 骨架
+     原封不動保留（<body> 起的 markup 產生器與 JS 逐字節照抄，只改皮膚
+     切換器兩顆按鈕文字），只重寫 <style>：結構與節奏改用《Xometry設計蒸餾.md》。
+       ・V1黑　Xometry 蒸餾（#v1，預設）＝忠實 Xometry 節奏：暗帶做重音
+       ・V1白　Xometry 蒸餾（#v2，hash #v2 或 ←→ 鍵切換）＝白底版節奏：
+         暗帶降階為淺灰帶（沿用 0727「白底黑字」裁示的落點）
+
+   ★ 0727 使用者裁示（色值回歸）：蒸餾灰階四階的三個灰（淺灰／深灰／近黑）
+     視覺不佳 → **色值全數回歸 V1 黑白版白名單**，蒸餾則只保留「結構層」：
+       回歸的（顏色）：亮區三階 #000／#333／#777、元件色 #111、線 #E5E5E5／#D4D4D4、
+         淺灰帶 #F5F5F5、下拉 hover 底 #F4F5F7、深帶 #1F1F1F／#222／#111、頁尾 #000、
+         深底文字兩階 #FFF／rgba(255,255,255,.62)、浮層 rgba(0,0,0,.62)、
+         遮罩兩式 大圖 .62／產品 overlay .78。
+       保留的（蒸餾語彙）：亮暗節奏與深帶落點、陰影兩組（卡片以陰影承載、
+         內容卡不畫 1px 全框）、漸層語彙（標題字＋照片壓黑）、藥丸切換器（黑槽白滑塊）、
+         間距 8／16／24／48、字級 38／30／24／20／14、圓角 6／8／9999、
+         sticky 主導覽、兩欄式聯絡我們、CTA二 大卡化、hover 不做黑白反轉。
+
+   ■ 兩皮差異表（未列出的區塊兩皮完全相同）
+     區塊          │ V1黑（忠實 Xometry 節奏）    │ V1白（白底版）
+     工具列        │ #1F1F1F 促銷帶（兩皮相同）   │ 同左
+     關於我們      │ #1F1F1F／白字                │ #F5F5F5／黑字
+     多媒體輪播    │ #222                         │ #F5F5F5
+     CTA 一        │ #222／白字                   │ 照片帶＋白 .72 遮罩／黑字
+     數據統計      │ #1F1F1F／白字                │ #F5F5F5／黑字
+     聯絡我們      │ #FFF 白底（兩皮相同）        │ 同左
+     頁尾          │ #000（兩皮相同，全站唯一純黑）│ 同左
+     黑皮節奏（0727 交錯裁示：聯訂與表單改白，深帶互不相連、逐段亮暗交錯）：
+       深帶四座 #1F1F1F／#222／#222／#1F1F1F ＋ #000 頁尾收尾，其間全為白段。
+     兩皮相同的暗區：產品 tab 藥丸（#111 槽）。
+     依據＝蒸餾 §三 節奏表（暗帶只落在敘事／沉浸／轉換／實力／收尾五個心理節點）
+     ＋深帶落點與色值＝index-dark.html 原值。
+
+   ■ 設計系統
+     色值（★＝0727 裁示回歸 V1 黑白版，蒸餾 §二 四階不再使用）
+        亮區文字三階：標題 #000｜內文 #333｜輔助（eyebrow、摘要、hint、placeholder、
+          統計標籤、telNote）#777
+        元件色 #111：主鈕底、描邊鈕的描邊與字、導覽字（rest #111／hover #000＝
+          V1「hover 字色加深」）、HOT／85折標底、藥丸槽底、放大鏡與 caret、
+          輸入框 focus 描邊、白底圓點作用中、送出鈕底
+        線兩階：容器線與分隔 #E5E5E5｜輸入類邊線與白底非作用圓點 #D4D4D4
+        深底文字只有兩階：主 #FFF｜其餘一切（說明、內文、版權、徽章字、未選 tab 字）
+          rgba(255,255,255,.62)；控制項描邊 .55／深底圓點非作用 .35／
+          分隔 .15／徽章底 .12
+     §二 漸層只剩兩種（語彙照蒸餾、值回歸 V1；原②卡底漸層＝0727 裁示
+        聯訂改白卡〔兩皮〕後全檔退場）：
+        ①標題字漸層＝水平 #000→#777，只給 CTA二標題
+        ③照片壓黑漸層＝大圖 rgba(0,0,0,.62)→transparent／
+          產品 overlay transparent→rgba(0,0,0,.78)（V1 兩式遮罩：文字越小保護越深）
+     §四 字級五層：38/1.21｜30/1.27｜24/1.33｜20/1.4｜14/1.57
+     §五 間距四階 8／16／24／48（區塊上下 48＝比 V1 原本 88 緊，Xometry 密度）
+     §五 圓角三階 6（按鈕・輸入・標記）／8（卡片・圖片・影片・面板）／
+        9999（tab 藥丸・頁尾徽章・大圖圓點容器）；正圓只留圓點本體。16 保留不用。
+     §五 陰影：卡片一律以陰影承載（內容卡不畫 1px 全框，描邊只留給輸入類）；
+        標準一組＋hover 加深一組，hover 另加 translateY(-2px)。
+     §八 容器：外框寬 min(1200px, 視窗−60px) 置中（沿用 V1 外框公式）
+     §九 動態：0.2s／0.3s ease；卡片 hover 浮起；下拉 hover／focus-within 開啟。
+
+   ■ 與 V1 原檔最大的三個差異（＝客戶說「不像」的地方，色值回歸後仍保留）
+     1. hover 一律不做黑白反轉：主鈕加陰影＋opacity .9、描邊鈕加陰影
+        （只有「暗底描邊鈕」保留轉白實心＝蒸餾 §七.9 反白鈕原生語彙）。
+     2. 卡片改陰影承載、不畫 1px 全框；圓角收斂成 6／8／9999 三值。
+     3. 區塊上下留白 48、卡片間 24（原 88／24）＋主導覽改 sticky。
+
+   ■ 紅線：所有文字字串、img/ 相對路徑、data URI（含下列四個遮罩圖示）
+     一字未改；不外連任何資源；DOM 結構與順序完全不動（皮＝純 CSS）。
+   ================================================================ */
+
+/* ── 設計 token（角色制命名；--ico-* 四個 data URI 自原檔逐字照抄） ── */
+:root{
+  /* 亮區文字三階＋元件色（★V1 黑白版白名單） */
+  --ink-strong:#000;   /* 標題階：區塊標題、卡片標題、品名、組標題、統計數字、必填* */
+  --ink:#111;          /* 元件色（非文字階）：鈕底、描邊、導覽字、藥丸槽、標記底、focus */
+  --body:#333;         /* 內文階 */
+  --muted:#777;        /* 輔助階：eyebrow、摘要、hint、placeholder、統計標籤、telNote */
+  --w:#FFF;
+  /* 線兩階 */
+  --line:#E5E5E5;      /* 容器線與分隔（導覽下緣、表單組分隔） */
+  --line-input:#D4D4D4;/* 輸入類邊線（比容器線深一階）＋白底非作用圓點 */
+  /* 帶色與面板 */
+  --band-light:#F5F5F5;/* 淺灰帶：白皮三帶＋兩皮 CTA二 卡底 */
+  --band-promo:#1F1F1F;/* 工具列促銷帶（兩皮相同） */
+  --band-footer:#000;  /* 頁尾＝全站唯一純黑 */
+  --surface:#F4F5F7;   /* 下拉項目 hover 底（V1 值） */
+  /* 深底文字只有兩階＋控制項透明度（V1 深底階） */
+  --on-dark:#FFF;
+  --on-dark-sub:rgba(255,255,255,.62);
+  --on-dark-line:rgba(255,255,255,.55);
+  --dot-dark-off:rgba(255,255,255,.35);
+  --hair-dark:rgba(255,255,255,.15);
+  --chip-dark:rgba(255,255,255,.12);
+  /* 浮層（播放鍵、平台標籤、大圖圓點容器、元件標示）＝V1 統一值 */
+  --scrim:rgba(0,0,0,.62);
+  /* 字級五層（蒸餾 §四） */
+  --fs-h1:38px;--fs-h2:30px;--fs-h3:24px;--fs-h4:20px;--fs-body:14px;
+  --lh-h1:1.21;--lh-h2:1.27;--lh-h3:1.33;--lh-h4:1.4;--lh-body:1.57;--lh-ctrl:1.2;
+  /* 間距四階（蒸餾 §五／§六） */
+  --sp-1:8px;--sp-2:16px;--sp-3:24px;--sp-4:48px;
+  /* 圓角三階（蒸餾 §五） */
+  --r-btn:6px;--r-card:8px;--r-pill:9999px;
+  /* 陰影兩組（蒸餾 §五，值不隨色值回歸變動） */
+  --sh:0 6px 16px rgba(0,0,0,.08), 0 3px 6px -4px rgba(0,0,0,.12), 0 9px 28px 8px rgba(0,0,0,.05);
+  --sh-h:0 12px 28px rgba(0,0,0,.12), 0 6px 12px -4px rgba(0,0,0,.16), 0 12px 32px 8px rgba(0,0,0,.08);
+  /* 容器（蒸餾 §八） */
+  --wrap:1200px;
+  /* 字體（蒸餾 §四：Open Sans 為首，備援本機中文字型；不外連字型檔） */
+  --ff:"Open Sans","Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;
+  /* 遮罩圖示（data URI 逐字照抄原檔；顏色由 currentColor 決定，內含 black 僅為 mask 來源） */
+  --ico-chev:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M14.5 5 7.5 12l7 7' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  --ico-down:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='m3.5 6 4.5 4.5L12.5 6' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  --ico-search:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'><circle cx='8' cy='8' r='5.4' fill='none' stroke='black' stroke-width='1.8'/><path d='m12.2 12.2 3.8 3.8' stroke='black' stroke-width='1.8' stroke-linecap='round'/></svg>");
+  --ico-check:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='m3 8.5 3.5 3.5L13 5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:#fff;color:#222;
-  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",Roboto,sans-serif;
-  -webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
+  font-size:var(--fs-body);line-height:var(--lh-body);-webkit-font-smoothing:antialiased}
 
-/* 皮膚切換器（demo 外殼，非頁面內容，不受頁面規則約束） */
-.skinSwitch{position:sticky;top:0;z-index:80;display:flex;
+/* ── 皮膚切換器＝demo 外殼（不列入色彩系統，樣式自原檔照搬；
+      z-index 110＋line-height 1＝使用者後補修正：與 sticky 導覽並存、高度固定 46px） ── */
+.skinSwitch{position:sticky;top:0;z-index:110;display:flex;
   background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid #e2e2e2}
-.skinSwitch button{font:inherit;font-size:14px;font-weight:600;color:#999;background:none;border:0;cursor:pointer;
+.skinSwitch button{font:inherit;font-size:14px;font-weight:600;line-height:1;color:#999;background:none;border:0;cursor:pointer;
   padding:14px 26px;border-bottom:3px solid transparent;transition:.15s}
 .skinSwitch button:hover{color:#111}
 .skinSwitch button[aria-selected="true"]{color:#111;border-bottom-color:#111}
 .skinSwitch .hint{margin-left:auto;align-self:center;padding-right:20px;font-size:12px;color:#bbb}
 
+/* ================================================================
+   A. 兩皮共用層（亮區三階＋蒸餾 §四／§五 全站規則）
+      白皮＝本層原樣＋淺灰帶；黑皮＝本層＋深帶與深底文字兩階覆寫
+   ================================================================ */
+.vx{background:var(--w);color:var(--body);font-family:var(--ff)}
+.vx[hidden]{display:none}
+/* 外框公式沿用 V1：任何視窗寬度下全區塊左右緣逐 px 對齊（蒸餾 §八 容器 1200） */
+.vx .wrap{width:calc(100% - 60px);max-width:var(--wrap);margin:0 auto;padding:0 30px}
+/* 區塊上下留白 48＝蒸餾 §五 間距第四階（Xometry 密度，比 V1 原本 88 緊） */
+.vx section{padding:var(--sp-4) 0}
+/* 區塊標題 H2 30／1.27（§四）＋標題階 #000；軸線沿用 V1 T 字置中 */
+.vx h2{font-size:var(--fs-h2);line-height:var(--lh-h2);font-weight:700;color:var(--ink-strong);
+  margin:0 0 var(--sp-3);text-align:center}
+
+/* 佔位圖：材質三值＝照片載入前的 fallback（非 UI 色；真實照片由 .phImg 覆蓋） */
+.vx .ph{position:relative;overflow:hidden;display:block;
+  background:linear-gradient(135deg,#cfcfcf,#efefef 42%,#bdbdbd)}
+/* 元件標示＝浮層語彙（V1 統一浮層 rgba(0,0,0,.62) 白字），與平台標籤同一種浮層 */
+.vx .ph::after{content:attr(data-label);position:absolute;left:50%;bottom:var(--sp-2);transform:translateX(-50%);
+  max-width:calc(100% - var(--sp-4));padding:var(--sp-1) var(--sp-2);border-radius:var(--r-btn);
+  background:var(--scrim);color:var(--on-dark);font-size:var(--fs-body);line-height:var(--lh-ctrl);text-align:center}
+.vx .ph:not([data-label])::after{display:none}
+.vx .adv .ph::after{top:50%;bottom:auto;transform:translate(-50%,-50%)}
+.vx .iStage .ph::after{top:var(--sp-2);bottom:auto}
+.vx .ph > img.phImg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+
+/* 輪播箭頭（蒸餾 §七.5／§九）：白底方圓鈕 8＋標準陰影、圖示 #111，卡列在外緣 */
+.vx .arrowLeft,.vx .arrowRight{position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;user-select:none;
+  background:var(--w);color:var(--ink);border-radius:var(--r-card);box-shadow:var(--sh);transition:.2s ease}
+.vx .arrowLeft:hover,.vx .arrowRight:hover{box-shadow:var(--sh-h)}
+.vx .arrowLeft::before,.vx .arrowRight::before{content:"";width:16px;height:16px;background:currentColor;
+  -webkit-mask:var(--ico-chev) center/contain no-repeat;mask:var(--ico-chev) center/contain no-repeat}
+.vx .arrowRight::before{transform:scaleX(-1)}
+.vx .arrowLeft{left:calc(var(--sp-4) * -1)} .vx .arrowRight{right:calc(var(--sp-4) * -1)}
+
+/* 圓點指示器：填色雙態、正圓（§五 圓角唯一例外＝圓點本體）；白底＝#111／#D4D4D4 */
+.vx .indicator{display:flex;justify-content:center;margin-top:var(--sp-3)}
+.vx .indicator ul{display:flex;gap:var(--sp-1);list-style:none;padding:0;margin:0}
+.vx .indicator li{width:8px;height:8px;border-radius:50%;background:var(--line-input);display:block}
+.vx .indicator li.now{background:var(--ink)}
+
+/* ── 按鈕三型（蒸餾 §七.5／§七.9 造型；色值＝V1 元件色 #111）：radius 6、內距 8×24、14／600 ──
+   ★與 V1 最大差異：hover 一律不做黑白反轉，只加陰影／降透明度；
+     唯一保留反轉的是「暗底描邊鈕」轉白實心（Xometry 反白鈕原生語彙） */
+/* ①主要＝#111 實心白字（.btn 同時涵蓋 CTA 兩顆與表單送出鈕） */
+.vx .btn{display:inline-flex;align-items:center;justify-content:center;font:inherit;
+  font-size:var(--fs-body);font-weight:600;line-height:var(--lh-ctrl);cursor:pointer;text-decoration:none;
+  padding:var(--sp-1) var(--sp-3);border:1px solid var(--ink);border-radius:var(--r-btn);
+  background:var(--ink);color:var(--w);transition:.2s ease}
+.vx .btn:hover{box-shadow:var(--sh-h);opacity:.9}
+/* ②次要＝白底＋#111 1px 描邊＋#111 字（More、電話鈕、聯訂卡兩鈕〔0727 裁示：
+   聯訂卡與表單區兩皮皆白〕、白皮的查看全文） */
+.vx .newsBlock .more a,.vx2 .aboutUs .more a,.vx .contactForm .tel,.vx .contacts.alone button{
+  display:inline-flex;align-items:center;justify-content:center;font:inherit;
+  font-size:var(--fs-body);font-weight:600;line-height:var(--lh-ctrl);cursor:pointer;text-decoration:none;
+  padding:var(--sp-1) var(--sp-3);border:1px solid var(--ink);border-radius:var(--r-btn);
+  background:var(--w);color:var(--ink);transition:.2s ease}
+.vx .newsBlock .more a:hover,.vx2 .aboutUs .more a:hover,.vx .contactForm .tel:hover,
+.vx .contacts.alone button:hover{box-shadow:var(--sh-h)}
+/* ③暗底次要＝透明底＋白 .55 描邊＋白字；hover 轉白實心 #111 字 */
+.vx1 .aboutUs .more a,.vx1 .ctaA .btn{
+  display:inline-flex;align-items:center;justify-content:center;font:inherit;
+  font-size:var(--fs-body);font-weight:600;line-height:var(--lh-ctrl);cursor:pointer;text-decoration:none;
+  padding:var(--sp-1) var(--sp-3);border:1px solid var(--on-dark-line);border-radius:var(--r-btn);
+  background:transparent;color:var(--on-dark);transition:.2s ease}
+.vx1 .aboutUs .more a:hover,.vx1 .ctaA .btn:hover{
+  background:var(--w);color:var(--ink);border-color:var(--w);box-shadow:var(--sh-h);opacity:1}
+
+/* 標記類（HOT／85折）＝#111 實心白字 14／700、radius 6、卡片右上（§五 圓角 6 小元件） */
+.vx .newsBlock .labelHot,.vx .pdQueue .discountLabel{position:absolute;top:var(--sp-2);right:var(--sp-2);z-index:3;
+  background:var(--ink);color:var(--w);font-size:var(--fs-body);font-weight:700;line-height:var(--lh-ctrl);
+  border-radius:var(--r-btn);padding:var(--sp-1) var(--sp-2)}
+
+/* ================================================================
+   B. 頁首三段（蒸餾 §七.1 促銷帶／§七.2 sticky 頁首與搜尋）
+   ================================================================ */
+/* ── 工具列＝促銷帶語彙（蒸餾 §七.1 深帶白字，色值＝#1F1F1F；兩皮相同）；
+      深底兩階：連結 rest 輔階 白.62、hover 主階 #FFF＝V1「hover 字色加深」的深底版 ── */
+.vx .epHeader{background:var(--band-promo);color:var(--on-dark);font-size:var(--fs-body);line-height:var(--lh-body)}
+.vx .epHeader .wrap{display:flex;align-items:center;justify-content:flex-end;min-height:48px}
+.vx .epHeader ul{display:flex;align-items:center;gap:var(--sp-2);list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.vx .epHeader a{color:var(--on-dark-sub);text-decoration:none;display:inline-flex;align-items:center;transition:.2s ease}
+.vx .epHeader a:hover{color:var(--on-dark)}
+.vx .epHeader .icoS{width:16px;height:16px;margin-right:var(--sp-1);flex:none}
+.vx .caret::after{content:"";width:16px;height:16px;margin-left:var(--sp-1);background:currentColor;flex:none;
+  -webkit-mask:var(--ico-down) center/contain no-repeat;mask:var(--ico-down) center/contain no-repeat;transition:.2s ease}
+.vx .drop:hover > a.caret::after{transform:rotate(180deg)}
+
+/* ── Logo 主列＋搜尋（蒸餾 §七.2：白底；搜尋框 radius 6、1px #D4D4D4、focus #111、放大鏡 #111） ── */
+.vx .topZone{background:var(--w)}
+.vx .topZone .wrap{display:flex;align-items:center;gap:var(--sp-3);padding-top:var(--sp-2);padding-bottom:var(--sp-2)}
+.vx .webHeader h1{margin:0}
+.vx .webHeader h1 a{display:flex;align-items:center;gap:var(--sp-2);text-decoration:none;color:var(--ink-strong)}
+.vx .webHeader .logoPh{width:56px;height:56px;border-radius:var(--r-card);flex:none;background:var(--w);overflow:hidden}
+.vx .webHeader .logoPh img{width:100%;height:100%;object-fit:contain;display:block}
+.vx .webHeader .firmName{font-size:var(--fs-h4);line-height:var(--lh-h4);font-weight:700}
+.vx .webHeader .firmName small{display:block;font-size:var(--fs-body);line-height:var(--lh-body);
+  font-weight:400;color:var(--muted)}
+.vx .topZone .search{margin-left:auto;display:flex;align-items:center;position:relative;width:300px;max-width:40vw}
+.vx .topZone .search input[type=text]{width:100%;font:inherit;font-size:var(--fs-body);height:48px;
+  border:1px solid var(--line-input);border-radius:var(--r-btn);background:var(--w);color:var(--body);
+  padding:0 var(--sp-4) 0 var(--sp-2);outline:none;transition:.2s ease}
+.vx .topZone .search input[type=text]:focus{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.vx .topZone .search input[type=text]::placeholder{color:var(--muted)}
+/* 搜尋鈕只留放大鏡（鈕透明、點擊區不變＝沿用 V1 現制的 .searchIcon 機制） */
+.vx .topZone .search input[type=button]{position:absolute;right:var(--sp-1);top:var(--sp-1);width:32px;height:32px;
+  border:0;border-radius:var(--r-btn);background:transparent;cursor:pointer;font-size:0}
+.vx .topZone .search .searchIcon{position:absolute;right:var(--sp-2);top:var(--sp-2);width:16px;height:16px;
+  pointer-events:none;background:var(--ink);
+  -webkit-mask:var(--ico-search) center/contain no-repeat;mask:var(--ico-search) center/contain no-repeat}
+
+/* ── 主導覽＝sticky（蒸餾 §七.2 position:sticky）：白底、整列置中、14／600；
+      字 rest #111／hover #000＝V1「hover 字色加深」；下緣 1px #E5E5E5 ── */
+/* top:46px＝停在皮膚切換器（demo 外殼，高 46px）下方，兩條同時常駐 */
+.vx nav.menu{position:sticky;top:46px;z-index:100;background:var(--w);border-bottom:1px solid var(--line)}
+.vx nav.menu .wrap{display:flex;align-items:center;justify-content:center;min-height:56px}
+.vx nav.menu ul{display:flex;list-style:none;margin:0;padding:0}
+.vx nav.menu a{text-decoration:none;color:var(--ink);font-size:var(--fs-body);font-weight:600;
+  line-height:var(--lh-ctrl);padding:var(--sp-2) var(--sp-3);white-space:nowrap;display:inline-block;transition:.2s ease}
+.vx nav.menu a:hover{color:var(--ink-strong)}
+.vx nav.menu li.hasChild > a::after{content:"";display:inline-block;width:16px;height:16px;margin-left:var(--sp-1);
+  background:currentColor;vertical-align:-3px;
+  -webkit-mask:var(--ico-down) center/contain no-repeat;mask:var(--ico-down) center/contain no-repeat;transition:.2s ease}
+.vx nav.menu li.hasChild:hover > a::after{transform:rotate(180deg)}
+
+/* ── 下拉選單（蒸餾 §七.2 巨型下拉收斂：白底面板 radius 8＋標準陰影、無全框；
+      項目 hover 底＝V1 #F4F5F7、選中 #000 700＋勾） ──
+   z-index 110＞sticky 導覽 100：工具列下拉不被導覽帶蓋住 */
+.vx .drop{position:relative}
+.vx ul.dropMenu{position:absolute;top:calc(100% + 8px);left:0;z-index:110;min-width:184px;display:block;
+  list-style:none;margin:0;padding:var(--sp-1);background:var(--w);border-radius:var(--r-card);
+  box-shadow:var(--sh);opacity:0;visibility:hidden;transform:translateY(6px);transition:.2s ease}
+.vx ul.dropMenu::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px}
+.vx .drop:hover > .dropMenu,.vx .drop:focus-within > .dropMenu{opacity:1;visibility:visible;transform:translateY(0)}
+.vx .dropMenu li{display:block}
+.vx nav.menu .dropMenu a,.vx .epHeader .dropMenu a{display:flex;align-items:center;justify-content:space-between;
+  gap:var(--sp-2);padding:var(--sp-1) var(--sp-2);border-radius:var(--r-btn);
+  font-size:var(--fs-body);font-weight:400;line-height:var(--lh-body);color:var(--body);
+  white-space:nowrap;text-decoration:none;transition:.2s ease}
+.vx nav.menu .dropMenu a:hover,.vx .epHeader .dropMenu a:hover{background:var(--surface);color:var(--ink-strong)}
+.vx .dropMenu .on a{color:var(--ink-strong);font-weight:700}
+.vx .dropMenu .ck{width:16px;height:16px;flex:none;background:currentColor;
+  -webkit-mask:var(--ico-check) center/contain no-repeat;mask:var(--ico-check) center/contain no-repeat}
+.vx .epHeader ul.dropMenu{left:auto;right:0}
+
+/* ================================================================
+   C. 大圖輪播（蒸餾 §七.3 Hero：H1 38 置中；漸層③ 大圖遮罩＝V1 rgba(0,0,0,.62)）
+   ================================================================ */
+.vx .bigBanner .showArea{position:relative}
+.vx .bigBanner .slideList{list-style:none;padding:0;margin:0}
+.vx .bigBanner .slideList li{display:none;position:relative}
+.vx .bigBanner .slideList li:first-child{display:block}
+.vx .bigBanner .ph{aspect-ratio:1540/503;border-radius:var(--r-card);box-shadow:var(--sh)}
+.vx .bigBanner .fadeoutMask{position:absolute;inset:0;z-index:1;border-radius:var(--r-card);
+  background:linear-gradient(to top,rgba(0,0,0,.62),transparent)}
+.vx .bigBanner .textCnt{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:0 var(--sp-4)}
+.vx .bigBanner .textCnt h4{font-size:var(--fs-h1);line-height:var(--lh-h1);font-weight:700;
+  color:var(--on-dark);margin:0 0 var(--sp-2)}
+/* 副標＝圖上文字，照 V1 原檔取主階白（不降 .62：疊在照片上需要強度） */
+.vx .bigBanner .textCnt p{font-size:var(--fs-h4);line-height:var(--lh-h4);color:var(--on-dark);margin:0}
+/* 箭頭在圖內兩緣（現況紅線）；圓點容器＝藥丸 9999 置圖下緣內側 24（浮於照片需容器補償） */
+.vx .bigBanner .arrowLeft{left:var(--sp-2)} .vx .bigBanner .arrowRight{right:var(--sp-2)}
+.vx .bigBanner .indicator{position:relative;z-index:3;margin-top:-48px;margin-bottom:var(--sp-3)}
+.vx .bigBanner .indicator ul{background:var(--scrim);border-radius:var(--r-pill);padding:var(--sp-1) var(--sp-2)}
+.vx .bigBanner .indicator li{background:var(--dot-dark-off)}
+.vx .bigBanner .indicator li.now{background:var(--on-dark)}
+
+/* ================================================================
+   D. 公司新聞（蒸餾 §七.12 新聞輪播白卡；§五 卡片 8＋標準陰影、不畫全框）
+   ================================================================ */
+.vx .newsBlock{background:var(--w)}
+.vx .newsBlock .slideArea{position:relative}
+.vx .newsBlock .list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3)}
+/* 白卡：陰影承載、無邊框（§五 陰影表＋§十.7 卡片語彙統一）；hover 浮起 2px＋陰影加深 */
+.vx .newsBlock .list > li{position:relative;background:var(--w);border-radius:var(--r-card);
+  box-shadow:var(--sh);transition:.3s ease}
+.vx .newsBlock .list > li:hover{transform:translateY(-2px);box-shadow:var(--sh-h)}
+.vx .newsBlock .list > li > a{display:block;text-decoration:none;color:inherit}
+.vx .newsBlock .newsImg{display:block;position:relative}
+.vx .newsBlock .newsImg .ph{aspect-ratio:490/325;border-radius:var(--r-card) var(--r-card) 0 0}
+.vx .newsBlock h4{font-size:var(--fs-h4);line-height:var(--lh-h4);font-weight:700;color:var(--ink-strong);
+  margin:var(--sp-3) var(--sp-3) var(--sp-1)}
+.vx .newsBlock p{font-size:var(--fs-body);line-height:var(--lh-body);color:var(--muted);
+  margin:0 var(--sp-3) var(--sp-3)}
+.vx .newsBlock .more{text-align:center;margin-top:var(--sp-3)}
+
+/* ================================================================
+   E. 橫幅廣告（§五 圖片圓角 8＋標準陰影；區塊內禁放文字節點＝標示畫在圖上）
+   ================================================================ */
+.vx .adv{padding:var(--sp-4) 0}
+.vx .adv a{display:block}
+.vx .adv .ph{aspect-ratio:1540/300;border-radius:var(--r-card);box-shadow:var(--sh)}
+
+/* ================================================================
+   F. 關於我們（蒸餾 §三 敘事＝暗帶節點；黑皮 #1F1F1F／白皮 #F5F5F5）
+   ================================================================ */
+.vx .aboutUs article{max-width:900px;margin:0 auto;text-align:center}
+.vx .aboutUs article > div:not(.more){font-size:var(--fs-body);line-height:var(--lh-body);
+  color:var(--body);max-width:820px;margin:0 auto}
+.vx .aboutUs .more{margin-top:var(--sp-3)}
+
+/* ================================================================
+   G. 頁中聯繫與訂閱＝白卡兩張（0727 裁示：兩皮皆白卡、亮暗交錯；
+      原蒸餾 §二 漸層②卡底漸層自此全檔退場，漸層只剩①標題字＋③照片壓黑）
+   ================================================================ */
+.vx .contacts.alone .wrap{display:grid;grid-template-columns:repeat(2,minmax(0,420px));
+  gap:var(--sp-3);justify-content:center}
+.vx .contacts.alone .contactUs,.vx .contacts.alone .emailUpdate{
+  background:var(--w);
+  border-radius:var(--r-card);padding:var(--sp-3);box-shadow:var(--sh);text-align:left}
+/* 卡上文字＝亮區階：em 標題 #000 700／說明 #333 */
+.vx .contacts.alone p{margin:0 0 var(--sp-3);font-size:var(--fs-body);line-height:var(--lh-body);color:var(--body)}
+.vx .contacts.alone em{display:block;font-style:normal;font-size:var(--fs-h3);line-height:var(--lh-h3);
+  font-weight:700;color:var(--ink-strong);margin-bottom:var(--sp-1)}
+
+/* ================================================================
+   H. 多媒體輪播（蒸餾 §七.10 影片區；浮層＝V1 統一 rgba(0,0,0,.62) 白字）
+      黑皮 #222／白皮 #F5F5F5
+   ================================================================ */
+.vx .iStage{padding:var(--sp-4) 0}
+.vx .iStage .showArea{position:relative}
+.vx .iStage .showList{list-style:none;padding:0;margin:0}
+.vx .iStage .showList li{display:none}
+.vx .iStage .showList li.now{display:block}
+.vx .iStage .videoBox{position:relative}
+.vx .iStage .videoBox .ph{aspect-ratio:16/9;border-radius:var(--r-card)}
+.vx .iStage .playBtn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
+  width:76px;height:52px;border-radius:var(--r-btn);background:var(--scrim);
+  display:flex;align-items:center;justify-content:center;pointer-events:none}
+/* 三角形以 border 繪製；margin-left 3px＝三角形視覺重心補償（幾何光學微調，非間距階） */
+.vx .iStage .playBtn::after{content:"";border-left:16px solid #FFF;
+  border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:3px}
+.vx .iStage .platformTag{position:absolute;right:var(--sp-2);bottom:var(--sp-2);z-index:2;
+  background:var(--scrim);color:var(--on-dark);font-size:var(--fs-body);line-height:var(--lh-ctrl);
+  border-radius:var(--r-btn);padding:var(--sp-1) var(--sp-2)}
+/* YT Short：9:16 直式置中（pillarbox 由色帶本身承擔，不另加黑底容器）；
+   置中由 li 承擔、videoBox 縮到影片本身大小＝播放鍵與平台標籤才會貼影片緣 */
+.vx .iStage .showList li.is-short.now{display:flex;align-items:center;justify-content:center;min-height:540px}
+.vx .iStage .showList li.is-short .videoBox{display:inline-block}
+.vx .iStage .showList li.is-short .ph{aspect-ratio:9/16;height:520px;width:auto;border-radius:var(--r-card)}
+
+/* ================================================================
+   I. 產品展示（蒸餾 §七.5 圓丸切換器；色值回歸 index-dark「黑槽白滑塊」＝
+      槽 #111 藥丸無描邊／未選字 白.62／滑塊 #FFF 實心＋#111 字 700（雙重編碼）；
+      overlay＝漸層③ 產品遮罩 V1 值 .78；卡片＝§五 圓角 8＋標準陰影）
+   ================================================================ */
+.vx .pdQueue{background:var(--w)}
+/* 標題與 tab 垂直堆疊置中（沿用 V1 T 字軸線） */
+.vx .pdQueue .section-head{display:flex;flex-direction:column;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)}
+.vx .pdQueue .section-head h2{margin:0}
+.vx .pdQueue .tablist{display:flex;list-style:none;margin:0;gap:var(--sp-1);padding:var(--sp-1);
+  background:var(--ink);border-radius:var(--r-pill)}
+.vx .pdQueue .tablist button{font:inherit;font-size:var(--fs-body);font-weight:400;line-height:var(--lh-ctrl);
+  cursor:pointer;border:0;background:none;color:var(--on-dark-sub);
+  padding:var(--sp-1) var(--sp-3);border-radius:var(--r-pill);white-space:nowrap;transition:.2s ease}
+.vx .pdQueue .tablist button:hover{color:var(--on-dark)}
+.vx .pdQueue .tablist button[aria-selected="true"]{background:var(--w);color:var(--ink);font-weight:700}
+.vx .pdQueue [role=tabpanel][hidden]{display:none}
+.vx .pdQueue .slideArea{position:relative}
+.vx .pdQueue .list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3)}
+.vx .pdQueue .list > li{position:relative;transition:.3s ease}
+.vx .pdQueue .list > li > a{display:block;text-decoration:none;color:inherit;position:relative}
+.vx .pdQueue .pdImg{position:relative;display:block;border-radius:var(--r-card);overflow:hidden;
+  box-shadow:var(--sh);transition:.3s ease}
+.vx .pdQueue .list > li:hover{transform:translateY(-2px)}
+.vx .pdQueue .list > li:hover .pdImg{box-shadow:var(--sh-h)}
+.vx .pdQueue .pdImg .ph{aspect-ratio:1/1;border-radius:0}
+.vx .pdQueue .hiddenInfo{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:var(--sp-2);
+  background:linear-gradient(to top,rgba(0,0,0,.78),transparent);color:var(--on-dark)}
+.vx .pdQueue .hiddenInfo p{margin:0 0 var(--sp-1);font-size:var(--fs-h4);line-height:var(--lh-h4);font-weight:700}
+.vx .pdQueue .priceSet{display:flex;flex-wrap:wrap;gap:var(--sp-1);align-items:baseline;
+  font-size:var(--fs-body);line-height:var(--lh-body)}
+/* 折扣卡：原價刪除線在上（深底輔階 白.62）、折後價在下（白）＝V1 深底兩階 */
+.vx .pdQueue .oldPrice{text-decoration:line-through;width:100%;order:-1;color:var(--on-dark-sub)}
+
+/* ================================================================
+   J. CTA 一（蒸餾 §七.9 CTA 帶：置中 H2＋副標＋單一按鈕；黑皮 #222／白皮照片帶）
+   ================================================================ */
+.vx .ctaBlock .eyebrow{font-size:var(--fs-body);line-height:var(--lh-body);font-weight:600;
+  letter-spacing:.08em;color:var(--muted);margin:0 0 var(--sp-2)}
+.vx .ctaBlock h2{margin:0 0 var(--sp-2)}
+.vx .ctaBlock .lead{color:var(--body);margin:0 0 var(--sp-3)}
+.vx .ctaA .inner{text-align:center}
+.vx .ctaA .lead{font-size:var(--fs-h4);line-height:var(--lh-h4);max-width:640px;margin-left:auto;margin-right:auto}
+
+/* ================================================================
+   K. CTA 二（蒸餾 §七.5 服務大卡＝淺灰底卡 8＋內距 24＋標準陰影＋左文右圖；
+      卡底回歸 V1 #F5F5F5；標題用漸層① 標題字漸層＝全頁唯一使用處）
+   ================================================================ */
+.vx .ctaB .inner{display:grid;grid-template-columns:.85fr 1.15fr;gap:var(--sp-3);align-items:center;
+  background:var(--band-light);border-radius:var(--r-card);padding:var(--sp-3);box-shadow:var(--sh)}
+.vx .ctaB .ctaText{text-align:left}
+/* 標題字漸層：水平、background-clip:text（蒸餾 §二 漸層①／出處 styles__AdventureTitle）。
+   端點取「標題階 #000 → 輔助階 #777」：兩端都與 #F5F5F5 卡底有足夠對比，
+   不會出現原蒸餾版「尾端與卡底同色而隱字」的問題（親驗截圖確認） */
+.vx .ctaB h2{font-size:var(--fs-h3);line-height:var(--lh-h3);text-align:left;
+  background:linear-gradient(90deg,var(--ink-strong),var(--muted));
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.vx .ctaB .lead{font-size:var(--fs-body);line-height:var(--lh-body);max-width:none}
+.vx .ctaB .ctaImg .ph{aspect-ratio:4/3;border-radius:var(--r-card);box-shadow:var(--sh)}
+
+/* ================================================================
+   L. 數據統計（蒸餾 §七.4 數據帶：四組「大數字 H2 700＋標籤 14」；黑皮 #1F1F1F／白皮 #F5F5F5）
+   ================================================================ */
+.vx .statBlock .stats{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);
+  gap:var(--sp-3);text-align:center}
+.vx .statBlock .num{font-size:var(--fs-h2);line-height:var(--lh-h2);font-weight:700;color:var(--ink-strong)}
+.vx .statBlock .lab{font-size:var(--fs-body);line-height:var(--lh-body);color:var(--muted);margin-top:var(--sp-1)}
+
+/* ================================================================
+   M. 聯絡我們（蒸餾 §七.13 lead_capture：左側 H2＋說明＋電話／右側白色圓角表單卡）
+      兩皮都是左右兩欄 0.85fr/1.15fr、欄距 48；黑皮 #111 底／白皮 #FFF 底
+   ================================================================ */
+.vx .contactForm .wrap{display:grid;grid-template-columns:.85fr 1.15fr;gap:var(--sp-4);align-items:start}
+.vx .contactForm .cfInfo{text-align:left}
+.vx .contactForm .cfInfo h2{text-align:left;margin:0 0 var(--sp-2)}
+.vx .contactForm .cfInfo p{font-size:var(--fs-body);line-height:var(--lh-body);color:var(--body);margin:0 0 var(--sp-3)}
+.vx .contactForm .tel{font-size:var(--fs-h4);line-height:var(--lh-h4);font-weight:700;gap:var(--sp-1);
+  margin-bottom:var(--sp-1)}
+.vx .contactForm .tel svg{width:20px;height:20px;flex:none}
+.vx .contactForm .cfInfo p.telNote{font-size:var(--fs-body);line-height:var(--lh-body);color:var(--muted);margin:0}
+/* 表單卡＝白卡 radius 8＋內距 24＋標準陰影（兩皮相同；卡內一律亮區三階） */
+.vx .contactForm form{display:flex;flex-direction:column;gap:var(--sp-3);
+  background:var(--w);border-radius:var(--r-card);padding:var(--sp-3);box-shadow:var(--sh)}
+.vx .contactForm .formSec{display:flex;flex-direction:column;gap:var(--sp-2);
+  border-top:1px solid var(--line);padding-top:var(--sp-3)}
+.vx .contactForm .formSec:first-child{border-top:0;padding-top:0}
+.vx .contactForm .secTitle{font-size:var(--fs-h4);line-height:var(--lh-h4);font-weight:700;color:var(--ink-strong);margin:0}
+.vx .contactForm .row2{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-2)}
+.vx .contactForm .field{display:flex;flex-direction:column;gap:var(--sp-1)}
+.vx .contactForm label{font-size:var(--fs-body);line-height:var(--lh-ctrl);font-weight:600;color:var(--body);text-align:left}
+.vx .contactForm label .req{color:var(--ink-strong);font-weight:700}
+/* 輸入類＝唯一保留描邊的元件（§五 陰影表註）：radius 6、1px #D4D4D4、focus #111、placeholder #777 */
+.vx .contactForm input,.vx .contactForm select,.vx .contactForm textarea{font:inherit;font-size:var(--fs-body);
+  color:var(--body);background:var(--w);border:1px solid var(--line-input);border-radius:var(--r-btn);
+  height:48px;padding:0 var(--sp-2);outline:none;transition:.2s ease;width:100%}
+.vx .contactForm ::placeholder{color:var(--muted)}
+.vx .contactForm textarea{height:auto;min-height:104px;padding:var(--sp-2)}
+.vx .contactForm input:focus,.vx .contactForm select:focus,.vx .contactForm textarea:focus{
+  border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.vx .contactForm .telRow{display:grid;grid-template-columns:auto 1fr;gap:var(--sp-1)}
+.vx .contactForm .qtyRow{display:grid;grid-template-columns:1fr auto;gap:var(--sp-1)}
+.vx .contactForm .telRow3{display:grid;grid-template-columns:auto 1fr 88px;gap:var(--sp-1)}
+.vx .contactForm .chipRow,.vx .contactForm .radioRow{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center;
+  font-size:var(--fs-body);line-height:var(--lh-ctrl);color:var(--body)}
+.vx .contactForm .chipRow label,.vx .contactForm .radioRow label{display:inline-flex;gap:var(--sp-1);
+  align-items:center;cursor:pointer;font-weight:400}
+.vx .contactForm input[type=radio],.vx .contactForm input[type=checkbox]{accent-color:#111;
+  width:16px;height:16px;margin:0;flex:none}
+.vx .contactForm .hint{font-size:var(--fs-body);line-height:var(--lh-body);color:var(--muted);margin:0}
+.vx .contactForm .msgBox{border:1px solid var(--line-input);border-radius:var(--r-btn);background:var(--w);transition:.2s ease}
+.vx .contactForm .msgBox textarea{border:0;min-height:96px}
+.vx .contactForm .msgBox textarea:focus{border:0;box-shadow:none}
+.vx .contactForm .msgBox:focus-within{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.vx .contactForm .msgBox .chipRow{padding:0 var(--sp-2) var(--sp-2)}
+/* 附件＝#D4D4D4 虛線框（輸入類邊線階） */
+.vx .contactForm .upBox{display:flex;gap:var(--sp-2);align-items:center}
+.vx .contactForm .upPlus{width:88px;height:88px;flex:none;border:1px dashed var(--line-input);border-radius:var(--r-btn);
+  display:flex;align-items:center;justify-content:center;font-size:var(--fs-h3);color:var(--muted)}
+.vx .contactForm .nameRow{display:flex;gap:var(--sp-2);align-items:center;flex-wrap:wrap}
+.vx .contactForm .nameRow > input{flex:1;min-width:220px}
+.vx .contactForm .recommend{display:flex;gap:var(--sp-1);align-items:flex-start;font-weight:400;
+  font-size:var(--fs-body);line-height:var(--lh-body);color:var(--body);cursor:pointer}
+/* 送出＝#111 實心、min-width 200、置中（沿用 V1 現行表單置中鈕邏輯） */
+.vx .contactForm .submit{border:1px solid var(--ink);min-width:200px;align-self:center}
+
+/* ================================================================
+   N. 頁尾（蒸餾 §七.14 footer：徽章藥丸、社群 36px、內容置中 1200；
+      色值回歸 V1：滿版 #000＝全站唯一純黑，深底文字兩階；兩皮相同）
+   ================================================================ */
+.vx .contactSet{background:var(--band-footer);color:var(--on-dark-sub)}
+.vx .contactSet > .wrap{padding-top:var(--sp-4);padding-bottom:var(--sp-2)}
+/* 頁尾＝入口層非說明層：標題與說明留在 DOM、CSS 隱藏，只留白實心鈕 */
+.vx .contactSet .contactUs p,.vx .contactSet .emailUpdate p{display:none}
+.vx .contactSet button{font:inherit;font-size:var(--fs-body);font-weight:600;line-height:var(--lh-ctrl);
+  cursor:pointer;background:var(--w);color:var(--ink);border:0;border-radius:var(--r-btn);
+  padding:var(--sp-1) var(--sp-3);transition:.2s ease}
+.vx .contactSet button:hover{box-shadow:var(--sh-h);opacity:.9}
+/* 識別層：行動鈕 → 社群 36px 藥丸 → QR 白底 8；層間 1px 白 .15 細線 */
+.vx .contactSet .others{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;
+  gap:var(--sp-2);padding:0 0 var(--sp-2)}
+.vx .contactSet .others ul{display:flex;flex-wrap:wrap;gap:var(--sp-1);list-style:none;margin:0;padding:0}
+.vx .contactSet .emailUpdate + ul{margin-left:var(--sp-3)}
+.vx .contactSet .others li a{width:36px;height:36px;border-radius:var(--r-pill);background:var(--w);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;text-decoration:none;transition:.2s ease}
+.vx .contactSet .others li a:hover{box-shadow:var(--sh-h)}
+.vx .contactSet .others li a svg{width:18px;height:18px;display:block}
+.vx .contactSet .qrcode{width:88px;height:88px;flex:none;background:var(--w);
+  border-radius:var(--r-card);margin-left:var(--sp-3)}
+.vx .contactSet .qrcode img{width:100%;height:100%;object-fit:contain;display:block;border-radius:inherit}
+/* 信任層：認證徽章＝藥丸 9999＋白 12% 底（徽章文字隱藏、只留圖章） */
+.vx .contactSet .certList{border-top:1px solid var(--hair-dark);padding:var(--sp-2) 0;
+  display:flex;flex-wrap:wrap;justify-content:center;gap:var(--sp-1);align-items:center}
+.vx .contactSet .cert{height:40px;border-radius:var(--r-pill);background:var(--chip-dark);
+  display:flex;align-items:center;justify-content:center;padding:0 var(--sp-2);font-size:0}
+.vx .contactSet .cert img{height:26px;width:auto;display:block}
+/* 法遵層：版權＝深底輔階 白.62 */
+.vx .contactSet .webFooter{border-top:1px solid var(--hair-dark);background:transparent;padding:var(--sp-2) 0}
+.vx .contactSet .webFooter p{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center;justify-content:center;
+  margin:0;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--on-dark-sub)}
+.vx .contactSet .webFooter a{color:var(--on-dark-sub);text-decoration:none;display:inline-flex;
+  align-items:center;gap:var(--sp-1);transition:.2s ease}
+.vx .contactSet .webFooter a:hover{color:var(--on-dark)}
+.vx .contactSet .webFooter .ttLogo{width:66px;height:18px;border-radius:var(--r-btn);display:inline-block}
+.vx .contactSet .webFooter .ttLogo img{width:100%;height:100%;object-fit:contain;display:block}
+/* 頁尾社群鈕＝真實品牌標誌（素材層例外色，值自原檔照抄） */
+.vx .contactSet .others li.fb a{background:#1877F2;color:#fff}
+.vx .contactSet .others li.youtube a{background:#F00;color:#fff}
+.vx .contactSet .others li.in a{background:#0A66C2;color:#fff}
+.vx .contactSet .others li.twitter a{background:#fff;color:#0F1419}
+.vx .contactSet .others li.instagram a{background:radial-gradient(circle at 30% 110%,#FDF497 0%,#FD5949 45%,#D6249F 60%,#285AEB 90%);color:#fff}
+
+/* ================================================================
+   O. 皮膚 V1黑｜.vx1＝忠實 Xometry 節奏（蒸餾 §三 暗帶做重音；深帶色值＝index-dark 原值）
+      關於我們 #1F1F1F → 多媒體 #222 → CTA一 #222 → 數據 #1F1F1F → 頁尾 #000
+      0727 交錯裁示：聯訂（深帶之間）與表單（數據與頁尾之間）改白卡白底，
+      讓深帶彼此不相連＝亮暗逐段交錯；表單深帶（蒸餾 §七.13）退場
+      深底文字只有兩階：標題與主要＝#FFF｜其餘一切（內文、說明、標籤）＝白.62
+   ================================================================ */
+.vx1{
+  --band-story:#1F1F1F;  /* 關於我們＝敘事 */
+  --band-media:#222;     /* 多媒體＝沉浸 */
+  --band-cta:#222;       /* CTA一＝轉換 */
+  --band-stat:#1F1F1F;   /* 數據＝實力 */
+}
+/* 關於我們＝深帶（標題 #FFF、內文白.62；按鈕＝暗底描邊） */
+.vx1 .aboutUs{background:var(--band-story)}
+.vx1 .aboutUs h2{color:var(--on-dark)}
+.vx1 .aboutUs article > div:not(.more){color:var(--on-dark-sub)}
+/* 多媒體＝深帶；圓點＝深底雙態 #FFF／白.35 */
+.vx1 .iStage{background:var(--band-media)}
+.vx1 .iStage .indicator li{background:var(--dot-dark-off)}
+.vx1 .iStage .indicator li.now{background:var(--on-dark)}
+/* CTA一＝深帶置中白字（蒸餾 §七.9 conversion_driver） */
+.vx1 .ctaA{background:var(--band-cta)}
+.vx1 .ctaA .eyebrow{color:var(--on-dark-sub)}
+.vx1 .ctaA h2{color:var(--on-dark)}
+.vx1 .ctaA .lead{color:var(--on-dark-sub)}
+/* 數據統計＝深帶（品牌實力聚光燈式展示） */
+.vx1 .statBlock{background:var(--band-stat)}
+.vx1 .statBlock .num{color:var(--on-dark)}
+.vx1 .statBlock .lab{color:var(--on-dark-sub)}
+/* 聯繫與訂閱＝白卡、聯絡我們＝白底（0727 交錯裁示，後續擴及兩皮＝共用層 G／M，
+   本層無須任何覆蓋；深帶之間全為白段、亮暗逐段交錯） */
+
+/* ================================================================
+   P. 皮膚 V1白｜.vx2＝白底版節奏（0727「白底黑字」裁示的落點）
+      四個節奏帶降階為 #F5F5F5 淺灰帶／照片帶；文字全部沿用共用層的亮區三階，
+      故本層只需換底色，無須任何文字覆寫（＝白底黑字基調的證明）
+   ================================================================ */
+.vx2 .aboutUs{background:var(--band-light)}
+.vx2 .iStage{background:var(--band-light)}
+/* CTA一＝照片帶（img/cta-1-bg.jpg＋白 .72 遮罩，值照原檔）＋亮區三階字、#111 實心鈕 */
+.vx2 .ctaA{background:linear-gradient(rgba(255,255,255,.72),rgba(255,255,255,.72)),
+  url(img/cta-1-bg.jpg) center/cover no-repeat}
+.vx2 .statBlock{background:var(--band-light)}
+.vx2 .contactForm{background:var(--w)}
+
+/* ================================================================
+   Q. RWD（桌機 1440 為準；≤1024 基本降級：多欄退兩欄／單欄、表單退單欄）
+      字級只在允許的五層之間降階（38→30），不引入階外值
+   ================================================================ */
+@media(max-width:1024px){
+  .vx .contactForm .wrap{grid-template-columns:1fr;gap:var(--sp-3)}
+  .vx .ctaB .inner{grid-template-columns:1fr;gap:var(--sp-3)}
+  .vx .pdQueue .list,.vx .newsBlock .list{grid-template-columns:repeat(2,1fr)}
+  .vx .statBlock .stats{grid-template-columns:repeat(2,1fr)}
+  .vx .bigBanner .textCnt h4{font-size:var(--fs-h2);line-height:var(--lh-h2)}
+  .vx .bigBanner .textCnt p{font-size:var(--fs-body);line-height:var(--lh-body)}
+  .vx .bigBanner .textCnt{padding:0 var(--sp-3)}
+  .vx nav.menu .wrap{overflow-x:auto}
+  .vx nav.menu a{padding:var(--sp-2)}
+}
+@media(max-width:720px){
+  .vx .pdQueue .list,.vx .newsBlock .list{grid-template-columns:1fr}
+  .vx .statBlock .stats{grid-template-columns:1fr}
+  .vx .contacts.alone .wrap{grid-template-columns:1fr}
+  .vx .contactForm .row2{grid-template-columns:1fr}
+  .vx .topZone .wrap{flex-wrap:wrap}
+  .vx .topZone .search{width:100%;max-width:none;margin-left:0}
+  .vx .iStage .showList li.is-short.now{min-height:440px}
+  .vx .iStage .showList li.is-short .ph{height:420px}
+}
 /* ============ 共用骨架（結構層，不隨換皮變動） ============ */
-.v{
+.vo{
   --bg:#fff;--surface:#f5f5f5;--ink-strong:#000;--ink:#111;--body:#333;--muted:#777;
   --line:#e5e5e5;--inv-fg:#fff;
   --fs-h1:48px;--fs-h2:36px;--fs-h3:27px;--fs-h4:20px;--fs-body:15px;
@@ -213,577 +647,597 @@ body{margin:0;background:#fff;color:#222;
   --ico-check:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='m3 8.5 3.5 3.5L13 5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
   background:var(--bg);color:var(--body)
 }
-.v[hidden]{display:none}
-.v{overflow-x:clip}  /* 騎邊箭頭與負邊距媒體的視窗保護 */
+.vo[hidden]{display:none}
+.vo{overflow-x:clip}  /* 騎邊箭頭與負邊距媒體的視窗保護 */
 /* 外框公式：所有區塊外框寬＝min(1200, 視窗−60)，任何視窗下全區塊左右緣對齊 */
-.v .wrap{width:calc(100% - 60px);max-width:var(--wrap);margin:0 auto;padding:0 30px}
-.v section{padding:var(--sec-pad) 0}
-.v h2{font-size:var(--fs-h2);line-height:1.2;font-weight:700;color:var(--ink-strong);margin:0 0 28px;letter-spacing:-.02em}
+.vo .wrap{width:calc(100% - 60px);max-width:var(--wrap);margin:0 auto;padding:0 30px}
+.vo section{padding:var(--sec-pad) 0}
+.vo h2{font-size:var(--fs-h2);line-height:1.2;font-weight:700;color:var(--ink-strong);margin:0 0 28px;letter-spacing:-.02em}
 
 /* 灰階佔位圖（data-label＝元件標示，只給無其他文字的區塊） */
-.v .ph{position:relative;overflow:hidden;border-radius:var(--r-img);display:block;
+.vo .ph{position:relative;overflow:hidden;border-radius:var(--r-img);display:block;
   background:linear-gradient(135deg,#cfcfcf,#efefef 42%,#bdbdbd)}
-.v .ph::before{content:"";position:absolute;inset:0;
+.vo .ph::before{content:"";position:absolute;inset:0;
   background:radial-gradient(120% 90% at 22% 18%,rgba(255,255,255,.85),rgba(255,255,255,0) 55%),
              radial-gradient(90% 80% at 82% 88%,rgba(0,0,0,.18),rgba(0,0,0,0) 60%)}
-.v .ph::after{content:attr(data-label);position:absolute;left:0;right:0;bottom:12px;text-align:center;
+.vo .ph::after{content:attr(data-label);position:absolute;left:0;right:0;bottom:12px;text-align:center;
   font-size:var(--fs-body);letter-spacing:.05em;color:rgba(0,0,0,.45);padding:0 10px}
-.v .ph:not([data-label])::after{display:none}
-.v .adv .ph::after{inset:0;display:flex;align-items:center;justify-content:center}
+.vo .ph:not([data-label])::after{display:none}
+.vo .adv .ph::after{inset:0;display:flex;align-items:center;justify-content:center}
 
 /* 輪播箭頭（現況 DOM：span.arrowLeft／span.arrowRight；兩種定位＝現況紅線） */
-.v .arrowLeft,.v .arrowRight{position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+.vo .arrowLeft,.vo .arrowRight{position:absolute;top:50%;transform:translateY(-50%);z-index:3;
   width:44px;height:44px;cursor:pointer;color:var(--ink);
   display:flex;align-items:center;justify-content:center;line-height:1.2;user-select:none}
-.v .arrowLeft::before,.v .arrowRight::before{content:"";width:18px;height:18px;background:currentColor;
+.vo .arrowLeft::before,.vo .arrowRight::before{content:"";width:18px;height:18px;background:currentColor;
   -webkit-mask:var(--ico-chev) center/contain no-repeat;mask:var(--ico-chev) center/contain no-repeat}
-.v .arrowRight::before{transform:scaleX(-1)}
-.v .arrowLeft{left:-54px} .v .arrowRight{right:-54px}
+.vo .arrowRight::before{transform:scaleX(-1)}
+.vo .arrowLeft{left:-54px} .vo .arrowRight{right:-54px}
 
 /* 圓點指示器（現況 DOM：.indicator > ul > li.now；作用中顆數＝可見卡數；樣式全站統一 8px） */
-.v .indicator{display:flex;justify-content:center;margin-top:22px}
-.v .indicator ul{display:flex;gap:8px;list-style:none;padding:0;margin:0}
-.v .indicator li{width:8px;height:8px;border-radius:999px;background:#D4D4D4;border:0;display:block}
-.v .indicator li.now{background:var(--ink)}
+.vo .indicator{display:flex;justify-content:center;margin-top:22px}
+.vo .indicator ul{display:flex;gap:8px;list-style:none;padding:0;margin:0}
+.vo .indicator li{width:8px;height:8px;border-radius:999px;background:#D4D4D4;border:0;display:block}
+.vo .indicator li.now{background:var(--ink)}
 
 /* 按鈕（全站統一：內距 12×28、字級 15／600；1.5px＝描邊按鈕專用粗細；文字不帶箭頭） */
-.v .btn{display:inline-block;font:inherit;font-size:var(--fs-body);font-weight:600;cursor:pointer;border-radius:var(--r-btn);
+.vo .btn{display:inline-block;font:inherit;font-size:var(--fs-body);font-weight:600;cursor:pointer;border-radius:var(--r-btn);
   padding:12px 28px;border:1.5px solid var(--ink);background:var(--ink);color:var(--inv-fg);transition:.18s;line-height:1.2;text-decoration:none}
-.v .btn--ghost{background:transparent;color:var(--ink)}
+.vo .btn--ghost{background:transparent;color:var(--ink)}
 
 /* 標記類（HOT＝現況原始碼 labelHot、資料驅動；折扣＝現況 DOM oldPrice+discountPrice+
    discountLabel、值＝台式折數）：標記統一置卡片右上（十一輪）＝V1 方圓角 6 黑標／
    V2 膠囊黑標（HOT 與折扣同款；↗ 已撤場）；折扣卡價格上下兩行＝原價刪除線在上（輔階）、
    折後價在下（主階） */
-.v .pdQueue .oldPrice{text-decoration:line-through;width:100%;order:-1}
-.v .pdQueue .priceSet{flex-wrap:wrap}
-.v .pdQueue .discountLabel{position:absolute;top:10px;right:10px;z-index:3;
+.vo .pdQueue .oldPrice{text-decoration:line-through;width:100%;order:-1}
+.vo .pdQueue .priceSet{flex-wrap:wrap}
+.vo .pdQueue .discountLabel{position:absolute;top:10px;right:10px;z-index:3;
   background:rgba(17,17,17,.66);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);color:var(--inv-fg);
   font-size:var(--fs-body);font-weight:700;letter-spacing:.03em;padding:4px 12px}
 
 /* ── 頁首｜工具列（處長指示：TT 標誌移除、認證徽章移頁尾；項目與順序照中文語系現況 DOM） ── */
-.v .epHeader{border-bottom:1px solid var(--line);font-size:var(--fs-body);background:var(--bg)}
-.v .epHeader .wrap{display:flex;align-items:center;justify-content:flex-end;min-height:44px}
-.v .epHeader ul{display:flex;align-items:center;gap:16px;list-style:none;margin:0;padding:0;color:var(--muted);flex-wrap:wrap}
-.v .epHeader a{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center}
-.v .epHeader a:hover{color:var(--ink)}
-.v .epHeader .sep{width:1px;height:18px;background:var(--line)}
-.v .epHeader .setNbr{background:var(--ink-strong);color:var(--inv-fg);font-size:12px;
+.vo .epHeader{border-bottom:1px solid var(--line);font-size:var(--fs-body);background:var(--bg)}
+.vo .epHeader .wrap{display:flex;align-items:center;justify-content:flex-end;min-height:44px}
+.vo .epHeader ul{display:flex;align-items:center;gap:16px;list-style:none;margin:0;padding:0;color:var(--muted);flex-wrap:wrap}
+.vo .epHeader a{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center}
+.vo .epHeader a:hover{color:var(--ink)}
+.vo .epHeader .sep{width:1px;height:18px;background:var(--line)}
+.vo .epHeader .setNbr{background:var(--ink-strong);color:var(--inv-fg);font-size:12px;
   border-radius:999px;padding:1px 7px;margin-left:5px;line-height:1.5}
-.v .caret::after{content:"";width:12px;height:12px;margin-left:4px;opacity:.7;background:currentColor;flex:none;
+.vo .caret::after{content:"";width:12px;height:12px;margin-left:4px;opacity:.7;background:currentColor;flex:none;
   -webkit-mask:var(--ico-down) center/contain no-repeat;mask:var(--ico-down) center/contain no-repeat;transition:.18s}
-.v .drop:hover > a.caret::after{transform:rotate(180deg);opacity:1}
-.v .epHeader .icoS{width:15px;height:15px;margin-right:5px;flex:none}
+.vo .drop:hover > a.caret::after{transform:rotate(180deg);opacity:1}
+.vo .epHeader .icoS{width:15px;height:15px;margin-right:5px;flex:none}
 
 /* ── 頁首｜主列（現況 DOM：topZone > webHeader h1 + search；搜尋鈕在框內右端＝結構；
       框與鈕形狀＝皮層：V1 方圓角 8／6、V2 膠囊＋圓鈕＝各版語彙貫徹） ── */
-.v .topZone{background:var(--bg)}
-.v .topZone .wrap{display:flex;align-items:center;gap:20px;padding-top:18px;padding-bottom:18px}
-.v .webHeader h1{margin:0}
-.v .webHeader h1 a{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink-strong)}
-.v .webHeader .logoPh{width:56px;height:56px;border-radius:var(--r-img);flex:none;background:#fff;overflow:hidden}
-.v .webHeader .logoPh img{width:100%;height:100%;object-fit:contain;display:block}
-.v .webHeader .firmName{font-size:var(--fs-h4);font-weight:700;letter-spacing:.03em;line-height:1.3}
-.v .webHeader .firmName small{display:block;font-size:var(--fs-body);font-weight:500;color:var(--muted);letter-spacing:.04em}
-.v .topZone .search{margin-left:auto;display:flex;align-items:center;position:relative;width:300px;max-width:40vw}
-.v .topZone .search input[type=text]{width:100%;font:inherit;font-size:var(--fs-body);border:1px solid var(--line);
+.vo .topZone{background:var(--bg)}
+.vo .topZone .wrap{display:flex;align-items:center;gap:20px;padding-top:18px;padding-bottom:18px}
+.vo .webHeader h1{margin:0}
+.vo .webHeader h1 a{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink-strong)}
+.vo .webHeader .logoPh{width:56px;height:56px;border-radius:var(--r-img);flex:none;background:#fff;overflow:hidden}
+.vo .webHeader .logoPh img{width:100%;height:100%;object-fit:contain;display:block}
+.vo .webHeader .firmName{font-size:var(--fs-h4);font-weight:700;letter-spacing:.03em;line-height:1.3}
+.vo .webHeader .firmName small{display:block;font-size:var(--fs-body);font-weight:500;color:var(--muted);letter-spacing:.04em}
+.vo .topZone .search{margin-left:auto;display:flex;align-items:center;position:relative;width:300px;max-width:40vw}
+.vo .topZone .search input[type=text]{width:100%;font:inherit;font-size:var(--fs-body);border:1px solid var(--line);
   background:var(--bg);color:var(--body);border-radius:999px;height:46px;padding:0 54px 0 18px;outline:none;transition:.15s}
-.v .topZone .search input[type=text]:focus{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
-.v .topZone .search input[type=button]{position:absolute;right:5px;top:5px;width:36px;height:36px;
+.vo .topZone .search input[type=text]:focus{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.vo .topZone .search input[type=button]{position:absolute;right:5px;top:5px;width:36px;height:36px;
   border-radius:50%;border:0;background:var(--ink-strong);color:var(--inv-fg);cursor:pointer;font-size:0}
-.v .topZone .search .searchIcon{position:absolute;right:14px;top:14px;width:18px;height:18px;pointer-events:none;
+.vo .topZone .search .searchIcon{position:absolute;right:14px;top:14px;width:18px;height:18px;pointer-events:none;
   background:var(--inv-fg);-webkit-mask:var(--ico-search) center/contain no-repeat;mask:var(--ico-search) center/contain no-repeat}
 
 /* ── 頁首｜主導覽（現況 DOM：nav.menu > ul > li；6 項、整列靠左＝現況紅線；僅關於我們／產品帶 chevron） ── */
-.v nav.menu{background:var(--bg);border-bottom:1px solid var(--line)}
-.v nav.menu .wrap{display:flex;align-items:center;gap:2px;min-height:54px}
-.v nav.menu ul{display:flex;list-style:none;margin:0;padding:0}
-.v nav.menu a{text-decoration:none;color:var(--ink);font-size:var(--fs-body);font-weight:500;
+.vo nav.menu{background:var(--bg);border-bottom:1px solid var(--line)}
+.vo nav.menu .wrap{display:flex;align-items:center;gap:2px;min-height:54px}
+.vo nav.menu ul{display:flex;list-style:none;margin:0;padding:0}
+.vo nav.menu a{text-decoration:none;color:var(--ink);font-size:var(--fs-body);font-weight:500;
   padding:10px 18px;transition:.15s;white-space:nowrap;display:inline-block}
-.v nav.menu li:first-child > a{padding-left:0}
-.v nav.menu li.hasChild > a::after{content:"";display:inline-block;width:12px;height:12px;margin-left:5px;opacity:.7;
+.vo nav.menu li:first-child > a{padding-left:0}
+.vo nav.menu li.hasChild > a::after{content:"";display:inline-block;width:12px;height:12px;margin-left:5px;opacity:.7;
   background:currentColor;vertical-align:-1px;
   -webkit-mask:var(--ico-down) center/contain no-repeat;mask:var(--ico-down) center/contain no-repeat;transition:.18s}
-.v nav.menu li.hasChild:hover > a::after{transform:rotate(180deg);opacity:1}
+.vo nav.menu li.hasChild:hover > a::after{transform:rotate(180deg);opacity:1}
 
 /* ── 大圖輪播（現況紅線：箭頭在圖內、圓點包深色容器置圖片下緣內側（浮於照片＝容器補償規則）、
       主標副標疊圖上） ── */
-.v .bigBanner .showArea{position:relative}
-.v .bigBanner .slideList{list-style:none;padding:0;margin:0}
-.v .bigBanner .slideList li{display:none;position:relative}
-.v .bigBanner .slideList li:first-child{display:block}
-.v .bigBanner .ph{aspect-ratio:1540/503}
-.v .bigBanner .fadeoutMask{position:absolute;inset:0;z-index:1;border-radius:var(--r-img);
+.vo .bigBanner .showArea{position:relative}
+.vo .bigBanner .slideList{list-style:none;padding:0;margin:0}
+.vo .bigBanner .slideList li{display:none;position:relative}
+.vo .bigBanner .slideList li:first-child{display:block}
+.vo .bigBanner .ph{aspect-ratio:1540/503}
+.vo .bigBanner .fadeoutMask{position:absolute;inset:0;z-index:1;border-radius:var(--r-img);
   background:linear-gradient(180deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,.45) 100%)}
-.v .bigBanner .textCnt{position:absolute;inset:0;z-index:2;
+.vo .bigBanner .textCnt{position:absolute;inset:0;z-index:2;
   display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 90px}
-.v .bigBanner .textCnt h4{font-size:var(--fs-h1);line-height:1.2;font-weight:700;color:#fff;margin:0 0 12px;letter-spacing:-.02em}
-.v .bigBanner .textCnt p{font-size:var(--fs-h4);color:#fff;margin:0}
-.v .bigBanner .arrowLeft{left:14px} .v .bigBanner .arrowRight{right:14px}
-.v .bigBanner .indicator{position:relative;margin-top:-46px;z-index:3;margin-bottom:22px}
-.v .bigBanner .indicator ul{background:rgba(0,0,0,.62);padding:7px 12px}
-.v .bigBanner .indicator li{background:rgba(255,255,255,.35)}
-.v .bigBanner .indicator li.now{background:#fff}
+.vo .bigBanner .textCnt h4{font-size:var(--fs-h1);line-height:1.2;font-weight:700;color:#fff;margin:0 0 12px;letter-spacing:-.02em}
+.vo .bigBanner .textCnt p{font-size:var(--fs-h4);color:#fff;margin:0}
+.vo .bigBanner .arrowLeft{left:14px} .vo .bigBanner .arrowRight{right:14px}
+.vo .bigBanner .indicator{position:relative;margin-top:-46px;z-index:3;margin-bottom:22px}
+.vo .bigBanner .indicator ul{background:rgba(0,0,0,.62);padding:7px 12px}
+.vo .bigBanner .indicator li{background:rgba(255,255,255,.35)}
+.vo .bigBanner .indicator li.now{background:#fff}
 
 /* ── 公司新聞（現況 DOM 紅線：圖→標題→摘要；HOT 僅卡1、圖片下緣左端外溢卡左界；
       圓點 6 顆前 3 作用中；More 置中在圓點之下；卡內文字左＝T 字卡內規則） ── */
-.v .newsBlock .slideArea{position:relative}
-.v .newsBlock .list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap)}
-.v .newsBlock .list > li{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-card);
+.vo .newsBlock .slideArea{position:relative}
+.vo .newsBlock .list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap)}
+.vo .newsBlock .list > li{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-card);
   box-shadow:var(--shadow);transition:.2s;position:relative}
 /* overflow:visible（九輪修 bug：hidden 會裁掉 HOT 左溢 5px＝現況紅線）；圖自帶上圓角 */
-.v .newsBlock .newsImg .ph{border-radius:var(--r-card) var(--r-card) 0 0}
-.v .newsBlock .list > li > a{display:block;text-decoration:none;color:inherit}
-.v .newsBlock .newsImg{display:block;position:relative}
-.v .newsBlock .newsImg .ph{aspect-ratio:490/325}
-.v .newsBlock h4{font-size:var(--fs-h4);line-height:1.45;font-weight:700;color:var(--ink);margin:16px 16px 8px}
-.v .newsBlock p{font-size:var(--fs-body);line-height:1.7;color:var(--muted);margin:0 16px 20px}
-.v .newsBlock .labelHot{position:absolute;top:10px;right:10px;z-index:2;
+.vo .newsBlock .newsImg .ph{border-radius:var(--r-card) var(--r-card) 0 0}
+.vo .newsBlock .list > li > a{display:block;text-decoration:none;color:inherit}
+.vo .newsBlock .newsImg{display:block;position:relative}
+.vo .newsBlock .newsImg .ph{aspect-ratio:490/325}
+.vo .newsBlock h4{font-size:var(--fs-h4);line-height:1.45;font-weight:700;color:var(--ink);margin:16px 16px 8px}
+.vo .newsBlock p{font-size:var(--fs-body);line-height:1.7;color:var(--muted);margin:0 16px 20px}
+.vo .newsBlock .labelHot{position:absolute;top:10px;right:10px;z-index:2;
   background:rgba(17,17,17,.66);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
   color:var(--inv-fg);font-size:var(--fs-body);font-weight:700;letter-spacing:.08em;padding:4px 12px}
-.v .newsBlock .more{text-align:center;margin-top:28px}
-.v .newsBlock .more a{display:inline-block;text-decoration:none;font-size:var(--fs-body);font-weight:600;
+.vo .newsBlock .more{text-align:center;margin-top:28px}
+.vo .newsBlock .more a{display:inline-block;text-decoration:none;font-size:var(--fs-body);font-weight:600;
   color:var(--ink);background:transparent;border:1.5px solid var(--ink);border-radius:var(--r-btn);padding:12px 28px;transition:.18s}
 
 /* ── 關於我們（現況 DOM：section.aboutUs > article > h2 + div + .more＝骨；
       按鈕排列位置＝皮層：預設堆疊左對齊（V2 軸線）、V1 覆寫整組置中（T 字）） ── */
-.v .aboutUs article > div:not(.more){font-size:var(--fs-body);line-height:1.7;color:var(--body);max-width:820px}
-.v .aboutUs .more{margin-top:28px}
-.v .aboutUs .more a{display:inline-block;text-decoration:none;font-size:var(--fs-body);font-weight:600;
+.vo .aboutUs article > div:not(.more){font-size:var(--fs-body);line-height:1.7;color:var(--body);max-width:820px}
+.vo .aboutUs .more{margin-top:28px}
+.vo .aboutUs .more a{display:inline-block;text-decoration:none;font-size:var(--fs-body);font-weight:600;
   background:var(--ink);color:var(--inv-fg);border:1.5px solid var(--ink);border-radius:var(--r-btn);padding:12px 28px;white-space:nowrap}
 
 /* ── 聯繫與訂閱（現況 DOM：contacts.alone > contactUs + emailUpdate＝骨；
       0724 五輪：兩欄卡片化＝兩張行動卡（DOM 不動、純 CSS）；標題與說明同一行；
       整組對齊＝皮層：V1 置中／V2 靠左 ── */
-.v .contacts.alone .wrap{display:grid;grid-template-columns:repeat(2,minmax(260px,420px));gap:var(--gap);justify-content:center}
-.v .contacts.alone .contactUs,.v .contacts.alone .emailUpdate{background:var(--bg);border:1px solid var(--line);
+.vo .contacts.alone .wrap{display:grid;grid-template-columns:repeat(2,minmax(260px,420px));gap:var(--gap);justify-content:center}
+.vo .contacts.alone .contactUs,.vo .contacts.alone .emailUpdate{background:var(--bg);border:1px solid var(--line);
   border-radius:var(--r-card);padding:28px;box-shadow:var(--shadow)}
-.v .contacts .contactUs p,.v .contacts .emailUpdate p{margin:0 0 16px;font-size:var(--fs-body);line-height:1.7;color:var(--body)}
-.v .contacts em{font-style:normal;font-weight:700;color:var(--ink-strong);margin-right:10px}
-.v .contacts button{font:inherit;font-size:var(--fs-body);font-weight:600;cursor:pointer;border-radius:var(--r-btn);
+.vo .contacts .contactUs p,.vo .contacts .emailUpdate p{margin:0 0 16px;font-size:var(--fs-body);line-height:1.7;color:var(--body)}
+.vo .contacts em{font-style:normal;font-weight:700;color:var(--ink-strong);margin-right:10px}
+.vo .contacts button{font:inherit;font-size:var(--fs-body);font-weight:600;cursor:pointer;border-radius:var(--r-btn);
   padding:12px 28px;border:1.5px solid var(--ink);background:var(--ink);color:var(--inv-fg);transition:.18s;line-height:1.2}
 
 /* ── 橫幅廣告（現況紅線：區塊內禁放文字節點 → 元件標示畫在佔位圖上） ── */
-.v .adv{padding:var(--sec-pad) 0}
-.v .adv a{display:block}
-.v .adv .ph{aspect-ratio:1540/300}  /* 0725 裁示：高度壓窄（原現況比 1540/385） */
+.vo .adv{padding:var(--sec-pad) 0}
+.vo .adv a{display:block}
+.vo .adv .ph{aspect-ratio:1540/300}  /* 0725 裁示：高度壓窄（原現況比 1540/385） */
 
 /* ── 產品展示（產品tab：標題列加 tab＝報價 3.1.2；tab 位置＝標題列（兩版同結構），樣式＝皮膚層；
       overlay 品名→價格靠左＝現況紅線＋T 字卡內規則） ── */
-.v .pdQueue .section-head{display:flex;align-items:center;gap:28px;margin-bottom:28px;flex-wrap:wrap}
-.v .pdQueue .section-head h2{margin:0}
-.v .pdQueue .tablist{display:flex;list-style:none;padding:0;margin:0;gap:4px}
-.v .pdQueue .tablist button{font:inherit;font-size:var(--fs-body);font-weight:500;cursor:pointer;border:0;
+.vo .pdQueue .section-head{display:flex;align-items:center;gap:28px;margin-bottom:28px;flex-wrap:wrap}
+.vo .pdQueue .section-head h2{margin:0}
+.vo .pdQueue .tablist{display:flex;list-style:none;padding:0;margin:0;gap:4px}
+.vo .pdQueue .tablist button{font:inherit;font-size:var(--fs-body);font-weight:500;cursor:pointer;border:0;
   background:none;color:var(--muted);padding:9px 18px;border-radius:var(--r-pill);transition:.15s;white-space:nowrap;line-height:1.2}
-.v .pdQueue [role=tabpanel][hidden]{display:none}
-.v .pdQueue .slideArea{position:relative}
-.v .pdQueue .list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap)}
-.v .pdQueue .list > li{position:relative;transition:.2s}
-.v .pdQueue .list > li > a{display:block;text-decoration:none;color:inherit;position:relative}
-.v .pdQueue .pdImg{position:relative;display:block;border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;transition:.2s}
-.v .pdQueue .pdImg .ph{aspect-ratio:1/1;border-radius:0}
-.v .pdQueue .hiddenInfo{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:16px;
+.vo .pdQueue [role=tabpanel][hidden]{display:none}
+.vo .pdQueue .slideArea{position:relative}
+.vo .pdQueue .list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap)}
+.vo .pdQueue .list > li{position:relative;transition:.2s}
+.vo .pdQueue .list > li > a{display:block;text-decoration:none;color:inherit;position:relative}
+.vo .pdQueue .pdImg{position:relative;display:block;border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;transition:.2s}
+.vo .pdQueue .pdImg .ph{aspect-ratio:1/1;border-radius:0}
+.vo .pdQueue .hiddenInfo{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:16px;
   background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.78));color:#fff}
-.v .pdQueue .hiddenInfo p{margin:0 0 6px;font-size:var(--fs-h4);font-weight:600;line-height:1.45}
-.v .pdQueue .priceSet{display:flex;gap:6px;align-items:baseline;font-size:var(--fs-body)}
-.v .pdQueue .priceSet .currency{opacity:.85}
+.vo .pdQueue .hiddenInfo p{margin:0 0 6px;font-size:var(--fs-h4);font-weight:600;line-height:1.45}
+.vo .pdQueue .priceSet{display:flex;gap:6px;align-items:baseline;font-size:var(--fs-body)}
+.vo .pdQueue .priceSet .currency{opacity:.85}
 
 /* ── 多媒體輪播（多媒short：YT Short；無左右箭頭＝現況紅線；一次僅顯示 1 則；來源膠囊保留） ── */
-.v .iStage{padding:var(--sec-pad) 0}
-.v .iStage .showArea{position:relative}
-.v .iStage .showList{list-style:none;padding:0;margin:0}
-.v .iStage .showList li{display:none}
-.v .iStage .showList li.now{display:block}
-.v .iStage .videoBox{position:relative}
-.v .iStage .videoBox .ph{aspect-ratio:16/9}
-.v .iStage .playBtn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
+.vo .iStage{padding:var(--sec-pad) 0}
+.vo .iStage .showArea{position:relative}
+.vo .iStage .showList{list-style:none;padding:0;margin:0}
+.vo .iStage .showList li{display:none}
+.vo .iStage .showList li.now{display:block}
+.vo .iStage .videoBox{position:relative}
+.vo .iStage .videoBox .ph{aspect-ratio:16/9}
+.vo .iStage .playBtn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
   width:76px;height:52px;border-radius:var(--r-img);background:rgba(0,0,0,.62);display:flex;align-items:center;justify-content:center;pointer-events:none}
-.v .iStage .playBtn::after{content:"";border-left:16px solid #fff;border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:3px}
-.v .iStage .platformTag{position:absolute;right:14px;bottom:14px;z-index:2;background:rgba(0,0,0,.62);color:#fff;
+.vo .iStage .playBtn::after{content:"";border-left:16px solid #fff;border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:3px}
+.vo .iStage .platformTag{position:absolute;right:14px;bottom:14px;z-index:2;background:rgba(0,0,0,.62);color:#fff;
   font-size:var(--fs-body);border-radius:var(--r-pill);padding:5px 14px;letter-spacing:.03em;line-height:1.2}
 /* YT Short（.is-short：9:16 直式置中＝pillarbox；不新增箭頭＝現況紅線） */
-.v .iStage .showList li.is-short .videoBox{background:#000;border-radius:var(--r-panel);overflow:hidden;
+.vo .iStage .showList li.is-short .videoBox{background:#000;border-radius:var(--r-panel);overflow:hidden;
   display:flex;align-items:center;justify-content:center;min-height:540px}
-.v .iStage .showList li.is-short .ph{aspect-ratio:9/16;height:520px;width:auto;border-radius:0}
-.v .iStage .showList li.is-short .ph::after{color:rgba(255,255,255,.62)}
+.vo .iStage .showList li.is-short .ph{aspect-ratio:9/16;height:520px;width:auto;border-radius:0}
+.vo .iStage .showList li.is-short .ph::after{color:rgba(255,255,255,.62)}
 
 /* ── 圖文模板新範本（圖文新範本：數據統計＋CTA×2＝新設計元件，走各版軸線；
       間距：eyebrow→標題 16、標題→lead 16、lead→按鈕 28） ── */
-.v .statBlock .stats{list-style:none;padding:0;margin:0;
+.vo .statBlock .stats{list-style:none;padding:0;margin:0;
   display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
-.v .statBlock .num{font-size:var(--fs-h1);font-weight:400;color:var(--ink-strong);line-height:1.2;letter-spacing:-.02em}
-.v .statBlock .lab{font-size:var(--fs-body);line-height:1.7;color:var(--muted);margin-top:8px}
-.v .ctaBlock .eyebrow{font-size:var(--fs-body);font-weight:500;letter-spacing:.12em;color:var(--muted);margin:0 0 16px;line-height:1.2}
-.v .ctaBlock h2{margin:0 0 16px}
-.v .ctaBlock .lead{font-size:var(--fs-h4);line-height:1.7;color:var(--body);margin:0 0 28px;max-width:640px}
-.v .ctaA .inner{text-align:center}
-.v .ctaA .lead{margin-left:auto;margin-right:auto}
-.v .ctaB .inner{display:grid;grid-template-columns:.85fr 1.15fr;gap:var(--gap-2col);align-items:center}
-.v .ctaB .ctaImg .ph{aspect-ratio:4/3}
+.vo .statBlock .num{font-size:var(--fs-h1);font-weight:400;color:var(--ink-strong);line-height:1.2;letter-spacing:-.02em}
+.vo .statBlock .lab{font-size:var(--fs-body);line-height:1.7;color:var(--muted);margin-top:8px}
+.vo .ctaBlock .eyebrow{font-size:var(--fs-body);font-weight:500;letter-spacing:.12em;color:var(--muted);margin:0 0 16px;line-height:1.2}
+.vo .ctaBlock h2{margin:0 0 16px}
+.vo .ctaBlock .lead{font-size:var(--fs-h4);line-height:1.7;color:var(--body);margin:0 0 28px;max-width:640px}
+.vo .ctaA .inner{text-align:center}
+.vo .ctaA .lead{margin-left:auto;margin-right:auto}
+.vo .ctaB .inner{display:grid;grid-template-columns:.85fr 1.15fr;gap:var(--gap-2col);align-items:center}
+.vo .ctaB .ctaImg .ph{aspect-ratio:4/3}
 
 /* ── 聯絡我們表單（表單元件＝現行公司商機表單全欄位；分組＝填寫表單／聯絡人資訊；
       V1＝上下分組全展開、V2＝分組收合 accordion；電話＝桌機複製／行動直撥 ── */
-.v .contactForm .cfInfo{margin-bottom:28px;max-width:640px}
-.v .contactForm h2{margin:0 0 16px}
-.v .contactForm .cfInfo p{font-size:var(--fs-body);line-height:1.7;color:var(--body);margin:0 0 20px}
-.v .contactForm .tel{display:inline-flex;align-items:center;gap:10px;font-size:var(--fs-h4);font-weight:700;
+.vo .contactForm .cfInfo{margin-bottom:28px;max-width:640px}
+.vo .contactForm h2{margin:0 0 16px}
+.vo .contactForm .cfInfo p{font-size:var(--fs-body);line-height:1.7;color:var(--body);margin:0 0 20px}
+.vo .contactForm .tel{display:inline-flex;align-items:center;gap:10px;font-size:var(--fs-h4);font-weight:700;
   color:var(--ink-strong);text-decoration:none;letter-spacing:.02em;margin-bottom:10px;
   border:1.5px solid var(--ink);border-radius:var(--r-btn);padding:12px 24px;transition:.18s;line-height:1.2;background:transparent;cursor:pointer}
-.v .contactForm .tel svg{width:20px;height:20px;flex:none}
-.v .contactForm .tel:hover{background:var(--ink);color:var(--inv-fg)}
-.v .contactForm .telNote{font-size:var(--fs-body);line-height:1.7;color:var(--muted);margin:0}
-.v .contactForm form{display:flex;flex-direction:column;gap:16px}
-.v .contactForm .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.v .contactForm .field{display:flex;flex-direction:column;gap:8px}
-.v .contactForm label{font-size:var(--fs-body);font-weight:500;color:var(--ink);text-align:left;line-height:1.2}
-.v .contactForm label .req{color:var(--ink-strong);font-weight:700;margin-left:2px}
-.v .contactForm input,.v .contactForm select,.v .contactForm textarea{
+.vo .contactForm .tel svg{width:20px;height:20px;flex:none}
+.vo .contactForm .tel:hover{background:var(--ink);color:var(--inv-fg)}
+.vo .contactForm .telNote{font-size:var(--fs-body);line-height:1.7;color:var(--muted);margin:0}
+.vo .contactForm form{display:flex;flex-direction:column;gap:16px}
+.vo .contactForm .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.vo .contactForm .field{display:flex;flex-direction:column;gap:8px}
+.vo .contactForm label{font-size:var(--fs-body);font-weight:500;color:var(--ink);text-align:left;line-height:1.2}
+.vo .contactForm label .req{color:var(--ink-strong);font-weight:700;margin-left:2px}
+.vo .contactForm input,.vo .contactForm select,.vo .contactForm textarea{
   font:inherit;font-size:var(--fs-body);color:var(--body);background:#fff;
   border:1px solid #D4D4D4;border-radius:6px;height:46px;padding:0 14px;outline:none;transition:.15s;width:100%}
-.v .contactForm ::placeholder{color:var(--muted)}
-.v .contactForm textarea{height:auto;min-height:104px;padding:12px 14px;resize:vertical}
-.v .contactForm input:focus,.v .contactForm select:focus,.v .contactForm textarea:focus{
+.vo .contactForm ::placeholder{color:var(--muted)}
+.vo .contactForm textarea{height:auto;min-height:104px;padding:12px 14px;resize:vertical}
+.vo .contactForm input:focus,.vo .contactForm select:focus,.vo .contactForm textarea:focus{
   border-color:var(--ink-strong);box-shadow:0 0 0 1px var(--ink-strong)}
-.v .contactForm .telRow{display:grid;grid-template-columns:auto 1fr;gap:10px}
-.v .contactForm .qtyRow{display:grid;grid-template-columns:1fr auto;gap:10px}
-.v .contactForm .telRow3{display:grid;grid-template-columns:auto 1fr 88px;gap:10px}
-.v .contactForm .formSec{border-top:1px solid var(--line);padding-top:28px;display:flex;flex-direction:column;gap:16px}
-.v .contactForm .secTitle{font-size:var(--fs-h4);line-height:1.45;font-weight:700;color:var(--ink-strong);margin:0}
-.v .contactForm .chipRow,.v .contactForm .radioRow{display:flex;flex-wrap:wrap;gap:16px;align-items:center;
+.vo .contactForm .telRow{display:grid;grid-template-columns:auto 1fr;gap:10px}
+.vo .contactForm .qtyRow{display:grid;grid-template-columns:1fr auto;gap:10px}
+.vo .contactForm .telRow3{display:grid;grid-template-columns:auto 1fr 88px;gap:10px}
+.vo .contactForm .formSec{border-top:1px solid var(--line);padding-top:28px;display:flex;flex-direction:column;gap:16px}
+.vo .contactForm .secTitle{font-size:var(--fs-h4);line-height:1.45;font-weight:700;color:var(--ink-strong);margin:0}
+.vo .contactForm .chipRow,.vo .contactForm .radioRow{display:flex;flex-wrap:wrap;gap:16px;align-items:center;
   font-size:var(--fs-body);color:var(--body);line-height:1.2}
-.v .contactForm .chipRow label,.v .contactForm .radioRow label{display:inline-flex;gap:8px;align-items:center;cursor:pointer}
-.v .contactForm input[type=radio],.v .contactForm input[type=checkbox]{accent-color:#111;width:16px;height:16px;margin:0;flex:none}
-.v .contactForm .hint{font-size:var(--fs-body);line-height:1.7;color:var(--muted);margin:0}
-.v .contactForm .upBox{display:flex;gap:16px;align-items:center}
-.v .contactForm .upPlus{width:88px;height:88px;flex:none;border:1px dashed #D4D4D4;border-radius:var(--r-img);
+.vo .contactForm .chipRow label,.vo .contactForm .radioRow label{display:inline-flex;gap:8px;align-items:center;cursor:pointer}
+.vo .contactForm input[type=radio],.vo .contactForm input[type=checkbox]{accent-color:#111;width:16px;height:16px;margin:0;flex:none}
+.vo .contactForm .hint{font-size:var(--fs-body);line-height:1.7;color:var(--muted);margin:0}
+.vo .contactForm .upBox{display:flex;gap:16px;align-items:center}
+.vo .contactForm .upPlus{width:88px;height:88px;flex:none;border:1px dashed #D4D4D4;border-radius:var(--r-img);
   display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--muted)}
-.v .contactForm .recommend{display:flex;gap:8px;align-items:flex-start;font-size:var(--fs-body);color:var(--body);line-height:1.7;cursor:pointer}
-.v .contactForm .msgBox{border:1px solid #D4D4D4;border-radius:6px;background:#fff;transition:.15s}
-.v .contactForm .msgBox textarea{border:0;min-height:96px}
-.v .contactForm .msgBox textarea:focus{border:0;box-shadow:none}
-.v .contactForm .msgBox:focus-within{border-color:var(--ink-strong);box-shadow:0 0 0 1px var(--ink-strong)}
-.v .contactForm .msgBox .chipRow{padding:2px 14px 12px}
-.v .contactForm .nameRow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.v .contactForm .nameRow > input{flex:1;min-width:220px}
-.v .contactForm .submit{border:0;min-width:200px;align-self:flex-start}
+.vo .contactForm .recommend{display:flex;gap:8px;align-items:flex-start;font-size:var(--fs-body);color:var(--body);line-height:1.7;cursor:pointer}
+.vo .contactForm .msgBox{border:1px solid #D4D4D4;border-radius:6px;background:#fff;transition:.15s}
+.vo .contactForm .msgBox textarea{border:0;min-height:96px}
+.vo .contactForm .msgBox textarea:focus{border:0;box-shadow:none}
+.vo .contactForm .msgBox:focus-within{border-color:var(--ink-strong);box-shadow:0 0 0 1px var(--ink-strong)}
+.vo .contactForm .msgBox .chipRow{padding:2px 14px 12px}
+.vo .contactForm .nameRow{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.vo .contactForm .nameRow > input{flex:1;min-width:220px}
+.vo .contactForm .submit{border:0;min-width:200px;align-self:flex-start}
 
 /* ── 頁尾＝單一黑塊（0724 四輪：含版權列全部收進黑底，不切零碎；本案新設計範圍）；
       內部四層：行動（聯繫＋訂閱，可開關：V1 開／V2 關）→ 信任（認證徽章，數量隨廠商動態）→
       識別（社群＋QR）→ 法遵（版權）；層間 1px rgba(255,255,255,.15) 細線＝現況橘線的黑白對應；
       排版＝左對齊流式（flex wrap，數量少也不空）、QR 單顆錨定右端；
       認證徽章自頁首移入（橘版測試廠商 8 枚＝示意）、TT 標誌縮小於版權列 ── */
-.v .contactSet{background:#000;color:rgba(255,255,255,.62)}
-.v .contactSet > .wrap{padding-top:44px;padding-bottom:16px}
+.vo .contactSet{background:#000;color:rgba(255,255,255,.62)}
+.vo .contactSet > .wrap{padding-top:44px;padding-bottom:16px}
 /* 行動鈕併入識別層（0724 九輪：位置＝社群左側，左→右＝行動→識別→QR 權重遞減；
    頁尾＝入口層非說明層；標題與說明保留於 DOM 僅 CSS 隱藏；
    原 contacts <section> 已移除＝修掉其誤吃全站 section 88 內距的 bug） */
-.v .contactSet .contactUs p,.v .contactSet .emailUpdate p{display:none}
-.v .contactSet button{font:inherit;font-size:var(--fs-body);font-weight:600;cursor:pointer;
+.vo .contactSet .contactUs p,.vo .contactSet .emailUpdate p{display:none}
+.vo .contactSet button{font:inherit;font-size:var(--fs-body);font-weight:600;cursor:pointer;
   background:#fff;color:#111;border:0;border-radius:var(--r-btn);padding:12px 28px;line-height:1.2}
-.v .contactSet .certList{border-top:1px solid rgba(255,255,255,.15);padding:16px 0;
+.vo .contactSet .certList{border-top:1px solid rgba(255,255,255,.15);padding:16px 0;
   display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.v .contactSet .cert{height:40px;min-width:88px;border-radius:6px;background:rgba(255,255,255,.12);
+.vo .contactSet .cert{height:40px;min-width:88px;border-radius:6px;background:rgba(255,255,255,.12);
   display:flex;align-items:center;justify-content:center;font-size:var(--fs-body);color:rgba(255,255,255,.62);padding:0 14px;letter-spacing:.03em}
-.v .contactSet .others{padding:0 0 16px;
+.vo .contactSet .others{padding:0 0 16px;
   display:flex;align-items:center;flex-wrap:wrap;gap:16px}
-.v .contactSet .others ul{display:flex;flex-wrap:wrap;gap:12px;list-style:none;margin:0;padding:0}
-.v .contactSet .emailUpdate + ul{margin-left:28px}
-.v .contactSet .qrcode{margin-left:auto}
-.v .contactSet .others li a{width:38px;height:38px;border-radius:50%;background:#fff;color:#111;
+.vo .contactSet .others ul{display:flex;flex-wrap:wrap;gap:12px;list-style:none;margin:0;padding:0}
+.vo .contactSet .emailUpdate + ul{margin-left:28px}
+.vo .contactSet .qrcode{margin-left:auto}
+.vo .contactSet .others li a{width:38px;height:38px;border-radius:50%;background:#fff;color:#111;
   display:flex;align-items:center;justify-content:center;font-size:var(--fs-body);font-weight:700;text-decoration:none}
-.v .contactSet .qrcode{width:88px;height:88px;border-radius:var(--r-img);flex:none;
+.vo .contactSet .qrcode{width:88px;height:88px;border-radius:var(--r-img);flex:none;
   background:linear-gradient(135deg,#cfcfcf,#efefef 42%,#bdbdbd)}
-.v .contactSet .webFooter{border-top:1px solid rgba(255,255,255,.15);background:transparent;padding:16px 0 12px}
-.v .contactSet .webFooter p{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:flex-start;
+.vo .contactSet .webFooter{border-top:1px solid rgba(255,255,255,.15);background:transparent;padding:16px 0 12px}
+.vo .contactSet .webFooter p{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:flex-start;
   margin:0;min-height:0;font-size:var(--fs-body);color:rgba(255,255,255,.62);padding:0}
-.v .contactSet .webFooter a{color:rgba(255,255,255,.62);text-decoration:none;display:inline-flex;align-items:center;gap:8px}
-.v .contactSet .webFooter a:hover{color:#fff}
-.v .contactSet .webFooter .ttLogo{width:66px;height:18px;border-radius:3px;display:inline-block;
+.vo .contactSet .webFooter a{color:rgba(255,255,255,.62);text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.vo .contactSet .webFooter a:hover{color:#fff}
+.vo .contactSet .webFooter .ttLogo{width:66px;height:18px;border-radius:3px;display:inline-block;
   background:linear-gradient(135deg,#cfcfcf,#efefef 42%,#bdbdbd)}
-
-/* ================================================================
-   V1｜Xometry 黑白轉譯 —— 滿版底色分段；T 字全置中；方圓角系統 6/8/10/12/16
-   ================================================================ */
-.v1{
-  --r-card:12px;--r-panel:16px;--r-btn:8px;--r-img:12px;--r-pill:6px;
-  --gap:24px;--sec-pad:88px;--line:#E5E5E5;--surface:#F4F5F7;
-  --ink-strong:#000;--ink:#111;--body:#333;--muted:#777;
-  --shadow:none;
-}
-/* T 字軸線：section 層一律置中（標題、副標、整組內容）；卡片內部文字左（base 已左） */
-.v1 h2{text-align:center}
-/* 大型滿寬媒體圓角 16；內容卡與內容圖 12 */
-.v1 .bigBanner .ph,.v1 .bigBanner .fadeoutMask{border-radius:16px}
-.v1 .iStage .videoBox .ph{border-radius:16px}
-.v1 .adv .ph{border-radius:16px}
-/* 大圖圓點容器＝8（浮於照片的容器補償，方圓角系統） */
-.v1 .bigBanner .indicator ul{border-radius:8px}
-/* 導覽 hover＝字色加深（Xometry 純文字階） */
-.v1 nav.menu a:hover{color:var(--ink-strong);font-weight:600}
-/* 工具列徽章數字＝6（方圓角系統） */
-.v1 .epHeader .setNbr{border-radius:6px}
-/* 輪播箭頭＝10 方圓鈕；白底不透明＋1px 框＋陰影（浮於照片＝全站唯一「框＋影並用」例外） */
-.v1 .arrowLeft,.v1 .arrowRight{background:#fff;border:1px solid var(--line);border-radius:10px;
-  box-shadow:0 4px 16px rgba(0,0,0,.08);font-size:20px;color:#111}
-/* 公司新聞：白卡 1px 框無影；hover 上浮＋影、框退場（擇一） */
-.v1 .newsBlock .list > li:hover{transform:translateY(-4px);box-shadow:0 4px 16px rgba(0,0,0,.08);border-color:transparent}
-.v1 .newsBlock .labelHot{border-radius:6px}
-.v1 .newsBlock .more a:hover{background:#111;color:#fff}
-/* 標記統一右上、V1＝方圓角 6（HOT 與折扣同款）；原價＝深底輔階（overlay 白字上） */
-.v1 .pdQueue .discountLabel{border-radius:6px}
-.v1 .pdQueue .oldPrice{color:rgba(255,255,255,.62)}
-/* 關於我們＝敘事層 → 滿版出血 #F5F5F5 淺灰帶（0 圓角；白底版：報價「白底黑字」要求）；
-   整組置中（T 字）；文字與按鈕回歸白底階＝共用層（h2 黑／內文 #333／黑實心鈕） */
-.v1 .aboutUs{background:#F5F5F5}
-.v1 .aboutUs article{max-width:900px;margin:0 auto;text-align:center}
-.v1 .aboutUs article > div:not(.more){margin:0 auto}
-/* 白底版二修：查看全文／聯繫我們／訂閱 三鈕改白底黑字（黑描邊沿用按鈕通則 1.5px）；
-   hover 與 More 鈕一致＝黑底白字反轉 */
-.v1 .aboutUs .more a,.v1 .contacts button{background:#fff;color:#111}
-.v1 .aboutUs .more a:hover,.v1 .contacts button:hover{background:#111;color:#fff}
-/* 產品展示：標題與 tab 置中堆疊（T 字）；tab＝深色槽 8＋白實心滑塊 6（Xometry 分段控制器，
-   形狀依方圓角系統轉譯）；卡片 hover 與新聞卡一致 */
-.v1 .pdQueue .section-head{flex-direction:column;align-items:center;gap:24px}
-/* 白底版二修：tab 槽去黑底＝#F5F5F5 淺槽＋黑實心滑塊白字（雙重編碼不變、明暗反轉）；
-   未選字回歸共用層 #777 */
-.v1 .pdQueue .tablist{background:#F5F5F5;border-radius:8px;padding:5px}
-.v1 .pdQueue .tablist button[aria-selected="true"]{background:#111;color:#fff}
-.v1 .pdQueue .pdImg{border-radius:12px}
-.v1 .pdQueue .list > li:hover{transform:translateY(-4px)}
-.v1 .pdQueue .list > li:hover .pdImg{box-shadow:0 4px 16px rgba(0,0,0,.08);border-color:transparent}
-/* 多媒體輪播＝滿版出血 #F5F5F5 淺灰帶（白底版）；影片框容器寬圓角 16 置帶內；
-   platformTag 回歸統一深浮層 rgba(0,0,0,.62)＝共用層（與播放鍵同值，淺底上可讀）；
-   圓點回歸白底雙態 #D4D4D4／#111＝共用層 */
-.v1 .iStage{background:#F5F5F5}
-.v1 .iStage .showList li.is-short .videoBox{background:transparent;min-height:540px;border-radius:0}
-/* 圖文模板新範本（新元件＝T 字置中）：統計＝淺灰帶；CTA一＝淺色照片滿版；CTA二＝白底分欄欄內置中 */
-/* 數據統計＝#F5F5F5 淺灰帶（白底版：原 0725 深底裁示依報價「白底黑字」調整）；
-   文字與按鈕回歸白底階＝共用層（數字黑／標籤 #777／h2 黑／lead #333／黑實心鈕） */
-.v1 .statBlock{background:#F5F5F5}
-/* 白底版二修：CTA一＝淺色食物照滿版背景（img/cta-1-bg.jpg＝Pexels 7489006 包餃子淺色調，
-   貼 ANKO 食品機械情境）＋白 .72 遮罩保黑字可讀 */
-.v1 .ctaA{background:linear-gradient(rgba(255,255,255,.72),rgba(255,255,255,.72)),
-  url(img/cta-1-bg.jpg) center/cover no-repeat}
-.v1 .ctaB .ctaText{text-align:center}
-.v1 .ctaB .lead{margin-left:auto;margin-right:auto}
-/* 聯絡我們表單（新元件＝V1 方案「上下分組全展開」）：說明＋電話置中在上（T 字）、
-   表單分組在下（max-width 840 置中；欄位標籤靠左＝易用性紅線例外）；送出置中 */
-.v1 .contactForm .cfInfo{text-align:center;max-width:none}
-.v1 .contactForm form{max-width:840px;margin:0 auto;width:100%}
-.v1 .contactForm .submit{align-self:center}
-/* 頁尾各層置中（V1 軸線；0724 五輪：「頁尾＝功能列例外」作廢）；QR 隨群組置中不錨右 */
-.v1 .contactSet .certList{justify-content:center}
-.v1 .contactSet .others{justify-content:center}
-.v1 .contactSet .others .qrcode{margin-left:28px}
-.v1 .contactSet .webFooter p{justify-content:center}
-/* 搜尋框／鈕與社群鈕轉方圓角（0724 五輪：正圓只留圓點本體，正圓＝V2 專屬語彙） */
-.v1 .topZone .search input[type=text]{border-radius:8px}
-/* 白底版二修：搜尋鈕去黑底、只留放大鏡（鈕透明、icon 轉黑；點擊區不變） */
-.v1 .topZone .search input[type=button]{border-radius:6px;background:transparent}
-.v1 .topZone .search .searchIcon{background:var(--ink)}
-.v1 .contactSet .others li a{border-radius:10px}
 
 /* ================================================================
    V2｜柔性面板 —— 面板分段；全左對齊；正圓系統 28/20/14/999
    ================================================================ */
-.v2{
+.vo2{
   --r-card:20px;--r-panel:28px;--r-btn:999px;--r-img:14px;--r-pill:999px;
   --gap:22px;--sec-pad:28px;--line:#ECECEC;--surface:#F2F2F2;
   --ink-strong:#0A0A0A;--ink:#111;--body:#3A3A3A;--muted:#8A8A8A;
   --shadow:0 6px 24px rgba(0,0,0,.07);
 }
 /* 同寬規則：面板背景畫在 .wrap（外框公式寬）；滿寬媒體以負邊距補齊到同一外框寬 */
-.v2 .bigBanner .showArea{margin:0 -30px}
-.v2 .adv a{margin:0 -30px}
-.v2 .iStage .showArea{margin:0 -30px}
-.v2 .bigBanner .ph,.v2 .bigBanner .fadeoutMask{border-radius:var(--r-panel)}
-.v2 .adv .ph{border-radius:var(--r-panel)}
-.v2 .iStage .videoBox .ph{border-radius:var(--r-panel)}
-.v2 .iStage .showList li.is-short .videoBox{border-radius:var(--r-panel);background:#262626}
+.vo2 .bigBanner .showArea{margin:0 -30px}
+.vo2 .adv a{margin:0 -30px}
+.vo2 .iStage .showArea{margin:0 -30px}
+.vo2 .bigBanner .ph,.vo2 .bigBanner .fadeoutMask{border-radius:var(--r-panel)}
+.vo2 .adv .ph{border-radius:var(--r-panel)}
+.vo2 .iStage .videoBox .ph{border-radius:var(--r-panel)}
+.vo2 .iStage .showList li.is-short .videoBox{border-radius:var(--r-panel);background:#262626}
 /* 面板容器（統一內距 44 四邊等距、圓角 28）：一個面板＝一個元件；
    深 #111＝關於我們與CTA一（0725 十二輪：底色任務對照兩版統一，
    原「深色位置與 V1 對調」合併理由作廢——邏輯一致性優先於位置差異化）；其餘＝淺灰 */
-.v2 .newsBlock > .wrap,.v2 .aboutUs > .wrap,.v2 .contacts.alone > .wrap,.v2 .pdQueue > .wrap,
-.v2 .statBlock > .wrap,.v2 .ctaA > .wrap,.v2 .ctaB > .wrap,.v2 .contactForm > .wrap{
+.vo2 .newsBlock > .wrap,.vo2 .aboutUs > .wrap,.vo2 .contacts.alone > .wrap,.vo2 .pdQueue > .wrap,
+.vo2 .statBlock > .wrap,.vo2 .ctaA > .wrap,.vo2 .ctaB > .wrap,.vo2 .contactForm > .wrap{
   border-radius:var(--r-panel);padding:44px}
-.v2 .newsBlock > .wrap,.v2 .contacts.alone > .wrap,.v2 .pdQueue > .wrap,
-.v2 .ctaB > .wrap,.v2 .contactForm > .wrap{background:var(--surface)}
-.v2 .aboutUs > .wrap,.v2 .ctaA > .wrap,.v2 .statBlock > .wrap{background:#262626}
+.vo2 .newsBlock > .wrap,.vo2 .contacts.alone > .wrap,.vo2 .pdQueue > .wrap,
+.vo2 .ctaB > .wrap,.vo2 .contactForm > .wrap{background:var(--surface)}
+.vo2 .aboutUs > .wrap,.vo2 .ctaA > .wrap,.vo2 .statBlock > .wrap{background:#262626}
 /* 白底版三修（使用者裁示）：V2 CTA一 面板上照片＝同 V1 用圖（cta-1-bg.jpg），
    黑 .72 遮罩（與 V1 白 .72 對稱＝照片透出程度一致）保白字可讀、面板仍屬深階；
    圓角 28 由面板 border-radius 自然剪裁背景 */
-.v2 .ctaA > .wrap{background:linear-gradient(rgba(0,0,0,.72),rgba(0,0,0,.72)),
+.vo2 .ctaA > .wrap{background:linear-gradient(rgba(0,0,0,.72),rgba(0,0,0,.72)),
   url(img/cta-1-bg.jpg) center/cover no-repeat}
-.v2 .statBlock .num{color:#fff}
-.v2 .statBlock .lab{color:rgba(255,255,255,.62)}
+.vo2 .statBlock .num{color:#fff}
+.vo2 .statBlock .lab{color:rgba(255,255,255,.62)}
 /* 全左軸線：聯繫與訂閱整組靠左（對齊＝皮層，依 V2 軸線）；兩卡 50/50 撐滿面板（0725 裁示） */
-.v2 .contacts.alone .wrap{justify-content:flex-start;grid-template-columns:1fr 1fr}
+.vo2 .contacts.alone .wrap{justify-content:flex-start;grid-template-columns:1fr 1fr}
 /* 導覽 hover＝底線（與 tab 同一「目前所在／切換」語彙） */
-.v2 nav.menu a{border-bottom:2px solid transparent;padding-bottom:8px}
-.v2 nav.menu a:hover{border-bottom-color:#111;color:var(--ink-strong)}
+.vo2 nav.menu a{border-bottom:2px solid transparent;padding-bottom:8px}
+.vo2 nav.menu a:hover{border-bottom-color:#111;color:var(--ink-strong)}
 /* 輪播箭頭＝正圓柔和圓鈕；位置統一「騎在外框邊線上」（0725 二裁：中心壓面板／媒體邊緣，
    卡列面板邊＝內縮 44 →-66、大圖媒體邊＝-22，同一條規則；V1 維持現況兩種定位＝兩案並陳） */
-.v2 .arrowLeft,.v2 .arrowRight{background:#fff;border:1px solid var(--line);border-radius:50%;
+.vo2 .arrowLeft,.vo2 .arrowRight{background:#fff;border:1px solid var(--line);border-radius:50%;
   box-shadow:0 2px 10px rgba(0,0,0,.07);font-size:20px;color:#111}
-.v2 .arrowLeft{left:-66px}
-.v2 .arrowRight{right:-66px}
-.v2 .bigBanner .arrowLeft{left:-22px}
-.v2 .bigBanner .arrowRight{right:-22px}
+.vo2 .arrowLeft{left:-66px}
+.vo2 .arrowRight{right:-66px}
+.vo2 .bigBanner .arrowLeft{left:-22px}
+.vo2 .bigBanner .arrowRight{right:-22px}
 /* 圓點：作用中＝黑色長膠囊（形狀＋長度雙重編碼；填色雙態承 base）；大圖圓點容器＝膠囊 */
-.v2 .indicator li.now{width:24px}
-.v2 .bigBanner .indicator ul{border-radius:999px}
+.vo2 .indicator li.now{width:24px}
+.vo2 .bigBanner .indicator ul{border-radius:999px}
 /* 標記統一右上、V2＝膠囊（HOT 與折扣同款；圓放不下三字母、膠囊與 V2 語彙一致；
    0724 十輪：↗ 撤場；可點性＝整卡點擊＋hover 浮起慣例） */
-.v2 .pdQueue .discountLabel{border-radius:999px}
-.v2 .pdQueue .oldPrice{color:var(--muted)}
-.v2 .pdQueue .discountPrice{color:var(--ink)}
+.vo2 .pdQueue .discountLabel{border-radius:999px}
+.vo2 .pdQueue .oldPrice{color:var(--muted)}
+.vo2 .pdQueue .discountPrice{color:var(--ink)}
 /* 大圖輪播：文字左下（nomal hero 圖證；疊圖上＝現況紅線不變） */
-.v2 .bigBanner .textCnt{align-items:flex-start;justify-content:flex-end;text-align:left;padding:0 0 84px 56px}
+.vo2 .bigBanner .textCnt{align-items:flex-start;justify-content:flex-end;text-align:left;padding:0 0 84px 56px}
 /* 公司新聞＝淺灰面板＋白卡浮起（0725 十二輪：看資訊類＝淺；與產品卡同構） */
-.v2 .newsBlock .list > li{border:0;box-shadow:var(--shadow)}
-.v2 .newsBlock .list > li:hover{transform:translateY(-6px);box-shadow:0 14px 34px rgba(0,0,0,.12)}
-.v2 .newsBlock .list > li > a{padding:10px}
-.v2 .newsBlock .newsImg .ph{border-radius:var(--r-img)}
-.v2 .newsBlock h4{margin:16px 8px 8px}
-.v2 .newsBlock p{margin:0 8px 14px}
-.v2 .newsBlock .labelHot{border-radius:999px}
-.v2 .newsBlock .more a:hover{background:#111;color:#fff}
+.vo2 .newsBlock .list > li{border:0;box-shadow:var(--shadow)}
+.vo2 .newsBlock .list > li:hover{transform:translateY(-6px);box-shadow:0 14px 34px rgba(0,0,0,.12)}
+.vo2 .newsBlock .list > li > a{padding:10px}
+.vo2 .newsBlock .newsImg .ph{border-radius:var(--r-img)}
+.vo2 .newsBlock h4{margin:16px 8px 8px}
+.vo2 .newsBlock p{margin:0 8px 14px}
+.vo2 .newsBlock .labelHot{border-radius:999px}
+.vo2 .newsBlock .more a:hover{background:#111;color:#fff}
 /* 關於我們＝深色面板（敘事層；深底文字 2 階、唯一按鈕＝反白實心膠囊）；
    聯繫與訂閱：淺灰面板、膠囊按鈕、左對齊堆疊；行動卡＝白卡浮起無框 */
-.v2 .aboutUs h2{color:#fff}
-.v2 .aboutUs article > div:not(.more){color:rgba(255,255,255,.62)}
+.vo2 .aboutUs h2{color:#fff}
+.vo2 .aboutUs article > div:not(.more){color:rgba(255,255,255,.62)}
 /* 白底版四修（使用者裁示）：三鈕降非CTA＝描邊膠囊（次要動作；實心留給真 CTA）。
    查看全文（深面板上）＝透明底白描邊白字（深底描邊 .55＝共04）；hover 白實心反轉 */
-.v2 .aboutUs .more a{border-radius:999px;background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
-.v2 .aboutUs .more a:hover{background:#fff;color:#111;border-color:#fff}
+.vo2 .aboutUs .more a{border-radius:999px;background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
+.vo2 .aboutUs .more a:hover{background:#fff;color:#111;border-color:#fff}
 /* 聯繫我們／訂閱（淺面板白卡上）＝白底黑字黑描邊；hover 黑白反轉（與 V1 對稱） */
-.v2 .contacts.alone button{border-radius:999px;background:#fff;color:#111}
-.v2 .contacts.alone button:hover{background:#111;color:#fff}
-.v2 .contacts.alone .contactUs,.v2 .contacts.alone .emailUpdate{border:0}
+.vo2 .contacts.alone button{border-radius:999px;background:#fff;color:#111}
+.vo2 .contacts.alone button:hover{background:#111;color:#fff}
+.vo2 .contacts.alone .contactUs,.vo2 .contacts.alone .emailUpdate{border:0}
 /* 產品展示：tab＝文字底線式；卡片白底浮起 */
-.v2 .pdQueue .tablist{gap:18px}
-.v2 .pdQueue .tablist button{padding:9px 2px;border-radius:0;border-bottom:2px solid transparent}
-.v2 .pdQueue .tablist button[aria-selected="true"]{color:#111;font-weight:700;border-bottom-color:#111}
-.v2 .pdQueue .list > li{background:#fff;border-radius:var(--r-card);box-shadow:var(--shadow)}
-.v2 .pdQueue .list > li:hover{transform:translateY(-6px);box-shadow:0 14px 34px rgba(0,0,0,.12)}
-.v2 .pdQueue .list > li > a{padding:10px}
-.v2 .pdQueue .pdImg{border:0;border-radius:var(--r-img)}
+.vo2 .pdQueue .tablist{gap:18px}
+.vo2 .pdQueue .tablist button{padding:9px 2px;border-radius:0;border-bottom:2px solid transparent}
+.vo2 .pdQueue .tablist button[aria-selected="true"]{color:#111;font-weight:700;border-bottom-color:#111}
+.vo2 .pdQueue .list > li{background:#fff;border-radius:var(--r-card);box-shadow:var(--shadow)}
+.vo2 .pdQueue .list > li:hover{transform:translateY(-6px);box-shadow:0 14px 34px rgba(0,0,0,.12)}
+.vo2 .pdQueue .list > li > a{padding:10px}
+.vo2 .pdQueue .pdImg{border:0;border-radius:var(--r-img)}
 /* 產品卡＝圖上文下兩段式（0724 五輪：去框感、與新聞卡同構；overlay absolute→static＝
    純 CSS、DOM 順序不動；V1 保留現況 overlay 疊圖＝兩版可比，列簡報說明） */
-.v2 .pdQueue .hiddenInfo{position:static;background:none;color:var(--ink);padding:12px 8px 4px;border-radius:0}
-.v2 .pdQueue .hiddenInfo p{color:var(--ink)}
-.v2 .pdQueue .priceSet{color:var(--muted)}
+.vo2 .pdQueue .hiddenInfo{position:static;background:none;color:var(--ink);padding:12px 8px 4px;border-radius:0}
+.vo2 .pdQueue .hiddenInfo p{color:var(--ink)}
+.vo2 .pdQueue .priceSet{color:var(--muted)}
 /* 數據統計（新元件＝左軸線）：面板內左對齊 */
-.v2 .statBlock .stats{text-align:left}
+.vo2 .statBlock .stats{text-align:left}
 /* eyebrow＝outline 膠囊（兩款 CTA 一致；深底白框、淺底黑框） */
-.v2 .ctaBlock .eyebrow{display:inline-block;border-radius:999px;padding:5px 14px;letter-spacing:.1em}
-.v2 .ctaA .eyebrow{color:#fff;border:1px solid rgba(255,255,255,.55)}
-.v2 .ctaB .eyebrow{color:#111;border:1px solid #111}
+.vo2 .ctaBlock .eyebrow{display:inline-block;border-radius:999px;padding:5px 14px;letter-spacing:.1em}
+.vo2 .ctaA .eyebrow{color:#fff;border:1px solid rgba(255,255,255,.55)}
+.vo2 .ctaB .eyebrow{color:#111;border:1px solid #111}
 /* CTA一＝左文右鈕（0724 五輪：左重右輕修正，按鈕移右側垂直置中） */
-.v2 .ctaA .inner{display:grid;grid-template-columns:1fr auto;column-gap:56px;align-items:center;text-align:left}
-.v2 .ctaA .inner .btn{grid-column:2;grid-row:1 / span 3;align-self:center}
-.v2 .ctaA .eyebrow{justify-self:start}
-.v2 .ctaA .lead{margin-left:0;margin-bottom:0}
-.v2 .ctaA h2{color:#fff}
-.v2 .ctaA .lead{color:rgba(255,255,255,.62)}
-.v2 .ctaA .btn{background:#fff;color:#111;border-color:#fff}
-.v2 .ctaB .ctaImg .ph{box-shadow:var(--shadow)}
+.vo2 .ctaA .inner{display:grid;grid-template-columns:1fr auto;column-gap:56px;align-items:center;text-align:left}
+.vo2 .ctaA .inner .btn{grid-column:2;grid-row:1 / span 3;align-self:center}
+.vo2 .ctaA .eyebrow{justify-self:start}
+.vo2 .ctaA .lead{margin-left:0;margin-bottom:0}
+.vo2 .ctaA h2{color:#fff}
+.vo2 .ctaA .lead{color:rgba(255,255,255,.62)}
+.vo2 .ctaA .btn{background:#fff;color:#111;border-color:#fff}
+.vo2 .ctaB .ctaImg .ph{box-shadow:var(--shadow)}
 /* 聯絡我們表單（V2 方案「分組收合 accordion」）：淺灰面板、白輸入框、欄位圓角 14；電話膠囊描邊；
    面板頭攤平＝左（標題＋說明）右（電話＋副註）平衡（0724 五輪：左重右輕修正）；
    收合＝點組標題（⌃/⌄）；demo 預設展開供審視、上線建議預設收合（列訪談） */
-.v2 .contactForm input,.v2 .contactForm select,.v2 .contactForm textarea{border-radius:14px}
-.v2 .contactForm .msgBox{border-radius:14px}
-.v2 .contactForm .cfInfo{display:grid;grid-template-columns:1fr auto;column-gap:56px;align-items:center;
+.vo2 .contactForm input,.vo2 .contactForm select,.vo2 .contactForm textarea{border-radius:14px}
+.vo2 .contactForm .msgBox{border-radius:14px}
+.vo2 .contactForm .cfInfo{display:grid;grid-template-columns:1fr auto;column-gap:56px;align-items:center;
   max-width:none;margin-bottom:16px}
-.v2 .contactForm .cfInfo h2{grid-column:1;margin:0 0 8px}
-.v2 .contactForm .cfInfo p{grid-column:1;margin:0}
-.v2 .contactForm .cfInfo .tel{grid-column:2;grid-row:1;justify-self:end;margin:0}
-.v2 .contactForm .cfInfo .telNote{grid-column:2;grid-row:2;justify-self:end;margin:4px 0 0}
-.v2 .contactForm .secTitle{cursor:pointer;display:flex;align-items:center;justify-content:space-between}
-.v2 .contactForm .secTitle::after{content:"";width:14px;height:14px;background:var(--muted);flex:none;
+.vo2 .contactForm .cfInfo h2{grid-column:1;margin:0 0 8px}
+.vo2 .contactForm .cfInfo p{grid-column:1;margin:0}
+.vo2 .contactForm .cfInfo .tel{grid-column:2;grid-row:1;justify-self:end;margin:0}
+.vo2 .contactForm .cfInfo .telNote{grid-column:2;grid-row:2;justify-self:end;margin:4px 0 0}
+.vo2 .contactForm .secTitle{cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.vo2 .contactForm .secTitle::after{content:"";width:14px;height:14px;background:var(--muted);flex:none;
   -webkit-mask:var(--ico-down) center/contain no-repeat;mask:var(--ico-down) center/contain no-repeat;
   transform:rotate(180deg);transition:.18s}
-.v2 .contactForm .formSec.is-closed .secTitle::after{transform:rotate(0deg)}
-.v2 .contactForm .formSec.is-closed > *:not(.secTitle){display:none}
+.vo2 .contactForm .formSec.is-closed .secTitle::after{transform:rotate(0deg)}
+.vo2 .contactForm .formSec.is-closed > *:not(.secTitle){display:none}
 /* 頁尾＝左右滿版黑帶（0725 裁示：對應頁首＝系統框架首尾皆滿版；內容單元才用面板）；
    行動鈕關閉示意（可開關，V2 示範關）；徽章膠囊；各層左起＋QR 錨右（V2 軸線） */
-.v2 .contactSet{background:#111}
-.v2 .contactSet .contactUs,.v2 .contactSet .emailUpdate{display:none}
-.v2 .contactSet .cert{background:rgba(255,255,255,.12);border-radius:999px}
+.vo2 .contactSet{background:#111}
+.vo2 .contactSet .contactUs,.vo2 .contactSet .emailUpdate{display:none}
+.vo2 .contactSet .cert{background:rgba(255,255,255,.12);border-radius:999px}
+
+/* ================================================================
+   V3A｜編輯字報（Editorial Broadsheet）—— 把首頁排成一份黑白刊物
+   概念：分段靠「2px 粗頂線＋兩位數區塊編號」，不靠留白（留白反而收到 64）。
+   特色來源＝黑白排印的量體對比與線條系統：TriOrb 72px 大字標語（hero 文字左下）、
+   key vision 001–008 編號卡（h2::before CSS counter）、數新动态列表的密度、
+   年報表格式數據列（88px 細體數字＋1px 分項線）；全站方角、工業製圖感硬框。
+   ================================================================ */
+.vo3{
+  --r-card:0;--r-panel:0;--r-btn:0;--r-img:0;--r-pill:0;
+  --gap:24px;--sec-pad:64px;--line:#E5E5E5;--surface:#F5F5F5;
+  --ink-strong:#000;--ink:#111;--body:#333;--muted:#777;
+  --shadow:none;
+  counter-reset:sec;
+}
+/* 區塊分段線＝報刊 rule：每個區塊（含 adv／iStage 兩個 div 區塊）頂部 2px 黑線，畫在區塊全寬；
+   大圖輪播免線（開版）、頁尾黑塊免線（siteFooter／contactSet 非 section＝自然不吃線） */
+.vo3 section:not(.bigBanner),.vo3 .adv,.vo3 .iStage{border-top:2px solid #111}
+/* 區塊編號＋標題：h2 左對齊 56px；編號＝CSS counter 兩位數（01）置標題上方，
+   counter 掛容器（counter-reset）與 h2（counter-increment）＝順序自動、不動 DOM */
+.vo3 h2{text-align:left;font-size:56px;letter-spacing:-.03em;counter-increment:sec}
+.vo3 h2::before{content:counter(sec,decimal-leading-zero);display:block;
+  font-size:15px;font-weight:500;color:#777;letter-spacing:.14em;margin-bottom:12px}
+/* 大圖輪播＝文字左下、主標 72（量體對比的最強一擊）；遮罩改由下往上壓深，上緣淨空 */
+.vo3 .bigBanner .textCnt{align-items:flex-start;justify-content:flex-end;text-align:left;padding:0 0 64px 64px}
+.vo3 .bigBanner .textCnt h4{font-size:72px;font-weight:700;letter-spacing:-.03em}
+.vo3 .bigBanner .textCnt p{font-size:20px}
+.vo3 .bigBanner .fadeoutMask{background:linear-gradient(0deg,rgba(0,0,0,.55),rgba(0,0,0,0) 55%)}
+/* 公司新聞＝編輯格（2+2 鏡像版面）：5 欄柵格上首卡 3 欄、中二卡各 2 欄、尾卡 3 欄
+   ＝首尾卡寬、中二卡窄，兩排對稱（報刊頭版版面）；卡去外框改 1px 黑細線＋文字左 */
+.vo3 .newsBlock .list{grid-template-columns:repeat(5,1fr)}
+.vo3 .newsBlock .list > li:nth-child(1),.vo3 .newsBlock .list > li:nth-child(4){grid-column:span 3}
+.vo3 .newsBlock .list > li:nth-child(2),.vo3 .newsBlock .list > li:nth-child(3){grid-column:span 2}
+.vo3 .newsBlock .list > li{background:transparent;border:0;border-top:1px solid #111;padding-top:16px}
+.vo3 .newsBlock h4{margin:16px 0 8px}
+.vo3 .newsBlock p{margin:0}
+.vo3 .newsBlock .list > li:nth-child(1) h4{font-size:27px}
+.vo3 .newsBlock .more a:hover{background:#111;color:#fff}
+/* 產品展示：區塊頭左對齊一行（h2 左、tab 以 margin-left:auto 右推）；
+   tab＝文字式底線（2px 狀態線＝共用線條系統的狀態粗細） */
+.vo3 .pdQueue .section-head{flex-wrap:nowrap;align-items:flex-end}
+.vo3 .pdQueue .tablist{margin-left:auto;gap:0}
+.vo3 .pdQueue .tablist button{padding:9px 0;margin-right:24px;border-radius:0;border-bottom:2px solid transparent}
+.vo3 .pdQueue .tablist button:last-child{margin-right:0}
+.vo3 .pdQueue .tablist button[aria-selected="true"]{color:#111;font-weight:700;border-bottom-color:#111}
+/* 產品卡：overlay 疊圖保留（V1 同構）；圖框改 1px 黑硬框＝工業製圖感；
+   hover 不上浮、改 2px 黑外框（密度優先，不做飄浮動作） */
+.vo3 .pdQueue .pdImg{border:1px solid #111}
+.vo3 .pdQueue .list > li:hover{transform:none}
+.vo3 .pdQueue .list > li:hover .pdImg{outline:2px solid #111}
+/* 多媒體輪播：白底不用灰帶；直式影片的黑色 pillarbox 退場（頁尾才是全頁唯一黑塊） */
+.vo3 .iStage .showList li.is-short .videoBox{background:transparent}
+/* 數據統計＝年報表格式：白底、左對齊，每項一條 1px 頂線；數字 88px 細體、標籤 15 輔色 */
+.vo3 .statBlock{background:#fff}
+.vo3 .statBlock .stats{text-align:left}
+.vo3 .statBlock .stats > li{border-top:1px solid #111;padding-top:16px}
+.vo3 .statBlock .num{font-size:88px;font-weight:300;letter-spacing:-.04em;line-height:1.15}
+.vo3 .statBlock .lab{font-size:15px;color:#777}
+/* 關於我們＝非對稱編輯版式：左欄標題（含編號）、右欄內文與按鈕，欄比 0.85:1.15、欄距 56、頂端對齊 */
+.vo3 .aboutUs article{display:grid;grid-template-columns:.85fr 1.15fr;column-gap:var(--gap-2col);row-gap:0;align-items:start}
+.vo3 .aboutUs h2{grid-column:1;grid-row:1}
+.vo3 .aboutUs article > div:not(.more){grid-column:2;grid-row:1;max-width:640px}
+.vo3 .aboutUs .more{grid-column:2;grid-row:2;margin-top:28px}
+/* CTA一＝淺色照片帶＋白 .72 遮罩（沿正式版用圖）；文字與按鈕左對齊 */
+.vo3 .ctaA{background:linear-gradient(rgba(255,255,255,.72),rgba(255,255,255,.72)),
+  url(img/cta-1-bg.jpg) center/cover no-repeat}
+.vo3 .ctaA .inner{text-align:left}
+.vo3 .ctaA .lead{margin-left:0;margin-right:0}
+/* 聯絡我們表單：左對齊（V2 軸線）、輸入類方角；送出鈕補描邊供 hover 反轉時保住形狀 */
+.vo3 .contactForm input,.vo3 .contactForm select,.vo3 .contactForm textarea,.vo3 .contactForm .msgBox{border-radius:0}
+.vo3 .contactForm .submit{border:1.5px solid var(--ink)}
+/* 聯繫與訂閱＝方角卡＋1px 黑框（內容邊界在本案改由黑細線承載） */
+.vo3 .contacts.alone .contactUs,.vo3 .contacts.alone .emailUpdate{border:1px solid #111}
+/* 按鈕：全站方角（變數已 0）；主要＝黑實心、次要＝1.5px 黑描邊（共用層）；hover 一律黑白反轉 */
+.vo3 .btn:hover,.vo3 .aboutUs .more a:hover,.vo3 .contacts.alone button:hover{background:#fff;color:#111}
+/* 輪播箭頭＝方形 44、1px 黑框、白底黑箭、無陰影（位置沿 V1＝共用層） */
+.vo3 .arrowLeft,.vo3 .arrowRight{background:#fff;border:1px solid #111;border-radius:0;box-shadow:none;color:#111}
+/* 圓點改方點＝方語彙貫徹（作用中 #111＝共用層雙態） */
+.vo3 .indicator li{border-radius:0;width:8px}
+/* 搜尋＝方角框、黑描邊 focus（共用層即黑）；搜尋鈕沿白底版二修：去黑底只留放大鏡 */
+.vo3 .topZone .search input[type=text]{border-radius:0}
+.vo3 .topZone .search input[type=button]{border-radius:0;background:transparent}
+.vo3 .topZone .search .searchIcon{background:var(--ink)}
 
 /* ── 下拉選單（0725：高擬真設計層；主導覽與工具列共用面板；hover／focus-within 開啟；
       圓角隨各版語彙：V1 12/8、V2 16/10） ── */
-.v .drop{position:relative}
-.v ul.dropMenu,.v nav.menu ul.dropMenu,.v .epHeader ul.dropMenu{position:absolute;top:calc(100% + 10px);left:0;z-index:60;min-width:184px;display:block;
+.vo .drop{position:relative}
+.vo ul.dropMenu,.vo nav.menu ul.dropMenu,.vo .epHeader ul.dropMenu{position:absolute;top:calc(100% + 10px);left:0;z-index:60;min-width:184px;display:block;
   list-style:none;margin:0;padding:8px;background:#fff;border:1px solid var(--line);border-radius:12px;
   box-shadow:0 16px 40px rgba(0,0,0,.12);opacity:0;visibility:hidden;transform:translateY(6px);transition:.16s ease}
-.v ul.dropMenu::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px}
-.v .drop:hover > .dropMenu,.v .drop:focus-within > .dropMenu{opacity:1;visibility:visible;transform:translateY(0)}
-.v .dropMenu li{display:block}
-.v nav.menu .dropMenu a,.v .epHeader .dropMenu a{display:flex;align-items:center;justify-content:space-between;gap:12px;
+.vo ul.dropMenu::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px}
+.vo .drop:hover > .dropMenu,.vo .drop:focus-within > .dropMenu{opacity:1;visibility:visible;transform:translateY(0)}
+.vo .dropMenu li{display:block}
+.vo nav.menu .dropMenu a,.vo .epHeader .dropMenu a{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:9px 12px;border-radius:8px;border-bottom:0;font-size:var(--fs-body);font-weight:500;color:var(--body);
   white-space:nowrap;text-decoration:none;transition:.12s}
-.v nav.menu .dropMenu a:hover,.v .epHeader .dropMenu a:hover{background:var(--surface);color:var(--ink-strong);border-bottom:0}
-.v .dropMenu .on a{color:var(--ink-strong);font-weight:700}
-.v .dropMenu .ck{width:14px;height:14px;flex:none;background:currentColor;
+.vo nav.menu .dropMenu a:hover,.vo .epHeader .dropMenu a:hover{background:var(--surface);color:var(--ink-strong);border-bottom:0}
+.vo .dropMenu .on a{color:var(--ink-strong);font-weight:700}
+.vo .dropMenu .ck{width:14px;height:14px;flex:none;background:currentColor;
   -webkit-mask:var(--ico-check) center/contain no-repeat;mask:var(--ico-check) center/contain no-repeat}
-.v .epHeader ul.dropMenu{left:auto;right:0;top:calc(100% + 10px)}
-.v2 ul.dropMenu{border-radius:16px;box-shadow:0 18px 44px rgba(0,0,0,.1)}
-.v2 nav.menu .dropMenu a,.v2 .epHeader .dropMenu a{border-radius:10px;padding-bottom:9px}
+.vo .epHeader ul.dropMenu{left:auto;right:0;top:calc(100% + 10px)}
+.vo2 ul.dropMenu{border-radius:16px;box-shadow:0 18px 44px rgba(0,0,0,.1)}
+.vo2 nav.menu .dropMenu a,.vo2 .epHeader .dropMenu a{border-radius:10px;padding-bottom:9px}
 
 /* ── V1 主導覽置中（0725 指示） ── */
-.v1 nav.menu .wrap{justify-content:center}
-.v1 nav.menu li:first-child > a{padding-left:18px}
+.vo1 nav.menu .wrap{justify-content:center}
+.vo1 nav.menu li:first-child > a{padding-left:18px}
 
 /* ── 頁尾社群鈕＝真實品牌標誌（0725 指示：照現有介面以品牌色呈現；素材層例外色） ── */
-.v .contactSet .others li a svg{width:19px;height:19px;display:block}
-.v .contactSet .others li.fb a{background:#1877F2;color:#fff}
-.v .contactSet .others li.youtube a{background:#F00;color:#fff}
-.v .contactSet .others li.in a{background:#0A66C2;color:#fff}
-.v .contactSet .others li.twitter a{background:#fff;color:#0F1419}
-.v .contactSet .others li.instagram a{background:radial-gradient(circle at 30% 110%,#FDF497 0%,#FD5949 45%,#D6249F 60%,#285AEB 90%);color:#fff}
+.vo .contactSet .others li a svg{width:19px;height:19px;display:block}
+.vo .contactSet .others li.fb a{background:#1877F2;color:#fff}
+.vo .contactSet .others li.youtube a{background:#F00;color:#fff}
+.vo .contactSet .others li.in a{background:#0A66C2;color:#fff}
+.vo .contactSet .others li.twitter a{background:#fff;color:#0F1419}
+.vo .contactSet .others li.instagram a{background:radial-gradient(circle at 30% 110%,#FDF497 0%,#FD5949 45%,#D6249F 60%,#285AEB 90%);color:#fff}
 
 /* ── 高擬真照片與素材層（0725 裁示：照片與素材包圖檔＝唯一彩色；灰階漸層佔位底保留＝載入 fallback） ── */
-.v .ph > img.phImg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
-.v .contactSet .cert{gap:0;font-size:0;min-width:0;padding:0 12px}
-.v .contactSet .cert img{height:26px;width:auto;display:block}
-.v .contactSet .qrcode img{width:100%;height:100%;object-fit:contain;display:block;border-radius:inherit}
-.v .contactSet .webFooter .ttLogo img{width:100%;height:100%;object-fit:contain;display:block}
+.vo .ph > img.phImg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.vo .contactSet .cert{gap:0;font-size:0;min-width:0;padding:0 12px}
+.vo .contactSet .cert img{height:26px;width:auto;display:block}
+.vo .contactSet .qrcode img{width:100%;height:100%;object-fit:contain;display:block;border-radius:inherit}
+.vo .contactSet .webFooter .ttLogo img{width:100%;height:100%;object-fit:contain;display:block}
 
 /* ── 簡易響應（demo 檢視保護用；≥900 完整呈現現況 4 欄與單列頁尾＝簡報檢視基準） ── */
 @media(max-width:900px){
-  .v .pdQueue .list,.v .newsBlock .list{grid-template-columns:repeat(2,1fr)}
-  .v h2{font-size:27px}
-  .v .bigBanner .textCnt h4{font-size:32px}
-  .v .arrowLeft{left:-10px} .v .arrowRight{right:-10px}
-  .v .contactSet .others{justify-content:flex-start}
-  .v .statBlock .stats{grid-template-columns:1fr 1fr;gap:32px 24px}
-  .v .ctaB .inner{grid-template-columns:1fr;gap:32px}
-  .v .contactForm .row2{grid-template-columns:1fr}
-  .v2 .ctaA .inner{grid-template-columns:1fr}
-  .v2 .ctaA .inner .btn{grid-column:1;grid-row:auto;justify-self:start}
-  .v2 .contactForm .cfInfo{grid-template-columns:1fr}
-  .v2 .contactForm .cfInfo .tel,.v2 .contactForm .cfInfo .telNote{grid-column:1;grid-row:auto;justify-self:start}
-  .v .contacts.alone .wrap{grid-template-columns:1fr;gap:32px}
-  .v .topZone .search{width:200px}
-  .v .iStage .showList li.is-short .videoBox{min-height:440px}
-  .v .iStage .showList li.is-short .ph{height:420px}
+  .vo .pdQueue .list,.vo .newsBlock .list{grid-template-columns:repeat(2,1fr)}
+  .vo h2{font-size:27px}
+  .vo .bigBanner .textCnt h4{font-size:32px}
+  .vo .arrowLeft{left:-10px} .vo .arrowRight{right:-10px}
+  .vo .contactSet .others{justify-content:flex-start}
+  .vo .statBlock .stats{grid-template-columns:1fr 1fr;gap:32px 24px}
+  .vo .ctaB .inner{grid-template-columns:1fr;gap:32px}
+  .vo .contactForm .row2{grid-template-columns:1fr}
+  .vo2 .ctaA .inner{grid-template-columns:1fr}
+  .vo2 .ctaA .inner .btn{grid-column:1;grid-row:auto;justify-self:start}
+  .vo2 .contactForm .cfInfo{grid-template-columns:1fr}
+  .vo2 .contactForm .cfInfo .tel,.vo2 .contactForm .cfInfo .telNote{grid-column:1;grid-row:auto;justify-self:start}
+  .vo .contacts.alone .wrap{grid-template-columns:1fr;gap:32px}
+  .vo .topZone .search{width:200px}
+  .vo .iStage .showList li.is-short .videoBox{min-height:440px}
+  .vo .iStage .showList li.is-short .ph{height:420px}
+}
+
+/* ── V3 簡易響應（接在共用 ≤900 之後＝同權重時後者勝，把共用值改回各案規格） ── */
+@media(max-width:900px){
+  /* V3A：標題與數字降階、新聞編輯格退 2 欄、關於我們退單欄、區塊頭可換行 */
+  .vo3 h2{font-size:36px}
+  .vo3 .bigBanner .textCnt h4{font-size:40px}
+  .vo3 .statBlock .num{font-size:56px}
+  .vo3 .newsBlock .list{grid-template-columns:repeat(2,1fr)}
+  .vo3 .newsBlock .list > li:nth-child(1),.vo3 .newsBlock .list > li:nth-child(2),
+  .vo3 .newsBlock .list > li:nth-child(3),.vo3 .newsBlock .list > li:nth-child(4){grid-column:span 1}
+  .vo3 .aboutUs article{grid-template-columns:1fr}
+  .vo3 .aboutUs h2,.vo3 .aboutUs article > div:not(.more),.vo3 .aboutUs .more{grid-column:1;grid-row:auto}
+  .vo3 .pdQueue .section-head{flex-wrap:wrap}
+  .vo3 .pdQueue .tablist{margin-left:0}
 }
 </style>
 </head>
 <body>
 
 <nav class="skinSwitch" role="tablist" aria-label="版本切換">
-  <button role="tab" aria-selected="true"  data-skin="v1">V1　Xometry 黑白轉譯</button>
+  <button role="tab" aria-selected="true"  data-skin="v1b">V1黑　Xometry 蒸餾</button>
+  <button role="tab" aria-selected="false" data-skin="v1w">V1白　Xometry 蒸餾</button>
   <button role="tab" aria-selected="false" data-skin="v2">V2　柔性面板</button>
+  <button role="tab" aria-selected="false" data-skin="v3">V3　編輯字報</button>
   <span class="hint">← → 鍵可切換，捲動位置不變</span>
 </nav>
 
-<div class="v v1" id="v1"></div>
-<div class="v v2" id="v2" hidden></div>
+<div class="v vx vx1" id="v1b"></div>
+<div class="v vx vx2" id="v1w" hidden></div>
+<div class="v vo vo2" id="v2" hidden></div>
+<div class="v vo vo3" id="v3" hidden></div>
 
 <script>
-/* 兩款皮共用同一份 DOM 產生器（骨架完全一致，只有 class v1/v2 不同）
+/* 四款皮共用同一份 DOM 產生器（骨架完全一致，只有 class v1/v2/v3a/v3b/v3c 不同）
    內容規則：系統字串照中文語系現況照抄（含 More＝現況即英文）；內容示意文字＝繁中元件標示 */
 const PD_SET = {
   p1: ["產品名稱一","產品名稱二","產品名稱三","產品名稱四"],
@@ -1254,7 +1708,7 @@ document.querySelectorAll('#v2 .contactForm .formSec').forEach(secEl=>{
   if (t) t.addEventListener('click', ()=> secEl.classList.toggle('is-closed'));
 });
 
-/* 皮膚切換：V1／V2 於相同捲動位置對調，方便逐區比對 */
+/* 皮膚切換：四分頁（V1／V2／V3A／V3B／V3C）於相同捲動位置對調，方便逐區比對 */
 const SKINS = [...document.querySelectorAll('.skinSwitch button')];
 function show(id){
   const y = window.scrollY;
@@ -1271,7 +1725,7 @@ document.addEventListener('keydown', e => {
   const i = SKINS.findIndex(b => b.getAttribute('aria-selected') === 'true');
   show(SKINS[(i + (e.key === 'ArrowRight' ? 1 : SKINS.length - 1)) % SKINS.length].dataset.skin);
 });
-if (location.hash === '#v2') show('v2');
+if (/^#(v1w|v2|v3)$/.test(location.hash)) show(location.hash.slice(1));
 </script>
 </body>
 </html>
