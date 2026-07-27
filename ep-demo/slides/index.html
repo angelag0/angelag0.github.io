@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>台灣經貿網企業網・新版型設計｜第一次需求訪談</title>
+<style>
+/* ============================================================
+   字級系統（整份只有 4 級；每頁最多出現 3 級）
+   T1 44/700 — 封面主標（僅 P1）
+   T2 32/700 — 頁題（每頁同位置）＋P7 選項卡標題
+   T3 20/400 — 內文、清單、選項（強調＝.b 700）
+   T4 14/400 — 表格、小標籤、註記、頁碼（次要色＝.mut #777）
+   色彩：文字 #111｜次要 #777｜線 #E5E5E5｜表頭與淺塊 #F5F5F5｜選取 #111 底白字
+   字重：400／700 兩種。行高：標題 1.3｜內文 1.75｜表格 1.6
+   數字格式：全簡報有序清單一律「1. 」半形數字
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:#FFF;color:#111;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+#stage{position:fixed;left:50%;top:50%;width:1280px;height:720px;transform:translate(-50%,-50%);background:#FFF}
+.slide{position:absolute;inset:0;background:#FFF;padding:56px 72px 48px;display:none;flex-direction:column}
+.slide.on{display:flex}
+.t1{font-size:44px;font-weight:700;line-height:1.3}
+.pt{font-size:32px;font-weight:700;line-height:1.3;margin-bottom:28px}
+.t2{font-size:32px;font-weight:700;line-height:1.3}
+.t3{font-size:20px;font-weight:400;line-height:1.75}
+.t4{font-size:14px;font-weight:400;line-height:1.6}
+.b{font-weight:700}
+.mut{color:#777}
+table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.6}
+th,td{border:1px solid #E5E5E5;padding:7px 12px;text-align:left;vertical-align:middle}
+th{background:#F5F5F5;font-weight:700}
+.shot{position:relative;background:linear-gradient(160deg,#EFEFEF 0%,#CFCFCF 55%,#BDBDBD 100%);flex:none;overflow:hidden}
+.shot .lab{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#777}
+.shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.pick{cursor:pointer}
+.pick.sel{background:#111;color:#FFF}
+.pick.sel .mut{color:#FFF}
+.opt{display:inline-block;border:1px solid #E5E5E5;padding:3px 10px;margin:2px 0;cursor:pointer;white-space:nowrap}
+.opt.sel{background:#111;color:#FFF;border-color:#111}
+.sep{color:#777;margin:0 4px}
+#pageNum{position:fixed;right:20px;bottom:14px;font-size:14px;color:#777}
+@page{size:338.7mm 190.5mm;margin:0}
+@media print{
+ body{overflow:visible}
+ #pageNum{display:none}
+ #stage{position:static;transform:none;width:1280px;height:auto;left:auto;top:auto}
+ .slide{position:relative;inset:auto;display:flex !important;width:1280px;height:720px;page-break-after:always;break-after:page}
+ .slide:last-child{page-break-after:auto;break-after:auto}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- P1 封面｜字級 44/20/14 -->
+<section class="slide on" style="align-items:center;justify-content:center;text-align:center">
+  <h1 class="t1">台灣經貿網企業網・新版型設計</h1>
+  <p class="t3 b" style="margin-top:28px">第一次需求訪談｜2026-07-28</p>
+  <p class="t3" style="margin-top:56px">凌網資訊 Simmy</p>
+</section>
+
+<!-- P2 今天要做的事｜字級 32/20/14 -->
+<section class="slide">
+  <h2 class="pt">今天要做的事</h2>
+  <div style="flex:1;display:flex;flex-direction:column">
+    <div style="flex:1">
+      <p class="t4 mut b" style="margin-bottom:14px">今天談</p>
+      <p class="t3">1. 新版型風格設計（兩個版本選一版）<br>2. 新 Header＋Footer<br>3. 現有元件強化（多媒體／產品展示／圖文範本）<br>4. 新元件（聯絡我們商機表單）</p>
+    </div>
+    <div style="border-top:1px solid #E5E5E5;padding-top:28px">
+      <p class="t4 mut b" style="margin-bottom:14px">之後談</p>
+      <p class="t3">1. SU 建站引導（8/7）<br>2. 切版＋產品型錄（8/21）</p>
+    </div>
+  </div>
+</section>
+
+<!-- P3 本次設計項目｜字級 32/20 -->
+<section class="slide">
+  <h2 class="pt">本次設計項目（對應報價單）</h2>
+  <p class="t3">1. 新版型風格設計<br>2. 新 Header＋Footer 設計<br>3. 現有 8 元件配合調整<br>4. YT Short 可在首頁播放（多媒體輪播）<br>5. 產品展示 tab 呈現<br>6. 圖文模板新範本（CTA 樣式一／二＋數據統計）<br>7. Contact us 表單元件（聯絡電話＋商機表單）</p>
+</section>
+
+<!-- P4 V1｜字級 32/20 -->
+<section class="slide">
+  <h2 class="pt">V1：Xometry 的黑白轉譯</h2>
+  <div style="flex:1;display:flex;gap:64px;align-items:flex-start">
+    <div style="flex:1">
+      <p class="t3 b" style="margin-bottom:20px">參考 Xometry 蒸餾出的設計邏輯：</p>
+      <p class="t3">1. 區塊之間不畫線，用滿版底色和留白切段<br>2. 標題置中開場、卡片內文字靠左<br>3. 滿版色帶直角，圓角只給卡片與按鈕</p>
+    </div>
+    <div class="shot" style="width:281px;height:500px"><span class="lab">S1</span><img src="img/S1.png" alt="" onerror="this.style.display='none'"></div>
+  </div>
+</section>
+
+<!-- P5 九個元件回顧｜字級 32/14 -->
+<section class="slide">
+  <h2 class="pt" style="margin-bottom:20px">九個元件回顧</h2>
+  <table>
+    <tr><th style="width:200px">元件</th><th>特色</th><th style="width:34%">確認</th></tr>
+    <tr><td>頁首</td><td>上方讓給廠商品牌，TT 元素退場</td><td>1｜Header 右上功能列是否搬移</td></tr>
+    <tr><td>大圖輪播</td><td>形象大圖開場，標語壓圖置中</td><td>—</td></tr>
+    <tr><td>公司新聞</td><td>熱門消息自動掛 HOT 標，統一右上</td><td>2｜按鈕文字是否統一中文</td></tr>
+    <tr><td>橫幅廣告・關於我們・聯繫與訂閱</td><td>聯繫與訂閱變成兩張卡片</td><td>—</td></tr>
+    <tr><td>多媒體輪播</td><td>手機拍的直式短影片，直接放上首頁</td><td>3｜YT Short 置中直式或並排多則</td></tr>
+    <tr><td>產品展示</td><td>多條產品線用分頁切換，同一區塊放得下</td><td>—</td></tr>
+    <tr><td>圖文模板新範本</td><td>多三款版面：兩款行動呼籲＋一款秀公司數字</td><td>—</td></tr>
+    <tr><td>聯絡我們商機表單</td><td>買主在首頁就能發詢價、直接進商機清單；電話一點就撥</td><td>4｜表單欄位以哪份為準<br>5｜表單預設收合或展開<br>6｜必填星號黑或紅<br>7｜桌機是否點按複製號碼</td></tr>
+    <tr><td>頁尾</td><td>官方資訊、認證、版權收成一塊黑，乾淨收尾</td><td>8｜頁尾是否保留聯絡我們區塊<br>9｜認證徽章是否移至頁尾</td></tr>
+  </table>
+</section>
+
+<!-- P6 V2｜字級 32/20 -->
+<section class="slide">
+  <h2 class="pt">V2：柔性面板</h2>
+  <div style="flex:1;display:flex;gap:64px;align-items:flex-start">
+    <div style="flex:1">
+      <p class="t3 b" style="margin-bottom:20px">同一份骨架、由設計師提案進行蒸餾：</p>
+      <p class="t3">1. 每個區塊收進圓角面板，區塊即卡片<br>2. 內容全部靠左對齊，閱讀動線一致<br>3. 按鈕與標籤採正圓膠囊，柔和親和</p>
+    </div>
+    <div class="shot" style="width:281px;height:500px"><span class="lab">S2</span><img src="img/S2.png" alt="" onerror="this.style.display='none'"></div>
+  </div>
+</section>
+
+<!-- P7 風格怎麼選｜字級 32/20/14（上：可點選選項卡；下：兩版縮圖） -->
+<section class="slide">
+  <h2 class="pt">風格怎麼選</h2>
+  <div style="display:flex;gap:24px">
+    <div class="pick" style="flex:1;border:1px solid #E5E5E5;padding:28px 32px">
+      <p class="t2">V1　穩重</p>
+      <p class="t4 mut" style="margin-top:10px">適合機械、零組件、B2B 製造</p>
+    </div>
+    <div class="pick" style="flex:1;border:1px solid #E5E5E5;padding:28px 32px">
+      <p class="t2">V2　親和</p>
+      <p class="t4 mut" style="margin-top:10px">適合消費品、服務業、多品項通路</p>
+    </div>
+    <div class="pick" style="flex:1;border:1px solid #E5E5E5;padding:28px 32px">
+      <p class="t2">設計混搭</p>
+      <p class="t4 mut" style="margin-top:10px">以一版為主體、局部採另一版</p>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;gap:56px;align-items:center;justify-content:center;margin-top:28px">
+    <div style="text-align:center">
+      <div class="shot" style="width:180px;height:320px"><span class="lab">S1</span><img src="img/S1.png" alt="" onerror="this.style.display='none'"></div>
+      <p class="t4 mut" style="margin-top:8px">V1</p>
+    </div>
+    <div style="text-align:center">
+      <div class="shot" style="width:180px;height:320px"><span class="lab">S2</span><img src="img/S2.png" alt="" onerror="this.style.display='none'"></div>
+      <p class="t4 mut" style="margin-top:8px">V2</p>
+    </div>
+  </div>
+</section>
+
+<!-- P8 差異對照｜字級 32/14（V1／V2 儲存格可點選） -->
+<section class="slide">
+  <h2 class="pt" style="margin-bottom:20px">V1 × V2 差異對照</h2>
+  <table style="table-layout:fixed">
+    <tr><th style="width:160px">項目</th><th>V1</th><th>V2</th></tr>
+    <tr><td>排版軸線</td><td class="pick">置中開場、卡內文字靠左</td><td class="pick">全部靠左</td></tr>
+    <tr><td>分段方式</td><td class="pick">滿版淺灰帶切段</td><td class="pick">圓角面板</td></tr>
+    <tr><td>深色使用</td><td class="pick">全頁只有頁尾黑</td><td class="pick">深面板點綴＋頁尾黑</td></tr>
+    <tr><td>圓角</td><td class="pick">方圓角（工業感）</td><td class="pick">正圓膠囊（親和感）</td></tr>
+    <tr><td>分頁 tab</td><td class="pick">淺灰槽＋黑色滑塊</td><td class="pick">文字底線</td></tr>
+    <tr><td>陰影</td><td class="pick">幾乎不用</td><td class="pick">柔影＋滑過浮起</td></tr>
+    <tr><td>留白</td><td class="pick">大（大器）</td><td class="pick">緊湊（密度高）</td></tr>
+    <tr><td>輪播箭頭</td><td class="pick">照現況兩種位置</td><td class="pick">統一騎在邊線上</td></tr>
+    <tr><td>大圖文字</td><td class="pick">置中疊圖</td><td class="pick">壓左下</td></tr>
+    <tr><td>標記</td><td class="pick">方角黑標</td><td class="pick">膠囊黑標</td></tr>
+    <tr><td>產品卡</td><td class="pick">文字壓在圖上</td><td class="pick">文字在圖下</td></tr>
+    <tr><td>CTA一背景</td><td class="pick">淺色照片＋白遮罩黑字</td><td class="pick">同照片＋黑遮罩白字</td></tr>
+  </table>
+</section>
+
+<!-- P9 今天的決議｜字級 32/14（結果欄選項可點選） -->
+<section class="slide">
+  <h2 class="pt" style="margin-bottom:20px">今天的決議</h2>
+  <table>
+    <tr><th style="width:56px">確認</th><th style="width:260px">題目</th><th>結果</th></tr>
+    <tr><td>1</td><td>Header 右上功能列是否搬移</td><td><span class="opt">照原樣不搬</span><span class="sep">／</span><span class="opt">搬部分（現場記項目）</span><span class="sep">／</span><span class="opt">全部搬</span></td></tr>
+    <tr><td>2</td><td>按鈕文字是否統一中文</td><td><span class="opt">統一為「查看更多」</span><span class="sep">／</span><span class="opt">維持現況「More」</span></td></tr>
+    <tr><td>3</td><td>YT Short 置中直式或並排多則</td><td><span class="opt">置中直式</span><span class="sep">／</span><span class="opt">並排多則</span></td></tr>
+    <tr><td>4</td><td>表單欄位以哪份為準</td><td><span class="opt">產品詢價表單（demo 版）</span><span class="sep">／</span><span class="opt">聯絡供應商表單</span></td></tr>
+    <tr><td>5</td><td>表單預設收合或展開</td><td><span class="opt">預設收合</span><span class="sep">／</span><span class="opt">預設全展開</span></td></tr>
+    <tr><td>6</td><td>必填星號黑或紅</td><td><span class="opt">黑色星號</span><span class="sep">／</span><span class="opt">紅色星號</span></td></tr>
+    <tr><td>7</td><td>桌機是否點按複製號碼</td><td><span class="opt">點按複製號碼</span><span class="sep">／</span><span class="opt">僅顯示號碼</span></td></tr>
+    <tr><td>8</td><td>頁尾是否保留聯絡我們區塊</td><td><span class="opt">保留（做成可開關）</span><span class="sep">／</span><span class="opt">不保留（以新表單為主）</span><span class="sep">／</span><span class="opt">其他</span></td></tr>
+    <tr><td>9</td><td>認證徽章是否移至頁尾</td><td><span class="opt">移至頁尾（數量隨認證動態）</span><span class="sep">／</span><span class="opt">維持頁首</span></td></tr>
+    <tr><td>10</td><td>風格方向</td><td><span class="opt">V1</span><span class="sep">／</span><span class="opt">V2</span><span class="sep">／</span><span class="opt">設計混搭（項目於差異對照頁點選）</span></td></tr>
+  </table>
+  <p class="t4 mut" style="margin-top:14px">未拍板的項目，會後以書面確認，於設計稿前收齊。</p>
+</section>
+
+<!-- P10 下一步｜字級 32/20 -->
+<section class="slide">
+  <h2 class="pt">下一步</h2>
+  <p class="t3">1. 今天定調的風格，我們將整理成設計稿提供貴處審核。<br>2. 8/7 第二次訪談：SU 建站引導</p>
+  <p class="t3" style="margin-top:8px;padding-left:34px">・後台建站流程整併（首頁配置與資料編輯重新設計）<br>・版型與色系設定加入新版型選項、各語系同步<br>・今天定案元件的後台設定（產品展示分頁、YT Short、圖文模板新範本）</p>
+  <p class="t3" style="margin-top:auto">謝謝，其他問題歡迎現在提出。</p>
+</section>
+
+</div>
+<div id="pageNum">1 / 10</div>
+<script>
+(function(){
+var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,N=slides.length;
+function go(n){cur=Math.max(0,Math.min(N-1,n));for(var i=0;i<N;i++)slides[i].classList.toggle('on',i===cur);document.getElementById('pageNum').textContent=(cur+1)+' / '+N;}
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')go(cur+1);else if(e.key==='ArrowLeft')go(cur-1);});
+document.addEventListener('click',function(e){
+  var t=e.target;
+  if(t.closest&&t.closest('.pick,.opt')){
+    var el=t.closest('.pick,.opt');
+    if(el.classList.contains('sel')){el.classList.remove('sel');return;}
+    var scope=el.classList.contains('pick')?el.parentElement.querySelectorAll('.pick'):el.closest('td').querySelectorAll('.opt');
+    for(var i=0;i<scope.length;i++)scope[i].classList.remove('sel');
+    el.classList.add('sel');
+    return;
+  }
+  var w=window.innerWidth;
+  if(e.clientX<w*0.2)go(cur-1);
+  else if(e.clientX>w*0.8)go(cur+1);
+});
+function fit(){var s=Math.min(window.innerWidth/1280,window.innerHeight/720);document.getElementById('stage').style.transform='translate(-50%,-50%) scale('+s+')';}
+window.addEventListener('resize',fit);fit();
+var m=location.hash.match(/^#p(\d+)$/);if(m)go(parseInt(m[1],10)-1);
+})();
+</script>
+</body>
+</html>
