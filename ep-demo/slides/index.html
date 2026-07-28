@@ -7,12 +7,12 @@
 <style>
 /* ============================================================
    字級系統（整份只有 4 級；每頁最多出現 3 級）
-   T1 44/700 — 封面主標（僅 P1）
-   T2 32/700 — 頁題（每頁同位置）＋P7 選項卡標題
-   T3 20/400 — 內文、清單、選項（強調＝.b 700）
-   T4 14/400 — 表格、小標籤、註記、頁碼（次要色＝.mut #777）
+   T1 52/700 — 封面主標（僅 P1）
+   T2 38/700 — 頁題（每頁同位置）＋P7 選項卡標題
+   T3 24/400 — 內文、清單、選項（強調＝.b 700）
+   T4 17/400 — 表格、小標籤、註記、頁碼（次要色＝.mut #777）
    色彩：文字 #111｜次要 #777｜線 #E5E5E5｜表頭與淺塊 #F5F5F5｜選取 #111 底白字
-   字重：400／700 兩種。行高：標題 1.3｜內文 1.75｜表格 1.6
+   字重：400／700 兩種。行高：標題 1.3｜內文 1.75｜表格 1.5
    數字格式：全簡報有序清單一律「1. 」半形數字
    ============================================================ */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -21,26 +21,27 @@ body{background:#FFF;color:#111;font-family:"Noto Sans TC","PingFang TC","Micros
 #stage{position:fixed;left:50%;top:50%;width:1280px;height:720px;transform:translate(-50%,-50%);background:#FFF}
 .slide{position:absolute;inset:0;background:#FFF;padding:56px 72px 48px;display:none;flex-direction:column}
 .slide.on{display:flex}
-.t1{font-size:44px;font-weight:700;line-height:1.3}
-.pt{font-size:32px;font-weight:700;line-height:1.3;margin-bottom:28px}
-.t2{font-size:32px;font-weight:700;line-height:1.3}
-.t3{font-size:20px;font-weight:400;line-height:1.75}
-.t4{font-size:14px;font-weight:400;line-height:1.6}
+.t1{font-size:52px;font-weight:700;line-height:1.3}
+.pt{font-size:38px;font-weight:700;line-height:1.3;margin-bottom:28px}
+.t2{font-size:38px;font-weight:700;line-height:1.3}
+.t3{font-size:24px;font-weight:400;line-height:1.75}
+.t4{font-size:17px;font-weight:400;line-height:1.6}
 .b{font-weight:700}
 .mut{color:#777}
-table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.6}
-th,td{border:1px solid #E5E5E5;padding:7px 12px;text-align:left;vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:17px;line-height:1.5}
+th,td{border:1px solid #E5E5E5;padding:6px 12px;text-align:left;vertical-align:middle}
 th{background:#F5F5F5;font-weight:700}
+.tight th,.tight td{padding:4px 12px}
 .shot{position:relative;background:linear-gradient(160deg,#EFEFEF 0%,#CFCFCF 55%,#BDBDBD 100%);flex:none;overflow:hidden}
-.shot .lab{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#777}
+.shot .lab{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:700;color:#777}
 .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .pick{cursor:pointer}
 .pick.sel{background:#111;color:#FFF}
 .pick.sel .mut{color:#FFF}
-.opt{display:inline-block;border:1px solid #E5E5E5;padding:3px 10px;margin:2px 0;cursor:pointer;white-space:nowrap}
+.opt{display:inline-block;border:1px solid #E5E5E5;padding:2px 10px;margin:2px 0;cursor:pointer;white-space:nowrap}
 .opt.sel{background:#111;color:#FFF;border-color:#111}
 .sep{color:#777;margin:0 4px}
-#pageNum{position:fixed;right:20px;bottom:14px;font-size:14px;color:#777}
+#pageNum{position:fixed;right:20px;bottom:14px;font-size:17px;color:#777}
 @page{size:338.7mm 190.5mm;margin:0}
 @media print{
  body{overflow:visible}
@@ -109,7 +110,7 @@ th{background:#F5F5F5;font-weight:700}
 <section class="slide">
   <h2 class="pt" style="margin-bottom:20px">九個元件回顧</h2>
   <table>
-    <tr><th style="width:200px">元件</th><th>特色</th><th style="width:34%">確認</th></tr>
+    <tr><th style="width:280px">元件</th><th>特色</th><th style="width:30%">確認</th></tr>
     <tr><td>頁首</td><td>上方讓給廠商品牌，TT 元素退場</td><td>1｜Header 右上功能列是否搬移</td></tr>
     <tr><td>大圖輪播</td><td>形象大圖開場，標語壓圖置中</td><td>—</td></tr>
     <tr><td>公司新聞</td><td>熱門消息自動掛 HOT 標，統一右上</td><td>2｜按鈕文字是否統一中文</td></tr>
@@ -152,19 +153,19 @@ th{background:#F5F5F5;font-weight:700}
 <section class="slide">
   <h2 class="pt">風格怎麼選</h2>
   <div style="display:flex;gap:16px">
-    <div class="pick" style="flex:1;border:1px solid #E5E5E5;padding:24px 24px">
+    <div class="pick" style="flex:1;border:1px solid #E5E5E5;padding:22px 20px">
       <p class="t2">V1　穩重</p>
       <p class="t4 mut" style="margin-top:10px">黑、白兩種色帶配置<br>適合機械、零組件、B2B 製造</p>
     </div>
-    <div class="pick" style="flex:1;border:1px solid #E5E5E5;padding:24px 24px">
+    <div class="pick" style="flex:1;border:1px solid #E5E5E5;padding:22px 20px">
       <p class="t2">V2　親和</p>
       <p class="t4 mut" style="margin-top:10px">圓角面板、正圓膠囊<br>適合消費品、服務業、多品項通路</p>
     </div>
-    <div class="pick" style="flex:1;border:1px solid #E5E5E5;padding:24px 24px">
+    <div class="pick" style="flex:1;border:1px solid #E5E5E5;padding:22px 20px">
       <p class="t2">V3　鮮明</p>
       <p class="t4 mut" style="margin-top:10px">報刊排印、大字編號<br>適合想突出品牌個性的廠商</p>
     </div>
-    <div class="pick" style="flex:1;border:1px solid #E5E5E5;padding:24px 24px">
+    <div class="pick" style="flex:1;border:1px solid #E5E5E5;padding:22px 20px">
       <p class="t2">設計混搭</p>
       <p class="t4 mut" style="margin-top:10px">以一版為主體<br>局部採另一版做法</p>
     </div>
@@ -193,7 +194,7 @@ th{background:#F5F5F5;font-weight:700}
 <section class="slide">
   <h2 class="pt" style="margin-bottom:20px">V1 × V2 × V3 差異對照</h2>
   <table style="table-layout:fixed">
-    <tr><th style="width:132px">項目</th><th>V1</th><th>V2</th><th>V3</th></tr>
+    <tr><th style="width:140px">項目</th><th>V1</th><th>V2</th><th>V3</th></tr>
     <tr><td>排版軸線</td><td class="pick">置中開場、卡內文字靠左</td><td class="pick">全部靠左</td><td class="pick">全部靠左、編輯欄式</td></tr>
     <tr><td>分段方式</td><td class="pick">滿版色帶交錯切段</td><td class="pick">圓角面板</td><td class="pick">粗頂線＋區塊編號</td></tr>
     <tr><td>深色使用</td><td class="pick">黑版四條深帶／白版只有頁尾黑</td><td class="pick">深面板點綴＋頁尾黑</td><td class="pick">只有頁尾黑</td></tr>
@@ -212,8 +213,8 @@ th{background:#F5F5F5;font-weight:700}
 <!-- P10 今天的決議｜字級 32/14（結果欄選項可點選） -->
 <section class="slide">
   <h2 class="pt" style="margin-bottom:20px">今天的決議</h2>
-  <table>
-    <tr><th style="width:56px">確認</th><th style="width:260px">題目</th><th>結果</th></tr>
+  <table class="tight">
+    <tr><th style="width:68px">確認</th><th style="width:290px">題目</th><th>結果</th></tr>
     <tr><td>1</td><td>Header 右上功能列是否搬移</td><td><span class="opt">照原樣不搬</span><span class="sep">／</span><span class="opt">搬部分（現場記項目）</span><span class="sep">／</span><span class="opt">全部搬</span></td></tr>
     <tr><td>2</td><td>按鈕文字是否統一中文</td><td><span class="opt">統一為「查看更多」</span><span class="sep">／</span><span class="opt">維持現況「More」</span></td></tr>
     <tr><td>3</td><td>YT Short 置中直式或並排多則</td><td><span class="opt">置中直式</span><span class="sep">／</span><span class="opt">並排多則</span></td></tr>
