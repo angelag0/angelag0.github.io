@@ -1,0 +1,67 @@
+{
+  "name": "claude-plus",
+  "displayName": "Claude Plus",
+  "description": "讓 VS Code 的 Claude Code 更好用：思考區塊展開＋一鍵中譯；對話清單管理：復原誤刪、真刪除（丟資源回收筒）、重骰後自動隱藏舊分身。",
+  "version": "2.0.0",
+  "publisher": "angelag0",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.94.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "claudeThinkingZh.patch",
+        "title": "Claude Plus: 套用修補"
+      },
+      {
+        "command": "claudeThinkingZh.restore",
+        "title": "Claude Plus: 還原 Claude Code 原始檔"
+      },
+      {
+        "command": "claudeThinkingZh.status",
+        "title": "Claude Plus: 檢查狀態"
+      },
+      {
+        "command": "claudeThinkingZh.unhide",
+        "title": "Claude Plus: ♻️ 復原已刪除的對話"
+      },
+      {
+        "command": "claudeThinkingZh.purge",
+        "title": "Claude Plus: 🧹 清理對話（真刪除，丟資源回收筒）"
+      }
+    ],
+    "configuration": {
+      "title": "Claude Plus",
+      "properties": {
+        "claudeThinkingZh.autoExpand": {
+          "type": "boolean",
+          "default": true,
+          "description": "思考區塊預設展開。"
+        },
+        "claudeThinkingZh.targetLang": {
+          "type": "string",
+          "default": "zh-TW",
+          "description": "翻譯目標語言代碼，例如 zh-TW（繁體）、zh-CN（簡體）、ja。"
+        },
+        "claudeThinkingZh.autoPatchOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "description": "VS Code 啟動時自動檢查，若 Claude Code 剛更新過就重新套用修補。"
+        },
+        "claudeThinkingZh.autoHideOnRewind": {
+          "type": "boolean",
+          "default": true,
+          "description": "在面板用 Rewind（重骰）後，自動把被分岔掉的舊對話從清單隱藏（檔案保留，可用「復原對話」找回、用「清理對話」真刪除）。"
+        }
+      }
+    }
+  }
+}
