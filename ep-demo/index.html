@@ -49,12 +49,13 @@
      二.10 頁尾聯訂兩行排＋版權列白底黑字；主帶依二輪更正④改明亮式（全亮色頁尾）
    ■ 0803 下午 靖慈反饋輪（LINE 私訊四點＋當日裁示；出處＝raw-input/優先１．需求訪談/
      20260803-LINE私訊-靖慈demo反饋.md；本檔已依此落地）
-     點1 左右留白對齊內頁：.wrap 內距移除＝內容淨寬 1200（原 1140；內頁容器＝1200 置中）
+     點1 左右留白對齊現行版心（0803 晚二次更正定版）：.wrap＝96vw、--wrap 封頂 1520
+        （現行前台實際版心＝94–96vw 流動、≥1620 視窗封頂 1500–1540；
+        初判「內頁 1200 置中」為 styleB 個別模組規則的誤讀，已作廢）
      點2 關於我們：骨架照 3現有前台tw 現行 aboutUs（左 aboutUsVideo 影音輪播＋右 article）；
-        標題下公司名稱行＝「公司介紹」明細頁帶入的內文首行（非後台欄位＝靖慈疑問的解答），
-        照現有規格保留，假字改為可自我說明（首行＝公司名稱真名、內文標明自公司介紹帶入）
-     點3 產品展示放大：樣式照現有規格維持 4 欄（無三欄樣式），放大由區塊容器放寬承擔
-        （.pdQueue .wrap max-width 1660 ≈ 原站產品區近滿版 96vw；4 欄卡淨寬 397 ≈ 原站實測約 400）
+        假字標明內容自「公司介紹」明細頁帶入；公司名稱行依 0803 晚靖慈確認**移除**
+     點3 產品展示：照現有規格 4 欄；0803 晚二次更正＝1660 特例容器移除、與全站同版心
+        （現行站產品區與其他區同版心；版心放寬後卡寬自然回到現行比例）
      點4 小鯨魚線上客服浮動鈕：右下 fixed 100×100 圓形，樣式照現行測試機 #sui-webchat-btn
      另（同日裁示）：多媒體輪播段移除；圖文模板段＝三支原生 YT Short iframe 直嵌
         （PM 實測三支、不加任何修飾），標註「圖文模板 YT short 示意」；
@@ -118,8 +119,10 @@
   /* 陰影兩組（蒸餾 §五，值不隨色值回歸變動） */
   --sh:0 6px 16px rgba(0,0,0,.08), 0 3px 6px -4px rgba(0,0,0,.12), 0 9px 28px 8px rgba(0,0,0,.05);
   --sh-h:0 12px 28px rgba(0,0,0,.12), 0 6px 12px -4px rgba(0,0,0,.16), 0 12px 32px 8px rgba(0,0,0,.08);
-  /* 容器（蒸餾 §八） */
-  --wrap:1200px;
+  /* 容器（0803 晚更正：照現行前台版心＝94–96vw 流動、≥1620 視窗封頂 1500–1540
+     〔styleB：.contacts 1500／.newsBlock 1520／.oneXtwo 1540／.aboutUs padding calc(50vw-760px)〕
+     → 統一取 96vw＋封頂 1520；初判「內頁 1200 置中」為誤讀，已作廢） */
+  --wrap:1520px;
   /* 字體（蒸餾 §四：Open Sans 為首，備援本機中文字型；不外連字型檔） */
   --ff:"Open Sans","Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;
   /* 遮罩圖示（data URI 逐字照抄原檔；顏色由 currentColor 決定，內含 black 僅為 mask 來源） */
@@ -154,9 +157,10 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
       0803 單版：原「共用層＋白皮」已合併為本層，切換器與黑皮退場
    ================================================================ */
 .vx{background:var(--w);color:var(--body);font-family:var(--ff)}
-/* 外框公式沿用 V1：任何視窗寬度下全區塊左右緣逐 px 對齊；
-   0803 靖慈點1：內距移除＝內容淨寬 1200（與現行內頁容器 width:1200px 置中一致） */
-.vx .wrap{width:calc(100% - 60px);max-width:var(--wrap);margin:0 auto}
+/* 外框公式：任何視窗寬度下全區塊左右緣逐 px 對齊；
+   0803 晚更正（靖慈點1 二次反饋）：改現行前台同款流動版心＝96vw、封頂 --wrap 1520
+   （1920 視窗＝內容 1520、每側留白 200＝與現行站一致） */
+.vx .wrap{width:96vw;max-width:var(--wrap);margin:0 auto}
 /* 區塊上下留白 48＝蒸餾 §五 間距第四階（Xometry 密度，比 V1 原本 88 緊） */
 .vx section{padding:var(--sp-4) 0}
 /* 區塊標題 H2 30／1.27（§四）＋標題階 #000；軸線沿用 V1 T 字置中 */
@@ -366,8 +370,7 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
 /* ================================================================
    F. 關於我們（0803 靖慈點2＋更正輪：骨架照 3現有前台tw 現行 aboutUs＝
       左 aboutUsVideo 影音輪播〔影片＋圖片、廠商後台上傳〕＋右 article〔h2＋內文＋查看全文〕；
-      標題下公司名稱行＝「公司介紹」明細頁帶入的內文首行〔非後台欄位〕照現有規格保留、
-      假字改為可自我說明；版面＝設計稿左媒體右文；
+      公司名稱行依 0803 晚靖慈確認移除、假字標明內容自公司介紹帶入；版面＝設計稿左媒體右文；
       媒體卡沿用影片卡語彙〔播放鍵浮層＋平台標籤〕，平台標籤照設計稿置左下）
    ================================================================ */
 .vx .aboutUs .wrap{display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);
@@ -431,10 +434,8 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
    ================================================================ */
 .vx .pdQueue{background:var(--w)}
 .vx .pdQueue .slideArea{position:relative}
-/* 0803 更正輪（靖慈點3 重解）：系統無三欄產品樣式＝照現有規格維持 4 欄；
-   放大由區塊容器放寬承擔（原站產品區＝近滿版 96vw、卡寬實測約 400）
-   → 本區 .wrap 放寬 1660＝4 欄卡淨寬 397 ≈ 原站 */
-.vx .pdQueue .wrap{max-width:1660px}
+/* 0803 晚更正（靖慈二次反饋「只有產品有調寬」）：產品區 1660 特例容器移除＝
+   與全站同版心（現行站產品區與其他區同版心）；4 欄照現有規格 */
 .vx .pdQueue .list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3)}
 .vx .pdQueue .list > li{position:relative;transition:.3s ease}
 .vx .pdQueue .list > li > a{display:block;text-decoration:none;color:inherit;position:relative}
@@ -706,7 +707,7 @@ const PD_LIST = [
   {n:"產品名稱二", img:"prod-02", price:"9,500.00-14,000.00"},
   {n:"產品名稱三", img:"prod-03", price:"8,800.00-11,500.00"},
   {n:"產品名稱四", img:"prod-04", price:"依詢價"}
-];/* 0803 更正輪：照現有規格 4 欄＝4 張；放大由 .pdQueue .wrap 放寬 1660 承擔 */
+];/* 0803 晚更正：照現有規格 4 欄＝4 張；與全站同版心（96vw／封頂 1520） */
 /* 圖文模板 YT Short 三支（0803 靖慈定調：原生 iframe 直嵌、不加任何修飾；
    影片＝PM 實測三支、由使用者提供網址；需連網才會載入＝紅線唯一外連例外） */
 const YT_SHORTS = ["sOWZw45P-fk","w8kbCowYZMg","lXhFrT--Rbs"];
@@ -886,10 +887,9 @@ function markup(){
     </div>
   </div>
 
-  <!-- 關於我們 aboutUs（0803 靖慈點2＋更正輪：骨架照 3現有前台tw 現行＝左 aboutUsVideo
-       影音輪播〔影片＋圖片、廠商後台上傳〕＋右 article；標題下公司名稱行＝
-       「公司介紹」明細頁帶入的內文首行〔非後台欄位〕，照現有規格保留、假字自我說明；
-       按鈕字串照中文語系現況＝查看全文＝骨） -->
+  <!-- 關於我們 aboutUs（0803 靖慈點2＋兩輪更正：骨架照 3現有前台tw 現行＝左 aboutUsVideo
+       影音輪播〔影片＋圖片、廠商後台上傳〕＋右 article；公司名稱行依 0803 晚靖慈確認移除、
+       假字標明內容自「公司介紹」明細頁帶入；按鈕字串照中文語系現況＝查看全文＝骨） -->
   <section class="aboutUs">
     <div class="wrap">
       <div class="aboutUsVideo ckSlide">
@@ -914,7 +914,7 @@ function markup(){
       </div>
       <article>
         <h2>關於我們</h2>
-        <div>安口食品機械股份有限公司<br><br>關於我們內文示意：本區文字自「公司介紹」明細頁帶入（首行＝公司名稱），廠商於後台編輯公司介紹即同步更新，約二至四行。</div>
+        <div>關於我們內文示意：本區文字自「公司介紹」明細頁帶入，廠商於後台編輯公司介紹即同步更新，約二至四行。</div>
         <div class="more"><a href="#">查看全文</a></div>
       </article>
     </div>
