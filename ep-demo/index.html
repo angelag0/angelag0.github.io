@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EP 企業網新版型 Demo｜0803（V1白 × 膠囊圓角）｜V1／V2 表單雙版本分頁</title>
+<title>EP 企業網新版型 Demo｜0803（V1白 × 膠囊圓角）｜目前設計稿／V1／V2</title>
 <style>
 /* ================================================================
    ★ 本檔＝0803 Demo：V1白 Xometry 滿版 ＋ V2 膠囊圓角定版
@@ -47,6 +47,21 @@
           ＋表單拉寬 900 置中（未決議，8/11 會議決策；附註小字依二輪更正①移除）
      二.9 作廢（0802 更正①：頁中聯訂卡放回）
      二.10 頁尾聯訂兩行排＋版權列白底黑字；主帶依二輪更正④改明亮式（全亮色頁尾）
+   ■ 0803 下午 靖慈反饋輪（LINE 私訊四點＋當日裁示；出處＝raw-input/優先１．需求訪談/
+     20260803-LINE私訊-靖慈demo反饋.md；本檔已依此落地）
+     點1 左右留白對齊內頁：.wrap 內距移除＝內容淨寬 1200（原 1140；內頁容器＝1200 置中）
+     點2 關於我們：骨架照 3現有前台tw 現行 aboutUs（左 aboutUsVideo 影音輪播＋右 article）；
+        標題下公司名稱行＝「公司介紹」明細頁帶入的內文首行（非後台欄位＝靖慈疑問的解答），
+        照現有規格保留，假字改為可自我說明（首行＝公司名稱真名、內文標明自公司介紹帶入）
+     點3 產品展示放大：樣式照現有規格維持 4 欄（無三欄樣式），放大由區塊容器放寬承擔
+        （.pdQueue .wrap max-width 1660 ≈ 原站產品區近滿版 96vw；4 欄卡淨寬 397 ≈ 原站實測約 400）
+     點4 小鯨魚線上客服浮動鈕：右下 fixed 100×100 圓形，樣式照現行測試機 #sui-webchat-btn
+     另（同日裁示）：多媒體輪播段移除；圖文模板段＝三支原生 YT Short iframe 直嵌
+        （PM 實測三支、不加任何修飾），標註「圖文模板 YT short 示意」；
+        主導覽下拉重設計（關於我們＝直式清單下拉〔現有規格 subMenu 縱向〕＋產品 megamenu
+        ＝結構照現行測試機）；頂部新增第三顆分頁「現有設計稿參考（非最終成品）」＝
+        設計師整張設計稿原圖（img/design-draft.jpg、#draft 直達、滿版顯示）；
+        分頁標籤＝Demo V1／Demo V2（聯繫我們置中版）／現有設計稿參考（非最終成品）
 
    ■ 設計系統（沿用 V1 黑白版白名單，色值紀律不變）
      色值：亮區三階 #000／#333／#777、元件色 #111、線 #E5E5E5／#D4D4D4、
@@ -63,7 +78,8 @@
      容器：外框寬 min(1200px, 視窗−60px) 置中；主導覽 sticky top:0。
      12px 只剩必填提示一處（二輪更正①：內部註記小字全數移除）。
 
-   ■ 紅線：文字字串、img/ 相對路徑、data URI 一字未改；不外連任何資源；
+   ■ 紅線：文字字串、img/ 相對路徑、data URI 一字未改；不外連任何資源
+     （唯一例外＝圖文模板段三支 YT Short iframe：0803 客戶指示原生嵌入、需連網才會載入）；
      產出＝單一自包含 HTML＋隨附 img/ 資料夾。
    ================================================================ */
 
@@ -127,13 +143,20 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
 .skinSwitch button:hover{color:#111}
 .skinSwitch button[aria-selected="true"]{color:#111;border-bottom-color:#111}
 
+/* 「現有設計稿參考」分頁＝設計師整張設計稿原圖（0803；demo 外殼，不列入色彩系統）；
+   0803 更正輪二：原始尺寸置中（原檔寬 1440px、不放大不縮小＝最銳利，縮放交給瀏覽器 Ctrl+滾輪）；
+   視窗窄於原圖時容器水平捲動 */
+.draftPage{background:#fff;overflow-x:auto}
+.draftPage img{display:block;width:auto;max-width:none;margin:0 auto}
+
 /* ================================================================
    A. 全站共用層（亮區三階＋蒸餾 §四／§五 全站規則）
       0803 單版：原「共用層＋白皮」已合併為本層，切換器與黑皮退場
    ================================================================ */
 .vx{background:var(--w);color:var(--body);font-family:var(--ff)}
-/* 外框公式沿用 V1：任何視窗寬度下全區塊左右緣逐 px 對齊（蒸餾 §八 容器 1200） */
-.vx .wrap{width:calc(100% - 60px);max-width:var(--wrap);margin:0 auto;padding:0 30px}
+/* 外框公式沿用 V1：任何視窗寬度下全區塊左右緣逐 px 對齊；
+   0803 靖慈點1：內距移除＝內容淨寬 1200（與現行內頁容器 width:1200px 置中一致） */
+.vx .wrap{width:calc(100% - 60px);max-width:var(--wrap);margin:0 auto}
 /* 區塊上下留白 48＝蒸餾 §五 間距第四階（Xometry 密度，比 V1 原本 88 緊） */
 .vx section{padding:var(--sp-4) 0}
 /* 區塊標題 H2 30／1.27（§四）＋標題階 #000；軸線沿用 V1 T 字置中 */
@@ -149,7 +172,6 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
   background:var(--scrim);color:var(--on-dark);font-size:var(--fs-body);line-height:var(--lh-ctrl);text-align:center}
 .vx .ph:not([data-label])::after{display:none}
 .vx .adv .ph::after{top:50%;bottom:auto;transform:translate(-50%,-50%)}
-.vx .iStage .ph::after{top:var(--sp-2);bottom:auto}
 .vx .ph > img.phImg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 
 /* 輪播箭頭（蒸餾 §七.5／§九）：白底方圓鈕 8＋標準陰影、圖示 #111，卡列在外緣 */
@@ -265,6 +287,32 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
 .vx .dropMenu .ck{width:16px;height:16px;flex:none;background:currentColor;
   -webkit-mask:var(--ico-check) center/contain no-repeat;mask:var(--ico-check) center/contain no-repeat}
 .vx .epHeader ul.dropMenu{left:auto;right:0}
+/* 0803 更正輪：一般下拉＝直式清單（現有規格 subMenu 縱向）——
+   specificity 補正：.vx nav.menu ul 的 display:flex（0,2,2）原本壓過 .vx ul.dropMenu（0,2,1），
+   導覽下拉被攤成橫式；以下兩條把主導覽內的下拉清單全部立回縱向 */
+.vx nav.menu ul.dropMenu{display:block}
+.vx nav.menu .megaMenu ul{display:block}
+
+/* ── 產品 megamenu（0803 靖慈裁示：下拉重設計、結構照現行測試機 #prodMegamenu＝
+      「檢視全部」列＋分類清單（可帶子分類）；皮＝demo 面板語彙（radius 20＋標準陰影）──
+   分類名＝廠商自訂內容（假字）；「檢視全部」「其他」「私人展銷室」「All」＝系統字串照抄 */
+.vx nav.menu .megaMenu{position:absolute;top:calc(100% + 8px);left:50%;z-index:110;
+  width:min(760px,92vw);padding:var(--sp-3);background:var(--w);border-radius:var(--r-card);
+  box-shadow:var(--sh);text-align:left;
+  opacity:0;visibility:hidden;transform:translate(-50%,6px);transition:.2s ease}
+.vx nav.menu .megaMenu::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px}
+.vx nav.menu .drop:hover > .megaMenu,.vx nav.menu .drop:focus-within > .megaMenu{
+  opacity:1;visibility:visible;transform:translate(-50%,0)}
+.vx nav.menu .megaMenu .viewAll{border-bottom:1px solid var(--line);
+  padding-bottom:var(--sp-2);margin-bottom:var(--sp-2)}
+.vx nav.menu .megaMenu ul{list-style:none;margin:0;padding:0}
+.vx nav.menu .megaMenu .pdCate{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp-2);align-items:start}
+.vx nav.menu .megaMenu .pdCate ul{margin-top:var(--sp-1)}
+.vx nav.menu .megaMenu a{display:block;padding:var(--sp-1) var(--sp-2);border-radius:var(--r-btn);
+  font-size:var(--fs-body);font-weight:400;line-height:var(--lh-body);color:var(--body);
+  white-space:nowrap;text-decoration:none;transition:.2s ease}
+.vx nav.menu .megaMenu a:hover{background:var(--surface);color:var(--ink-strong)}
+.vx nav.menu .megaMenu .viewAll a,.vx nav.menu .megaMenu .cateT{font-weight:700;color:var(--ink-strong)}
 
 /* ================================================================
    C. 大圖輪播（蒸餾 §七.3 Hero：H1 38 置中；漸層③ 大圖遮罩＝V1 rgba(0,0,0,.62)）
@@ -316,18 +364,41 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
 .vx .adv .ph{aspect-ratio:1540/300;border-radius:var(--r-img);box-shadow:var(--sh)}
 
 /* ================================================================
-   F. 關於我們（蒸餾 §三 敘事＝暗帶節點；黑皮 #1F1F1F／白皮 #F5F5F5）
+   F. 關於我們（0803 靖慈點2＋更正輪：骨架照 3現有前台tw 現行 aboutUs＝
+      左 aboutUsVideo 影音輪播〔影片＋圖片、廠商後台上傳〕＋右 article〔h2＋內文＋查看全文〕；
+      標題下公司名稱行＝「公司介紹」明細頁帶入的內文首行〔非後台欄位〕照現有規格保留、
+      假字改為可自我說明；版面＝設計稿左媒體右文；
+      媒體卡沿用影片卡語彙〔播放鍵浮層＋平台標籤〕，平台標籤照設計稿置左下）
    ================================================================ */
-.vx .aboutUs article{max-width:900px;margin:0 auto;text-align:center}
-.vx .aboutUs article > div:not(.more){font-size:var(--fs-body);line-height:var(--lh-body);
-  color:var(--body);max-width:820px;margin:0 auto}
+.vx .aboutUs .wrap{display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);
+  gap:var(--sp-4);align-items:center}
+.vx .aboutUs .aboutUsVideo{position:relative}
+.vx .aboutUs .aboutUsVideo .list{list-style:none;margin:0;padding:0}
+.vx .aboutUs .aboutUsVideo .list > li{display:none}
+.vx .aboutUs .aboutUsVideo .list > li.now{display:block}
+.vx .aboutUs .videoBox{position:relative}
+.vx .aboutUs .videoBox .ph{aspect-ratio:16/9;border-radius:var(--r-img);box-shadow:var(--sh)}
+.vx .aboutUs .playBtn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
+  width:76px;height:52px;border-radius:var(--r-btn);background:var(--scrim);
+  display:flex;align-items:center;justify-content:center;pointer-events:none}
+.vx .aboutUs .playBtn::after{content:"";border-left:16px solid #FFF;
+  border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:3px}
+.vx .aboutUs .platformTag{position:absolute;left:var(--sp-2);bottom:var(--sp-2);z-index:2;
+  background:var(--scrim);color:var(--on-dark);font-size:var(--fs-body);line-height:var(--lh-ctrl);
+  border-radius:var(--r-btn);padding:var(--sp-1) var(--sp-2)}
+.vx .aboutUs .aboutUsVideo .arrowLeft{left:var(--sp-2)}
+.vx .aboutUs .aboutUsVideo .arrowRight{right:var(--sp-2)}
+.vx .aboutUs .aboutUsVideo .indicator{margin-top:var(--sp-2)}
+.vx .aboutUs article{text-align:left}
+.vx .aboutUs article h2{text-align:left}
+.vx .aboutUs article > div:not(.more){font-size:var(--fs-body);line-height:var(--lh-body);color:var(--body)}
 .vx .aboutUs .more{margin-top:var(--sp-3)}
 
 /* ================================================================
    G. 頁中聯繫與訂閱＝白卡兩張（0727 裁示：白卡＋陰影；樣式自 index-0728四版.html
       V1白 照抄，圓角改用本版變數：卡 --r-card 20／鈕 --r-btn 999）
       0802 更正①：決議8＝後台系統行為（版型設定送出不預設自帶聯訂元件），
-      不代表 demo 移除此元件 → 本段放回，位置＝關於我們之後、多媒體輪播之前
+      不代表 demo 移除此元件 → 本段放回，位置＝關於我們之後、產品展示之前（多媒體輪播 0803 移除）
    ================================================================ */
 .vx .contacts.alone .wrap{display:grid;grid-template-columns:repeat(2,minmax(0,420px));
   gap:var(--sp-3);justify-content:center}
@@ -339,48 +410,17 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
 .vx .contacts.alone em{display:block;font-style:normal;font-size:var(--fs-h3);line-height:var(--lh-h3);
   font-weight:700;color:var(--ink-strong);margin-bottom:var(--sp-1)}
 
-/* ================================================================
-   H. 多媒體輪播（蒸餾 §七.10 影片區；浮層＝V1 統一 rgba(0,0,0,.62) 白字）
-      黑皮 #222／白皮 #F5F5F5
-   ================================================================ */
-.vx .iStage{padding:var(--sp-4) 0}
-.vx .iStage .showArea{position:relative}
-.vx .iStage .showList{list-style:none;padding:0;margin:0}
-.vx .iStage .showList li{display:none}
-.vx .iStage .showList li.now{display:block}
-.vx .iStage .videoBox{position:relative}
-.vx .iStage .videoBox .ph{aspect-ratio:16/9;border-radius:var(--r-img)}
-.vx .iStage .playBtn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
-  width:76px;height:52px;border-radius:var(--r-btn);background:var(--scrim);
-  display:flex;align-items:center;justify-content:center;pointer-events:none}
-/* 三角形以 border 繪製；margin-left 3px＝三角形視覺重心補償（幾何光學微調，非間距階） */
-.vx .iStage .playBtn::after{content:"";border-left:16px solid #FFF;
-  border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:3px}
-.vx .iStage .platformTag{position:absolute;right:var(--sp-2);bottom:var(--sp-2);z-index:2;
-  background:var(--scrim);color:var(--on-dark);font-size:var(--fs-body);line-height:var(--lh-ctrl);
-  border-radius:var(--r-btn);padding:var(--sp-1) var(--sp-2)}
-/* 0802 更正②：YT Short 直式那則（含其專用 CSS）自本段退場＝多媒體輪播只放橫式 16:9 兩則；
-   YT Short 唯一呈現處＝「圖文模板」段（H2 段） */
+/* （原 H. 多媒體輪播 iStage：0803 靖慈裁示整段移除；影音展示改由關於我們 aboutUsVideo 承擔） */
 
 /* ================================================================
-   H2. 圖文模板（0803 施工單二.4＝決議4＋LINE 點3；0802 二輪更正②：改名並移至
-      產品展示與 CTA 樣式一之間，標題層級改用「圖文模板新範本」等級語彙）
-      沿用 iStage 影片卡語彙（播放鍵浮層＋平台標籤＋圖片圓角 14），不發明新樣式；
-      3 支直式 9:16 並排置中，素材取 img/ 既有圖以 object-fit:cover 裁 9:16
+   H2. 圖文模板（0803 靖慈定調：圖文模板＝後台 HTML 編輯區，YT Short 原生呈現什麼樣
+      就什麼樣＝youtube.com/embed 原生 iframe 直嵌、不加圓角陰影等任何修飾（PM 實測樣式）；
+      本段 CSS 只做三支並排置中的排版；標註單行「圖文模板 YT short 示意」）
    ================================================================ */
 .vx .shortsBlock .shortsList{list-style:none;margin:0;padding:0;display:grid;
   grid-template-columns:repeat(3,minmax(0,260px));gap:var(--sp-3);justify-content:center}
-.vx .shortsBlock .videoBox{position:relative}
-.vx .shortsBlock .videoBox .ph{aspect-ratio:9/16;border-radius:var(--r-img);box-shadow:var(--sh)}
-.vx .shortsBlock .playBtn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
-  width:76px;height:52px;border-radius:var(--r-btn);background:var(--scrim);
-  display:flex;align-items:center;justify-content:center;pointer-events:none}
-.vx .shortsBlock .playBtn::after{content:"";border-left:16px solid #FFF;
-  border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:3px}
-.vx .shortsBlock .platformTag{position:absolute;right:var(--sp-2);bottom:var(--sp-2);z-index:2;
-  background:var(--scrim);color:var(--on-dark);font-size:var(--fs-body);line-height:var(--lh-ctrl);
-  border-radius:var(--r-btn);padding:var(--sp-1) var(--sp-2)}
-/* 標題組＝與 CTA 兩式同構（eyebrow→h2→lead 置中）；規則掛在 J 段一併定義 */
+.vx .shortsBlock iframe{display:block;width:100%;aspect-ratio:9/16;border:0}
+/* 標題組＝與 CTA 兩式同構（eyebrow 置中）；規則掛在 J 段一併定義 */
 
 /* ================================================================
    I. 產品展示（0803 施工單二.5＝決議5「拿掉 tab、其餘前端不變」）
@@ -391,6 +431,10 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
    ================================================================ */
 .vx .pdQueue{background:var(--w)}
 .vx .pdQueue .slideArea{position:relative}
+/* 0803 更正輪（靖慈點3 重解）：系統無三欄產品樣式＝照現有規格維持 4 欄；
+   放大由區塊容器放寬承擔（原站產品區＝近滿版 96vw、卡寬實測約 400）
+   → 本區 .wrap 放寬 1660＝4 欄卡淨寬 397 ≈ 原站 */
+.vx .pdQueue .wrap{max-width:1660px}
 .vx .pdQueue .list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3)}
 .vx .pdQueue .list > li{position:relative;transition:.3s ease}
 .vx .pdQueue .list > li > a{display:block;text-decoration:none;color:inherit;position:relative}
@@ -580,13 +624,22 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
 .vx .contactSet .social li.instagram a{background:radial-gradient(circle at 30% 110%,#FDF497 0%,#FD5949 45%,#D6249F 60%,#285AEB 90%);color:#fff}
 
 /* ================================================================
+   N2. 小鯨魚線上客服浮動鈕（0803 靖慈點4；樣式照現行測試機 #sui-webchat-btn：
+      fixed 右下 16px、100×100 圓形、陰影 1px 2px 8px #000、z-index 9999；
+      橘底 #EC8D00＋鯨魚圖＝素材層例外色，照現行元件原樣、不入黑白色彩系統）
+   ================================================================ */
+.vx .webchatBtn{position:fixed;right:16px;bottom:16px;width:100px;height:100px;z-index:9999;
+  display:block;border:0;padding:0;cursor:pointer;border-radius:50%;font-size:0;
+  background:#EC8D00 url(img/webchat-whale.png) center/cover no-repeat;
+  box-shadow:1px 2px 8px 0 #000}
+
+/* ================================================================
    O. 節奏帶（原 V1白皮 .vx2，0803 併入共用層＝單版基調）
       四個節奏帶＝#F5F5F5 淺灰帶／CTA一 照片帶；文字全部沿用亮區三階，
       故本層只需換底色，無須任何文字覆寫（＝白底黑字基調的證明）
       （原 .vx1 黑皮節奏＝深帶四座，隨單版收斂移除）
    ================================================================ */
 .vx .aboutUs{background:var(--band-light)}
-.vx .iStage{background:var(--band-light)}
 /* CTA一＝照片帶（img/cta-1-bg.jpg＋白 .72 遮罩，值照原檔）＋亮區三階字、#111 實心鈕 */
 .vx .ctaA{background:linear-gradient(rgba(255,255,255,.72),rgba(255,255,255,.72)),
   url(img/cta-1-bg.jpg) center/cover no-repeat}
@@ -599,6 +652,7 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
    ================================================================ */
 @media(max-width:1024px){
   .vx .contactForm .wrap{grid-template-columns:1fr;gap:var(--sp-3)}
+  .vx .aboutUs .wrap{grid-template-columns:1fr;gap:var(--sp-3)}
   .vx .ctaB .inner{grid-template-columns:1fr;gap:var(--sp-3)}
   .vx .pdQueue .list,.vx .newsBlock .list{grid-template-columns:repeat(2,1fr)}
   .vx .statBlock .stats{grid-template-columns:repeat(2,1fr)}
@@ -615,10 +669,8 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
   .vx .contactForm .row2{grid-template-columns:1fr}
   .vx .topZone .wrap{flex-wrap:wrap}
   .vx .topZone .search{width:100%;max-width:none;margin-left:0}
-  .vx .shortsBlock .shortsList{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-1)}
-  .vx .shortsBlock .playBtn{width:56px;height:38px}
-  .vx .shortsBlock .playBtn::after{border-left-width:12px;border-top-width:7px;border-bottom-width:7px}
-  .vx .shortsBlock .platformTag{display:none}
+  .vx .shortsBlock .shortsList{grid-template-columns:minmax(0,260px);gap:var(--sp-2)}
+  .vx .webchatBtn{width:72px;height:72px}
   .vx .ctaB .inner{gap:var(--sp-3)}
   .vx .contactSet .others{grid-template-columns:1fr;gap:var(--sp-3)}
   .vx .contactSet .qrcode{justify-self:start}
@@ -629,12 +681,17 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
 </head>
 <body>
 
-<!-- 表單雙版本分頁（0802 更正④）：頂部兩顆分頁＝V1（預設）／V2（無電話；#v2 直達） -->
-<nav class="skinSwitch" role="tablist" aria-label="表單版本切換">
-  <button role="tab" aria-selected="true"  data-skin="v1">V1</button>
-  <button role="tab" aria-selected="false" data-skin="v2">V2</button>
+<!-- 頂部分頁（0803 更正輪定案標籤與順序）：Demo V1（預設）／Demo V2（聯繫我們置中版＝
+     無電話表單，#v2 直達）／現有設計稿參考（非最終成品）＝設計師整張設計稿（#draft 直達） -->
+<nav class="skinSwitch" role="tablist" aria-label="版本切換">
+  <button role="tab" aria-selected="true"  data-skin="v1">Demo V1</button>
+  <button role="tab" aria-selected="false" data-skin="v2">Demo V2（聯繫我們置中版）</button>
+  <button role="tab" aria-selected="false" data-skin="draft">現有設計稿參考（非最終成品）</button>
 </nav>
 
+<div class="v draftPage" id="draft" hidden>
+  <img src="img/design-draft.jpg" alt="現有設計稿參考（非最終成品，整頁）">
+</div>
 <div class="v vx" id="v1"></div>
 <div class="v vx ver-b" id="v2" hidden></div>
 
@@ -649,9 +706,10 @@ const PD_LIST = [
   {n:"產品名稱二", img:"prod-02", price:"9,500.00-14,000.00"},
   {n:"產品名稱三", img:"prod-03", price:"8,800.00-11,500.00"},
   {n:"產品名稱四", img:"prod-04", price:"依詢價"}
-];
-/* 短影片展示 3 支（施工單二.4）：只用 img/ 既有圖，直式以 object-fit:cover 裁 9:16 */
-const SHORTS = ["media-short-916","food-accent","prod-09"];
+];/* 0803 更正輪：照現有規格 4 欄＝4 張；放大由 .pdQueue .wrap 放寬 1660 承擔 */
+/* 圖文模板 YT Short 三支（0803 靖慈定調：原生 iframe 直嵌、不加任何修飾；
+   影片＝PM 實測三支、由使用者提供網址；需連網才會載入＝紅線唯一外連例外） */
+const YT_SHORTS = ["sOWZw45P-fk","w8kbCowYZMg","lXhFrT--Rbs"];
 const NEWS = [
   {t:"新聞標題一", s:"新聞摘要文字示意，約一至兩行，超出自動截斷。", hot:true},
   {t:"新聞標題二", s:"新聞摘要文字示意，約一至兩行，超出自動截斷。", hot:false},
@@ -676,14 +734,10 @@ function markup(){
             ${p.off?'<span class="discountLabel">85折</span>':''}
           </a>
         </li>`).join("");
-  const shortCards = SHORTS.map(f=>`
-          <li>
-            <div class="videoBox">
-              <span class="ph"><img class="phImg" src="img/${f}.jpg" alt=""></span>
-              <span class="playBtn"></span>
-              <span class="platformTag">觀看平台：YouTube</span>
-            </div>
-          </li>`).join("");
+  const shortCards = YT_SHORTS.map(id=>`
+          <li><iframe src="https://www.youtube.com/embed/${id}" title="YT Short 示意"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe></li>`).join("");
 
   const newsCards = NEWS.map((n,i)=>`
         <li>
@@ -745,21 +799,44 @@ function markup(){
     <div class="wrap">
       <ul>
         <li><a href="#">主頁</a></li>
+        <!-- 0803 靖慈裁示：下拉重設計、結構照現行測試機——
+             關於我們＝一般下拉（「總覽」＝系統字串置頂＋廠商自訂項目）；
+             產品＝megamenu（「檢視全部」列＋分類清單帶子分類；
+             「檢視全部」「All」「其他」「私人展銷室」＝系統字串照抄，分類名＝假字） -->
         <li class="hasChild drop"><a href="#">關於我們</a>
           <ul class="dropMenu">
+            <li><a href="#">總覽</a></li>
             <li><a href="#">公司簡介</a></li>
-            <li><a href="#">沿革與里程碑</a></li>
-            <li><a href="#">認證與獎項</a></li>
-            <li><a href="#">廠房導覽</a></li>
+            <li><a href="#">經營理念</a></li>
+            <li><a href="#">公司沿革</a></li>
+            <li><a href="#">大事紀要</a></li>
+            <li><a href="#">競爭優勢</a></li>
           </ul>
         </li>
         <li class="hasChild drop"><a href="#">產品</a>
-          <ul class="dropMenu">
-            <li><a href="#">產品分頁一</a></li>
-            <li><a href="#">產品分頁二</a></li>
-            <li><a href="#">產品分頁三</a></li>
-            <li><a href="#">全部產品</a></li>
-          </ul>
+          <div class="megaMenu">
+            <div class="viewAll"><a href="#">檢視全部</a></div>
+            <ul class="pdCate">
+              <li>
+                <a class="cateT" href="#">產品分類一</a>
+                <ul>
+                  <li><a href="#">All</a></li>
+                  <li><a href="#">子分類一</a></li>
+                  <li><a href="#">子分類二</a></li>
+                </ul>
+              </li>
+              <li>
+                <a class="cateT" href="#">產品分類二</a>
+                <ul>
+                  <li><a href="#">All</a></li>
+                  <li><a href="#">子分類一</a></li>
+                </ul>
+              </li>
+              <li><a class="cateT" href="#">產品分類三</a></li>
+              <li><a class="cateT" href="#">其他</a></li>
+              <li><a class="cateT" href="#">私人展銷室</a></li>
+            </ul>
+          </div>
         </li>
         <li><a href="#">新聞</a></li>
         <li><a href="#">網上商城</a></li>
@@ -809,19 +886,42 @@ function markup(){
     </div>
   </div>
 
-  <!-- 關於我們 aboutUs（按鈕字串照中文語系現況＝查看全文＝骨；排列＝皮：V1 置中堆疊／V2 左堆疊） -->
+  <!-- 關於我們 aboutUs（0803 靖慈點2＋更正輪：骨架照 3現有前台tw 現行＝左 aboutUsVideo
+       影音輪播〔影片＋圖片、廠商後台上傳〕＋右 article；標題下公司名稱行＝
+       「公司介紹」明細頁帶入的內文首行〔非後台欄位〕，照現有規格保留、假字自我說明；
+       按鈕字串照中文語系現況＝查看全文＝骨） -->
   <section class="aboutUs">
     <div class="wrap">
+      <div class="aboutUsVideo ckSlide">
+        <div class="slideArea">
+          <ul class="list">
+            <li class="now">
+              <div class="videoBox">
+                <span class="ph"><img class="phImg" src="img/media-video-169.jpg" alt=""></span>
+                <span class="playBtn"></span>
+                <span class="platformTag">觀看平台：YouTube</span>
+              </div>
+            </li>
+            <li>
+              <div class="videoBox">
+                <span class="ph"><img class="phImg" src="img/prod-11.jpg" alt=""></span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <span class="arrowLeft"></span><span class="arrowRight"></span>
+        <div class="indicator"><ul><li class="now"></li><li></li></ul></div>
+      </div>
       <article>
         <h2>關於我們</h2>
-        <div>公司名稱副標行<br><br>關於我們簡介內文示意：介紹公司沿革、核心能力與服務範圍，文字由廠商於後台自行編輯，約二至四行。</div>
+        <div>安口食品機械股份有限公司<br><br>關於我們內文示意：本區文字自「公司介紹」明細頁帶入（首行＝公司名稱），廠商於後台編輯公司介紹即同步更新，約二至四行。</div>
         <div class="more"><a href="#">查看全文</a></div>
       </article>
     </div>
   </section>
 
   <!-- 頁中聯繫與訂閱 contacts（0802 更正①：決議8＝後台系統行為，非 demo 移除 → 本段放回；
-       文案逐字照 index-0728四版.html；位置＝關於我們之後、多媒體輪播之前） -->
+       文案逐字照 index-0728四版.html；位置＝關於我們之後、產品展示之前〔多媒體輪播 0803 移除〕） -->
   <section class="contacts alone">
     <div class="wrap">
       <div class="contactUs">
@@ -837,35 +937,10 @@ function markup(){
 
   <!-- ══════════ 現有元件・採新設計 ══════════ -->
 
-  <!-- 多媒體輪播 iStage（無左右箭頭、一次僅顯示 1 則；區塊無標題 → 標示畫在佔位圖上；
-       0725 順序裁示：移至聯繫與訂閱之後、產品展示之前；
-       0802 更正②：移除 YT Short 直式那則 → 2 則皆橫式 16:9，YT Short 只在下方短影片展示段） -->
-  <div class="iStage">
-    <div class="wrap">
-      <div class="showArea">
-        <ul class="showList">
-          <li class="now">
-            <div class="videoBox">
-              <span class="ph" data-label="多媒體輪播"><img class="phImg" src="img/media-video-169.jpg" alt=""></span>
-              <span class="playBtn"></span>
-              <span class="platformTag">觀看平台：YouTube</span>
-            </div>
-          </li>
-          <li>
-            <div class="videoBox">
-              <span class="ph" data-label="多媒體輪播"><img class="phImg" src="img/prod-11.jpg" alt=""></span>
-              <span class="playBtn"></span>
-              <span class="platformTag">觀看平台：YouTube</span>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="indicator"><ul><li class="now"></li><li></li></ul></div>
-    </div>
-  </div>
+  <!-- （原 多媒體輪播 iStage：0803 靖慈裁示整段移除；影音展示改由關於我們 aboutUsVideo 承擔） -->
 
-  <!-- 產品展示 pdQueue（施工單二.5：tab 退場＝單一 h2 標題；
-       0802 更正③：分類樹不入 demo → 滿寬一列 4 欄卡，呈現照 index-0728四版.html panel1） -->
+  <!-- 產品展示 pdQueue（施工單二.5：tab 退場＝單一 h2 標題；0802 更正③：分類樹不入 demo；
+       0803 更正輪：照現有規格 4 欄、區塊容器放寬 1660＝卡淨寬 397 ≈ 原站實測約 400） -->
   <section class="pdQueue ckSlide">
     <div class="wrap">
       <h2>產品展示</h2>
@@ -877,12 +952,12 @@ function markup(){
     </div>
   </section>
 
-  <!-- 圖文模板段（0802 三輪：標示改單行「圖文模板短影片示意」、其餘文字移除）：
-       3 支直式 9:16 短影片卡並排置中，沿用 iStage 影片卡語彙（播放鍵浮層＋平台標籤） -->
+  <!-- 圖文模板段（0803 靖慈定調：圖文模板＝後台 HTML 編輯區，YT Short 原生呈現什麼樣
+       就什麼樣＝原生 iframe 直嵌、不加任何修飾；標註單行「圖文模板 YT short 示意」） -->
   <section class="shortsBlock">
     <div class="wrap">
       <div class="inner">
-        <p class="eyebrow">圖文模板短影片示意</p>
+        <p class="eyebrow">圖文模板 YT short 示意</p>
       </div>
       <ul class="shortsList">${shortCards}</ul>
     </div>
@@ -1091,11 +1166,15 @@ function markup(){
         </p>
       </div>
     </footer>
-  </div>`;
+  </div>
+
+  <!-- 小鯨魚線上客服浮動鈕（0803 靖慈點4；樣式照現行測試機 #sui-webchat-btn） -->
+  <button type="button" class="webchatBtn" aria-label="線上客服"></button>`;
 }
 
-/* 兩個分頁容器（#v1／#v2）掛同一份 markup；V2 的差異全由容器 .ver-b class 以 CSS 決定 */
-document.querySelectorAll('.v').forEach(el => el.innerHTML = markup());
+/* 兩個分頁容器（#v1／#v2）掛同一份 markup；V2 的差異全由容器 .ver-b class 以 CSS 決定；
+   「現有設計稿參考」分頁（#draft）＝靜態整張設計稿圖，不掛 markup */
+document.querySelectorAll('.v.vx').forEach(el => el.innerHTML = markup());
 
 /* 電話：桌機（可 hover 的精準指標）＝點按複製號碼＋回饋；行動裝置＝tel: 直撥 */
 document.querySelectorAll('.contactForm .tel').forEach(t=>{
@@ -1180,7 +1259,7 @@ document.addEventListener('keydown', e => {
   const i = SKINS.findIndex(b => b.getAttribute('aria-selected') === 'true');
   show(SKINS[(i + (e.key === 'ArrowRight' ? 1 : SKINS.length - 1)) % SKINS.length].dataset.skin);
 });
-if (/^#(v1|v2)$/.test(location.hash)) show(location.hash.slice(1));
+if (/^#(draft|v1|v2)$/.test(location.hash)) show(location.hash.slice(1));
 </script>
 </body>
 </html>
