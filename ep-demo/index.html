@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EP 企業網新版型 Demo｜0803（V1白 × 膠囊圓角）｜目前設計稿／V1／V2</title>
+<title>EP 企業網新版型 Demo｜0803（V1白 × 膠囊圓角）｜V1／V2</title>
 <style>
 /* ================================================================
    ★ 本檔＝0803 Demo：V1白 Xometry 滿版 ＋ V2 膠囊圓角定版
@@ -63,6 +63,8 @@
         ＝結構照現行測試機）；頂部新增第三顆分頁「現有設計稿參考（非最終成品）」＝
         設計師整張設計稿原圖（img/design-draft.jpg、#draft 直達、滿版顯示）；
         分頁標籤＝Demo V1／Demo V2（聯繫我們置中版）／現有設計稿參考（非最終成品）
+   ■ 0804 客戶要求：設計稿分頁移除，僅留 V1／V2 雙分頁（第三顆分頁「現有設計稿參考」
+      連同 draftPage 容器與相關切換邏輯整段拔除）；三分頁版留檔＝index-0803三分頁.html
 
    ■ 設計系統（沿用 V1 黑白版白名單，色值紀律不變）
      色值：亮區三階 #000／#333／#777、元件色 #111、線 #E5E5E5／#D4D4D4、
@@ -145,12 +147,6 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
   padding:14px 26px;border-bottom:3px solid transparent;transition:.15s}
 .skinSwitch button:hover{color:#111}
 .skinSwitch button[aria-selected="true"]{color:#111;border-bottom-color:#111}
-
-/* 「現有設計稿參考」分頁＝設計師整張設計稿原圖（0803；demo 外殼，不列入色彩系統）；
-   0803 更正輪二：原始尺寸置中（原檔寬 1440px、不放大不縮小＝最銳利，縮放交給瀏覽器 Ctrl+滾輪）；
-   視窗窄於原圖時容器水平捲動 */
-.draftPage{background:#fff;overflow-x:auto}
-.draftPage img{display:block;width:auto;max-width:none;margin:0 auto}
 
 /* ================================================================
    A. 全站共用層（亮區三階＋蒸餾 §四／§五 全站規則）
@@ -682,17 +678,13 @@ body{margin:0;background:var(--w);color:var(--body);font-family:var(--ff);
 </head>
 <body>
 
-<!-- 頂部分頁（0803 更正輪定案標籤與順序）：Demo V1（預設）／Demo V2（聯繫我們置中版＝
-     無電話表單，#v2 直達）／現有設計稿參考（非最終成品）＝設計師整張設計稿（#draft 直達） -->
+<!-- 頂部分頁（0804 客戶要求：設計稿分頁移除，僅留 V1／V2）：Demo V1（預設）／
+     Demo V2（聯繫我們置中版＝無電話表單，#v2 直達） -->
 <nav class="skinSwitch" role="tablist" aria-label="版本切換">
   <button role="tab" aria-selected="true"  data-skin="v1">Demo V1</button>
   <button role="tab" aria-selected="false" data-skin="v2">Demo V2（聯繫我們置中版）</button>
-  <button role="tab" aria-selected="false" data-skin="draft">現有設計稿參考（非最終成品）</button>
 </nav>
 
-<div class="v draftPage" id="draft" hidden>
-  <img src="img/design-draft.jpg" alt="現有設計稿參考（非最終成品，整頁）">
-</div>
 <div class="v vx" id="v1"></div>
 <div class="v vx ver-b" id="v2" hidden></div>
 
@@ -1172,8 +1164,7 @@ function markup(){
   <button type="button" class="webchatBtn" aria-label="線上客服"></button>`;
 }
 
-/* 兩個分頁容器（#v1／#v2）掛同一份 markup；V2 的差異全由容器 .ver-b class 以 CSS 決定；
-   「現有設計稿參考」分頁（#draft）＝靜態整張設計稿圖，不掛 markup */
+/* 兩個分頁容器（#v1／#v2）掛同一份 markup；V2 的差異全由容器 .ver-b class 以 CSS 決定 */
 document.querySelectorAll('.v.vx').forEach(el => el.innerHTML = markup());
 
 /* 電話：桌機（可 hover 的精準指標）＝點按複製號碼＋回饋；行動裝置＝tel: 直撥 */
@@ -1259,7 +1250,7 @@ document.addEventListener('keydown', e => {
   const i = SKINS.findIndex(b => b.getAttribute('aria-selected') === 'true');
   show(SKINS[(i + (e.key === 'ArrowRight' ? 1 : SKINS.length - 1)) % SKINS.length].dataset.skin);
 });
-if (/^#(draft|v1|v2)$/.test(location.hash)) show(location.hash.slice(1));
+if (/^#(v1|v2)$/.test(location.hash)) show(location.hash.slice(1));
 </script>
 </body>
 </html>
