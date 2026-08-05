@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EP｜Header ＆ Menu 要設計的元素</title>
+<style>
+/* ================================================================
+   EP 企業網改版｜Header ＆ Menu 要請設計師畫的元素（index2.html）
+   一眼看完版：只呈現「要畫的東西長在哪、有幾個」，不寫互動與系統細節。
+   互動／狀態／系統字串等切版層資訊 → 另一份 docs/demo/切版說明.html。
+   狀態一律以「已登入」為準（未登入只差：登入 ↔ Hi, boan＋登出）。
+   視覺語彙沿用 index.html；橘色標籤＝工作註記，不是設計配色。
+   ================================================================ */
+:root{
+  --ink-strong:#000; --ink:#111; --body:#333; --muted:#777; --w:#FFF;
+  --line:#E5E5E5; --line-input:#D4D4D4; --band-promo:#1F1F1F; --surface:#F4F5F7;
+  --on-dark:#FFF; --on-dark-sub:rgba(255,255,255,.62);
+  --sp-1:8px; --sp-2:16px; --sp-3:24px; --sp-4:48px;
+  --r-btn:999px; --r-card:20px; --r-img:14px; --r-pill:9999px;
+  --sh:0 6px 16px rgba(0,0,0,.08), 0 3px 6px -4px rgba(0,0,0,.12), 0 9px 28px 8px rgba(0,0,0,.05);
+  --ff:"Open Sans","Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;
+  --ico-down:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='m3.5 6 4.5 4.5L12.5 6' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  --ico-search:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'><circle cx='8' cy='8' r='5.4' fill='none' stroke='black' stroke-width='1.8'/><path d='m12.2 12.2 3.8 3.8' stroke='black' stroke-width='1.8' stroke-linecap='round'/></svg>");
+  --ico-check:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='m3 8.5 3.5 3.5L13 5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  --todo:#C2410C; --todo-bg:#FFF4ED;
+}
+*{box-sizing:border-box}
+a{text-decoration:none}
+body{margin:0;background:#FAFAFA;color:var(--body);font-family:var(--ff);font-size:14px;line-height:1.6}
+
+/* ── 頁面外殼 ── */
+.head{background:var(--w);border-bottom:1px solid #E2E2E2;padding:26px 40px 22px}
+.head h1{margin:0 0 6px;font-size:26px;line-height:1.3;font-weight:700;color:var(--ink-strong)}
+.head p{margin:0;font-size:14.5px;color:var(--body);max-width:80ch}
+.head b{color:var(--ink-strong)}
+.doc{width:min(94vw,1400px);margin:0 auto;padding:var(--sp-3) 0 96px}
+.sec{background:var(--w);border-radius:var(--r-card);box-shadow:var(--sh);padding:var(--sp-4);margin-top:var(--sp-3)}
+.sec > h2{margin:0 0 var(--sp-3);font-size:20px;line-height:1.4;font-weight:700;color:var(--ink-strong);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sec > h2 small{font-size:13px;font-weight:400;color:var(--muted)}
+.no{flex:none;border-radius:var(--r-pill);background:var(--ink);color:var(--w);padding:5px 12px;
+  font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;line-height:1.2}
+
+/* 展示台（不設 overflow，避免展開的面板被切掉） */
+.stage{background:#F2F2F2;border-radius:var(--r-card);padding:var(--sp-3)}
+.stage.pb{padding-bottom:var(--sp-4)} /* 第 1 區：展開的面板會浮出去蓋住下方，這是實際行為 */
+
+/* 面板畫廊 */
+.gal{display:flex;gap:var(--sp-3);flex-wrap:wrap;align-items:flex-start}
+.gal figure{margin:0;flex:0 0 auto}
+.gal figcaption{margin-top:10px;font-size:13px;font-weight:700;color:var(--ink-strong);display:flex;
+  align-items:center;gap:7px}
+.gal figcaption i{width:20px;height:20px;flex:none;border-radius:var(--r-pill);background:var(--ink);color:var(--w);
+  font-size:11px;font-style:normal;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+.gal figcaption span{font-weight:400;color:var(--muted)}
+
+.tag{display:inline-flex;align-items:center;font-size:11.5px;font-weight:700;line-height:1;padding:5px 10px;
+  border-radius:var(--r-pill);color:var(--todo);border:1px solid #F0C0A2;background:var(--todo-bg);white-space:nowrap}
+
+/* ══════════ Header 元件（樣式沿用 index.html） ══════════ */
+.ep{background:var(--w);border-radius:var(--r-img);box-shadow:var(--sh);font-size:14px}
+.ep .wrap{width:min(96%,1520px);margin:0 auto}
+.ep .epHeader{background:var(--band-promo);color:var(--on-dark);border-radius:var(--r-img) var(--r-img) 0 0}
+.ep .epHeader .wrap{display:flex;align-items:center;justify-content:flex-end;min-height:48px}
+.ep .epHeader ul{display:flex;align-items:center;gap:var(--sp-2);list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.ep .epHeader > .wrap > ul > li{position:relative}
+.ep .epHeader a{color:var(--on-dark-sub);display:inline-flex;align-items:center;white-space:nowrap;transition:.2s}
+.ep .epHeader a:hover{color:var(--on-dark)}
+.ep .icoS{width:16px;height:16px;margin-right:6px;flex:none}
+.caret::after{content:"";display:inline-block;width:16px;height:16px;margin-left:4px;background:currentColor;
+  -webkit-mask:var(--ico-down) center/16px no-repeat;mask:var(--ico-down) center/16px no-repeat;transition:.2s}
+.drop:hover > a.caret::after{transform:rotate(180deg)}
+.numBadge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;
+  margin-left:6px;border-radius:var(--r-pill);background:#D93025;color:#FFF;font-size:11px;font-weight:700;line-height:1}
+.ep .topZone .wrap{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-2) 0}
+.ep .webHeader,.ep .webHeader h1{margin:0;font-size:inherit}
+.ep .webHeader h1 a{display:flex;align-items:center;gap:var(--sp-2);color:var(--ink-strong)}
+.ep .logoPh{width:64px;height:64px;flex:none;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.ep .logoPh img{max-width:100%;max-height:100%;display:block}
+.ep .firmName{font-size:22px;font-weight:700;line-height:1.25;color:var(--ink-strong)}
+.ep .firmName small{display:block;font-size:13px;font-weight:400;color:var(--body)}
+.ep .search{margin-left:auto;position:relative;width:300px;max-width:40vw}
+.ep .search input{width:100%;font:inherit;height:48px;border:1px solid var(--line-input);border-radius:var(--r-btn);
+  background:var(--w);color:var(--body);padding:0 48px 0 var(--sp-3)}
+.ep .search .btn{position:absolute;right:6px;top:6px;width:36px;height:36px;border-radius:50%;background:var(--ink);border:0}
+.ep .search .btn::after{content:"";position:absolute;inset:0;background:var(--w);
+  -webkit-mask:var(--ico-search) center/18px no-repeat;mask:var(--ico-search) center/18px no-repeat}
+.ep nav.menu{background:var(--w);border-bottom:1px solid var(--line);border-radius:0 0 var(--r-img) var(--r-img)}
+.ep nav.menu > .wrap{display:flex;align-items:center;min-height:56px}
+.ep nav.menu ul.lv1{display:flex;list-style:none;margin:0;padding:0;width:100%;justify-content:space-between}
+.ep nav.menu ul.lv1 > li{position:relative}
+.ep nav.menu ul.lv1 > li > a{color:var(--ink);font-size:15px;font-weight:600;padding:18px 4px;display:inline-flex;align-items:center}
+.ep nav.menu li.now > a{color:var(--ink-strong);font-weight:700;box-shadow:inset 0 -2px 0 var(--ink-strong)}
+
+/* 下拉面板 */
+.panel{background:var(--w);border-radius:var(--r-card);box-shadow:var(--sh);padding:var(--sp-1) 0;min-width:200px;
+  list-style:none;margin:0}
+.panel.wide{min-width:264px}
+.panel a{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-2);padding:9px var(--sp-3);
+  color:var(--body);line-height:1.5;transition:.15s}
+.panel a:hover{background:var(--surface);color:var(--ink-strong)}
+.panel .on a{color:var(--ink-strong);font-weight:700}
+.panel .on a::after{content:"";width:16px;height:16px;flex:none;background:currentColor;
+  -webkit-mask:var(--ico-check) center/16px no-repeat;mask:var(--ico-check) center/16px no-repeat}
+.panel .sysStr a{font-weight:700;color:var(--ink-strong)}
+.panel .sep{height:1px;background:var(--line);margin:6px var(--sp-3)}
+.panel .redTxt a{color:#C62828}
+
+/* hover 展開（僅第 1 區） */
+.live .drop > .panel,.live .drop > .megaWrap{position:absolute;top:calc(100% + 6px);z-index:120;
+  opacity:0;visibility:hidden;transform:translateY(-6px);transition:.18s}
+.live .epHeader .drop > .panel{right:0}
+.live nav.menu .drop > .panel{left:0}
+.live .drop:hover > .panel,.live .drop:hover > .megaWrap{opacity:1;visibility:visible;transform:translateY(0)}
+.live .drop > .panel::before,.live .drop > .megaWrap::before{content:"";position:absolute;left:0;right:0;top:-12px;height:12px}
+.live nav.menu .drop > .megaWrap{left:0;width:100%;min-width:980px}
+
+/* 產品面板 */
+.mega{background:var(--w);border-radius:var(--r-card);box-shadow:var(--sh);padding:var(--sp-3) var(--sp-4)}
+.mega .top{display:flex;align-items:center;border-bottom:1px solid var(--line);padding-bottom:var(--sp-2);margin-bottom:var(--sp-3)}
+.mega .top a{font-weight:700;color:var(--ink-strong);font-size:15px}
+.mega .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3) var(--sp-4);list-style:none;margin:0;padding:0;align-items:start}
+.mega .grid > li > a.cateT{display:block;font-weight:700;color:var(--ink-strong);font-size:15px;padding:6px 0;line-height:1.4}
+.mega .grid ul{list-style:none;margin:4px 0 0;padding:0 0 0 var(--sp-2);border-left:1px solid var(--line)}
+.mega .grid ul a{display:block;color:var(--body);padding:5px 0 5px 10px;line-height:1.5}
+.mega .sysRow{display:flex;gap:var(--sp-3);border-top:1px solid var(--line);margin-top:var(--sp-3);padding-top:var(--sp-2)}
+.mega .sysRow a{font-weight:600;color:var(--body)}
+.cateImg{width:100%;aspect-ratio:16/10;border-radius:var(--r-img);overflow:hidden;background:#EEE;margin-bottom:8px;display:block}
+.cateImg img{width:100%;height:100%;object-fit:cover;display:block}
+.cateImg.none{border:1.5px dashed var(--line-input);background:transparent;display:flex;align-items:center;
+  justify-content:center;color:#BBB;font-size:12.5px}
+/* 極端情境標籤 */
+.pin{display:inline-block;font-size:11px;font-weight:700;line-height:1;color:var(--todo);background:var(--todo-bg);
+  border:1px solid #F0C0A2;border-radius:var(--r-pill);padding:4px 9px;margin-bottom:8px}
+
+/* 購物車面板 */
+.cart{width:400px;background:var(--w);border-radius:var(--r-card);box-shadow:var(--sh);padding:var(--sp-2) 0}
+.cart .ct{display:flex;align-items:center;justify-content:space-between;padding:0 var(--sp-3) var(--sp-2);
+  border-bottom:1px solid var(--line);color:var(--ink-strong);font-weight:700;font-size:15px}
+.cart .body{max-height:280px;overflow:auto;padding:var(--sp-2) var(--sp-3)}
+.cart .grp{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.cart .grpT{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;
+  color:var(--ink-strong);font-weight:700;font-size:13.5px}
+.cart .qty{border:1px solid var(--line-input);border-radius:var(--r-pill);color:var(--muted);font-size:11px;
+  font-weight:700;padding:2px 8px;line-height:1.4}
+.cart .item{display:flex;gap:12px}
+.cart .thumb{position:relative;width:64px;height:64px;flex:none;border-radius:10px;overflow:hidden;background:#EEE}
+.cart .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.cart .del{position:absolute;left:4px;bottom:4px;width:20px;height:20px;border-radius:6px;background:rgba(255,255,255,.9);
+  display:flex;align-items:center;justify-content:center}
+.cart .price{color:#C62828;font-weight:700;font-size:13.5px}
+.cart .ship{display:inline-flex;align-items:center;gap:4px;color:#1D4ED8;font-size:12px;margin:2px 0}
+.cart .nm{font-size:13px;line-height:1.5}
+.cart .spec{font-size:12px;color:var(--muted)}
+.cart .foot{padding:var(--sp-2) var(--sp-3) 0;border-top:1px solid var(--line)}
+.cart .foot a{display:block;text-align:center;background:var(--ink);color:var(--w);font-weight:700;padding:13px;
+  border-radius:var(--r-btn)}
+
+/* 手機 */
+.phone{width:290px;border:10px solid #1F1F1F;border-radius:32px;overflow:hidden;background:var(--w);flex:none}
+.phone .ph{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid var(--line)}
+.phone .burger{width:22px;height:16px;flex:none;display:flex;flex-direction:column;justify-content:space-between}
+.phone .burger i{display:block;height:2px;background:var(--ink);border-radius:2px}
+.phone .lg{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--ink-strong)}
+.phone .lg img{width:26px;height:26px;object-fit:contain}
+.phone .ic{margin-left:auto;display:flex;gap:12px;color:var(--ink)}
+.phone .ic svg{width:20px;height:20px}
+.phone .bd{height:130px;background:#F2F2F2;display:flex;align-items:center;justify-content:center;color:#AAA;font-size:12px}
+.phone .dw a{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;color:var(--body);
+  font-size:13px;border-bottom:1px solid var(--line)}
+
+/* 收尾清單 */
+.sum{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.sum li{border:1px solid var(--line);border-radius:14px;padding:16px var(--sp-2);font-size:15px;line-height:1.6;
+  display:flex;gap:10px;align-items:center}
+.sum li::before{content:"";flex:none;width:18px;height:18px;border:1.6px solid var(--line-input);border-radius:5px}
+.sum b{color:var(--ink-strong)}
+.sum small{display:block;font-size:12.5px;color:var(--muted);font-weight:400}
+
+@media (max-width:1000px){
+  .sec{padding:var(--sp-3)}
+  .mega .grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <h1>Header ＆ Menu：要請妳設計的元素</h1>
+  <p>Header 的三條（深色功能列／LOGO 與搜尋／主選單）妳已經畫好了。<b>這頁列的是「點下去、滑上去才會出現」的部分。</b>
+  以下都以<b>已登入</b>的狀態為準。</p>
+</div>
+
+<div class="doc">
+
+<!-- ══════ 1 ══════ -->
+<section class="sec">
+  <h2>現在的樣子<small>滑鼠移上去就會展開，可以試試看</small></h2>
+  <div class="stage pb">
+    <div class="ep live">
+      <div class="epHeader">
+        <div class="wrap">
+          <ul>
+            <li class="drop"><a href="#" class="caret">正體中文</a>
+              <ul class="panel wide">
+                <li class="on"><a href="#">正體中文</a></li>
+                <li><a href="#">English</a></li><li><a href="#">简体中文</a></li>
+                <li><a href="#">Русский</a></li><li><a href="#">Português</a></li>
+                <li><a href="#">العربية</a></li><li><a href="#">Indonesia</a></li>
+                <li><a href="#">韓文</a></li><li><a href="#">Deutsch</a></li>
+                <li><a href="#">Français</a></li><li><a href="#">ภาษาไทย</a></li>
+                <li><a href="#">Polish</a></li><li><a href="#">Czech</a></li>
+              </ul>
+            </li>
+            <li><a href="#"><svg class="icoS" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.3 4.9 13a4.9 4.9 0 0 1 0-6.9 4.7 4.7 0 0 1 6.8 0l.3.32.3-.32a4.7 4.7 0 0 1 6.8 0 4.9 4.9 0 0 1 0 6.9L12 20.3Z"/></svg>加入我的最愛</a></li>
+            <li class="drop"><a href="#" class="caret">TWD</a>
+              <ul class="panel wide">
+                <li class="on"><a href="#">TWD 新台幣</a></li>
+                <li class="sep" aria-hidden="true"></li>
+                <li><a href="#">變更幣別</a></li>
+              </ul>
+            </li>
+            <li class="drop"><a href="#" class="caret">
+              <svg class="icoS" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg>
+              Hi, boan<span class="numBadge">99+</span></a>
+              <ul class="panel wide">
+                <li><a href="#">前往企業網</a></li>
+                <li><a href="#">線上對談</a></li>
+                <li><a href="#">買主訂單<span class="numBadge">99+</span></a></li>
+                <li><a href="#">我的管理端</a></li>
+                <li class="redTxt"><a href="#">會員重要公告</a></li>
+                <li><a href="#">潛在買主名單資料庫</a></li>
+                <li><a href="#">Inquiries<span class="numBadge">99+</span></a></li>
+                <li><a href="#">My Subscription</a></li>
+                <li><a href="#">Orders</a></li>
+                <li><a href="#">Customized Sourcing</a></li>
+                <li><a href="#">Account Setting</a></li>
+              </ul>
+            </li>
+            <li><a href="#">登出</a></li>
+            <li class="drop"><a href="#" class="caret">我的最愛</a>
+              <ul class="panel">
+                <li><a href="#">產品<span class="numBadge">99+</span></a></li>
+                <li><a href="#">供應商<span class="numBadge">99+</span></a></li>
+              </ul>
+            </li>
+            <li><a href="#"><svg class="icoS" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11.2a1.6 1.6 0 0 0 1.57 1.3h8.2a1.6 1.6 0 0 0 1.56-1.24L20.5 8H6.1"/><circle cx="9.6" cy="20" r="1.4"/><circle cx="17.2" cy="20" r="1.4"/></svg>99+ 商品</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="topZone">
+        <div class="wrap">
+          <header class="webHeader">
+            <h1><a href="#">
+              <span class="logoPh"><img src="img/logo-anko.png" alt="ANKO 標誌"></span>
+              <span class="firmName">安口食品機械股份有限公司<small>ANKO FOOD MACHINE CO., LTD.</small></span>
+            </a></h1>
+          </header>
+          <div class="search">
+            <input type="text" placeholder="快速搜尋" aria-label="站內搜尋">
+            <button class="btn" type="button" aria-label="搜尋"></button>
+          </div>
+        </div>
+      </div>
+      <nav class="menu">
+        <div class="wrap">
+          <ul class="lv1">
+            <li class="now"><a href="#">主頁</a></li>
+            <li class="drop"><a href="#" class="caret">關於我們</a>
+              <ul class="panel">
+                <li class="sysStr"><a href="#">總覽</a></li>
+                <li><a href="#">公司簡介</a></li><li><a href="#">經營理念</a></li>
+                <li><a href="#">公司沿革</a></li><li><a href="#">大事紀要</a></li>
+                <li><a href="#">競爭優勢</a></li>
+              </ul>
+            </li>
+            <li class="drop"><a href="#" class="caret">產品</a>
+              <div class="megaWrap">
+                <div class="mega">
+                  <div class="top"><a href="#">檢視全部</a></div>
+                  <ul class="grid">
+                    <li><span class="cateImg"><img src="img/prod-01.jpg" alt=""></span>
+                      <a class="cateT" href="#">食品機械</a>
+                      <ul><li><a href="#">All</a></li><li><a href="#">包餡機</a></li><li><a href="#">成型機</a></li></ul></li>
+                    <li><span class="cateImg"><img src="img/prod-03.jpg" alt=""></span>
+                      <a class="cateT" href="#">生產線設備</a>
+                      <ul><li><a href="#">All</a></li><li><a href="#">自動化生產線</a></li></ul></li>
+                    <li><span class="cateImg none">沒有圖</span><a class="cateT" href="#">週邊配件</a></li>
+                    <li><span class="cateImg"><img src="img/prod-07.jpg" alt=""></span>
+                      <a class="cateT" href="#">客製化服務</a>
+                      <ul><li><a href="#">All</a></li><li><a href="#">產線規劃</a></li></ul></li>
+                  </ul>
+                  <div class="sysRow"><a href="#">其他</a><a href="#">私人展銷室</a></div>
+                </div>
+              </div>
+            </li>
+            <li><a href="#">新聞</a></li>
+            <li><a href="#">網上商城</a></li>
+            <li><a href="#">聯繫我們</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ 2 ══════ -->
+<section class="sec">
+  <h2><span class="no">1–6</span>要畫的展開面板<span class="tag">要請妳設計</span></h2>
+  <div class="stage">
+    <div class="gal">
+      <figure>
+        <ul class="panel wide">
+          <li class="on"><a href="#">正體中文</a></li>
+          <li><a href="#">English</a></li><li><a href="#">简体中文</a></li>
+          <li><a href="#">Русский</a></li><li><a href="#">Português</a></li>
+          <li><a href="#">العربية</a></li><li><a href="#">Indonesia</a></li>
+          <li><a href="#">韓文</a></li><li><a href="#">Deutsch</a></li>
+          <li><a href="#">Français</a></li><li><a href="#">ภาษาไทย</a></li>
+          <li><a href="#">Polish</a></li><li><a href="#">Czech</a></li>
+        </ul>
+        <figcaption><i>1</i>語系<span>13 項</span></figcaption>
+      </figure>
+      <figure>
+        <ul class="panel wide">
+          <li class="on"><a href="#">TWD 新台幣</a></li>
+          <li class="sep" aria-hidden="true"></li>
+          <li><a href="#">變更幣別</a></li>
+        </ul>
+        <figcaption><i>2</i>幣別<span>只有 2 行</span></figcaption>
+      </figure>
+      <figure>
+        <ul class="panel">
+          <li><a href="#">產品<span class="numBadge">99+</span></a></li>
+          <li><a href="#">供應商<span class="numBadge">99+</span></a></li>
+        </ul>
+        <figcaption><i>3</i>我的最愛<span>帶數字</span></figcaption>
+      </figure>
+      <figure>
+        <ul class="panel wide">
+          <li><a href="#">前往企業網</a></li>
+          <li><a href="#">線上對談</a></li>
+          <li><a href="#">買主訂單<span class="numBadge">99+</span></a></li>
+          <li><a href="#">我的管理端</a></li>
+          <li class="redTxt"><a href="#">會員重要公告</a></li>
+          <li><a href="#">潛在買主名單資料庫</a></li>
+          <li><a href="#">Inquiries<span class="numBadge">99+</span></a></li>
+          <li><a href="#">My Subscription</a></li>
+          <li><a href="#">Orders</a></li>
+          <li><a href="#">Customized Sourcing</a></li>
+          <li><a href="#">Account Setting</a></li>
+        </ul>
+        <figcaption><i>4</i>會員<span>11 項，一行紅字</span></figcaption>
+      </figure>
+      <figure>
+        <ul class="panel">
+          <li class="sysStr"><a href="#">總覽</a></li>
+          <li><a href="#">公司簡介</a></li><li><a href="#">經營理念</a></li>
+          <li><a href="#">公司沿革</a></li><li><a href="#">大事紀要</a></li>
+          <li><a href="#">競爭優勢</a></li>
+        </ul>
+        <figcaption><i>5</i>關於我們<span>1～10 項不定</span></figcaption>
+      </figure>
+      <figure>
+        <div class="cart">
+          <div class="ct">待完成訂單<span style="color:var(--muted);font-size:20px;line-height:1;font-weight:400">×</span></div>
+          <div class="body">
+            <div class="grp">
+              <div class="grpT">上昊實業有限公司<span class="qty">1</span></div>
+              <div class="item">
+                <div class="thumb"><img src="img/prod-02.jpg" alt="">
+                  <span class="del"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round" style="width:12px;height:12px" aria-hidden="true"><path d="M4 6h16M9 6V4h6v2M7 6l1 14h8l1-14"/></svg></span></div>
+                <div>
+                  <div class="price">USD 68.00</div>
+                  <div class="ship"><svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px" aria-hidden="true"><path d="M3 6h11v9H3zM14 9h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></svg>免費運送</div>
+                  <div class="nm">保健食品、機能食品、營養補給</div>
+                  <div class="spec">Quantity：1　Size：M</div>
+                </div>
+              </div>
+            </div>
+            <div class="grp">
+              <div class="grpT">凌網科技<span class="qty">2</span></div>
+              <div class="item">
+                <div class="thumb"><img src="img/prod-06.jpg" alt="">
+                  <span class="del"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round" style="width:12px;height:12px" aria-hidden="true"><path d="M4 6h16M9 6V4h6v2M7 6l1 14h8l1-14"/></svg></span></div>
+                <div>
+                  <div class="price">USD 100.00</div>
+                  <div class="nm">電子紙閱讀器</div>
+                  <div class="spec">Quantity：1</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="foot"><a href="#">查看購物車並結帳</a></div>
+        </div>
+        <figcaption><i>6</i>購物車<span>依賣家分組，可能 1 筆也可能 20 筆</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ 3 ══════ -->
+<section class="sec">
+  <h2><span class="no">7</span>產品面板<span class="tag">要請妳設計</span></h2>
+  <p style="margin:0 0 var(--sp-3);font-size:14.5px;max-width:80ch">
+    分類是廠商自己建的，每家差很多。<b>這張把所有極端情況塞在同一個面板裡</b>，實際不會這麼慘，但每一種都可能單獨發生。
+  </p>
+  <div class="stage">
+    <div class="mega">
+      <div class="top"><a href="#">檢視全部</a></div>
+      <ul class="grid">
+        <li>
+          <span class="pin">名稱超長</span><span class="pin">子分類 12 個</span>
+          <span class="cateImg"><img src="img/prod-01.jpg" alt=""></span>
+          <a class="cateT" href="#">食品機械設備與自動化整廠生產線規劃暨客製化製程顧問服務</a>
+          <ul>
+            <li><a href="#">All</a></li><li><a href="#">包餡成型機</a></li><li><a href="#">水餃機</a></li>
+            <li><a href="#">春捲皮機</a></li><li><a href="#">燒賣機</a></li><li><a href="#">湯圓機</a></li>
+            <li><a href="#">酥皮機</a></li><li><a href="#">餡料充填機</a></li><li><a href="#">蒸煮設備</a></li>
+            <li><a href="#">油炸設備</a></li><li><a href="#">急速冷凍設備</a></li><li><a href="#">輸送帶</a></li>
+          </ul>
+        </li>
+        <li>
+          <span class="pin">名稱只有一個字</span><span class="pin">沒有圖</span><span class="pin">沒有子分類</span>
+          <span class="cateImg none">沒有圖</span>
+          <a class="cateT" href="#">a</a>
+        </li>
+        <li>
+          <span class="pin">一般情況</span>
+          <span class="cateImg"><img src="img/prod-03.jpg" alt=""></span>
+          <a class="cateT" href="#">包裝機械</a>
+          <ul><li><a href="#">All</a></li><li><a href="#">封口機</a></li><li><a href="#">貼標機</a></li></ul>
+        </li>
+        <li>
+          <span class="pin">有圖但沒有子分類</span>
+          <span class="cateImg"><img src="img/prod-09.jpg" alt=""></span>
+          <a class="cateT" href="#">客製化服務</a>
+        </li>
+      </ul>
+      <ul class="grid" style="margin-top:var(--sp-3)">
+        <li>
+          <span class="pin">整段文章被貼進名稱</span>
+          <span class="cateImg none">沒有圖</span>
+          <a class="cateT" href="#">漢皇重色思傾國，御宇多年求不得。楊家有女初長成，養在深閨人未識。天生麗質難自棄，一朝選在君王側。</a>
+          <ul><li><a href="#">All</a></li><li><a href="#">子分類</a></li></ul>
+        </li>
+        <li>
+          <span class="pin">子分類名稱也可能很長</span>
+          <span class="cateImg"><img src="img/prod-05.jpg" alt=""></span>
+          <a class="cateT" href="#">週邊配件</a>
+          <ul><li><a href="#">All</a></li>
+            <li><a href="#">不鏽鋼輸送帶專用耐高溫矽膠滾輪組（含軸承）</a></li>
+            <li><a href="#">濾網</a></li></ul>
+        </li>
+        <li>
+          <span class="pin">只有 All、沒有其他子分類</span>
+          <span class="cateImg"><img src="img/prod-11.jpg" alt=""></span>
+          <a class="cateT" href="#">零件</a>
+          <ul><li><a href="#">All</a></li></ul>
+        </li>
+        <li></li>
+      </ul>
+      <div class="sysRow">
+        <a href="#">其他</a><a href="#">私人展銷室</a>
+      </div>
+    </div>
+  </div>
+  <p style="margin:var(--sp-3) 0 0;font-size:14px;color:var(--muted);max-width:80ch">
+    橘標只是註記。<b style="color:var(--ink-strong)">檢視全部（會出現兩次）、All、其他、私人展銷室</b>
+    和「關於我們」的<b style="color:var(--ink-strong)">總覽</b>是系統固定的字，不能改。
+  </p>
+</section>
+
+<!-- ══════ 4 ══════ -->
+<section class="sec">
+  <h2><span class="no">8</span>手機版<span class="tag">要請妳設計</span></h2>
+  <div class="stage">
+    <div class="gal">
+      <figure>
+        <div class="phone">
+          <div class="ph">
+            <span class="burger"><i></i><i></i><i></i></span>
+            <span class="lg"><img src="img/logo-anko.png" alt="">安口食品機械</span>
+            <span class="ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4.5 4.5" stroke-linecap="round"/></svg>
+              <span style="position:relative;display:inline-flex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11.2a1.6 1.6 0 0 0 1.57 1.3h8.2a1.6 1.6 0 0 0 1.56-1.24L20.5 8H6.1"/><circle cx="9.6" cy="20" r="1.4"/><circle cx="17.2" cy="20" r="1.4"/></svg><span class="numBadge" style="position:absolute;top:-6px;right:-14px;margin:0;font-size:9px;height:15px">99+</span></span>
+            </span>
+          </div>
+          <div class="bd">頁面內容</div>
+        </div>
+        <figcaption><i>8</i>收起來</figcaption>
+      </figure>
+      <figure>
+        <div class="phone">
+          <div class="ph">
+            <span class="burger"><i></i><i></i><i></i></span>
+            <span class="lg">選單</span>
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg></span>
+          </div>
+          <div class="dw">
+            <a href="#">主頁</a>
+            <a href="#">關於我們 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="m9 5 7 7-7 7"/></svg></a>
+            <a href="#">產品 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="m9 5 7 7-7 7"/></svg></a>
+            <a href="#">新聞</a><a href="#">網上商城</a><a href="#">聯繫我們</a>
+          </div>
+        </div>
+        <figcaption><i>8</i>打開<span>三層選單怎麼往下鑽</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ 5 ══════ -->
+<section class="sec">
+  <h2>就這些</h2>
+  <ul class="sum">
+    <li><span><b>Header</b><small>功能列的 4 個下拉＋購物車面板</small></span></li>
+    <li><span><b>Menu</b><small>關於我們下拉＋產品面板</small></span></li>
+    <li><span><b>手機版</b><small>收起與打開兩張</small></span></li>
+  </ul>
+</section>
+
+</div>
+</body>
+</html>
