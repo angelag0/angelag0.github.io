@@ -3,12 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>台灣經貿網企業網・新版型設計｜第二次需求訪談</title>
+<title>台灣經貿網企業網・新版型設計與建站引導｜第二次需求訪談</title>
 <style>
 /* ============================================================
-   風格沿用第一次訪談簡報：
-   字級 T1 52/700 封面｜T2 38/700 頁題｜T3 24/400 內文｜T4 17/400 註記
-   色彩：#111 文字｜#777 次要｜#E5E5E5 線｜#F5F5F5 淺塊｜選取 #111 底白字
+   字級系統（整份只有 4 級；每頁最多 3 級）
+   T1 52/700 — 封面主標與暫停頁大字
+   T2 38/700 — 頁題（每頁同位置）
+   T3 24/400 — 內文、清單（強調＝.b 700）
+   T4 17/400 — 表格、要點、註記、頁碼（次要色＝.mut #777）
+   色彩：文字 #111｜次要 #777｜線 #E5E5E5｜表頭與淺塊 #F5F5F5｜選取 #111 底白字
+   標註色 #C00 只用於流程圖的步驟編號
    ============================================================ */
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%}
@@ -18,6 +22,7 @@ body{background:#FFF;color:#111;font-family:"Noto Sans TC","PingFang TC","Micros
 .slide.on{display:flex}
 .t1{font-size:52px;font-weight:700;line-height:1.3}
 .pt{font-size:38px;font-weight:700;line-height:1.3;margin-bottom:28px}
+.t2{font-size:38px;font-weight:700;line-height:1.3}
 .t3{font-size:24px;font-weight:400;line-height:1.75}
 .t4{font-size:17px;font-weight:400;line-height:1.6}
 .b{font-weight:700}
@@ -26,260 +31,408 @@ table{width:100%;border-collapse:collapse;font-size:17px;line-height:1.5}
 th,td{border:1px solid #E5E5E5;padding:6px 12px;text-align:left;vertical-align:middle}
 th{background:#F5F5F5;font-weight:700}
 .tight th,.tight td{padding:4px 12px}
-.opt{display:inline-block;padding:3px 14px;border:1px solid #CCC;border-radius:999px;cursor:pointer;user-select:none;font-size:17px;line-height:1.5}
+.quote{border-left:3px solid #111;padding:4px 0 4px 20px;font-size:24px;line-height:1.7}
+.nums{display:flex;gap:72px;margin-top:44px;flex:1;align-items:center}
+.nums .n{flex:1}
+.nums .k{font-size:24px;font-weight:700;line-height:1.5}
+.nums .v{font-size:64px;font-weight:700;line-height:1.1;margin-top:14px}
+.nums .v i{font-size:28px;font-style:normal;font-weight:400}
+.nums .e{font-size:17px;color:#777;margin-top:10px;line-height:1.6}
+/* 設計稿頁（.noflip 內點擊不換頁；點圖另開原尺寸） */
+.figrow{flex:1;display:flex;gap:40px;min-height:0}
+.figbox{overflow-y:auto;border:1px solid #E5E5E5;background:#F5F5F5}
+.figbox img{width:100%;display:block}
+.figcell{display:flex;flex-direction:column;min-width:0}
+.figcell .figbox{flex:1;min-height:0}
+.fig1{width:520px;flex:none}
+.figside{flex:1;min-width:0;display:flex;flex-direction:column}
+.figside ol,.figside ul{margin-left:22px;font-size:20px;line-height:1.7}
+.figside li{margin-bottom:14px}
+.stylist{list-style:none;margin-left:0;font-size:19px;line-height:1.6}
+.stylist li{margin-bottom:7px;display:flex;gap:12px}
+.stylist b{width:88px;flex:none}
+.stylist i{width:58px;flex:none;font-style:normal;color:#777}
+.figrow2{flex:1;display:flex;flex-direction:column;min-height:0}
+.figpair{display:flex;gap:40px;flex:1;min-height:0}
+.figpair .figcell{flex:1}
+.cap{font-size:17px;color:#777;margin-top:8px}
+/* 流程圖 */
+.flow{display:flex;gap:14px;align-items:center}
+.bx{border:1px solid #111;padding:10px 14px;font-size:17px;line-height:1.5;text-align:center}
+.bx.soft{border-color:#E5E5E5;background:#F5F5F5}
+.ar{color:#777;font-size:20px}
+.wire{border:1px solid #111;display:flex;flex-direction:column;font-size:15px;line-height:1.5}
+.wire .top{border-bottom:1px solid #111;padding:7px 10px;display:flex;justify-content:space-between;align-items:center;background:#F5F5F5}
+.wire .body{display:flex;flex:1}
+.wire .left{width:142px;border-right:1px solid #E5E5E5;padding:8px 10px}
+.wire .right{flex:1;padding:10px 14px;display:flex;flex-direction:column}
+.wire .row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px dotted #E5E5E5}
+.tag{font-size:13px;border:1px solid #111;padding:0 6px;border-radius:9px}
+.step{border:1px solid #C00;padding:7px 10px;margin-bottom:6px}
+.step .no{color:#C00;font-weight:700;font-size:17px}
+.stepar{color:#C00;text-align:center;font-size:15px;margin-bottom:6px}
+.pause{align-items:center;justify-content:center;text-align:center}
+.opt{display:inline-block;border:1px solid #E5E5E5;padding:2px 10px;margin:2px 0;cursor:pointer;white-space:nowrap}
 .opt.sel{background:#111;color:#FFF;border-color:#111}
-.sep{color:#AAA;margin:0 6px}
-.cols{display:flex;gap:36px;flex:1;min-height:0}
-.col{flex:1;min-width:0;display:flex;flex-direction:column}
-.scrollFig{flex:1;min-height:0;overflow-y:auto;border:1px solid #E5E5E5;border-radius:8px;background:#FAFAFA}
-.scrollFig img{width:100%;display:block}
-.figCap{font-size:15px;color:#777;margin-top:8px}
-.flowBox{border:1px solid #111;border-radius:12px;padding:18px 22px;text-align:center;font-size:21px;font-weight:700;background:#FFF}
-.flowBox .sub{display:block;font-size:16px;font-weight:400;color:#777;margin-top:6px}
-.arrow{font-size:28px;color:#777;align-self:center}
-.painRow{display:flex;gap:20px;align-items:stretch;margin-top:8px}
-.painRow .flowBox{flex:1}
-ol.num{padding-left:34px}
-ol.num li{margin-bottom:10px}
-.kicker{font-size:20px;font-weight:700;letter-spacing:.12em;color:#777;margin-bottom:16px}
-.foot{margin-top:auto;font-size:17px;color:#777}
-#pageNum{position:fixed;right:18px;bottom:12px;font-size:14px;color:#777;z-index:9}
+.sep{color:#777;margin:0 4px}
+a{color:#111}
+#pageNum{position:fixed;right:20px;bottom:14px;font-size:17px;color:#777}
+@page{size:338.7mm 190.5mm;margin:0}
+@media print{
+ body{overflow:visible}
+ #pageNum{display:none}
+ #stage{position:static;transform:none;width:1280px;height:auto;left:auto;top:auto}
+ .slide{position:relative;inset:auto;display:flex !important;width:1280px;height:720px;page-break-after:always;break-after:page}
+ .slide:last-child{page-break-after:auto;break-after:auto}
+ .figbox{overflow:hidden}
+}
 </style>
 </head>
 <body>
 <div id="stage">
 
+<!-- ═══════════════ 前半場 ═══════════════ -->
+
 <!-- P1 封面 -->
-<section class="slide on">
-  <div style="margin:auto 0">
-    <p class="kicker">台灣經貿網企業網・建站引導及版型擴充</p>
-    <h1 class="t1">第二次需求訪談</h1>
-    <p class="t3" style="margin-top:22px">首頁設計稿確認　×　SU 建站引導流程提案</p>
-    <p class="t4 mut" style="margin-top:40px">2026 / 08 / 11　凌網科技</p>
+<section class="slide on" style="align-items:center;justify-content:center;text-align:center">
+  <h1 class="t1">台灣經貿網企業網</h1>
+  <p class="t1" style="margin-top:8px">新版型設計與建站引導</p>
+  <p class="t3 b" style="margin-top:28px">第二次需求訪談｜2026-08-11</p>
+  <p class="t3" style="margin-top:56px">凌網資訊　Simmy</p>
+</section>
+
+<!-- P2 今天的流程 -->
+<section class="slide">
+  <h2 class="pt">今天的流程</h2>
+  <div style="flex:1;display:flex;flex-direction:column">
+    <div style="flex:1">
+      <p class="t4 mut b" style="margin-bottom:12px">一、前半場｜首頁元件設計稿確認</p>
+      <p class="t3">1. 設計風格簡介<br>2. 設計稿展示（首頁、元件樣式、圖文模板、選單、購物車、內頁兩式）<br>3. 需求確認</p>
+      <p class="t4 mut" style="margin-top:10px">今天展示的是桌面版。手機版設計稿於第三次訪談完整呈現。</p>
+    </div>
+    <div style="border-top:1px solid #E5E5E5;padding-top:22px;flex:1">
+      <p class="t4 mut b" style="margin-bottom:12px">二、後半場｜建站引導需求訪談</p>
+      <p class="t3">1. 建站引導新流程<br>2. 原型展示<br>3. 需求訪談</p>
+      <p class="t4 mut" style="margin-top:10px">過程中任何問題可隨時提出。</p>
+    </div>
+    <div style="border-top:1px solid #E5E5E5;padding-top:22px">
+      <p class="t4 mut b" style="margin-bottom:12px">三、下一步</p>
+      <p class="t3">後續時程確認</p>
+    </div>
   </div>
 </section>
 
-<!-- P2 今日流程 -->
+<!-- P3 設計風格 -->
 <section class="slide">
-  <h2 class="pt">今日流程</h2>
-  <ol class="num t3">
-    <li><span class="b">首頁設計稿確認</span>——完整設計稿五份；兩項需要拍板：表單版本、散項確認</li>
-    <li><span class="b">SU 建站引導流程提案</span>——現況與新流程、操作原型展示、三項細節確認</li>
-    <li><span class="b">時程與下一步</span>——手機版安排、第三次訪談時間</li>
-  </ol>
-  <p class="foot">過程中任何問題，隨時提出。</p>
-</section>
-
-<!-- P3 決議回顧 -->
-<section class="slide">
-  <h2 class="pt">上次會議至今：方向與落地</h2>
-  <table class="t3" style="font-size:21px;line-height:1.6">
-    <tr><th style="width:220px">7/28 第一次訪談</th><td>白底黑字、參考 Xometry 滿版設計；圓角採正圓膠囊　→　設計基調</td></tr>
-    <tr><th>7/31–8/5 貴處補充</th><td>加色原則（新範本與表單、點綴為主）、YT Short 版位（左影右文）、表單欄位補齊、產品分類樹展示　→　已全數納入設計稿</td></tr>
-    <tr><th>今日</th><td>確認設計稿　→　進入建站引導</td></tr>
-  </table>
-  <p class="foot">今天各位看到的設計稿＝上述決議落地的結果。</p>
-</section>
-
-<!-- P4 首頁設計稿 -->
-<section class="slide">
-  <h2 class="pt">首頁設計稿</h2>
-  <div class="cols">
-    <div class="col" style="max-width:520px">
-      <div class="scrollFig"><img src="設計師交付/首頁.jpg" alt="首頁設計稿"></div>
-      <p class="figCap">↕ 圖可捲動；需要細看時開原圖</p>
+  <h2 class="pt">設計風格</h2>
+  <p class="quote">「本案首頁版型設計將參考 Xometry 之網站風格，整體視覺以<span class="b">白底黑字</span>為主要基調，強調<span class="b">簡潔、直覺</span>之使用體驗。」</p>
+  <div class="nums">
+    <div class="n">
+      <p class="k">1. 高度間距</p>
+      <p class="v">64<i>px</i></p>
+      <p class="e">兩個元件之間高度參照 Xometry 緊密排版</p>
     </div>
-    <div class="col">
-      <ol class="num t3">
-        <li>Header：移除左上 TT 標誌；<span class="b">右上功能列維持現況</span></li>
-        <li>八個既有元件：白底黑字新樣式，<span class="b">功能與操作不變</span></li>
-        <li>新範本三件：CTA 樣式一、CTA 樣式二、數據統計</li>
-        <li>新元件：聯絡我們表單（首頁最下方）</li>
-        <li>頁尾：TT 標誌縮小、明亮式設計</li>
+    <div class="n">
+      <p class="k">2. 卡片圓角</p>
+      <p class="v">20<i>px</i></p>
+      <p class="e">卡片同一個值；按鈕與欄位走正圓膠囊</p>
+    </div>
+    <div class="n">
+      <p class="k">3. 區塊設計</p>
+      <p class="v">滿版</p>
+      <p class="e">區塊左右不留邊、通欄到底，用整片色帶分段取代框線</p>
+    </div>
+  </div>
+</section>
+
+<!-- P4 設計稿① 首頁 -->
+<section class="slide">
+  <h2 class="pt" style="margin-bottom:20px">設計稿 ①　首頁</h2>
+  <div class="figrow">
+    <div class="figcell fig1">
+      <div class="figbox noflip"><a href="設計師交付/首頁_64.jpg" target="_blank"><img src="設計師交付/首頁_64.jpg" alt="首頁設計稿"></a></div>
+      <p class="cap">首頁　｜　點圖另開原尺寸</p>
+    </div>
+    <div class="figside">
+      <ol class="t3">
+        <li>頁首讓給廠商品牌，TT 元素和品牌區隔</li>
+        <li>現有八個元件全部套上新樣式</li>
+        <li>新增三款圖文範本：<span class="b">行動呼籲兩款＋數據統計</span></li>
+        <li>最下方是唯一的全新元件：<span class="b">聯絡我們表單</span></li>
+        <li>頁尾收認證標章、社群與版權，TT 標誌縮小保留</li>
       </ol>
     </div>
   </div>
 </section>
 
-<!-- P5 選單與購物車 -->
+<!-- P5 設計稿② 元件樣式 -->
 <section class="slide">
-  <h2 class="pt">Header 選單：產品下拉＋購物車</h2>
-  <div class="cols">
-    <div class="col">
-      <div class="scrollFig"><img src="設計師交付/選單.jpg" alt="產品選單設計稿"></div>
-      <p class="figCap">產品選單展開</p>
+  <h2 class="pt" style="margin-bottom:20px">設計稿 ②　元件樣式</h2>
+  <div class="figrow">
+    <div class="figcell fig1">
+      <div class="figbox noflip"><a href="設計師交付/首頁_樣式.jpg" target="_blank"><img src="設計師交付/首頁_樣式.jpg" alt="元件樣式設計稿"></a></div>
+      <p class="cap">元件樣式　｜　點圖另開原尺寸</p>
     </div>
-    <div class="col">
-      <div class="scrollFig"><img src="設計師交付/購物車.jpg" alt="購物車設計稿"></div>
-      <p class="figCap">購物車展開</p>
+    <div class="figside">
+      <ul class="stylist">
+        <li><b>大圖輪播</b><i>樣式 2</i><span>分類樹＋大圖輪播</span></li>
+        <li><b>公司新聞</b><i>樣式 2</i><span>垂直條列</span></li>
+        <li><b>關於我們</b><i>樣式 1</i><span>簡介文案</span></li>
+        <li><b>關於我們</b><i>樣式 2</i><span>固定重點資訊</span></li>
+        <li><b>關於我們</b><i>樣式 3</i><span>分類樹搭配</span></li>
+        <li><b>產品展示</b><i>樣式 1</i><span>遮罩窗格</span></li>
+        <li><b>產品展示</b><i>樣式 2</i><span>直列窗格</span></li>
+        <li><b>產品展示</b><i>樣式 4</i><span>直列拖曳</span></li>
+        <li><b>產品展示</b><i>樣式 5</i><span>分類樹＋窗格</span></li>
+        <li><b>產品展示</b><i>樣式 6</i><span>左右雙欄</span></li>
+        <li><b>產品展示</b><i>樣式 7</i><span>左大右 4 小</span></li>
+        <li><b>產品展示</b><i>樣式 8</i><span>右大左 4 小</span></li>
+      </ul>
     </div>
-    <div class="col" style="max-width:330px">
-      <ol class="num t3" style="font-size:21px">
-        <li>第一層位置照現況；第二層垂直排列</li>
-        <li>產品分類範例加多——會營組意見</li>
-        <li>購物車可直接檢視訂單、進結帳</li>
+  </div>
+</section>
+
+<!-- P6 設計稿③ 圖文模板 -->
+<section class="slide">
+  <h2 class="pt" style="margin-bottom:20px">設計稿 ③　圖文模板</h2>
+  <div class="figrow">
+    <div class="figcell fig1">
+      <div class="figbox noflip"><a href="設計師交付/首頁_範本.jpg" target="_blank"><img src="設計師交付/首頁_範本.jpg" alt="圖文模板設計稿"></a></div>
+      <p class="cap">圖文模板　｜　點圖另開原尺寸</p>
+    </div>
+    <div class="figside">
+      <ol class="t3">
+        <li><span class="b">左右對調</span>：同一範本，圖文位置互換，廠商依內容選邊</li>
+        <li>範本一搭配目錄樹、範本二圖組式、範本三單圖式</li>
+        <li><span class="b">YT Short</span>：示意，非新範本，圖文模板現可插入手機直式短片</li>
       </ol>
     </div>
   </div>
 </section>
 
-<!-- P6 產品分類樹 -->
+<!-- P7 設計稿④ 選單與購物車 -->
 <section class="slide">
-  <h2 class="pt">產品分類樹</h2>
-  <div class="cols">
-    <div class="col" style="max-width:520px">
-      <div class="scrollFig"><img src="設計師交付/款2.jpg" alt="分類樹設計稿"></div>
-      <p class="figCap">↕ 圖可捲動</p>
+  <h2 class="pt" style="margin-bottom:20px">設計稿 ④　選單與購物車</h2>
+  <div class="figrow2">
+    <div class="figpair">
+      <div class="figcell">
+        <div class="figbox noflip"><a href="設計師交付/首頁_選單.jpg" target="_blank"><img src="設計師交付/首頁_選單.jpg" alt="選單設計稿"></a></div>
+        <p class="cap">選單展開　｜　點圖另開原尺寸</p>
+      </div>
+      <div class="figcell">
+        <div class="figbox noflip"><a href="設計師交付/首頁_購物車.jpg" target="_blank"><img src="設計師交付/首頁_購物車.jpg" alt="購物車設計稿"></a></div>
+        <p class="cap">購物車展開　｜　點圖另開原尺寸</p>
+      </div>
     </div>
-    <div class="col">
-      <ol class="num t3">
-        <li>參照 Xometry 左側做法——組長指定</li>
-        <li>產品展示、關於我們、大圖輪播、圖文模板<span class="b">四元件共用</span>同一套分類樹</li>
-        <li>使用前提：分類已啟用、分類中已有產品型錄</li>
-      </ol>
+    <div style="border-top:1px solid #E5E5E5;margin-top:16px;padding-top:14px">
+      <p class="t3">選單：分類縮圖卡＋兩層分類清單，最底列保留其他與自定義連結。</p>
+      <p class="t3">購物車：待完成訂單依供應商分組，功能同現況。</p>
     </div>
   </div>
 </section>
 
-<!-- P7 圖文模板範本 -->
+<!-- P8 設計稿⑤ 內頁 -->
 <section class="slide">
-  <h2 class="pt">圖文模板：左右對調範本＋YT Short</h2>
-  <div class="cols">
-    <div class="col" style="max-width:520px">
-      <div class="scrollFig"><img src="設計師交付/範本.jpg" alt="圖文模板範本設計稿"></div>
-      <p class="figCap">↕ 圖可捲動</p>
+  <h2 class="pt" style="margin-bottom:20px">設計稿 ⑤　內頁（產品列表・產品詳細）</h2>
+  <div class="figrow2">
+    <div class="figpair">
+      <div class="figcell">
+        <div class="figbox noflip"><a href="設計師交付/內頁_LP.jpg" target="_blank"><img src="設計師交付/內頁_LP.jpg" alt="產品列表頁設計稿"></a></div>
+        <p class="cap">產品列表頁　｜　點圖另開原尺寸</p>
+      </div>
+      <div class="figcell">
+        <div class="figbox noflip"><a href="設計師交付/內頁_CP.jpg" target="_blank"><img src="設計師交付/內頁_CP.jpg" alt="產品詳細頁設計稿"></a></div>
+        <p class="cap">產品詳細頁　｜　點圖另開原尺寸</p>
+      </div>
     </div>
-    <div class="col">
-      <ol class="num t3">
-        <li>左右對調：<span class="b">範本二、範本五做鏡像版</span>（範本一與四本身互為對調，系列即補齊）</li>
-        <li>YT Short：放進現有圖文範本，<span class="b">左影片、右文字</span>——8/5 組長指定版位</li>
-        <li>影片採 YouTube 原生樣式直接嵌入</li>
-      </ol>
+    <div style="border-top:1px solid #E5E5E5;margin-top:16px;padding-top:14px">
+      <p class="t3">新的頁首、頁尾套上現有介面展示。以安口為例。</p>
     </div>
   </div>
 </section>
 
-<!-- P8 表單版本決策 -->
+<!-- P9 需求確認：表單版本 -->
 <section class="slide">
-  <h2 class="pt">請拍板：聯絡我們表單版本</h2>
-  <table style="font-size:20px;line-height:1.7">
-    <tr><th style="width:130px">版本</th><th>內容</th><th style="width:200px">展示位置</th></tr>
-    <tr><td><span class="opt">版本Ａ</span></td><td>含聯絡電話（點擊可撥打）＋完整表單</td><td>設計稿（本頁前）</td></tr>
-    <tr><td><span class="opt">版本Ｂ</span></td><td>無電話、表單拉寬置中</td><td>展示網頁 V2 分頁</td></tr>
+  <h2 class="pt">需求確認：聯絡我們表單的版本</h2>
+  <p class="t3">首頁最下方的聯絡我們表單，有兩個版本，請貴處擇一。</p>
+  <table style="margin-top:22px">
+    <tr><th style="width:190px">版本</th><th>樣子</th></tr>
+    <tr><td class="b">Ａ　含電話</td><td>左邊聯絡電話卡、右邊商機表單——即今天設計稿 ① 的版本</td></tr>
+    <tr><td class="b">Ｂ　不含電話</td><td>拿掉電話卡、表單拉寬置中——見第一次訪談 demo，<a href="https://angelag0.github.io/ep-demo/#v2" target="_blank">點此開啟</a></td></tr>
   </table>
-  <p class="t3" style="margin-top:26px">說明：需求規格書附件一第 7 項載明「補充顯示聯絡電話（不顯示 email）」。<br>
-  若選<span class="b">版本Ｂ</span>，屬對規格書內容之變更，將載入本次會議記錄，後續以會議記錄為準。</p>
-  <p class="foot">兩版皆可實作，請各位決定。</p>
+  <p class="t3 b" style="margin-top:36px">決議</p>
+  <p style="margin-top:8px"><span class="opt">Ａ 含電話</span><span class="sep">／</span><span class="opt">Ｂ 不含電話・表單置中</span><span class="sep">／</span><span class="opt">會後書面確認</span></p>
 </section>
 
-<!-- P9 散項確認 -->
-<section class="slide">
-  <h2 class="pt">設計稿散項確認</h2>
-  <table class="tight" style="font-size:19px;line-height:1.7">
-    <tr><th style="width:56px">#</th><th style="width:260px">項目</th><th>選項</th></tr>
-    <tr><td>1</td><td>認證標章位置</td><td><span class="opt">移至頁尾</span><span class="sep">／</span><span class="opt">維持頁首</span></td></tr>
-    <tr><td>2</td><td>線上客服圖示（小鯨魚）</td><td><span class="opt">右下照舊</span><span class="sep">／</span><span class="opt">側邊</span><span class="sep">／</span><span class="opt">頁尾</span></td></tr>
-    <tr><td>3</td><td>影片載入提醒文字位置</td><td><span class="opt">影片區塊旁</span><span class="sep">／</span><span class="opt">其他</span>　<span class="mut t4">（文字內容由貴處提供）</span></td></tr>
-    <tr><td>4</td><td>Header 右上功能列</td><td>規格書原載移至頁尾；<span class="b">7/28 會議決議維持原樣</span>——本次複述確認，留於會議記錄</td></tr>
-  </table>
-  <p class="foot">以上四項確認後，設計稿即進入修訂與簽版準備。</p>
-</section>
-
-<!-- P10 建站引導：現況 -->
-<section class="slide">
-  <h2 class="pt">建站引導：現況</h2>
-  <p class="t3">廠商要建立首頁，同一個區塊的設定<span class="b">散落三處</span>：</p>
-  <div class="painRow" style="margin-top:28px">
-    <div class="flowBox">首頁配置<span class="sub">選版型・選樣式</span></div>
-    <div class="arrow">⇄</div>
-    <div class="flowBox">資料編輯<span class="sub">填文字・傳圖片（分語系）</span></div>
-    <div class="arrow">⇄</div>
-    <div class="flowBox">其他模組<span class="sub">公司資料・產品型錄・公司新聞</span></div>
+<!-- P10 前半場暫停 -->
+<section class="slide pause">
+  <p class="t4 mut b" style="letter-spacing:.2em;margin-bottom:20px">前半場結束</p>
+  <h2 class="t1">設計稿確認到此</h2>
+  <p class="t3" style="margin-top:36px">今天確認的意見會整理成書面紀錄，<br>連同修正後的設計稿一併回覆貴處。</p>
+  <div style="border-top:1px solid #E5E5E5;margin-top:44px;padding-top:24px;width:640px">
+    <p class="t4 mut b" style="margin-bottom:8px">接下來</p>
+    <p class="t3">後半場　建站引導需求訪談</p>
   </div>
-  <p class="t3" style="margin-top:30px">做到哪、還剩什麼，看不出來；第一次發布前，前台接近空白頁。</p>
-  <p class="foot">需求規格書要求：首頁資料編輯與版型配置整合於同一頁面（附件一第 2 項）。</p>
 </section>
 
-<!-- P11 新流程 -->
+<!-- ═══════════════ 後半場 ═══════════════ -->
+
+<!-- P11 建站引導新流程 -->
 <section class="slide">
-  <h2 class="pt">新流程：兩步驟，隨時發布</h2>
-  <div class="painRow">
-    <div class="flowBox">步驟一<span class="sub">選版型與色系（新版型在此）</span></div>
-    <div class="arrow">→</div>
-    <div class="flowBox" style="flex:2">步驟二<span class="sub">排版面＋填內容——每區塊：樣式、資料、內容一次做完</span></div>
-    <div class="arrow">→</div>
-    <div class="flowBox" style="border-style:dashed">發布<span class="sub">完成即提示，隨時可按</span></div>
+  <h2 class="pt" style="margin-bottom:16px">建站引導新流程</h2>
+  <p class="t3" style="margin-bottom:18px">原本的「首頁配置」與「首頁資料編輯（英文）」<span class="b">併成同一介面</span>，每個區塊在同一個面板裡選樣式、填內容、看條件。</p>
+  <div style="flex:1;display:flex;gap:36px;min-height:0">
+    <div style="width:392px;flex:none">
+      <div class="bx soft">建站引導首頁　<span class="b">「首頁(Home)設定」卡</span></div>
+      <p class="ar" style="text-align:center;margin:6px 0">↓</p>
+      <div class="flow">
+        <div class="bx" style="flex:1">英文＝母版</div>
+        <span class="ar">→</span>
+        <div class="bx" style="flex:1">步驟 1<br>版型與色系</div>
+        <span class="ar">→</span>
+        <div class="bx b" style="flex:1.2">步驟 2<br>版面與內容</div>
+      </div>
+      <div class="flow" style="margin-top:14px">
+        <div class="bx" style="flex:1">其他語系</div>
+        <span class="ar">→</span>
+        <div class="bx" style="flex:2.4">內容編輯（排序鎖定英文，<br>空欄位沿用英文內容）</div>
+      </div>
+      <div class="bx" style="margin-top:14px;border-style:dashed">頂部常駐：<span class="b">待完成計數　預覽　發布</span></div>
+    </div>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+      <p class="t4 mut b" style="margin-bottom:8px">步驟 2　版面與內容</p>
+      <div class="wire" style="flex:1;min-height:0">
+        <div class="top"><span class="b">首頁(Home)設定　語系：英文（母版）</span><span>待完成 2　<span class="tag">預覽</span> <span class="tag">發布</span></span></div>
+        <div class="body">
+          <div class="left">
+            <div class="row"><span>頁首</span></div>
+            <div class="row"><span>大圖輪播</span></div>
+            <div class="row"><span class="b">產品展示</span><span class="tag">待設定</span></div>
+            <div class="row"><span>關於我們</span></div>
+            <div class="row"><span>圖文模板</span><span class="tag">無內容</span></div>
+            <div class="row"><span>聯絡我們</span></div>
+            <div class="row"><span>頁尾</span></div>
+          </div>
+          <div class="right">
+            <p class="b" style="margin-bottom:8px">「產品展示」設定</p>
+            <div class="step"><span class="no">1・選擇顯示樣式</span>　<span class="mut">［八款縮圖單選］</span></div>
+            <p class="stepar">↓</p>
+            <div class="step"><span class="no">2・設定資料條件</span>　<span class="mut">［請選擇 ▾］</span></div>
+            <p class="stepar">↓</p>
+            <div class="step" style="flex:1">
+              <span class="no">3・設定內容</span>　<span class="mut">依 1 2 連動出現</span>
+              <p class="mut" style="margin-top:6px;line-height:1.6">・撈取類條件 → 顯示條件說明，資料自動帶入<br>・自選產品 → 出現可編輯的產品清單<br>・區塊名稱未填則用系統預設名稱</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <ol class="num t3" style="margin-top:30px">
-    <li><span class="b">永遠有預設</span>：首次啟用即見排好的首頁雛形，不會是空白頁（規格書紅字要求）</li>
-    <li><span class="b">狀態可見</span>：每區塊標示待設定／無內容；全部完成，系統提示可發布</li>
-    <li><span class="b">英文是母版</span>：版型只在英文設定；其他語系未填內容，前台自動沿用英文、不破版</li>
-  </ol>
+  <p class="t3" style="margin-top:16px">上一層決定下一層要填什麼——選完當場變化，<span class="b">這個連動本身就是教學</span>。</p>
 </section>
 
-<!-- P12 原型過場 -->
+<!-- P12 原型展示 -->
 <section class="slide">
-  <h2 class="pt">操作原型</h2>
-  <p class="t3">以下切換至原型，實際走一遍「廠商第一次啟用」：</p>
-  <ol class="num t3" style="margin-top:18px">
-    <li>入口：首頁設定（英文・版型與內容）</li>
-    <li>步驟一：選擇新版型</li>
-    <li>步驟二：預置雛形——排好的區塊與狀態標示</li>
-    <li>產品展示：選條件，欄位跟著變</li>
-    <li>待完成歸零 → 發布</li>
-    <li>其他語系：沿用英文的設計</li>
-  </ol>
-  <p class="foot">看完原型後，有三項細節想請教各位。</p>
-</section>
-
-<!-- P13 三題確認 -->
-<section class="slide">
-  <h2 class="pt">請確認：三項細節</h2>
-  <table class="tight" style="font-size:19px;line-height:1.7">
-    <tr><th style="width:56px">#</th><th style="width:330px">問題</th><th>選項</th></tr>
-    <tr><td>1</td><td>預置清單的「公司資訊」指哪個元件？</td><td><span class="opt">關於我們</span><span class="sep">／</span><span class="opt">公司新聞</span>　<span class="mut t4">若為關於我們，預設樣式：</span><span class="opt">簡介圖文</span><span class="sep">／</span><span class="opt">重點資訊欄位</span></td></tr>
-    <tr><td>2</td><td>未填寫前的佔位素材由誰提供？</td><td><span class="opt">貴處統一素材</span><span class="sep">／</span><span class="opt">凌網設計通用佔位</span>　<span class="mut t4">未填區塊前台：</span><span class="opt">顯示佔位</span><span class="sep">／</span><span class="opt">先隱藏</span></td></tr>
-    <tr><td>3</td><td>「關閉英文語系顯示」的開關位置</td><td><span class="opt">企業網多語設定</span><span class="sep">／</span><span class="opt">其他</span>　<span class="mut t4">（併確認：關閉後前台語言選單的呈現）</span></td></tr>
+  <h2 class="pt">原型展示</h2>
+  <p class="t3">以下四個畫面實機操作，隨時可以打斷提問。</p>
+  <table style="margin-top:24px">
+    <tr><th style="width:250px">畫面</th><th>要看什麼</th></tr>
+    <tr><td class="b">1　建站引導首頁</td><td>兩張卡併成一張「首頁(Home)設定」；語系入口與規格書指定的說明文字</td></tr>
+    <tr><td class="b">2　步驟 1　版型與色系</td><td>新版型與現有多頁式色系並列</td></tr>
+    <tr><td class="b">3　步驟 2　版面與內容</td><td>首次啟用就預先排好的區塊、狀態標示、樣式與條件如何連動出內容欄位</td></tr>
+    <tr><td class="b">4　其他語系內容編輯</td><td>排序鎖定英文、空值沿用英文的提示</td></tr>
   </table>
-  <p class="foot">確認後即納入規格書。</p>
+  <p class="t3" style="margin-top:auto">原型網址：<a href="https://angelag0.github.io/ep-demo/SU/" target="_blank">angelag0.github.io/ep-demo/SU/</a></p>
+  <p class="t4 mut" style="margin-top:6px">這是流程與介面的示意，不是最終視覺。</p>
 </section>
 
-<!-- P14 時程與下一步 -->
+<!-- P13 需求確認三題 -->
 <section class="slide">
-  <h2 class="pt">時程與下一步</h2>
-  <ol class="num t3">
-    <li><span class="b">手機版</span>：本次展示以桌面版為主；手機版設計稿於<span class="b">第三次訪談</span>展示。切版依規格書採 Mobile-First 策略，觸控尺寸等規格一併納入。</li>
-    <li><span class="b">今日決議</span> → 落入設計稿與規格書：<span class="b">8/21 規格書定稿、9/30 首頁上線，不變</span>。</li>
-    <li><span class="b">第三次訪談（簽版確認）</span>：本次訪談較原規劃延後兩個工作天，為使各位屆時看到<span class="b">已完整反映今日決議的定版</span>、當天一次簽版，建議<span class="b">順延一週</span>；後段時程由我方吸收，不影響 8/21 與 9/30。</li>
-  </ol>
-  <p class="t3" style="margin-top:auto">謝謝各位。其他問題歡迎現在提出。</p>
+  <h2 class="pt" style="margin-bottom:20px">需求確認</h2>
+  <table class="tight">
+    <tr><th style="width:52px">題</th><th style="width:42%">問題</th><th>選項</th></tr>
+    <tr>
+      <td class="b">1</td>
+      <td><span class="b">預置的基本元件是哪幾款？要採哪些樣式？</span><br>預計：大圖輪播 → 關於我們 → 產品展示 → 聯絡我們表單</td>
+      <td><span class="grp">元件：<span class="opt">照預計</span><span class="sep">／</span><span class="opt">增減（現場記錄）</span></span><br>
+          <span class="grp">大圖輪播：<span class="opt">形象大圖</span><span class="sep">／</span><span class="opt">分類樹＋大圖輪播</span></span><br>
+          <span class="grp">關於我們：<span class="opt">簡介文案</span><span class="sep">／</span><span class="opt">固定重點資訊</span><span class="sep">／</span><span class="opt">分類樹搭配</span></span><br>
+          <span class="grp">產品展示：<span class="opt">遮罩窗格</span><span class="sep">／</span><span class="opt">直列窗格</span><span class="sep">／</span><span class="opt">遮罩拖曳</span><span class="sep">／</span><span class="opt">直列拖曳</span><span class="sep">／</span><span class="opt">分類樹＋窗格</span><span class="sep">／</span><span class="opt">左右雙欄</span><span class="sep">／</span><span class="opt">左大右 4 小</span><span class="sep">／</span><span class="opt">右大左 4 小</span></span></td>
+    </tr>
+    <tr>
+      <td class="b">2</td>
+      <td><span class="b">基本元件若未填內容，前台怎麼處理？</span><br>三種做法擇一</td>
+      <td><span class="grp"><span class="opt">自動隱藏</span><span class="sep">／</span><span class="opt">我方設計佔位素材</span><span class="sep">／</span><span class="opt">設為必填</span></span><br>
+          <span class="grp">若採佔位：<span class="opt">貴處提供素材</span><span class="sep">／</span><span class="opt">我方設計通用款</span></span></td>
+    </tr>
+    <tr>
+      <td class="b">3</td>
+      <td><span class="b">「關閉英文語系」的開關放在哪裡？</span><br>我方建議放既有的「企業網多語設定」，語系啟用停用本來就在那裡</td>
+      <td><span class="grp"><span class="opt">多語設定（建議）</span><span class="sep">／</span><span class="opt">首頁設定頁</span><span class="sep">／</span><span class="opt">其他（現場記錄）</span></span></td>
+    </tr>
+  </table>
+</section>
+
+<!-- P14 後半場暫停 -->
+<section class="slide pause">
+  <p class="t4 mut b" style="letter-spacing:.2em;margin-bottom:20px">後半場結束</p>
+  <h2 class="t1">建站引導訪談到此</h2>
+  <p class="t3" style="margin-top:36px">今天的需求確認結果會整理成書面紀錄回覆貴處。</p>
+  <div style="border-top:1px solid #E5E5E5;margin-top:44px;padding-top:24px;width:640px">
+    <p class="t4 mut b" style="margin-bottom:8px">接下來</p>
+    <p class="t3">下一步與時程確認</p>
+  </div>
+</section>
+
+<!-- P15 時程與下一步 -->
+<section class="slide">
+  <h2 class="pt">下一步與時程</h2>
+  <p class="t3"><span class="b">1. 今天的決議</span>　整理成書面紀錄送給貴處，設計稿依今天的意見修正。</p>
+  <p class="t3" style="margin-top:16px"><span class="b">2. 手機版</span>　手機版設計稿於第三次訪談完整呈現；規格書的行動端規格已納入切版規格。<br>若貴處希望提前過目，中間可以安排一次線上會議。</p>
+  <p class="t3" style="margin-top:16px"><span class="b">3. 第三次訪談</span>　預計確認首頁元件手機版、檢視 SU 建站引導設計稿，<br>並進行產品型錄調整需求訪談。<br><span class="b">由於第二次訪談從 8 月 7 日調整到今天，建議第三次訪談移至 8 月 28 日（五）。</span></p>
+  <div style="border:1px solid #111;padding:14px 24px;margin-top:28px">
+    <p class="t4 mut">決議：<span class="opt">同意 8/28</span><span class="sep">／</span><span class="opt">另訂日期（現場記錄）</span></p>
+  </div>
+</section>
+
+<!-- P16 結束 -->
+<section class="slide pause">
+  <p class="t4 mut b" style="letter-spacing:.2em;margin-bottom:20px">本次訪談結束</p>
+  <h2 class="t1">謝謝各位</h2>
+  <p class="t3" style="margin-top:36px">今天的決議與待確認事項，會後以書面送給貴處。<br>其他問題歡迎現在提出。</p>
 </section>
 
 </div>
-<div id="pageNum">1 / 14</div>
+<div id="pageNum">1 / 16</div>
 <script>
 (function(){
 var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,N=slides.length;
-function go(n){cur=Math.max(0,Math.min(N-1,n));for(var i=0;i<N;i++)slides[i].classList.toggle('on',i===cur);document.getElementById('pageNum').textContent=(cur+1)+' / '+N;}
+function go(n){
+  cur=Math.max(0,Math.min(N-1,n));
+  for(var i=0;i<N;i++)slides[i].classList.toggle('on',i===cur);
+  var bs=slides[cur].querySelectorAll('.figbox');for(var j=0;j<bs.length;j++)bs[j].scrollTop=0;
+  document.getElementById('pageNum').textContent=(cur+1)+' / '+N;
+}
 document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')go(cur+1);else if(e.key==='ArrowLeft')go(cur-1);});
 document.addEventListener('click',function(e){
   var t=e.target;
-  if(t.closest&&t.closest('.opt')){
+  if(t.closest&&t.closest('a'))return;              // 連結照常開新分頁，不換頁
+  if(t.closest&&t.closest('.opt')){                  // 選項可勾選／再點取消
     var el=t.closest('.opt');
     if(el.classList.contains('sel')){el.classList.remove('sel');return;}
-    var scope=el.closest('td').querySelectorAll('.opt');
+    var scope=(el.closest('.grp')||el.closest('td')||el.parentElement).querySelectorAll('.opt');
     for(var i=0;i<scope.length;i++)scope[i].classList.remove('sel');
     el.classList.add('sel');
     return;
   }
-  if(t.closest&&t.closest('.scrollFig'))return;
+  if(t.closest&&t.closest('.noflip'))return;         // 設計稿捲動區內點擊不換頁
   var w=window.innerWidth;
   if(e.clientX<w*0.2)go(cur-1);
   else if(e.clientX>w*0.8)go(cur+1);
 });
 function fit(){var s=Math.min(window.innerWidth/1280,window.innerHeight/720);document.getElementById('stage').style.transform='translate(-50%,-50%) scale('+s+')';}
 window.addEventListener('resize',fit);fit();
-var m=location.hash.match(/^#p(\d+)$/);if(m)go(parseInt(m[1],10)-1);
+var m=location.hash.match(/^#p(\d+)$/);if(m)go(parseInt(m[1],10)-1);else go(0);
 })();
 </script>
 </body>
