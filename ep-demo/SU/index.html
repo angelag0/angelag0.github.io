@@ -156,13 +156,13 @@ input,textarea,select,button{font-family:var(--font-body)}
                     </div>
                     <div>
                       <span style="display:block;width:23px;height:23px;margin-left:auto;border-radius:50%;box-sizing:border-box;background:#fff;border:5px solid #b6c0c2"></span>
-                      <span style="display:flex;align-items:baseline;gap:3px;margin-top:16px;color:var(--text-muted)"><b style="font-size:26px;line-height:1">2</b>區塊配置</span>
+                      <span style="display:flex;align-items:baseline;gap:3px;margin-top:16px;color:var(--text-muted)"><b style="font-size:26px;line-height:1">2</b>版面與內容</span>
                     </div>
                   </div>
                 </div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
-                  <x-import component-from-global-scope="{{ ns }}.Button" variant="solid" onClick="{{ goS2 }}" hint-size="180px,40px">儲存，前往區塊配置</x-import>
-                  <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" onClick="{{ goEntry }}" hint-size="120px,40px">‹ 回建站引導</x-import>
+                  <button type="button" onClick="{{ goS2 }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--action-default);color:#fff;box-shadow:none;">儲存，前往版面與內容</button>
+                  <button type="button" onClick="{{ goEntry }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--surface-card);color:var(--text-body);box-shadow:var(--shadow-outline);">‹ 回建站引導</button>
                 </div>
               </div>
               <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--border-subtle);display:flex;align-items:center;gap:12px;flex-wrap:wrap">
@@ -225,8 +225,8 @@ input,textarea,select,button{font-family:var(--font-body)}
             </div>
 
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px">
-              <x-import component-from-global-scope="{{ ns }}.Button" variant="solid" onClick="{{ goS2 }}" hint-size="180px,40px">儲存，前往版面與內容</x-import>
-              <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" onClick="{{ goEntry }}" hint-size="120px,40px">‹ 回建站引導</x-import>
+              <button type="button" onClick="{{ goS2 }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--action-default);color:#fff;box-shadow:none;">儲存，前往版面與內容</button>
+              <button type="button" onClick="{{ goEntry }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--surface-card);color:var(--text-body);box-shadow:var(--shadow-outline);">‹ 回建站引導</button>
             </div>
           </div>
         </sc-if>
@@ -245,13 +245,13 @@ input,textarea,select,button{font-family:var(--font-body)}
                     </div>
                     <div>
                       <span style="display:block;width:23px;height:23px;margin-left:auto;border-radius:50%;box-sizing:border-box;background:var(--b-orange);border:4px solid #fff;box-shadow:0 0 0 4px var(--b-orange)"></span>
-                      <span style="display:flex;align-items:baseline;gap:3px;margin-top:16px;color:#000;font-weight:bold"><b style="font-size:26px;line-height:1">2</b>區塊配置</span>
+                      <span style="display:flex;align-items:baseline;gap:3px;margin-top:16px;color:#000;font-weight:bold"><b style="font-size:26px;line-height:1">2</b>版面與內容</span>
                     </div>
                   </div>
                 </div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
-                  <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" onClick="{{ goS1 }}" hint-size="110px,40px">‹ 回上一步</x-import>
-                  <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" onClick="{{ goEntry }}" hint-size="120px,40px">‹ 回建站引導</x-import>
+                  <button type="button" onClick="{{ goS1 }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--surface-card);color:var(--text-body);box-shadow:var(--shadow-outline);">‹ 回上一步</button>
+                  <button type="button" onClick="{{ goEntry }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--surface-card);color:var(--text-body);box-shadow:var(--shadow-outline);">‹ 回建站引導</button>
                 </div>
               </div>
               <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--border-subtle);display:flex;align-items:center;gap:12px;flex-wrap:wrap">
@@ -261,7 +261,7 @@ input,textarea,select,button{font-family:var(--font-body)}
                 <span style="flex:1"></span>
                 <span style="{{ counterCss }}">{{ counterText }}</span>
                 <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="90px,32px">預覽前台</x-import>
-                <x-import component-from-global-scope="{{ ns }}.Button" variant="solid" size="small" onClick="{{ goDone }}" hint-size="140px,32px">發布並檢視前台</x-import>
+                <button type="button" onClick="{{ goDone }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 .7em;height:1.8em;line-height:1.9em;font-size:.86em;background:var(--action-default);color:#fff;box-shadow:none;">發布並檢視前台</button>
               </div>
               <div style="margin-top:10px;color:var(--c-hint);font-size:.92em">Tips: 系統已提供首頁預設區塊，你可增減、調整區塊順序；版型與區塊配置為各語系共用，其他語系只需編輯內容。</div>
             </div>
@@ -270,7 +270,7 @@ input,textarea,select,button{font-family:var(--font-body)}
               <div style="display:flex;align-items:center;gap:12px;background:#eef6ef;box-shadow:#a8ccb0 0 0 0 1px;border-radius:var(--radius-sm);color:#2f6b45;padding:10px 14px;font-size:.92em;margin-bottom:14px">
                 <b>首頁的區塊都設定好了，可以發布了。</b>
                 <span style="flex:1"></span>
-                <x-import component-from-global-scope="{{ ns }}.Button" variant="solid" size="small" onClick="{{ goDone }}" hint-size="80px,32px">立即發布</x-import>
+                <button type="button" onClick="{{ goDone }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 .7em;height:1.8em;line-height:1.9em;font-size:.86em;background:var(--action-default);color:#fff;box-shadow:none;">立即發布</button>
               </div>
             </sc-if>
 
@@ -309,7 +309,7 @@ input,textarea,select,button{font-family:var(--font-body)}
                   </sc-for>
                 </div>
                 <button type="button" onClick="{{ addAll }}" style="width:100%;margin-top:10px;padding:10px;background:#fff;border:1px dashed var(--n-border);border-radius:var(--radius-sm);color:var(--text-body);font-size:.92em;cursor:pointer">＋ 新增區塊</button>
-                <div style="color:var(--c-hint);font-size:.86em;padding:8px 2px 0">Tips: 點「＋」會一次插入本版型建議的整組區塊；頁首與頁尾為固定區塊，不可刪除。</div>
+                <div style="color:var(--c-hint);font-size:.86em;padding:8px 2px 0">Tips: 頁首與頁尾為固定區塊，不可刪除。</div>
               </div>
 
               <div style="flex:1;min-width:420px;background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:20px">
@@ -329,15 +329,15 @@ input,textarea,select,button{font-family:var(--font-body)}
                       <span style="{{ sec1.noteCss }}">{{ sec1.note }}</span>
                       <span style="{{ sec1.arrowCss }}"></span>
                     </button>
-                    <sc-if value="{{ sec1Open }}" hint-placeholder-val="{{ true }}">
+                    <div style="{{ secBody1 }}"><div style="{{ secInner }}"><div style="{{ secPad }}">
                     <div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px">
                       <sc-for list="{{ styleOpts }}" as="s" hint-placeholder-count="2">
                         <button type="button" onClick="{{ s.pick }}" style="{{ s.css }}">
                           <span style="{{ s.radio }}"></span>
                           <span style="flex:1;min-width:0;text-align:left">
                             <span style="display:block;font-size:.86em;color:var(--text-body);margin-bottom:6px;line-height:1.5">{{ s.label }}</span>
-                            <img src="{{ s.icon }}" alt="" style="width:100%;display:block;background:#fff;box-shadow:var(--shadow-hairline);border-radius:2px">
+                            <img src="{{ s.icon }}" alt="" style="width:100%;max-height:110px;object-fit:contain;object-position:left top;display:block;background:#fff;box-shadow:var(--shadow-hairline);border-radius:2px">
                           </span>
                         </button>
                       </sc-for>
@@ -345,8 +345,18 @@ input,textarea,select,button{font-family:var(--font-body)}
                     <sc-if value="{{ showTreeWarn }}" hint-placeholder-val="{{ true }}">
                       <div style="color:var(--c-warning);font-size:.86em;margin-top:9px">※提醒您：使用「分類樹搭配」前，請確認分類已啟用，且分類中已有產品型錄，否則將無法顯示於企業網站。</div>
                     </sc-if>
-                    </div>
+                    <sc-if value="{{ showTplGrid }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:16px">
+                        <sc-for list="{{ tplGrid }}" as="t" hint-placeholder-count="10">
+                          <div style="{{ t.css }}">
+                            <img src="{{ t.icon }}" alt="" style="width:100%;height:62px;object-fit:contain;object-position:center top;display:block;background:#fff;box-shadow:var(--shadow-hairline);border-radius:2px;margin-bottom:7px">
+                            {{ t.name }}<span style="{{ t.tagCss }}">{{ t.tag }}</span>
+                          </div>
+                        </sc-for>
+                      </div>
                     </sc-if>
+                    </div>
+                    </div></div></div>
                   </div>
                 </sc-if>
 
@@ -359,21 +369,23 @@ input,textarea,select,button{font-family:var(--font-body)}
                       <span style="{{ sec1.noteCss }}">{{ sec1.note }}</span>
                       <span style="{{ sec1.arrowCss }}"></span>
                     </button>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
-                      <label style="width:110px;flex:0 0 110px;text-align:right;font-weight:bold;font-size:.92em;padding-top:7px"><span style="color:var(--c-danger)">*</span> 網站名稱</label>
-                      <div style="flex:1;min-width:280px">
-                        <input value="TAIWAN EXTERNAL TRADE DEVELOPMENT COUNCIL" style="width:100%;max-width:520px;padding:7px 10px;border:1px solid var(--n-border);border-radius:var(--radius-sm);font-size:.92em">
-                        <div style="color:var(--c-success);font-size:.86em;margin-top:6px">✓ 已帶入「公司資料設定」的公司名稱</div>
-                      </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center">
+                      <label style="width:110px;flex:0 0 110px;text-align:right;font-weight:bold;font-size:.92em;display:flex;align-items:center;justify-content:flex-end;gap:6px"><span style="color:var(--c-danger)">*</span> 網站名稱
+                        <span style="width:1.6em;height:1.6em;border-radius:50%;background:#d3dedf;color:#0098c4;display:inline-flex;align-items:center;justify-content:center;font-family:'Times New Roman',Times,serif;font-style:italic;font-size:.9em;cursor:pointer">i</span>
+                      </label>
+                      <div style="flex:1;min-width:280px;font-size:.95em">TAIWAN EXTERNAL TRADE DEVELOPMENT COUNCIL</div>
                     </div>
                     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
-                      <label style="width:110px;flex:0 0 110px;text-align:right;font-weight:bold;font-size:.92em;padding-top:7px">企業網 Logo</label>
+                      <label style="width:110px;flex:0 0 110px;text-align:right;font-weight:bold;font-size:.92em;padding-top:7px">企業網 Logo 設定</label>
                       <div style="flex:1;min-width:280px">
                         <div style="width:160px;background:#fff;box-shadow:var(--shadow-hairline);border-radius:var(--radius-sm);padding:7px;position:relative">
+                          <button type="button" title="移除" style="position:absolute;right:-8px;top:-8px;width:22px;height:22px;border-radius:50%;background:var(--n-slate);color:#fff;border:none;font-size:.8em;cursor:pointer;line-height:1">✕</button>
                           <div style="height:76px;background:var(--surface-subtle);display:flex;align-items:center;justify-content:center;font-size:.86em;color:var(--text-muted)">logo.png</div>
-                          <div style="font-size:.86em;color:var(--text-muted);padding-top:5px">1 / 1</div>
                         </div>
-                        <div style="color:var(--c-warning);font-size:.86em;margin-top:8px;line-height:1.6">Tips: 各語系Logo需要分別上傳，建議Logo尺寸 至少高度超過100 px，單張圖片大小不可超過3MB。</div>
+                        <div style="display:flex;justify-content:space-between;max-width:520px;gap:12px;margin-top:8px">
+                          <span style="color:var(--c-warning);font-size:.86em;line-height:1.6">Tips: 各語系Logo圖要分別上傳。建議Logo尺寸 至少高度超過 100 px，單張圖片大小不可超過3MB。</span>
+                          <span style="font-size:.86em;color:var(--text-muted);white-space:nowrap"><b style="color:#000">1</b> / 1</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -388,7 +400,7 @@ input,textarea,select,button{font-family:var(--font-body)}
                       <span style="{{ sec2.noteCss }}">{{ sec2.note }}</span>
                       <span style="{{ sec2.arrowCss }}"></span>
                     </button>
-                    <sc-if value="{{ sec2Open }}" hint-placeholder-val="{{ true }}">
+                    <div style="{{ secBody2 }}"><div style="{{ secInner }}"><div style="{{ secPad }}">
                     <div>
                     <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
                       <span style="color:var(--c-warning);font-size:.86em;flex:1;min-width:240px">Tips: 設定大圖輪播，展現公司形象可設定連結至精選頁面（產品、外部連結、優惠活動）。最多顯示五筆資料。</span>
@@ -396,11 +408,13 @@ input,textarea,select,button{font-family:var(--font-body)}
                     </div>
                     <div style="box-shadow:var(--shadow-hairline);border-radius:var(--radius-sm);padding:12px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
                       <span style="color:var(--text-muted);cursor:grab;padding-top:2px">≡</span>
-                      <div style="width:168px;height:94px;background:var(--surface-subtle);display:flex;align-items:center;justify-content:center;font-size:.86em;color:var(--text-muted);flex:0 0 168px">系統示意圖</div>
+                      <div style="flex:0 0 168px">
+                        <div style="width:168px;height:94px;background:var(--surface-subtle);display:flex;align-items:center;justify-content:center;font-size:.86em;color:var(--text-muted)">系統示意圖</div>
+                        <div style="font-size:.92em;padding-top:6px">大圖輪播 1</div>
+                      </div>
                       <div style="flex:1;min-width:200px;font-size:.92em;line-height:1.8">
                         <div><span style="display:inline-block;width:48px;color:var(--text-muted)">模式：</span>不顯示標題文字於圖上, 圖片不顯示遮罩效果</div>
                         <div><span style="display:inline-block;width:48px;color:var(--text-muted)">連結：</span>無連結</div>
-                        <div><span style="display:inline-block;width:48px;color:var(--text-muted)">名稱：</span><b>大圖輪播 1</b></div>
                       </div>
                       <div style="display:flex;gap:7px;align-self:flex-end">
                         <button type="button" style="width:28px;height:28px;border-radius:50%;background:var(--surface-subtle);border:none;color:var(--text-body);cursor:pointer">✎</button>
@@ -411,7 +425,7 @@ input,textarea,select,button{font-family:var(--font-body)}
                       目前使用的是<b>系統提供的示意圖</b>，前台已可正常顯示。建議替換為貴公司的形象大圖，讓首頁更貼近品牌。
                     </div>
                     </div>
-                    </sc-if>
+                    </div></div></div>
                   </div>
                 </sc-if>
 
@@ -424,14 +438,12 @@ input,textarea,select,button{font-family:var(--font-body)}
                       <span style="{{ sec2.noteCss }}">{{ sec2.note }}</span>
                       <span style="{{ sec2.arrowCss }}"></span>
                     </button>
-                    <sc-if value="{{ sec2Open }}" hint-placeholder-val="{{ true }}">
+                    <div style="{{ secBody2 }}"><div style="{{ secInner }}"><div style="{{ secPad }}">
                     <div>
                     <sc-if value="{{ aboutIsAuto }}" hint-placeholder-val="{{ false }}">
                       <div style="background:var(--surface-subtle);border-radius:var(--radius-sm);padding:13px 16px;font-size:.92em;line-height:1.75">
-                        本樣式的內容<b>由系統自動帶入</b>「公司資料設定」的重點資訊欄位，無需在此填寫：<br>
-                        資本額、員工人數、主要出口市場、主要出口產品、成立年份、年營業額、主要客戶、認證與獎項（共 8 項）。
-                        <div style="color:var(--c-success);margin-top:6px">✓ 已帶入 8 項中的 6 項，其餘留白不顯示</div>
-                        <div style="margin-top:10px"><x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="200px,32px">前往「公司資料設定」補齊</x-import></div>
+                        本樣式的內容<b>由系統自動帶入</b>「公司資料設定」中的固定重點資訊欄位（資本額、員工人數、主要出口市場、主要出口產品等 8 項），無需在此填寫。
+                        <div style="margin-top:10px"><x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="200px,32px">前往「公司資料設定」</x-import></div>
                       </div>
                     </sc-if>
                     <sc-if value="{{ aboutIsForm }}" hint-placeholder-val="{{ true }}">
@@ -473,7 +485,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                       </div>
                     </sc-if>
                     </div>
-                    </sc-if>
+                    </div></div></div>
                   </div>
                 </sc-if>
 
@@ -486,27 +498,36 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                       <span style="{{ sec2.noteCss }}">{{ sec2.note }}</span>
                       <span style="{{ sec2.arrowCss }}"></span>
                     </button>
-                    <sc-if value="{{ sec2Open }}" hint-placeholder-val="{{ true }}">
+                    <div style="{{ secBody2 }}"><div style="{{ secInner }}"><div style="{{ secPad }}">
                     <div style="display:flex;flex-direction:column;gap:8px">
                       <sc-for list="{{ conds }}" as="c" hint-placeholder-count="8">
-                        <button type="button" onClick="{{ c.pick }}" style="{{ c.css }}">
-                          <span style="{{ c.radio }}"></span>
-                          <span style="flex:1;min-width:0;text-align:left">
-                            <b style="font-size:.95em;color:#000">{{ c.name }}</b>
-                            <span style="display:block;font-size:.86em;color:var(--text-muted);margin-top:3px;line-height:1.6">{{ c.desc }}</span>
-                          </span>
-                        </button>
+                        <div style="{{ c.css }}">
+                          <button type="button" onClick="{{ c.pick }}" style="display:flex;gap:9px;align-items:flex-start;flex:1;min-width:0;background:none;border:none;padding:0;cursor:pointer;text-align:left">
+                            <span style="{{ c.radio }}"></span>
+                            <span style="flex:1;min-width:0;text-align:left">
+                              <b style="font-size:.95em;color:#000">{{ c.name }}</b>
+                              <sc-if value="{{ c.hasDesc }}" hint-placeholder-val="{{ true }}">
+                                <span style="display:block;font-size:.86em;color:var(--text-muted);margin-top:3px;line-height:1.6">{{ c.desc }}</span>
+                              </sc-if>
+                            </span>
+                          </button>
+                          <sc-if value="{{ c.hasSel }}" hint-placeholder-val="{{ false }}">
+                            <select style="min-width:140px;padding:5px 8px;border:1px solid var(--n-border);border-radius:var(--radius-sm);font-size:.86em;flex:0 0 auto">
+                              <option>{{ c.sel }}</option>
+                            </select>
+                          </sc-if>
+                        </div>
                       </sc-for>
                     </div>
 
-                    </sc-if>
+                    </div></div></div>
                     <button type="button" onClick="{{ sec3.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
                       <span style="{{ sec3.numCss }}">{{ sec3.num }}</span>
                       <b style="font-size:1em;color:#000">{{ sec3.title }}</b>
                       <span style="{{ sec3.noteCss }}">{{ sec3.note }}</span>
                       <span style="{{ sec3.arrowCss }}"></span>
                     </button>
-                    <sc-if value="{{ sec3Open }}" hint-placeholder-val="{{ true }}">
+                    <div style="{{ secBody3 }}"><div style="{{ secInner }}"><div style="{{ secPad }}">
                     <div>
 
                     <sc-if value="{{ prodNone }}" hint-placeholder-val="{{ true }}">
@@ -531,9 +552,10 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                         <div style="display:flex;gap:10px;flex-wrap:wrap">
                           <sc-for list="{{ pickedProducts }}" as="p" hint-placeholder-count="3">
                             <div style="width:126px;background:#fff;box-shadow:var(--shadow-hairline);border-radius:var(--radius-sm);padding:7px;position:relative">
-                              <span style="position:absolute;left:6px;top:6px;background:var(--n-slate);color:#fff;font-size:.8em;width:18px;height:18px;border-radius:2px;text-align:center;line-height:18px">{{ p.ord }}</span>
+                              <span title="拖曳排序" style="position:absolute;left:6px;top:6px;background:var(--surface-subtle);color:var(--text-muted);font-size:.8em;width:20px;height:20px;border-radius:2px;text-align:center;line-height:20px;cursor:grab">≡</span>
                               <div style="height:76px;background:var(--surface-subtle)"></div>
                               <div style="margin-top:6px;font-size:.86em;line-height:1.4;color:var(--text-muted);height:36px;overflow:hidden">{{ p.name }}</div>
+                              <button type="button" title="刪除" style="position:absolute;right:6px;bottom:6px;width:22px;height:22px;border-radius:50%;background:var(--surface-subtle);color:var(--text-body);border:none;font-size:.8em;cursor:pointer">🗑</button>
                             </div>
                           </sc-for>
                           <button type="button" style="width:126px;min-height:130px;border:1px dashed var(--n-border);border-radius:var(--radius-sm);background:#fff;color:var(--text-muted);font-size:.86em;cursor:pointer">＋ 新增產品</button>
@@ -554,7 +576,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                       </div>
                     </div>
                     </div>
-                    </sc-if>
+                    </div></div></div>
                   </div>
                 </sc-if>
 
@@ -567,28 +589,26 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                       <span style="{{ sec2.noteCss }}">{{ sec2.note }}</span>
                       <span style="{{ sec2.arrowCss }}"></span>
                     </button>
-                    <sc-if value="{{ sec2Open }}" hint-placeholder-val="{{ true }}">
+                    <div style="{{ secBody2 }}"><div style="{{ secInner }}"><div style="{{ secPad }}">
                     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
                       <label style="width:110px;flex:0 0 110px;text-align:right;font-weight:bold;font-size:.92em">按鈕資料更新</label>
                       <select onChange="{{ goSec3 }}" style="min-width:180px;padding:6px 10px;border:1px solid var(--n-border);border-radius:var(--radius-sm);font-size:.92em">
                         <option>每次一排</option>
-                        <option>每次一則</option>
                       </select>
                     </div>
-                    </sc-if>
+                    </div></div></div>
                     <button type="button" onClick="{{ sec3.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
                       <span style="{{ sec3.numCss }}">{{ sec3.num }}</span>
                       <b style="font-size:1em;color:#000">{{ sec3.title }}</b>
                       <span style="{{ sec3.noteCss }}">{{ sec3.note }}</span>
                       <span style="{{ sec3.arrowCss }}"></span>
                     </button>
-                    <sc-if value="{{ sec3Open }}" hint-placeholder-val="{{ true }}">
+                    <div style="{{ secBody3 }}"><div style="{{ secInner }}"><div style="{{ secPad }}">
                     <div style="background:var(--surface-subtle);border-radius:var(--radius-sm);padding:13px 16px;font-size:.92em;line-height:1.75">
                       公司新聞為自動條件。新增更多多語公司新聞，請至「內容管理 &gt; 公司新聞設定」管理。
-                      <div style="color:var(--c-success);margin-top:6px">✓ 目前已有 8 則新聞可供顯示（英文）</div>
                       <div style="margin-top:10px"><x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="230px,32px">前往「內容管理 &gt; 公司新聞設定」</x-import></div>
                     </div>
-                    </sc-if>
+                    </div></div></div>
                   </div>
                 </sc-if>
 
@@ -601,15 +621,22 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                       <span style="{{ sec1.noteCss }}">{{ sec1.note }}</span>
                       <span style="{{ sec1.arrowCss }}"></span>
                     </button>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-                      <span style="font-size:.92em;color:var(--text-muted)">目前 0 / 5 則</span>
+                    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+                      <span style="color:var(--c-warning);font-size:.86em;flex:1;min-width:240px">Tips: 可在首頁設定輪播展示Video影音、360°產品、720°實景、3D模型等多媒體資訊。<b>(最多顯示前 5 則)</b></span>
                       <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="70px,32px">＋ 新增</x-import>
                     </div>
-                    <div style="border:1px dashed var(--n-border);border-radius:var(--radius-sm);background:var(--surface-subtle);padding:26px;text-align:center;color:var(--text-muted);font-size:.92em;line-height:1.8">
-                      尚未新增多媒體內容。<br>點「＋ 新增」可加入 Video 影音、360°產品、720°實景或 3D 模型。
-                    </div>
-                    <div style="margin-top:12px;background:var(--surface-subtle);border-radius:var(--radius-sm);padding:13px 16px;font-size:.92em;line-height:1.7">
-                      這一區<b>還沒有內容</b>。在您新增之前，前台會自動跳過本區塊，不會出現空白區域。
+                    <div style="box-shadow:var(--shadow-hairline);border-radius:var(--radius-sm);padding:12px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+                      <span style="color:var(--text-muted);cursor:grab;padding-top:2px">≡</span>
+                      <div style="width:168px;height:94px;background:var(--surface-subtle);display:flex;align-items:center;justify-content:center;font-size:.86em;color:var(--text-muted);flex:0 0 168px">影片縮圖</div>
+                      <div style="flex:1;min-width:200px;font-size:.92em;line-height:1.8">
+                        <div><span style="display:inline-block;width:48px;color:var(--text-muted)">標題：</span>多媒體輪播</div>
+                        <div><span style="display:inline-block;width:48px;color:var(--text-muted)">類型：</span>Video</div>
+                        <div><span style="display:inline-block;width:48px;color:var(--text-muted)">連結：</span>https://www.youtube.com/watch?v=Yiqp7WM-LbI</div>
+                      </div>
+                      <div style="display:flex;gap:7px;align-self:flex-end">
+                        <button type="button" style="width:28px;height:28px;border-radius:50%;background:var(--surface-subtle);border:none;color:var(--text-body);cursor:pointer">✎</button>
+                        <button type="button" style="width:28px;height:28px;border-radius:50%;background:var(--surface-subtle);border:none;color:var(--text-body);cursor:pointer">🗑</button>
+                      </div>
                     </div>
                   </div>
                 </sc-if>
@@ -623,47 +650,31 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                       <span style="{{ sec2.noteCss }}">{{ sec2.note }}</span>
                       <span style="{{ sec2.arrowCss }}"></span>
                     </button>
-                    <sc-if value="{{ sec2Open }}" hint-placeholder-val="{{ true }}">
-                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px">
-                      <sc-for list="{{ tplGrid }}" as="t" hint-placeholder-count="10">
-                        <button type="button" onClick="{{ t.pick }}" style="{{ t.css }}">
-                          <img src="{{ t.icon }}" alt="" style="width:100%;display:block;background:#fff;box-shadow:var(--shadow-hairline);border-radius:2px;margin-bottom:7px">
-                          {{ t.name }}<span style="{{ t.tagCss }}">{{ t.tag }}</span>
-                        </button>
-                      </sc-for>
-                    </div>
-
-                    </sc-if>
-                    <button type="button" onClick="{{ sec3.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
-                      <span style="{{ sec3.numCss }}">{{ sec3.num }}</span>
-                      <b style="font-size:1em;color:#000">{{ sec3.title }}</b>
-                      <span style="{{ sec3.noteCss }}">{{ sec3.note }}</span>
-                      <span style="{{ sec3.arrowCss }}"></span>
-                    </button>
-                    <sc-if value="{{ sec3Open }}" hint-placeholder-val="{{ true }}">
+                    <div style="{{ secBody2 }}"><div style="{{ secInner }}"><div style="{{ secPad }}">
                     <div>
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px;flex-wrap:wrap">
-                      <span style="font-size:.92em">目前套用範本：<b>{{ curTplName }}</b></span>
+                      <span style="color:var(--c-warning);font-size:.86em;flex:1;min-width:240px">Tips: 點「＋ 新增」可挑選範本，並直接編輯圖片、文字與連結。</span>
                       <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="70px,32px">＋ 新增</x-import>
                     </div>
-                    <div style="box-shadow:var(--shadow-hairline);border-radius:var(--radius-sm);padding:12px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
-                      <span style="color:var(--text-muted);cursor:grab;padding-top:2px">≡</span>
-                      <div style="width:168px;height:94px;background:var(--surface-subtle);display:flex;align-items:center;justify-content:center;font-size:.86em;color:var(--text-muted);flex:0 0 168px">示意版面</div>
-                      <div style="flex:1;min-width:200px;font-size:.92em;line-height:1.8">
-                        <div><span style="display:inline-block;width:48px;color:var(--text-muted)">標題：</span><b>{{ tplPreview.title }}</b></div>
-                        <div><span style="display:inline-block;width:48px;color:var(--text-muted)">內文：</span>{{ tplPreview.body }}</div>
-                        <div><span style="display:inline-block;width:48px;color:var(--text-muted)">說明：</span>{{ tplPreview.note }}</div>
+                    <div style="box-shadow:var(--shadow-hairline);border-radius:var(--radius-sm);padding:16px">
+                      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+                        <div style="flex:1;min-width:220px">
+                          <div style="font-size:1.1em;font-weight:bold;color:#000;margin-bottom:8px">{{ tplPreview.title }}</div>
+                          <div style="font-size:.92em;color:var(--text-muted);line-height:1.7">{{ tplPreview.body }}</div>
+                          <span style="display:inline-block;margin-top:10px;padding:5px 16px;background:var(--b-orange);color:#fff;font-size:.86em;border-radius:2px">Link Text</span>
+                        </div>
+                        <div style="width:200px;height:120px;background:var(--surface-subtle);flex:0 0 200px;display:flex;align-items:center;justify-content:center;font-size:.86em;color:var(--text-muted)">範本示意圖</div>
                       </div>
-                      <div style="display:flex;gap:7px;align-self:flex-end">
-                        <button type="button" style="width:28px;height:28px;border-radius:50%;background:var(--surface-subtle);border:none;color:var(--text-body);cursor:pointer">✎</button>
-                        <button type="button" style="width:28px;height:28px;border-radius:50%;background:var(--surface-subtle);border:none;color:var(--text-body);cursor:pointer">🗑</button>
+                      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid var(--border-subtle)">
+                        <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="100px,32px">✎ 編輯內容</x-import>
+                        <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="70px,32px">🗑 刪除</x-import>
                       </div>
                     </div>
                     <div style="margin-top:12px;background:var(--surface-subtle);border-radius:var(--radius-sm);padding:13px 16px;font-size:.92em;line-height:1.7">
-                      目前是<b>範本自帶的示意圖文</b>，前台已可正常顯示。點「✎」即可換成貴公司的圖片與文案。
+                      目前是<b>範本自帶的示意圖文</b>，前台已可正常顯示，可隨時換成貴公司的圖片與文案。
                     </div>
                     </div>
-                    </sc-if>
+                    </div></div></div>
                   </div>
                 </sc-if>
 
@@ -681,7 +692,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
 
                 <sc-if value="{{ paneSavable }}" hint-placeholder-val="{{ true }}">
                   <div style="text-align:center;margin-top:22px;padding-top:16px;border-top:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:center;gap:12px">
-                    <x-import component-from-global-scope="{{ ns }}.Button" variant="solid" onClick="{{ saveBlock }}" hint-size="130px,40px">儲存區塊設定</x-import>
+                    <button type="button" onClick="{{ saveBlock }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--action-default);color:#fff;box-shadow:none;">儲存區塊設定</button>
                     <sc-if value="{{ savedFlash }}" hint-placeholder-val="{{ false }}">
                       <span style="color:var(--c-success);font-size:.92em">已儲存 ✓</span>
                     </sc-if>
@@ -692,10 +703,10 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
             </div>
 
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px">
-              <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" onClick="{{ goS1 }}" hint-size="110px,40px">‹ 回上一步</x-import>
+              <button type="button" onClick="{{ goS1 }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--surface-card);color:var(--text-body);box-shadow:var(--shadow-outline);">‹ 回上一步</button>
               <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" hint-size="90px,40px">預覽前台</x-import>
-              <x-import component-from-global-scope="{{ ns }}.Button" variant="solid" onClick="{{ goDone }}" hint-size="70px,40px">發布</x-import>
-              <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" onClick="{{ goEntry }}" hint-size="120px,40px">‹ 回建站引導</x-import>
+              <button type="button" onClick="{{ goDone }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--action-default);color:#fff;box-shadow:none;">發布</button>
+              <button type="button" onClick="{{ goEntry }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--surface-card);color:var(--text-body);box-shadow:var(--shadow-outline);">‹ 回建站引導</button>
             </div>
           </div>
         </sc-if>
@@ -704,7 +715,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
         <sc-if value="{{ isLang }}" hint-placeholder-val="{{ false }}">
           <div>
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:14px">
-              <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" onClick="{{ goEntry }}" hint-size="120px,40px">‹ 回建站引導</x-import>
+              <button type="button" onClick="{{ goEntry }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--surface-card);color:var(--text-body);box-shadow:var(--shadow-outline);">‹ 回建站引導</button>
             </div>
 
             <div style="display:flex;align-items:center;gap:14px;background:var(--surface-subtle);box-shadow:var(--shadow-hairline);border-radius:var(--radius-sm);padding:11px 16px;margin-bottom:14px;flex-wrap:wrap">
@@ -714,7 +725,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
               <span style="flex:1"></span>
               <span style="display:inline-flex;align-items:center;gap:7px;background:#fff;box-shadow:var(--shadow-hairline);color:var(--text-muted);padding:4px 12px;border-radius:var(--radius-pill);font-size:.86em">未填寫 <b style="color:#000">4</b> 項｜將沿用英文</span>
               <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="90px,32px">預覽前台</x-import>
-              <x-import component-from-global-scope="{{ ns }}.Button" variant="solid" size="small" onClick="{{ goDone }}" hint-size="70px,32px">發布</x-import>
+              <button type="button" onClick="{{ goDone }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 .7em;height:1.8em;line-height:1.9em;font-size:.86em;background:var(--action-default);color:#fff;box-shadow:none;">發布</button>
             </div>
 
             <div style="display:flex;align-items:center;gap:8px;background:var(--surface-subtle);box-shadow:var(--shadow-hairline);border-radius:var(--radius-sm);padding:9px 14px;font-size:.86em;margin-bottom:10px">
@@ -783,11 +794,14 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                       <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="70px,32px">＋ 新增</x-import>
                     </div>
                     <div style="box-shadow:var(--shadow-hairline);border-radius:var(--radius-sm);padding:12px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
-                      <div style="width:168px;height:94px;background:var(--surface-subtle);display:flex;align-items:center;justify-content:center;font-size:.86em;color:var(--text-muted);flex:0 0 168px">沿用英文圖片</div>
+                      <div style="flex:0 0 168px">
+                        <div style="width:168px;height:94px;background:var(--surface-subtle);display:flex;align-items:center;justify-content:center;font-size:.86em;color:var(--text-muted)">沿用英文圖片</div>
+                        <div style="font-size:.92em;padding-top:6px;color:var(--text-muted)">大圖輪播 1</div>
+                      </div>
                       <div style="flex:1;min-width:220px;font-size:.92em;line-height:1.8">
                         <div><span style="display:inline-block;width:48px;color:var(--text-muted)">模式：</span>不顯示標題文字於圖上, 圖片不顯示遮罩效果</div>
-                        <div><span style="display:inline-block;width:48px;color:var(--text-muted)">名稱：</span><span style="color:var(--text-muted)">未填寫</span></div>
-                        <div style="margin-top:6px;background:var(--surface-subtle);border-radius:var(--radius-sm);padding:7px 11px;font-size:.93em;color:var(--text-muted)">未填寫將沿用英文內容：<b style="color:var(--text-body)">大圖輪播 1</b></div>
+                        <div><span style="display:inline-block;width:48px;color:var(--text-muted)">連結：</span>無連結</div>
+                        <div style="margin-top:6px;background:var(--surface-subtle);border-radius:var(--radius-sm);padding:7px 11px;font-size:.93em;color:var(--text-muted)">未填寫將沿用英文內容</div>
                       </div>
                     </div>
                   </div>
@@ -805,6 +819,14 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                       </div>
                     </div>
                     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+                      <label style="width:110px;flex:0 0 110px;text-align:right;font-weight:bold;font-size:.92em;padding-top:7px">影片</label>
+                      <div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:7px;max-width:520px">
+                        <input placeholder="未填寫將沿用英文內容" style="padding:7px 10px;border:1px solid var(--n-border);border-radius:var(--radius-sm);font-size:.92em">
+                        <input placeholder="未填寫將沿用英文內容" style="padding:7px 10px;border:1px solid var(--n-border);border-radius:var(--radius-sm);font-size:.92em">
+                        <input placeholder="未填寫將沿用英文內容" style="padding:7px 10px;border:1px solid var(--n-border);border-radius:var(--radius-sm);font-size:.92em">
+                      </div>
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
                       <label style="width:110px;flex:0 0 110px;text-align:right;font-weight:bold;font-size:.92em;padding-top:7px">圖片</label>
                       <div style="flex:1;min-width:280px">
                         <div style="max-width:520px;height:104px;border:2px dashed var(--n-border);border-radius:var(--radius-sm);background:var(--surface-subtle);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--text-muted);font-size:.86em">
@@ -813,6 +835,10 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                             <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="90px,30px">從圖庫選擇</x-import>
                             <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="90px,30px">從本機上傳</x-import>
                           </span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;max-width:520px;gap:12px;margin-top:6px">
+                          <span style="color:var(--c-warning);font-size:.86em">Tips: 最多可上傳3張簡介用圖。建議尺寸 640*360px，單張圖片大小不可超過3MB。</span>
+                          <span style="font-size:.86em;color:var(--text-muted)"><b style="color:#000">0</b> / 3</span>
                         </div>
                       </div>
                     </div>
@@ -828,14 +854,14 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                     <div style="display:flex;gap:10px;flex-wrap:wrap">
                       <sc-for list="{{ langProducts }}" as="p" hint-placeholder-count="2">
                         <div style="width:126px;background:#fff;box-shadow:var(--shadow-hairline);border-radius:var(--radius-sm);padding:7px;position:relative">
-                          <span style="position:absolute;left:6px;top:6px;background:var(--n-slate);color:#fff;font-size:.8em;width:18px;height:18px;border-radius:2px;text-align:center;line-height:18px">{{ p.ord }}</span>
+                          <span title="拖曳排序" style="position:absolute;left:6px;top:6px;background:var(--surface-subtle);color:var(--text-muted);font-size:.8em;width:20px;height:20px;border-radius:2px;text-align:center;line-height:20px;cursor:grab">≡</span>
                           <div style="height:76px;background:var(--surface-subtle)"></div>
                           <div style="margin-top:6px;font-size:.86em;line-height:1.4;color:var(--text-muted);height:36px;overflow:hidden">{{ p.name }}</div>
+                          <button type="button" title="刪除" style="position:absolute;right:6px;bottom:6px;width:22px;height:22px;border-radius:50%;background:var(--surface-subtle);color:var(--text-body);border:none;font-size:.8em;cursor:pointer">🗑</button>
                         </div>
                       </sc-for>
                       <button type="button" style="width:126px;min-height:130px;border:1px dashed var(--n-border);border-radius:var(--radius-sm);background:#fff;color:var(--text-muted);font-size:.86em;cursor:pointer">＋ 新增產品</button>
                     </div>
-                    <div style="margin-top:10px;max-width:520px;background:var(--surface-subtle);border-radius:var(--radius-sm);padding:7px 11px;font-size:.86em;color:var(--text-muted)">{{ langName }}目前上架 7 筆型錄，可挑選的產品以本語系已上架者為限。</div>
                     <div style="display:flex;align-items:baseline;gap:10px;margin:20px 0 11px;padding-bottom:7px;border-bottom:1px solid var(--border-subtle)">
                       <h4 style="margin:0;font-size:1em">區塊名稱</h4>
                       <span style="font-size:.86em;color:var(--text-muted);flex:1">顯示在前台這一區的標題</span>
@@ -861,6 +887,29 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                   </div>
                 </sc-if>
 
+                <sc-if value="{{ lpane.media }}" hint-placeholder-val="{{ false }}">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+                      <span style="color:var(--c-warning);font-size:.86em;flex:1;min-width:240px">Tips: 可在首頁設定輪播展示Video影音、360°產品、720°實景、3D模型等多媒體資訊。<b>(最多顯示前 5 則)</b></span>
+                      <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="70px,32px">＋ 新增</x-import>
+                    </div>
+                    <div style="box-shadow:var(--shadow-hairline);border-radius:var(--radius-sm);padding:12px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+                      <span style="color:var(--text-muted);cursor:grab;padding-top:2px">≡</span>
+                      <div style="width:168px;height:94px;background:var(--surface-subtle);display:flex;align-items:center;justify-content:center;font-size:.86em;color:var(--text-muted);flex:0 0 168px">沿用英文影片</div>
+                      <div style="flex:1;min-width:200px;font-size:.92em;line-height:1.8">
+                        <div><span style="display:inline-block;width:48px;color:var(--text-muted)">標題：</span><span style="color:var(--text-muted)">未填寫</span></div>
+                        <div><span style="display:inline-block;width:48px;color:var(--text-muted)">類型：</span>Video</div>
+                        <div><span style="display:inline-block;width:48px;color:var(--text-muted)">連結：</span>https://www.youtube.com/watch?v=Yiqp7WM-LbI</div>
+                        <div style="margin-top:6px;background:var(--surface-subtle);border-radius:var(--radius-sm);padding:7px 11px;font-size:.93em;color:var(--text-muted)">未填寫將沿用英文內容：<b style="color:var(--text-body)">多媒體輪播</b></div>
+                      </div>
+                      <div style="display:flex;gap:7px;align-self:flex-end">
+                        <button type="button" style="width:28px;height:28px;border-radius:50%;background:var(--surface-subtle);border:none;color:var(--text-body);cursor:pointer">✎</button>
+                        <button type="button" style="width:28px;height:28px;border-radius:50%;background:var(--surface-subtle);border:none;color:var(--text-body);cursor:pointer">🗑</button>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+
                 <sc-if value="{{ lpane.auto }}" hint-placeholder-val="{{ false }}">
                   <div style="background:var(--surface-subtle);border-radius:var(--radius-sm);padding:13px 16px;font-size:.92em;line-height:1.75">{{ lautoBody }}</div>
                 </sc-if>
@@ -875,8 +924,8 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
 
             <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px">
               <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" hint-size="90px,40px">預覽前台</x-import>
-              <x-import component-from-global-scope="{{ ns }}.Button" variant="solid" onClick="{{ goDone }}" hint-size="70px,40px">發布</x-import>
-              <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" onClick="{{ goEntry }}" hint-size="120px,40px">‹ 回建站引導</x-import>
+              <button type="button" onClick="{{ goDone }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--action-default);color:#fff;box-shadow:none;">發布</button>
+              <button type="button" onClick="{{ goEntry }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--surface-card);color:var(--text-body);box-shadow:var(--shadow-outline);">‹ 回建站引導</button>
             </div>
           </div>
         </sc-if>
@@ -900,8 +949,8 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
 
             <div style="margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
               <x-import component-from-global-scope="{{ ns }}.Button" variant="solid" hint-size="100px,40px">檢視前台</x-import>
-              <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" onClick="{{ goS2 }}" hint-size="120px,40px">繼續編輯首頁</x-import>
-              <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" onClick="{{ goEntry }}" hint-size="120px,40px">‹ 回建站引導</x-import>
+              <button type="button" onClick="{{ goS2 }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--surface-card);color:var(--text-body);box-shadow:var(--shadow-outline);">繼續編輯首頁</button>
+              <button type="button" onClick="{{ goEntry }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--surface-card);color:var(--text-body);box-shadow:var(--shadow-outline);">‹ 回建站引導</button>
             </div>
           </div>
         </sc-if>
@@ -921,15 +970,15 @@ const SCHEMA = 'assets/schema/';
 const BLOCK_DEFS = [
   { key:'header', name:'頁首', sub:'自動帶入公司名稱與 Logo', state:'quiet', fixed:true, on:true, icon:'header.svg',
     desc:'頁首會顯示貴公司名稱與企業網 Logo，版面為系統固定，不提供樣式選擇。' },
-  { key:'hero', name:'大圖輪播', sub:'形象大圖 · 1 筆（系統示意圖）', state:'empty', on:true, icon:'big-banner.svg',
+  { key:'hero', name:'大圖輪播', sub:'形象大圖 · 1 筆（系統示意圖）', state:'quiet', on:true, icon:'big-banner.svg',
     desc:'選擇您想要的形象 / 廣告大圖輪播模式，可上傳或選擇大尺寸圖片在首頁曝光。' },
   { key:'news', name:'公司新聞', sub:'單列最多 6 則 · 自動帶入', state:'quiet', on:false, icon:'news.svg',
     desc:'顯示公司最新新聞條列。新增更多公司新聞，請至「內容管理 > 公司新聞設定」管理。' },
   { key:'about', name:'關於我們', sub:'簡介文案搭配圖片與影片', state:'quiet', on:true, icon:'about-us.svg',
     desc:'在首頁呈現您的公司簡介資訊或是「公司資料設定」中的固定重點資訊欄位。' },
-  { key:'subscribe', name:'聯繫與訂閱', sub:'系統固定區塊', state:'quiet', on:false, icon:'ad-banner.svg',
+  { key:'subscribe', name:'聯繫與訂閱', sub:'系統固定區塊', state:'quiet', on:false, icon:'contact-us.svg',
     desc:'您可於首頁插入「聯繫與訂閱」區塊，讓買主訂閱貴公司最新產品資訊。本區塊版面與欄位為系統固定，無需設定。' },
-  { key:'media', name:'多媒體輪播', sub:'尚未新增多媒體內容', state:'empty', on:false, icon:'media-carousel.svg',
+  { key:'media', name:'多媒體輪播', sub:'Video 影音 · 1 則', state:'quiet', on:false, icon:'media-carousel.svg',
     desc:'可在首頁設定輪播展示Video影音、360°產品、720°實景、3D模型等多媒體資訊。(最多顯示前 5 則)' },
   { key:'product', name:'產品展示', sub:'尚未選擇資料條件', state:'todo', on:true, icon:'product-queue-2.svg',
     desc:'設定顯示產品資料條件與樣式。您可將相關產品設定為「首頁產品推薦」，針對該產品的訂單紀錄、瀏覽紀錄以及貼標資訊等，推薦給買主最吸睛的產品。' },
@@ -937,9 +986,9 @@ const BLOCK_DEFS = [
     desc:'提供可插入圖文模板。圖文模板提供設計好的配置與樣式，讓您自由更換圖片、編輯文字、設定連結，更自由的設計您的首頁。' },
   { key:'cta2', name:'圖文模板', sub:'全欄圖文模板 · 行動呼籲（圖文分欄）', state:'empty', on:false, icon:'text-image.svg',
     desc:'提供可插入圖文模板。圖文模板提供設計好的配置與樣式，讓您自由更換圖片、編輯文字、設定連結，更自由的設計您的首頁。' },
-  { key:'stat', name:'圖文模板', sub:'全欄圖文模板 · 數據統計', state:'empty', on:false, icon:'ad-banner.svg',
+  { key:'stat', name:'圖文模板', sub:'全欄圖文模板 · 數據統計', state:'empty', on:false, icon:'stat-block.svg',
     desc:'提供可插入圖文模板。圖文模板提供設計好的配置與樣式，讓您自由更換圖片、編輯文字、設定連結，更自由的設計您的首頁。' },
-  { key:'contact', name:'聯絡我們表單', sub:'系統固定區塊 · 自動帶入聯絡資訊', state:'quiet', on:true, icon:'contact-us.svg',
+  { key:'contact', name:'聯絡我們表單', sub:'系統固定區塊 · 自動帶入聯絡資訊', state:'quiet', on:true, icon:'contact-form.svg',
     desc:'您可於首頁插入「聯絡我們」表單區塊，讓買主直接填寫詢問單與貴公司聯繫。本區塊版面與欄位為系統固定，無需設定。' },
   { key:'footer', name:'頁尾', sub:'系統固定區塊', state:'quiet', fixed:true, on:true, icon:'footer.svg',
     desc:'頁尾為系統固定區塊，顯示聯繫與訂閱、社群連結、企業網 QR Code 與台灣經貿網版權資訊，無需設定。' },
@@ -947,12 +996,12 @@ const BLOCK_DEFS = [
 
 const CONDS = {
   rec:{ name:'推薦產品 Recommendation', fb:'Recommendation', pick:false, desc:'個性化預測買主有興趣的商品，提高買主與網頁產品的互動率。' },
-  products:{ name:'公司產品 Products', fb:'Products', pick:false, desc:'依「更新時間」排序，顯示貴公司已上架的產品。' },
+  products:{ name:'公司產品 Products', fb:'Products', pick:false, sel:'更新時間', desc:'' },
   hot:{ name:'熱銷產品 Hot Sale', fb:'Hot Sale', pick:false, desc:'顯示銷售最多的產品，不足時，系統會以最新異動的線上銷售產品自動補足。' },
   popular:{ name:'人氣產品 Popular Products', fb:'Popular Products', pick:false, desc:'顯示點擊數最高的 24 項線上販售產品，不足時，系統會以最新異動的線上販售產品自動補足。' },
-  fresh:{ name:'新產品 New Products', fb:'New Products', pick:false, desc:'顯示會員最新的 24 則產品圖片（含品名）。設有「New Product」貼標的產品型錄優先，不足時，系統將以最新異動的產品自動補足。' },
-  featured:{ name:'焦點產品 Featured Products', fb:'Featured Products', pick:false, desc:'最多顯示 24 則設有「Featured」貼標的產品型錄；顯示順序依點閱次數、更新時間、3D模型、360°環物及 Video 影音等條件由多至少、由新到舊顯示。' },
-  collection:{ name:'自定義分類 Collection（ebook）', fb:'ebook', pick:false, desc:'顯示指定分類項下的 24 則產品，貼有「New Product」標籤的產品優先顯示，其它則依上架日期由新到舊排序。' },
+  fresh:{ name:'新產品 New Products', fb:'New Products', pick:false, desc:'「New Products」會顯示會員最新的 24 則產品圖片（含品名）。設有「New Product」貼標的產品型錄優先，不足時，系統將以最新異動的產品自動補足，惟仍不滿 24 則，右邊即留白。' },
+  featured:{ name:'焦點產品 Featured Products', fb:'Featured Products', pick:false, sel:'全部', desc:'最多顯示 24 則設有「Featured」貼標的產品型錄；顯示順序依點閱次數、更新時間、3D模型、360°環物及 Video 影音等條件由多至少、由新到舊顯示。' },
+  collection:{ name:'自定義分類 Collection', fb:'ebook', pick:false, sel:'ebook', desc:'顯示指定分類項下的 24 則產品，貼有「New Product」標籤的產品優先顯示，其它則依上架日期由新到舊排序。' },
   selection:{ name:'自選產品 Selection', fb:'Selected Products', pick:true, desc:'顯示自行挑選的產品，順序依自訂的排序來顯示。' },
 };
 
@@ -982,7 +1031,7 @@ const STYLE_SETS = {
   ],
   tpl:[
     { v:'full', label:'全欄圖文模板（全欄圖文模板區）', icon:'text-image.svg' },
-    { v:'tree', label:'分類樹搭配圖文模板（圖文模板區）', icon:'about-us-tree.svg', tree:true },
+    { v:'tree', label:'分類樹搭配圖文模板（圖文模板區）', icon:'text-image-tree.svg', tree:true },
   ],
 };
 
@@ -992,10 +1041,10 @@ const TPL_GRID = [
   { key:'s3', name:'Smart Block Style3', icon:'product-queue-2.svg' },
   { key:'s4', name:'Smart Block Style4', icon:'about-us-icon.svg' },
   { key:'s5', name:'Smart Block Style5', icon:'news.svg' },
-  { key:'cta1', name:'行動呼籲・橫幅式', icon:'ad-banner.svg', tag:'本次新增' },
+  { key:'cta1', name:'行動呼籲・橫幅式', icon:'cta-banner.svg', tag:'本次新增' },
   { key:'cta2', name:'行動呼籲・圖文分欄', icon:'text-image.svg', tag:'本次新增' },
-  { key:'stat', name:'數據統計', icon:'contact-us.svg', tag:'本次新增' },
-  { key:'mirror', name:'左右對調款', icon:'about-us.svg', tag:'本次新增' },
+  { key:'stat', name:'數據統計', icon:'stat-block.svg', tag:'本次新增' },
+  { key:'mirror', name:'左右對調款', icon:'text-image-mirror.svg', tag:'本次新增' },
   { key:'catalog', name:'產品型錄圖文模板', icon:'product-queue.svg', tag:'本次新增' },
 ];
 
@@ -1013,8 +1062,8 @@ const TPL_PREVIEW = {
 };
 
 const SYSTEM_PANES = {
-  subscribe:{ icon:'ad-banner.svg', note:'訂閱名單會直接進入「會員管理」，買主按下 Contact Us 時，將依貴公司於「公司資料設定」登錄的聯絡信箱發送。' },
-  contact:{ icon:'contact-us.svg', note:'買主送出的詢問單，會依貴公司於「公司資料設定」登錄的聯絡電話與收件信箱處理，並同步進入「商機管理」。已帶入公司聯絡電話 02-2123-4567。' },
+  subscribe:{ icon:'contact-us.svg', note:'本區塊版面與欄位為系統固定，無需設定。前台會顯示「Contact Us」按鈕與「Email Updates」訂閱欄位。' },
+  contact:{ icon:'contact-form.svg', note:'本區塊版面與欄位為系統固定，無需設定。前台會顯示詢問單表單，買主填寫後即可與貴公司聯繫。' },
   footer:{ icon:'footer.svg', note:'頁尾顯示聯繫與訂閱、社群連結、企業網 QR Code 與台灣經貿網版權資訊，各語系一致。' },
 };
 
@@ -1026,10 +1075,9 @@ const PANEL_QUIET = {
 
 const LAUTO = {
   news:{ t:'公司新聞', d:'本區塊的資料由系統自動帶入，無需在此填寫。', b:'公司新聞為自動條件，會自動撈取本語系已發布的新聞。新增更多多語公司新聞，請至「內容管理 > 公司新聞設定」管理。' },
-  subscribe:{ t:'聯繫與訂閱', d:'本區塊版面與欄位為系統固定，各語系一致，無需設定。', b:'買主訂閱後，名單會直接進入「會員管理」。' },
-  contact:{ t:'聯絡我們表單', d:'本區塊版面與欄位為系統固定，各語系一致，無需設定。', b:'買主送出的詢問單，會依貴公司於「公司資料設定」登錄的聯絡電話與收件信箱處理，並同步進入「商機管理」。' },
+  subscribe:{ t:'聯繫與訂閱', d:'本區塊版面與欄位為系統固定，各語系一致，無需設定。', b:'前台會顯示「Contact Us」按鈕與「Email Updates」訂閱欄位。' },
+  contact:{ t:'聯絡我們表單', d:'本區塊版面與欄位為系統固定，各語系一致，無需設定。', b:'前台會顯示詢問單表單，買主填寫後即可與貴公司聯繫。' },
   footer:{ t:'頁尾', d:'頁尾為系統固定區塊，各語系一致，無需設定。', b:'顯示聯繫與訂閱、社群連結、企業網 QR Code 與台灣經貿網版權資訊。' },
-  media:{ t:'多媒體輪播', d:'可在首頁設定輪播展示Video影音、360°產品、720°實景、3D模型等多媒體資訊。', b:'英文（母版）尚未新增多媒體內容，本語系亦無可沿用的內容。' },
 };
 
 class Component extends DCLogic {
@@ -1099,7 +1147,7 @@ class Component extends DCLogic {
 
   save() {
     const key = this.state.cur;
-    const subs = { header:'自動帶入公司名稱與 Logo', hero:'形象大圖 · 1 筆', media:'已新增多媒體內容' };
+    const subs = { header:'自動帶入公司名稱與 Logo', hero:'形象大圖 · 1 筆', media:'Video 影音 · 1 則' };
     this.setBlock(key, { state:'quiet', sub: subs[key] || this.blk(key).sub });
     this.setState({ savedFlash:true });
     clearTimeout(this._t);
@@ -1133,7 +1181,8 @@ class Component extends DCLogic {
   secObj(list, i) {
     const d = list[i];
     const blank = { num:'', title:'', note:'', open:false, toggle:()=>{},
-      numCss:{ display:'none' }, arrowCss:{ display:'none' }, noteCss:{ display:'none' } };
+      numCss:{ display:'none' }, arrowCss:{ display:'none' }, noteCss:{ display:'none' },
+      body:{ display:'block' } };
     if (!d) return blank;
     const single = list.length === 1;
     const open = single || this.state.openSec === i + 1;
@@ -1157,6 +1206,15 @@ class Component extends DCLogic {
         display: single ? 'none' : 'block', width:'8px', height:'8px', flex:'0 0 8px',
         borderRight:'2px solid var(--n-slate)', borderBottom:'2px solid var(--n-slate)',
         transform: open ? 'rotate(225deg)' : 'rotate(45deg)', marginTop: open ? '4px' : '-3px',
+        transition:'transform .3s cubic-bezier(.4,0,.2,1), margin-top .3s cubic-bezier(.4,0,.2,1)',
+      },
+      /* 展開收合動畫：grid-template-rows 0fr↔1fr 可對任意高度平滑過渡 */
+      body: {
+        display:'grid',
+        gridTemplateRows: open ? '1fr' : '0fr',
+        opacity: open ? 1 : 0,
+        pointerEvents: open ? 'auto' : 'none',
+        transition:'grid-template-rows .32s cubic-bezier(.4,0,.2,1), opacity .24s ease',
       },
     };
   }
@@ -1256,6 +1314,7 @@ class Component extends DCLogic {
 
     const conds = Object.keys(CONDS).map(k => ({
       name: CONDS[k].name, desc: CONDS[k].desc,
+      hasDesc: !!CONDS[k].desc, hasSel: !!CONDS[k].sel, sel: CONDS[k].sel || '',
       pick: () => this.pickCond(k),
       css: this.itemCss(s.cond === k, { alignItems:'flex-start', padding:'11px 12px' }),
       radio: this.radioCss(s.cond === k),
@@ -1296,7 +1355,7 @@ class Component extends DCLogic {
     else if (cur === 'news') secList = [
       { title:'顯示樣式', hint:'新聞在首頁的排列方式', summary:'已選：' + cut(styleLabel), done:true },
       { title:'資料條件', hint:'新聞由系統依條件自動撈取', summary:'按鈕資料更新：每次一排', done:true },
-      { title:'內容', hint:'自動帶入，無需在此填寫', summary:'系統自動帶入 8 則新聞' },
+      { title:'內容', hint:'自動帶入，無需在此填寫', summary:'系統自動帶入' },
     ];
     else if (cur === 'product') secList = [
       { title:'顯示樣式', hint:'產品在首頁的排列方式', summary:'已選：' + cut(styleLabel), done:true },
@@ -1307,9 +1366,8 @@ class Component extends DCLogic {
         summary: condInfo ? (condInfo.pick ? '已挑選 3 筆產品' : '系統自動帶入') : '請先選擇資料條件', done: !!condInfo },
     ];
     else if (isTplBlock) secList = [
-      { title:'顯示樣式', hint:'選擇後，下方可選的範本會跟著調整', summary:'已選：' + cut(styleLabel), done:true },
-      { title:'選擇範本', hint:'決定這一區的圖文配置', summary:'已選：' + tplName, done:true },
-      { title:'內容', hint:'依上方選擇的範本填寫圖片與文字', summary:'範本自帶示意圖文' },
+      { title:'顯示樣式', hint:'選擇後，下方的內容欄位會跟著調整', summary:'已選：' + cut(styleLabel), done:true },
+      { title:'內容', hint:'點「＋ 新增」可挑選範本並編輯圖文', summary:'範本自帶示意圖文（' + tplName + '）' },
     ];
     const sec1 = this.secObj(secList, 0);
     const sec2 = this.secObj(secList, 1);
@@ -1317,7 +1375,7 @@ class Component extends DCLogic {
     const langBlockKeys = visible.map(b => b.key);
     const lcur = langBlockKeys.indexOf(s.lcur) >= 0 ? s.lcur : 'header';
     const langSubs = { header:'已填寫', hero:'未填寫，沿用英文', about:'未填寫，沿用英文', product:'未填寫，沿用英文',
-      news:'自動帶入', subscribe:'系統固定', media:'英文尚無內容', contact:'系統固定', footer:'系統固定',
+      news:'自動帶入', subscribe:'系統固定', media:'未填寫，沿用英文', contact:'系統固定', footer:'系統固定',
       cta1:'未填寫，沿用英文', cta2:'未填寫，沿用英文', stat:'未填寫，沿用英文' };
     const langBlocks = visible.map(b => {
       const d = this.def(b.key);
@@ -1329,8 +1387,9 @@ class Component extends DCLogic {
     });
     const lIsTpl = lcur === 'cta1' || lcur === 'cta2' || lcur === 'stat';
     const lAuto = LAUTO[lcur];
-    const lTitles = { header:'頁首', hero:'大圖輪播', about:'關於我們', product:'產品展示' };
+    const lTitles = { header:'頁首', hero:'大圖輪播', about:'關於我們', product:'產品展示', media:'多媒體輪播' };
     const lDescs = {
+      media:'可在首頁設定輪播展示Video影音、360°產品、720°實景、3D模型等多媒體資訊。(最多顯示前 5 則) 本頁僅需設定本語系要顯示的多媒體內容。',
       header:'頁首的網站名稱與 Logo 需要各語系分別設定。',
       hero:'顯示樣式為「' + STYLE_SETS.hero.find(o => o.v === s.styles.hero).label + '」（由英文母版設定）。本頁僅需替換各語系要顯示的圖片與標題文字。',
       about:'顯示樣式為「' + STYLE_SETS.about.find(o => o.v === s.styles.about).label + '」（由英文母版設定）。本頁僅需填寫本語系的內容。',
@@ -1376,6 +1435,10 @@ class Component extends DCLogic {
       paneSavable: !isSystem,
       sec1, sec2, sec3,
       sec1Open: sec1.open, sec2Open: sec2.open, sec3Open: sec3.open,
+      secBody1: sec1.body, secBody2: sec2.body, secBody3: sec3.body,
+      secInner: { overflow:'hidden', minHeight:0 },
+      /* 內層留白：卡片邊框是 box-shadow 畫的，繪製於元素外側，沒有留白會被 overflow:hidden 裁掉 */
+      secPad: { padding:'6px' },
       goSec3: () => this.setState({ openSec:3 }),
       pane: {
         header: cur === 'header', hero: cur === 'hero', about: cur === 'about', product: cur === 'product',
@@ -1383,6 +1446,7 @@ class Component extends DCLogic {
       },
       hasStyles: !!styleGroup,
       styleOpts,
+      showTplGrid: isTplBlock,
       showTreeWarn: !!styleGroup && STYLE_SETS[styleGroup].some(o => o.tree),
       aboutIsAuto: s.styles.about === 'fixed',
       aboutIsForm: s.styles.about !== 'fixed',
@@ -1414,7 +1478,7 @@ class Component extends DCLogic {
       lpaneHint: lAuto ? '自動帶入' : s.lang,
       lpane: {
         header: lcur === 'header', hero: lcur === 'hero', about: lcur === 'about',
-        product: lcur === 'product', tpl: lIsTpl, auto: !!lAuto,
+        product: lcur === 'product', media: lcur === 'media', tpl: lIsTpl, auto: !!lAuto,
       },
       lpaneSavable: !lAuto,
       lautoBody: lAuto ? lAuto.b : '',
