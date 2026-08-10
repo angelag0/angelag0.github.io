@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>企業網 建站引導－操作流程原型</title>
+<style>
+:root{
+  --ink:#2b2f33;
+  --ink-soft:#5f676e;
+  --ink-mute:#8c949b;
+  --line:#ccd2d8;
+  --line-2:#e2e6ea;
+  --line-strong:#98a2ab;
+  --bg:#e9ecef;
+  --panel:#ffffff;
+  --fill:#d3d9de;
+  --fill-2:#e8ebee;
+  --fill-3:#f4f6f7;
+  --accent:#46596b;
+  --accent-soft:#eef1f4;
+  --warn:#9c3b3b;
+  --todo:#a8642a;
+  --todo-bg:#faf1e6;
+  --todo-line:#dcbb96;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  font-size:14px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;font-size:inherit;color:inherit;}
+
+/* ============ 展示列（切換畫面用） ============ */
+.deck{
+  position:fixed;top:0;left:0;right:0;height:54px;z-index:50;
+  background:var(--accent);color:#fff;
+  display:flex;align-items:center;gap:24px;padding:0 20px;
+  box-shadow:0 2px 6px rgba(0,0,0,.18);
+}
+.deck-title{font-size:15px;font-weight:700;letter-spacing:.06em;white-space:nowrap;}
+.deck-title span{font-weight:400;opacity:.75;margin-left:10px;font-size:13px;letter-spacing:0;}
+.deck-nav{display:flex;gap:6px;flex-wrap:nowrap;}
+.chip{
+  background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;
+  border-radius:16px;padding:5px 15px;font-size:13px;white-space:nowrap;
+  transition:background .15s,border-color .15s;
+}
+.chip:hover{background:rgba(255,255,255,.14);}
+.chip.on{background:#fff;color:var(--accent);border-color:#fff;font-weight:700;}
+
+/* ============ 後台外框 ============ */
+.stage{padding:54px 0 40px;}
+.topstrip{
+  background:#3f464c;height:34px;display:flex;align-items:center;justify-content:flex-end;
+  gap:18px;padding:0 22px;color:#cfd5da;font-size:12px;
+}
+.app{max-width:1340px;margin:0 auto;background:var(--panel);border:1px solid var(--line);}
+.body{display:flex;align-items:stretch;min-height:760px;}
+
+/* 左側選單 */
+.side{width:190px;flex:0 0 190px;background:#f7f8f9;border-right:1px solid var(--line);padding-bottom:30px;}
+.brand{height:60px;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid var(--line-2);}
+.brand-mark{
+  border:1px solid var(--line-strong);border-radius:3px;padding:3px 8px;
+  font-size:12px;letter-spacing:.04em;color:var(--ink-soft);
+}
+.side-item{padding:10px 16px;font-size:13px;color:var(--ink-soft);border-bottom:1px solid var(--line-2);}
+.side-item.cur{background:#e7ebee;color:var(--ink);font-weight:700;}
+.side-sub{padding:7px 16px 7px 28px;font-size:12.5px;color:var(--ink-soft);}
+.side-sub.cur{background:#dfe4e8;color:var(--ink);font-weight:700;border-left:3px solid var(--accent);padding-left:25px;}
+
+/* 主內容 */
+.main{flex:1;min-width:0;background:#fbfcfc;}
+.pagehead{
+  background:#5a656e;color:#fff;padding:11px 22px;display:flex;align-items:center;justify-content:space-between;
+}
+.pagehead h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.04em;}
+.crumb{font-size:12px;color:#dfe4e8;}
+.content{padding:22px;}
+.screen{display:none;}
+.screen.on{display:block;}
+
+/* ============ 通用元件 ============ */
+.note{
+  background:#fbfaf3;border:1px solid #e6e2cf;padding:12px 16px;color:var(--ink-soft);
+  font-size:13px;margin-bottom:18px;
+}
+.tips{color:#4a6d86;font-size:12.5px;margin:8px 0 0;}
+.redtip{color:var(--warn);font-size:12.5px;line-height:1.55;margin:8px 0 0;}
+.pinktip{color:#98607a;font-size:12.5px;margin:4px 0 0;}
+.desc{background:#eef1f3;border:1px solid var(--line-2);padding:11px 15px;color:var(--ink-soft);font-size:13px;}
+.muted{color:var(--ink-mute);}
+
+.btn{
+  background:#fff;border:1px solid var(--line-strong);border-radius:3px;padding:6px 14px;
+  font-size:13px;color:var(--ink-soft);white-space:nowrap;
+}
+.btn:hover{background:#f2f4f6;}
+.btn-main{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700;}
+.btn-main:hover{background:#3a4a59;}
+.btn-sm{padding:4px 11px;font-size:12.5px;}
+.btn-xs{padding:2px 9px;font-size:12px;}
+.i-mark{
+  display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
+  border-radius:50%;border:1px solid var(--line-strong);color:var(--ink-mute);
+  font-size:12px;font-style:italic;font-weight:700;flex:0 0 22px;
+}
+
+/* 卡片式總覽 */
+.cardlist{border:1px solid var(--line);background:#fff;}
+.card{display:flex;align-items:center;gap:16px;padding:16px 18px;border-bottom:1px solid var(--line-2);}
+.card:last-child{border-bottom:none;}
+.card-main{flex:1;min-width:0;}
+.card h3{margin:0 0 3px;font-size:15px;font-weight:700;}
+.card-meta{font-size:13px;color:var(--ink-soft);}
+.card-act{display:flex;align-items:center;gap:8px;}
+.card.hi{background:#f4f7f9;border-left:3px solid var(--accent);padding-left:15px;}
+.card.stack{display:block;}
+.card .toprow{display:flex;align-items:center;gap:16px;}
+.card .subrow{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  margin-top:14px;padding-top:13px;border-top:1px dashed var(--line);
+}
+.card .subrow .lb{font-size:13px;font-weight:700;}
+.qr{width:52px;height:52px;background:
+  repeating-linear-gradient(90deg,#5f676e 0 4px,#fff 4px 8px),
+  repeating-linear-gradient(0deg,#5f676e 0 4px,transparent 4px 8px);
+  border:3px solid #fff;outline:1px solid var(--line);}
+.warnline{
+  margin-top:11px;border:1px solid #ddbdbd;background:#fbf4f4;color:var(--warn);
+  padding:8px 13px;font-size:12.5px;line-height:1.55;
+}
+
+/* 步驟指示器 */
+.steps{display:flex;align-items:flex-start;padding:6px 0 18px;position:relative;}
+.step{flex:1;text-align:center;position:relative;background:none;border:none;padding:0;}
+.step .dot{
+  width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--line-strong);
+  margin:0 auto 8px;position:relative;z-index:2;
+}
+.step .rail{position:absolute;top:9px;left:50%;width:100%;height:4px;background:var(--line);z-index:1;}
+.step:last-child .rail{display:none;}
+.step .lb{font-size:13px;color:var(--ink-mute);}
+.step .lb b{font-size:20px;font-weight:700;margin-right:4px;vertical-align:-1px;}
+.step.on .dot{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 3px #fff inset;}
+.step.on .lb{color:var(--ink);font-weight:700;}
+.step.done .dot{border-color:var(--accent);}
+.step.done .lb{color:var(--ink-soft);}
+
+.actbar{display:flex;justify-content:flex-end;gap:8px;padding:0 0 14px;}
+.actbar.bottom{padding:18px 0 0;border-top:1px solid var(--line-2);margin-top:18px;}
+
+/* 表單列 */
+.frow{display:flex;gap:18px;padding:18px 0;border-bottom:1px dashed var(--line);}
+.frow:last-child{border-bottom:none;}
+.flabel{width:110px;flex:0 0 110px;text-align:right;font-size:14px;font-weight:700;padding-top:4px;}
+.flabel .req{color:var(--warn);margin-right:2px;}
+.fbody{flex:1;min-width:0;}
+
+/* 單選 */
+.radio{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;border:2px solid var(--line-strong);background:#fff;flex:0 0 16px;
+}
+.radio.on{border-color:var(--accent);}
+.radio.on::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);}
+.check{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border:2px solid var(--line-strong);background:#fff;flex:0 0 16px;
+  font-size:12px;color:#fff;line-height:1;
+}
+.check.on{border-color:var(--accent);background:var(--accent);}
+.opt-inline{display:inline-flex;align-items:center;gap:7px;margin-right:26px;font-size:14px;}
+
+/* 大型單選卡 */
+.pickcards{display:flex;gap:18px;flex-wrap:wrap;}
+.pick{
+  border:1px solid var(--line);background:#fff;padding:14px;width:300px;display:flex;gap:10px;align-items:flex-start;
+  text-align:left;
+}
+.pick.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;background:#fafbfc;}
+.pick .pk-txt{font-size:13px;color:var(--ink-soft);line-height:1.55;}
+.pick .pk-txt b{color:var(--ink);font-size:14px;display:block;margin-bottom:4px;}
+.pick .badge-new{
+  display:inline-block;background:var(--accent);color:#fff;font-size:11px;
+  padding:0 7px;border-radius:2px;margin-left:6px;vertical-align:1px;font-weight:400;
+}
+
+/* 樣式選項（含縮圖） */
+.styleopts{display:grid;grid-template-columns:1fr 1fr;gap:14px 22px;}
+.sopt{display:flex;gap:10px;align-items:flex-start;border:1px solid transparent;padding:8px;text-align:left;background:none;width:100%;}
+.sopt:hover{border-color:var(--line-2);background:#fafbfc;}
+.sopt.on{border-color:var(--accent);background:#fafbfc;}
+.sopt .so-body{flex:1;min-width:0;}
+.sopt .so-lb{font-size:13px;color:var(--ink-soft);margin-bottom:6px;line-height:1.5;}
+
+/* 線框縮圖零件 */
+.thumb{background:#fff;border:1px solid var(--line);padding:6px;}
+.ph{background:var(--fill);display:block;}
+.ph-d{background:#9aa4ad;}
+.ln{height:3px;background:var(--fill);border-radius:2px;margin:3px 0;display:block;}
+.ln.s{width:60%;}
+.ln.m{width:80%;}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}
+.row4{display:flex;gap:4px;align-items:stretch;}
+.sq{aspect-ratio:1/1;}
+.tree{width:26px;flex:0 0 26px;background:repeating-linear-gradient(0deg,var(--fill) 0 3px,#fff 3px 8px);border:1px solid var(--line-2);}
+.arrowbox{display:flex;align-items:center;color:var(--ink-mute);font-size:12px;padding:0 2px;}
+.dots{display:flex;gap:4px;justify-content:center;margin-top:5px;}
+.dots i{width:5px;height:5px;border-radius:50%;background:var(--fill);display:block;}
+.dots i:first-child{background:#9aa4ad;}
+
+/* ============ 步驟 2 工作列 ============ */
+.workbar{
+  display:flex;align-items:center;gap:14px;background:#eef1f4;border:1px solid var(--line);
+  padding:11px 16px;margin-bottom:14px;font-size:13px;flex-wrap:wrap;
+}
+.workbar .who{font-size:14px;font-weight:700;}
+.workbar .sep{width:1px;height:18px;background:var(--line-strong);}
+.workbar .spacer{flex:1;}
+.counter{
+  display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--todo-line);
+  color:var(--todo);padding:4px 12px;border-radius:14px;font-size:13px;font-weight:700;
+}
+.counter.clear{border-color:var(--line-strong);color:var(--ink-soft);}
+.counter em{font-style:normal;font-size:15px;}
+
+/* 狀態標籤 */
+.badge{
+  display:inline-block;font-size:11.5px;line-height:1.7;padding:0 8px;border-radius:2px;
+  border:1px solid;white-space:nowrap;
+}
+.badge.todo{color:var(--todo);border-color:var(--todo-line);background:var(--todo-bg);font-weight:700;}
+.badge.empty{color:var(--ink-soft);border-color:var(--line-strong);background:#fff;border-style:dashed;}
+.badge.quiet{color:var(--ink-mute);border-color:transparent;background:none;padding:0;}
+.badge.auto{color:var(--ink-mute);border-color:var(--line-2);background:#f6f7f8;}
+
+/* ============ 步驟 2 版面 ============ */
+.two{display:flex;gap:18px;align-items:flex-start;}
+.blocklist{width:308px;flex:0 0 308px;}
+.blocklist .lsthead{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:12.5px;color:var(--ink-mute);padding:0 2px 7px;
+}
+.blk{
+  border:1px solid var(--line);background:#fff;padding:8px 9px 8px 26px;position:relative;
+  text-align:left;width:100%;display:flex;gap:9px;align-items:center;cursor:pointer;
+}
+.blk + .blk{margin-top:0;}
+.blk:hover{border-color:var(--line-strong);}
+.blk.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;background:#fafbfc;}
+.blk.on::after{
+  content:"";position:absolute;right:-9px;top:50%;margin-top:-8px;
+  border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:9px solid var(--accent);
+}
+.blk.fixed{background:#f2f4f5;}
+.blk .handle{position:absolute;left:7px;top:50%;margin-top:-8px;color:var(--ink-mute);font-size:13px;line-height:1;}
+.blk.fixed .handle{color:#c3c9ce;}
+.blk .mini{width:52px;flex:0 0 52px;border:1px solid var(--line-2);background:#fff;padding:3px;}
+.blk .nm{flex:1;min-width:0;}
+.blk .nm b{display:block;font-size:13.5px;font-weight:700;}
+.blk .nm span{display:block;font-size:12px;color:var(--ink-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.blk .st{flex:0 0 auto;display:flex;align-items:center;gap:5px;}
+.blk .trash{
+  width:20px;height:20px;border-radius:50%;background:#eceff1;color:#6b747c;
+  font-size:11px;line-height:20px;text-align:center;flex:0 0 20px;
+}
+.blk .trash:hover{background:#dde2e6;}
+.plus{display:flex;align-items:center;justify-content:center;height:20px;position:relative;}
+.plus::before{content:"";position:absolute;left:0;right:24px;top:50%;height:1px;background:var(--line-2);}
+.plus span{
+  width:19px;height:19px;border-radius:50%;border:1px solid var(--line-strong);background:#fff;
+  color:var(--ink-mute);font-size:13px;line-height:16px;text-align:center;position:absolute;right:0;cursor:pointer;
+}
+.plus span:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+.addblk{
+  width:100%;border:1px dashed var(--line-strong);background:#fff;color:var(--ink-soft);
+  padding:9px;font-size:13px;margin-top:8px;
+}
+.addblk:hover{background:#f2f4f6;}
+
+/* 右側面板 */
+.panel{flex:1;min-width:0;border:1px solid var(--line);background:#fff;padding:0 18px 18px;position:relative;}
+.paneltitle{
+  display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line-strong);border-top:none;
+  padding:7px 18px;font-size:15px;font-weight:700;background:#fff;
+}
+.panelhead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;}
+.panelstate{font-size:12.5px;color:var(--ink-mute);padding-top:10px;display:flex;align-items:center;gap:6px;}
+.pane,.lpane{display:none;}
+.pane.on,.lpane.on{display:block;}
+.pubtip{
+  display:none;align-items:center;gap:10px;background:#eef4ee;border:1px solid #b9d0bd;color:#3d6b4a;
+  padding:9px 14px;font-size:13px;margin-bottom:14px;
+}
+.pubtip.on{display:flex;}
+.pubtip .spacer{flex:1;}
+.sechead{
+  display:flex;align-items:baseline;gap:10px;margin:20px 0 11px;padding-bottom:7px;border-bottom:1px solid var(--line);
+}
+.sechead .no{
+  display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;
+  background:var(--accent);color:#fff;font-size:12px;font-weight:700;flex:0 0 20px;
+}
+.sechead h4{margin:0;font-size:14px;font-weight:700;}
+.sechead .sub{font-size:12.5px;color:var(--ink-mute);flex:1;}
+.split{border-top:2px dashed var(--line);margin:22px 0 0;}
+.savewrap{text-align:center;margin-top:22px;padding-top:16px;border-top:1px solid var(--line-2);}
+.dyn{animation:flash .5s ease-out;}
+@keyframes flash{
+  0%{background:#fff7e8;}
+  100%{background:transparent;}
+}
+.hint-arrow{
+  display:inline-block;color:var(--accent);font-size:12.5px;background:#eef1f4;
+  border:1px dashed var(--accent);padding:2px 10px;margin-left:8px;
+}
+
+/* 自動帶入說明框 */
+.autobox{
+  border:1px solid var(--line-2);background:#f6f8f9;padding:13px 16px;font-size:13px;color:var(--ink-soft);
+  display:flex;gap:14px;align-items:flex-start;
+}
+.autobox .ic{
+  width:26px;height:26px;border-radius:50%;background:#dfe4e8;color:var(--ink-soft);
+  display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 26px;
+}
+.autobox .ab-body{flex:1;min-width:0;}
+.autobox b{color:var(--ink);}
+.linkrow{display:flex;align-items:center;gap:9px;margin-top:9px;flex-wrap:wrap;}
+.okline{color:#3d6b4a;font-size:12.5px;margin-top:6px;}
+.badline{color:var(--todo);font-size:12.5px;margin-top:6px;}
+
+/* 欄位 */
+.field{display:flex;align-items:flex-start;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.field > label{font-size:13px;font-weight:700;width:96px;flex:0 0 96px;text-align:right;padding-top:6px;}
+.field > label .req{color:var(--warn);margin-right:2px;}
+.field .fv{flex:1;min-width:0;}
+.inp{
+  border:1px solid var(--line-strong);background:#fff;padding:6px 10px;font-size:13px;color:var(--ink);
+  border-radius:2px;min-width:240px;
+}
+.inp.wide{width:100%;max-width:520px;}
+.inp.mid{width:300px;}
+.inp[readonly]{background:#f4f6f7;color:var(--ink-soft);}
+.ta{
+  border:1px solid var(--line-strong);background:#fff;padding:8px 10px;font-size:13px;
+  border-radius:2px;width:100%;max-width:600px;min-height:96px;line-height:1.6;resize:vertical;
+}
+.cnt{text-align:right;max-width:600px;font-size:12px;color:var(--ink-mute);}
+.cnt b{color:var(--ink);}
+.sel{
+  border:1px solid var(--line-strong);background:#fff;padding:5px 26px 5px 10px;font-size:13px;border-radius:2px;
+  color:var(--ink);display:inline-block;position:relative;cursor:pointer;min-width:200px;text-align:left;
+}
+.sel::after{content:"▾";position:absolute;right:9px;top:4px;color:var(--ink-mute);}
+.sel.ph{color:var(--ink-mute);}
+.sel.wide{min-width:330px;}
+.selwrap{position:relative;display:inline-block;}
+.selmenu{
+  display:none;position:absolute;left:0;top:100%;z-index:30;background:#fff;border:1px solid var(--line-strong);
+  box-shadow:0 6px 16px rgba(0,0,0,.14);min-width:330px;max-height:330px;overflow:auto;
+}
+.selwrap.open .selmenu{display:block;}
+.selmenu button{
+  display:block;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid var(--line-2);
+  padding:8px 12px;font-size:13px;
+}
+.selmenu button:hover{background:var(--accent-soft);}
+.selmenu button small{display:block;color:var(--ink-mute);font-size:11.5px;line-height:1.45;}
+.selmenu button.on{background:var(--accent-soft);font-weight:700;}
+
+/* 上傳 */
+.uprow{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;}
+.upbox{
+  width:190px;height:104px;border:2px dashed var(--line-strong);background:var(--fill-3);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  color:var(--ink-mute);font-size:12.5px;text-align:center;padding:8px;
+}
+.upbox .big{font-size:20px;line-height:1;}
+.upbox .btns{display:flex;gap:6px;}
+.upfilled{width:150px;border:1px solid var(--line);background:#fff;padding:6px;position:relative;}
+.upfilled .img{height:76px;background:var(--fill);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;}
+.upfilled .x{
+  position:absolute;right:-8px;top:-8px;width:20px;height:20px;border-radius:50%;
+  background:#6b747c;color:#fff;font-size:12px;line-height:20px;text-align:center;
+}
+.upfilled .cap{font-size:12px;color:var(--ink-mute);padding-top:5px;}
+
+/* 項目列表（大圖輪播／多媒體／圖文模板） */
+.itemlist{border:1px solid var(--line-2);}
+.item{display:flex;gap:14px;align-items:flex-start;padding:12px;border-bottom:1px solid var(--line-2);position:relative;}
+.item:last-child{border-bottom:none;}
+.item .handle{color:var(--ink-mute);font-size:14px;padding-top:2px;cursor:grab;}
+.item .thumbimg{
+  width:168px;flex:0 0 168px;height:94px;background:var(--fill);border:1px solid var(--line-2);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;position:relative;
+}
+.item .thumbimg.dark{background:#9aa4ad;}
+.item .meta{flex:1;min-width:0;font-size:13px;color:var(--ink-soft);}
+.item .meta div{margin-bottom:5px;}
+.item .meta .k{display:inline-block;width:44px;color:var(--ink-mute);}
+.item .meta b{color:var(--ink);}
+.item .acts{display:flex;gap:7px;align-self:flex-end;}
+.iconbtn{
+  width:28px;height:28px;border-radius:50%;background:#eceff1;border:none;color:#5f676e;
+  font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;
+}
+.iconbtn:hover{background:var(--accent);color:#fff;}
+.listhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:12px;}
+.listhead .lh-t{font-size:13px;color:var(--ink-soft);}
+.emptybox{
+  border:1px dashed var(--line-strong);background:var(--fill-3);padding:26px;text-align:center;
+  color:var(--ink-mute);font-size:13px;
+}
+
+/* 自選產品 */
+.picked{display:flex;gap:10px;flex-wrap:wrap;}
+.prod{width:120px;border:1px solid var(--line);background:#fff;padding:6px;position:relative;}
+.prod .img{height:76px;background:var(--fill);}
+.prod .nm{margin-top:6px;font-size:12px;line-height:1.4;color:var(--ink-soft);height:34px;overflow:hidden;}
+.prod .ord{
+  position:absolute;left:5px;top:5px;background:#6b747c;color:#fff;font-size:11px;
+  width:18px;height:18px;border-radius:2px;text-align:center;line-height:18px;
+}
+.prod .del{
+  position:absolute;right:4px;bottom:4px;width:20px;height:20px;border-radius:50%;background:#eceff1;
+  color:#6b747c;font-size:11px;line-height:20px;text-align:center;border:none;
+}
+.prod.add{
+  border-style:dashed;border-color:var(--line-strong);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;color:var(--ink-mute);font-size:12.5px;gap:4px;min-height:124px;
+}
+
+/* WYSIWYG */
+.wy{border:1px solid var(--line);background:#fff;}
+.wybar{display:flex;flex-wrap:wrap;gap:5px;padding:7px 9px;border-bottom:1px solid var(--line-2);background:#f6f7f8;}
+.wybar b{
+  width:24px;height:22px;border:1px solid var(--line-2);background:#fff;border-radius:2px;
+  font-size:12px;font-weight:400;color:var(--ink-mute);display:flex;align-items:center;justify-content:center;
+}
+.wybody{display:flex;gap:12px;padding:12px;}
+.wycanvas{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px;}
+.smart{display:flex;gap:10px;border:1px dashed var(--line);padding:8px;}
+.smart .img{width:120px;flex:0 0 120px;height:74px;background:var(--fill);}
+.smart .tx{flex:1;min-width:0;}
+.smart .lk{display:inline-block;margin-top:6px;border:1px solid var(--line-strong);color:var(--ink-mute);font-size:11.5px;padding:2px 10px;}
+.wylist{width:132px;flex:0 0 132px;border-left:1px solid var(--line-2);padding-left:10px;}
+.wylist .sticky{position:sticky;top:12px;}
+.wylist .lh{font-size:12px;color:var(--ink-mute);margin-bottom:7px;}
+.wylist .it{border:1px solid var(--line-2);padding:5px;margin-bottom:7px;font-size:11.5px;color:var(--ink-soft);text-align:center;cursor:pointer;}
+.wylist .it.on{border-color:var(--accent);color:var(--ink);background:#fafbfc;font-weight:700;}
+.wylist .it .mini{height:26px;background:var(--fill);margin-bottom:4px;}
+
+/* 範本清單 */
+.tplgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.tpl{border:1px solid var(--line-2);background:#fff;padding:7px;text-align:center;font-size:12px;color:var(--ink-soft);}
+.tpl:hover{border-color:var(--line-strong);}
+.tpl.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;color:var(--ink);font-weight:700;}
+.tpl .box{height:56px;background:var(--fill-3);border:1px solid var(--line-2);margin-bottom:6px;padding:5px;}
+.tpl .new{color:var(--accent);font-size:11px;}
+
+/* 唯讀清單（其他語系） */
+.blk.ro{cursor:pointer;padding-left:10px;}
+.blk.ro .handle{display:none;}
+.lockline{
+  display:flex;align-items:center;gap:8px;background:#f2f4f6;border:1px solid var(--line-2);
+  padding:8px 13px;font-size:12.5px;color:var(--ink-soft);margin-bottom:10px;
+}
+.fallback{
+  border:1px solid var(--line-2);background:#f8f9fa;padding:7px 11px;font-size:12.5px;color:var(--ink-mute);
+  margin-top:6px;
+}
+.fallback b{color:var(--ink-soft);}
+
+/* 對話框 */
+.mask{
+  position:fixed;inset:0;background:rgba(30,35,40,.5);display:none;align-items:center;justify-content:center;z-index:80;
+  padding:20px;
+}
+.mask.on{display:flex;}
+.dialog{background:#fff;width:560px;max-width:96vw;max-height:92vh;display:flex;flex-direction:column;
+  border:1px solid var(--line-strong);box-shadow:0 12px 30px rgba(0,0,0,.25);}
+.dialog.lg{width:940px;}
+.dialog .dh{padding:13px 20px;border-bottom:1px solid var(--line);font-size:15px;font-weight:700;display:flex;justify-content:space-between;align-items:center;}
+.dialog .dh .x{background:none;border:none;font-size:18px;color:var(--ink-mute);line-height:1;}
+.dialog .db{padding:18px 20px;font-size:13.5px;line-height:1.7;overflow:auto;}
+.dialog .df{padding:12px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px;background:#fafbfb;}
+.hide{display:none !important;}
+
+/* 區塊型錄（新增區塊燈箱） */
+.catgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.catitem{border:1px solid var(--line);background:#fff;padding:10px;text-align:left;font-size:13px;}
+.catitem:hover{border-color:var(--accent);background:#fafbfc;}
+.catitem .cbox{height:52px;background:var(--fill-3);border:1px solid var(--line-2);margin-bottom:7px;padding:5px;}
+.catitem b{display:block;font-size:13px;}
+.catitem small{color:var(--ink-mute);font-size:11.5px;line-height:1.45;display:block;}
+
+/* 完成 */
+.finish{text-align:center;padding:56px 20px;}
+.finish .big{
+  width:64px;height:64px;border-radius:50%;background:var(--accent);color:#fff;
+  font-size:30px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;
+}
+.finish h2{margin:0 0 8px;font-size:22px;}
+.finish p{margin:0 0 6px;color:var(--ink-soft);}
+.finish .btns{margin-top:26px;display:flex;gap:12px;justify-content:center;}
+.sumbox{
+  border:1px solid var(--line);background:#fff;max-width:620px;margin:26px auto 0;text-align:left;
+}
+.sumbox .sh{background:var(--accent-soft);padding:9px 16px;font-size:13.5px;font-weight:700;border-bottom:1px solid var(--line-2);}
+.sumbox .sr{display:flex;justify-content:space-between;padding:9px 16px;border-bottom:1px solid var(--line-2);font-size:13px;}
+.sumbox .sr:last-child{border-bottom:none;}
+.sumbox .sr span{color:var(--ink-soft);}
+
+/* 頁尾 */
+.foot{padding:22px;text-align:center;color:var(--ink-mute);font-size:12px;border-top:1px solid var(--line-2);background:#f7f8f9;}
+</style>
+</head>
+<body>
+
+<!-- ===== 展示切換列 ===== -->
+<div class="deck">
+  <div class="deck-title">企業網 建站引導<span>操作流程原型</span></div>
+  <nav class="deck-nav">
+    <button class="chip on" data-go="entry">建站引導首頁</button>
+    <button class="chip" data-go="s1">步驟 1　版型與色系</button>
+    <button class="chip" data-go="s2">步驟 2　版面與內容</button>
+    <button class="chip" data-go="lang">其他語系內容編輯</button>
+    <button class="chip" data-go="done">發布完成</button>
+  </nav>
+</div>
+
+<div class="stage">
+<div class="app">
+  <div class="topstrip"><span>Home</span><span>Hello, boan</span><span>TWD</span><span>Sign Out</span><span>購物車</span></div>
+  <div class="body">
+
+    <!-- 左側選單 -->
+    <aside class="side">
+      <div class="brand"><span class="brand-mark">taiwantrade</span></div>
+      <div class="side-item">My Taiwantrade</div>
+      <div class="side-item cur">企業網管理</div>
+      <div class="side-sub">公司資料設定</div>
+      <div class="side-sub">台灣經貿網Logo申請</div>
+      <div class="side-sub cur">建站引導</div>
+      <div class="side-item">內容管理</div>
+      <div class="side-item">銷貨管理</div>
+      <div class="side-item">商機管理</div>
+      <div class="side-item">會員管理</div>
+      <div class="side-item">購物車</div>
+      <div class="side-item">連結</div>
+    </aside>
+
+    <main class="main">
+
+      <!-- ============================================================
+           畫面一：建站引導首頁（入口）
+      ============================================================ -->
+      <section class="screen on" id="entry">
+        <div class="pagehead">
+          <h1>建站引導</h1>
+          <div class="crumb">企業網管理 ／ 建站引導</div>
+        </div>
+        <div class="content">
+          <div class="note">
+            開始建立您專屬的企業網！<br>
+            建站引導提供您步驟式的引導，讓您輕易設計自己想要的網站樣式。
+          </div>
+
+          <div class="cardlist">
+
+            <div class="card">
+              <div class="qr"></div>
+              <div class="card-main">
+                <h3>專屬網址</h3>
+                <div class="card-meta">https://hyweb.en.taiwantrade.com（預設）</div>
+              </div>
+              <div class="card-act">
+                <button class="btn">申請網址</button><span class="i-mark">i</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-main"><h3>會員年資標章</h3></div>
+              <div class="card-act">
+                <span class="opt-inline"><span class="radio on"></span>ON</span>
+                <span class="opt-inline"><span class="radio"></span>OFF</span>
+                <button class="btn">設定</button><span class="i-mark">i</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-main">
+                <h3>企業網多語設定</h3>
+                <div class="card-meta">已啟用語系：英文｜正體中文｜日文</div>
+                <div class="pinktip">語系啟用與停用可於日後自由調整，請放心設定。</div>
+              </div>
+              <div class="card-act">
+                <button class="btn">設定語系</button><span class="i-mark">i</span>
+              </div>
+            </div>
+
+            <!-- ★ 一卡雙區：整併「首頁(Home)配置」＋「首頁(Home)資料編輯」 -->
+            <div class="card hi stack">
+              <div class="toprow">
+                <div class="card-main">
+                  <h3>首頁(Home)設定</h3>
+                  <div class="card-meta">目前設定：設計款｜白色　·　尚未發布</div>
+                  <div class="pinktip">首頁(Home)設定可於日後自由調整，請放心設定。</div>
+                </div>
+                <div class="card-act">
+                  <button class="btn btn-main" data-go="s1">設定首頁（英文・版型與內容）</button>
+                  <span class="i-mark">i</span>
+                </div>
+              </div>
+              <div class="subrow">
+                <span class="lb">其他語系內容編輯</span>
+                <button class="btn btn-sm" data-go="lang">正體中文</button>
+                <button class="btn btn-sm" data-go="lang">日文</button>
+                <span class="muted" style="font-size:12.5px;">（僅顯示已啟用語系）</span>
+              </div>
+              <div class="warnline">
+                英文語系為唯一版型設定頁面，其他語系資料編輯仍需至各自語系進行。
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-main">
+                <h3>導覽列 / 網站選單（選填）</h3>
+                <div class="pinktip">導覽列可於日後再進行調整，請放心設定。</div>
+              </div>
+              <div class="card-act">
+                <button class="btn">設定導覽列</button><span class="i-mark">i</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-main">
+                <h3>產品型錄設定</h3>
+                <div class="card-meta">上架型錄數：英文(8)｜正體中文(7)｜日文(0)</div>
+              </div>
+              <div class="card-act">
+                <button class="btn">產品型錄設定</button><span class="i-mark">i</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-main">
+                <h3>收款及幣別（選填）</h3>
+                <div class="card-meta">已啟用收款模式：Paypal：TWD｜信用卡：USD</div>
+              </div>
+              <div class="card-act">
+                <button class="btn">收款設定</button><span class="i-mark">i</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-main">
+                <h3>線上商城(Online Shop)配置（選填）</h3>
+                <div class="pinktip">請注意，設定前需先開通金流，並選用多頁式版型。</div>
+              </div>
+              <div class="card-act">
+                <button class="btn">線上商城(Online Shop)設定</button><span class="i-mark">i</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           畫面二：步驟 1　版型與風格
+      ============================================================ -->
+      <section class="screen" id="s1">
+        <div class="pagehead">
+          <h1>首頁(Home)設定</h1>
+          <div class="crumb">企業網管理 ／ 建站引導 ／ 首頁(Home)設定</div>
+        </div>
+        <div class="content">
+
+          <div class="actbar">
+            <button class="btn btn-main" data-go="s2">儲存，前往版面與內容</button>
+            <button class="btn" data-go="entry">‹ 回建站引導</button>
+          </div>
+
+          <div class="steps">
+            <button class="step on" data-go="s1">
+              <div class="rail"></div><div class="dot"></div>
+              <div class="lb"><b>1</b>版型與色系</div>
+            </button>
+            <button class="step" data-go="s2">
+              <div class="dot"></div>
+              <div class="lb"><b>2</b>版面與內容</div>
+            </button>
+          </div>
+
+          <div class="workbar">
+            <span class="who">語系：英文（母版）</span>
+            <span class="sep"></span>
+            <span class="muted">版型與樣式為各語系共用，於英文語系設定一次即可</span>
+          </div>
+
+          <div class="frow">
+            <div class="flabel"><span class="req">*</span>選擇版型</div>
+            <div class="fbody">
+              <div class="pickcards">
+
+                <button class="pick on" data-pick="tpl" data-v="new">
+                  <span class="radio on"></span>
+                  <span class="pk-txt">
+                    <b>設計款<span class="badge-new">本次新增</span></b>
+                    以白色為基調的簡潔版型，搭配全新的頁首、頁尾與行動呼籲、數據統計等圖文區塊，適合希望以形象與內容並重呈現的供應商。
+                  </span>
+                </button>
+
+                <button class="pick" data-pick="tpl" data-v="multi">
+                  <span class="radio"></span>
+                  <span class="pk-txt">
+                    <b>經典款</b>
+                    包含多個子頁面，可在不同頁面編輯不同企業資訊內容，適合產品或服務較多元的供應商選用。
+                  </span>
+                </button>
+
+              </div>
+              <div class="tips">Tips: 版型與區塊設定為各語系共用，選擇版型與色系後，可進一步設定您想要的資料區塊。</div>
+            </div>
+          </div>
+
+          <div class="frow">
+            <div class="flabel"><span class="req">*</span>選擇色系</div>
+            <div class="fbody">
+
+              <!-- 設計款色系 -->
+              <div id="style-new">
+                <span class="opt-inline"><span class="radio on"></span>白色</span>
+                <div class="tips">Tips: 設計款目前提供白色系。色系可隨時調整，請放心設定。</div>
+              </div>
+
+              <!-- 經典款色系 -->
+              <div id="style-old" class="hide">
+                <span class="opt-inline"><span class="radio"></span>銀色系</span>
+                <span class="opt-inline"><span class="radio on"></span>橘色系</span>
+                <span class="opt-inline"><span class="radio"></span>綠色系</span>
+                <div class="tips">Tips: 經典款可選擇要搭配的網站色系。色系可隨時調整，請放心設定。</div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="frow">
+            <div class="flabel">版面預覽</div>
+            <div class="fbody">
+              <div class="uprow" style="align-items:flex-start;">
+                <div class="thumb" style="width:230px;">
+                  <div style="background:#fff;border:1px solid var(--line-2);padding:6px;">
+                    <span style="display:flex;gap:5px;align-items:center;margin-bottom:5px;">
+                      <span class="ph" style="width:26px;height:9px;"></span>
+                      <span class="ln s" style="flex:1;margin:0;"></span>
+                    </span>
+                    <span class="ph" style="height:52px;"></span>
+                    <span class="grid4" style="margin-top:5px;">
+                      <span><span class="ph" style="height:22px;"></span><span class="ln"></span></span>
+                      <span><span class="ph" style="height:22px;"></span><span class="ln"></span></span>
+                      <span><span class="ph" style="height:22px;"></span><span class="ln"></span></span>
+                      <span><span class="ph" style="height:22px;"></span><span class="ln"></span></span>
+                    </span>
+                    <span style="display:flex;gap:6px;margin-top:6px;">
+                      <span class="ph" style="width:80px;height:34px;"></span>
+                      <span style="flex:1;"><span class="ln"></span><span class="ln m"></span><span class="ln s"></span></span>
+                    </span>
+                    <span class="ph-d ph" style="height:20px;margin-top:6px;"></span>
+                  </div>
+                  <div style="text-align:center;font-size:12px;color:var(--ink-mute);padding-top:6px;">首頁</div>
+                </div>
+                <div class="desc" style="flex:1;min-width:260px;">
+                  選定版型後，系統會為您<b>預先排好一份完整的首頁</b>：頁首、主視覺、公司新聞、關於我們、產品展示、行動呼籲與聯絡我們表單都已就位，
+                  未填寫的區塊會先以示意圖文佔位，您可以在下一步逐一替換成貴公司的內容。
+                  <div class="tips" style="margin-top:9px;">Tips: 區塊順序、增減皆可於下一步自由調整，請放心設定。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="actbar bottom">
+            <button class="btn btn-main" data-go="s2">儲存，前往版面與內容</button>
+            <button class="btn" data-go="entry">‹ 回建站引導</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           畫面三：步驟 2　版面與內容（整併主戰場）
+      ============================================================ -->
+      <section class="screen" id="s2">
+        <div class="pagehead">
+          <h1>首頁(Home)設定</h1>
+          <div class="crumb">企業網管理 ／ 建站引導 ／ 首頁(Home)設定</div>
+        </div>
+        <div class="content">
+
+          <div class="actbar">
+            <button class="btn" data-go="s1">‹ 回上一步</button>
+            <button class="btn" data-go="entry">‹ 回建站引導</button>
+          </div>
+
+          <div class="steps">
+            <button class="step done" data-go="s1">
+              <div class="rail"></div><div class="dot"></div>
+              <div class="lb"><b>1</b>版型與色系</div>
+            </button>
+            <button class="step on" data-go="s2">
+              <div class="dot"></div>
+              <div class="lb"><b>2</b>版面與內容</div>
+            </button>
+          </div>
+
+          <div class="workbar">
+            <span class="who">語系：英文（母版）</span>
+            <span class="sep"></span>
+            <span class="muted">版型：設計款｜白色</span>
+            <span class="spacer"></span>
+            <span class="counter" id="counter">待完成 <em>2</em> 項</span>
+            <button class="btn btn-sm">預覽前台</button>
+            <button class="btn btn-sm btn-main" data-go="done">發布</button>
+          </div>
+
+          <div class="warnline" style="margin:0 0 14px;">
+            英文語系為唯一版型設定頁面，其他語系資料編輯仍需至各自語系進行。
+          </div>
+
+          <div class="pubtip" id="pubtip">
+            <b>首頁的區塊都設定好了，可以發布了。</b>
+            <span class="spacer"></span>
+            <button class="btn btn-sm btn-main" data-go="done">立即發布</button>
+          </div>
+
+          <div class="two">
+
+            <!-- ========== 左欄：區塊清單 ========== -->
+            <div class="blocklist">
+              <div class="lsthead">
+                <span>首頁區塊（拖曳 ≡ 可調整順序）</span>
+                <span id="blkcount">共 6 個</span>
+              </div>
+
+              <button class="blk fixed on" data-blk="header" data-state="quiet" data-sub="自動帶入公司名稱與 Logo">
+                <span class="handle">≡</span>
+                <span class="mini"><span style="display:flex;gap:3px;align-items:center;"><span class="ph" style="width:12px;height:7px;"></span><span class="ln s" style="flex:1;margin:0;"></span></span></span>
+                <span class="nm"><b>頁首</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <div class="plus"><span data-addall="1">＋</span></div>
+
+              <button class="blk" data-blk="hero" data-state="empty" data-sub="形象大圖 · 1 筆（系統示意圖）">
+                <span class="handle">≡</span>
+                <span class="mini"><span class="ph" style="height:20px;"></span><span class="dots"><i></i><i></i><i></i></span></span>
+                <span class="nm"><b>大圖輪播</b><span></span></span>
+                <span class="st"></span>
+                <span class="trash">✕</span>
+              </button>
+
+              <div class="plus pend hide"><span data-addall="1">＋</span></div>
+              <button class="blk pend hide" data-blk="news" data-state="quiet" data-sub="單列最多 6 則 · 自動帶入">
+                <span class="handle">≡</span>
+                <span class="mini"><span class="grid3"><span class="ph" style="height:14px;"></span><span class="ph" style="height:14px;"></span><span class="ph" style="height:14px;"></span></span><span class="ln" style="margin-top:3px;"></span></span>
+                <span class="nm"><b>公司新聞</b><span></span></span>
+                <span class="st"></span>
+                <span class="trash">✕</span>
+              </button>
+
+              <div class="plus"><span data-addall="1">＋</span></div>
+
+              <button class="blk" data-blk="about" data-state="quiet" data-sub="簡介文案搭配圖片與影片">
+                <span class="handle">≡</span>
+                <span class="mini"><span style="display:flex;gap:4px;"><span class="ph" style="width:18px;height:20px;"></span><span style="flex:1;"><span class="ln"></span><span class="ln m"></span><span class="ln s"></span></span></span></span>
+                <span class="nm"><b>關於我們</b><span></span></span>
+                <span class="st"></span>
+                <span class="trash">✕</span>
+              </button>
+
+              <div class="plus pend hide"><span data-addall="1">＋</span></div>
+              <button class="blk pend hide" data-blk="subscribe" data-state="quiet" data-sub="系統固定區塊">
+                <span class="handle">≡</span>
+                <span class="mini"><span style="display:flex;gap:4px;"><span class="ph" style="flex:1;height:14px;"></span><span class="ph" style="flex:1;height:14px;"></span></span></span>
+                <span class="nm"><b>聯繫與訂閱</b><span></span></span>
+                <span class="st"></span>
+                <span class="trash">✕</span>
+              </button>
+
+              <div class="plus pend hide"><span data-addall="1">＋</span></div>
+              <button class="blk pend hide" data-blk="media" data-state="empty" data-sub="尚未新增多媒體內容">
+                <span class="handle">≡</span>
+                <span class="mini"><span class="ph-d ph" style="height:20px;position:relative;"><span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;font-size:9px;">▶</span></span></span>
+                <span class="nm"><b>多媒體輪播</b><span></span></span>
+                <span class="st"></span>
+                <span class="trash">✕</span>
+              </button>
+
+              <div class="plus"><span data-addall="1">＋</span></div>
+
+              <button class="blk" data-blk="product" data-state="todo" data-sub="尚未選擇資料條件">
+                <span class="handle">≡</span>
+                <span class="mini"><span class="grid4"><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span></span></span>
+                <span class="nm"><b>產品展示</b><span></span></span>
+                <span class="st"></span>
+                <span class="trash">✕</span>
+              </button>
+
+              <div class="plus pend hide"><span data-addall="1">＋</span></div>
+              <button class="blk pend hide" data-blk="cta1" data-state="empty" data-sub="全欄圖文模板 · 行動呼籲（橫幅式）">
+                <span class="handle">≡</span>
+                <span class="mini"><span class="ph" style="height:9px;"></span><span class="ln" style="width:40%;margin:4px auto;"></span></span>
+                <span class="nm"><b>圖文模板</b><span></span></span>
+                <span class="st"></span>
+                <span class="trash">✕</span>
+              </button>
+
+              <div class="plus pend hide"><span data-addall="1">＋</span></div>
+              <button class="blk pend hide" data-blk="cta2" data-state="empty" data-sub="全欄圖文模板 · 行動呼籲（圖文分欄）">
+                <span class="handle">≡</span>
+                <span class="mini"><span style="display:flex;gap:4px;"><span style="flex:1;"><span class="ln"></span><span class="ln m"></span></span><span class="ph" style="width:18px;height:18px;"></span></span></span>
+                <span class="nm"><b>圖文模板</b><span></span></span>
+                <span class="st"></span>
+                <span class="trash">✕</span>
+              </button>
+
+              <div class="plus pend hide"><span data-addall="1">＋</span></div>
+              <button class="blk pend hide" data-blk="stat" data-state="empty" data-sub="全欄圖文模板 · 數據統計">
+                <span class="handle">≡</span>
+                <span class="mini"><span class="grid4"><span class="ln" style="height:8px;"></span><span class="ln" style="height:8px;"></span><span class="ln" style="height:8px;"></span><span class="ln" style="height:8px;"></span></span></span>
+                <span class="nm"><b>圖文模板</b><span></span></span>
+                <span class="st"></span>
+                <span class="trash">✕</span>
+              </button>
+
+              <div class="plus"><span data-addall="1">＋</span></div>
+
+              <button class="blk" data-blk="contact" data-state="quiet" data-sub="系統固定區塊 · 自動帶入聯絡資訊">
+                <span class="handle">≡</span>
+                <span class="mini"><span class="ln"></span><span class="ln"></span><span class="ph" style="width:24px;height:8px;margin-top:4px;"></span></span>
+                <span class="nm"><b>聯絡我們表單</b><span></span></span>
+                <span class="st"></span>
+                <span class="trash">✕</span>
+              </button>
+
+              <div class="plus"><span data-addall="1">＋</span></div>
+
+              <button class="blk fixed" data-blk="footer" data-state="quiet" data-sub="系統固定區塊">
+                <span class="handle">≡</span>
+                <span class="mini"><span class="ph-d ph" style="height:16px;"></span></span>
+                <span class="nm"><b>頁尾</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <button class="addblk" data-addall="1">＋ 新增區塊</button>
+              <div class="tips" style="padding:0 2px;">Tips: 頁首與頁尾為固定區塊，不可刪除。</div>
+            </div>
+
+            <!-- ========== 右欄：一站式設定面板 ========== -->
+            <div class="panel">
+
+              <!-- ---------- 頁首 ---------- -->
+              <div class="pane on" id="pane-header">
+                <div class="panelhead">
+                  <span class="paneltitle">頁首</span>
+                  <span class="panelstate">狀態：<span class="badge auto">⚙ 系統自動帶入</span></span>
+                </div>
+                <div class="desc">
+                  頁首會顯示貴公司名稱與企業網 Logo，版面為系統固定，不提供樣式選擇。
+                </div>
+
+                <div class="sechead"><span class="no">1</span><h4>內容</h4><span class="sub">資料自動帶自「公司資料設定」，可在此調整</span></div>
+
+                <div class="field">
+                  <label><span class="req">*</span>網站名稱</label>
+                  <div class="fv">
+                    <input class="inp wide" value="TAIWAN EXTERNAL TRADE DEVELOPMENT COUNCIL">
+                    <div class="okline">✓ 已帶入「公司資料設定」的公司名稱</div>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label>企業網 Logo 設定</label>
+                  <div class="fv">
+                    <div class="uprow">
+                      <div class="upfilled">
+                        <span class="x">✕</span>
+                        <div class="img">logo.png</div>
+                        <div class="cap">1 / 1</div>
+                      </div>
+                    </div>
+                    <div class="redtip">Tips: 各語系Logo需要分別上傳，建議Logo尺寸 至少高度超過100 px，單張圖片大小不可超過3MB。</div>
+                  </div>
+                </div>
+
+                <div class="savewrap"><button class="btn btn-main" data-save="header">儲存區塊設定</button></div>
+              </div>
+
+              <!-- ---------- 大圖輪播 ---------- -->
+              <div class="pane" id="pane-hero">
+                <div class="panelhead">
+                  <span class="paneltitle">大圖輪播</span>
+                  <span class="panelstate">狀態：<span class="badge empty">無內容</span></span>
+                </div>
+                <div class="desc">
+                  選擇您想要的形象 / 廣告大圖輪播模式，可上傳或選擇大尺寸圖片在首頁曝光。
+                </div>
+
+                <div class="sechead"><span class="no">1</span><h4>顯示樣式</h4><span class="sub">選擇後，下方的內容欄位會跟著調整</span></div>
+                <div class="styleopts">
+                  <button class="sopt on" data-style="hero" data-v="a">
+                    <span class="radio on"></span>
+                    <span class="so-body">
+                      <span class="so-lb">形象大圖</span>
+                      <span class="thumb"><span class="ph" style="height:44px;"></span><span class="dots"><i></i><i></i><i></i><i></i></span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-style="hero" data-v="b">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <span class="so-lb">分類樹 + 大圖輪播</span>
+                      <span class="thumb"><span style="display:flex;gap:5px;"><span class="tree" style="height:44px;"></span><span class="ph" style="flex:1;height:44px;"></span></span></span>
+                    </span>
+                  </button>
+                </div>
+                <div class="redtip">※提醒您：使用「分類樹搭配」前，請確認分類已啟用，且分類中已有產品型錄，否則將無法顯示於企業網站。</div>
+
+                <div class="split"></div>
+                <div class="sechead"><span class="no">2</span><h4>內容</h4><span class="sub">最多 5 筆</span></div>
+                <div class="listhead">
+                  <span class="lh-t redtip" style="margin:0;">Tips: 設定大圖輪播，展現公司形象可設定連結至精選頁面（產品、外部連結、優惠活動）。最多顯示五筆資料。</span>
+                  <button class="btn btn-sm">＋ 新增</button>
+                </div>
+                <div class="itemlist">
+                  <div class="item">
+                    <span class="handle">≡</span>
+                    <span class="thumbimg">系統示意圖</span>
+                    <span class="meta">
+                      <div><span class="k">模式：</span>不顯示標題文字於圖上, 圖片不顯示遮罩效果</div>
+                      <div><span class="k">連結：</span>無連結</div>
+                      <div><span class="k">名稱：</span><b>大圖輪播 1</b></div>
+                    </span>
+                    <span class="acts">
+                      <button class="iconbtn">✎</button>
+                      <button class="iconbtn">🗑</button>
+                    </span>
+                  </div>
+                </div>
+                <div class="autobox" style="margin-top:12px;">
+                  <span class="ic">!</span>
+                  <span class="ab-body">
+                    目前使用的是<b>系統提供的示意圖</b>，前台已可正常顯示。建議替換為貴公司的形象大圖，讓首頁更貼近品牌。
+                  </span>
+                </div>
+
+                <div class="savewrap"><button class="btn btn-main" data-save="hero">儲存區塊設定</button></div>
+              </div>
+
+              <!-- ---------- 關於我們 ---------- -->
+              <div class="pane" id="pane-about">
+                <div class="panelhead">
+                  <span class="paneltitle">關於我們</span>
+                  <span class="panelstate">狀態：<span class="badge auto">⚙ 已帶入公司簡介</span></span>
+                </div>
+                <div class="desc">
+                  在首頁呈現您的公司簡介資訊或是「公司資料設定」中的固定重點資訊欄位。
+                </div>
+
+                <div class="sechead"><span class="no">1</span><h4>顯示樣式</h4><span class="sub">選擇後，下方的內容欄位會跟著調整</span></div>
+                <div class="styleopts">
+                  <button class="sopt on" data-style="about" data-v="intro">
+                    <span class="radio on"></span>
+                    <span class="so-body">
+                      <span class="so-lb">關於我們：簡介文案搭配圖片與影片</span>
+                      <span class="thumb"><span style="display:flex;gap:6px;"><span class="ph" style="width:60px;height:40px;"></span><span style="flex:1;"><span class="ln"></span><span class="ln"></span><span class="ln m"></span><span class="ln s"></span></span></span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-style="about" data-v="fixed">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <span class="so-lb">固定撈取公司重點資訊欄位<br>(資本額、員工人數、主要出口市場、主要出口產品等 8 項)</span>
+                      <span class="thumb"><span class="grid3" style="gap:5px;">
+                        <span><span class="ln s"></span><span class="ln"></span></span><span><span class="ln s"></span><span class="ln"></span></span><span><span class="ln s"></span><span class="ln"></span></span>
+                        <span><span class="ln s"></span><span class="ln"></span></span><span><span class="ln s"></span><span class="ln"></span></span><span><span class="ln s"></span><span class="ln"></span></span>
+                      </span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-style="about" data-v="tree">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <span class="so-lb">分類樹搭配關於我們</span>
+                      <span class="thumb"><span style="display:flex;gap:5px;"><span class="tree" style="height:40px;"></span><span class="ph" style="width:44px;height:40px;"></span><span style="flex:1;"><span class="ln"></span><span class="ln m"></span><span class="ln s"></span></span></span></span>
+                    </span>
+                  </button>
+                </div>
+                <div class="redtip">※提醒您：使用「分類樹搭配」前，請確認分類已啟用，且分類中已有產品型錄，否則將無法顯示於企業網站。</div>
+
+                <div class="split"></div>
+                <div class="sechead"><span class="no">2</span><h4>內容</h4><span class="sub" id="about-subhint">依上方選擇的樣式顯示對應欄位</span></div>
+
+                <!-- 內容 A：簡介文案（樣式＝簡介／分類樹搭配） -->
+                <div id="about-form">
+                  <div class="pinktip">關於我們區塊所填寫的資料內容將寫回「公司資料設定的『About us』」欄位。</div>
+
+                  <div class="field">
+                    <label>介紹</label>
+                    <div class="fv">
+                      <textarea class="ta">TAIWAN EXTERNAL
+
+Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is organized by Taiwan's Bureau of Foreign Trade, Ministry of Economic Affairs and operated by the Taiwan External Trade Development Council, the nation's largest nonprofit trade promotion organization.</textarea>
+                      <div class="cnt"><b>296</b> / 2,000</div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label>影片</label>
+                    <div class="fv">
+                      <input class="inp wide" value="https://youtu.be/o-iedzJd8SQ?si=0VDHkkeiPceI5bGs" style="margin-bottom:7px;">
+                      <input class="inp wide" value="https://www.youtube.com/watch?v=93yePYC8B9Y" style="margin-bottom:7px;">
+                      <input class="inp wide" value="https://www.youtube.com/watch?v=z54X0uPRy_Q&list=RDz54X0uPRy_Q&start_radio=1">
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label>圖片</label>
+                    <div class="fv">
+                      <div class="upbox" style="width:100%;max-width:520px;">
+                        <span>拖拉檔案或選擇檔案上傳</span>
+                        <span class="btns">
+                          <button class="btn btn-xs">從圖庫選擇</button>
+                          <button class="btn btn-xs">從本機上傳</button>
+                        </span>
+                      </div>
+                      <div style="display:flex;justify-content:space-between;max-width:520px;">
+                        <span class="redtip">Tips: 最多可上傳3張簡介用圖。建議尺寸 640*360px，單張圖片大小不可超過3MB。</span>
+                        <span class="cnt" style="padding-top:8px;"><b>0</b> / 3</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 內容 B：固定撈取 8 欄位 -->
+                <div id="about-auto" class="hide">
+                  <div class="autobox">
+                    <span class="ic">⚙</span>
+                    <span class="ab-body">
+                      本樣式的內容<b>由系統自動帶入</b>「公司資料設定」的重點資訊欄位，無需在此填寫：<br>
+                      資本額、員工人數、主要出口市場、主要出口產品、成立年份、年營業額、主要客戶、認證與獎項（共 8 項）。
+                      <span class="okline">✓ 已帶入 8 項中的 6 項，其餘留白不顯示</span>
+                      <span class="linkrow">
+                        <button class="btn btn-sm">前往「公司資料設定」補齊</button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="savewrap"><button class="btn btn-main" data-save="about">儲存區塊設定</button></div>
+              </div>
+
+              <!-- ---------- 產品展示 ---------- -->
+              <div class="pane" id="pane-product">
+                <div class="panelhead">
+                  <span class="paneltitle">產品展示</span>
+                  <span class="panelstate">狀態：<span class="badge todo">待設定</span></span>
+                </div>
+                <div class="desc">
+                  設定顯示產品資料條件與樣式。您可將相關產品設定為「首頁產品推薦」，針對該產品的訂單紀錄、瀏覽紀錄以及貼標資訊等，推薦給買主最吸睛的產品。
+                </div>
+
+                <div class="sechead"><span class="no">1</span><h4>顯示樣式</h4><span class="sub">產品在首頁的排列方式</span></div>
+                <div class="styleopts">
+                  <button class="sopt on" data-style="prod" data-v="s1">
+                    <span class="radio on"></span>
+                    <span class="so-body">
+                      <span class="so-lb">單列 4 則，多列窗格，用遮罩效果滑過才顯示產品資訊</span>
+                      <span class="thumb"><span class="grid4"><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span></span><span class="grid4" style="margin-top:4px;"><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span></span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-style="prod" data-v="s2">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <span class="so-lb">單列 4 則，多列窗格，直接列出產品資訊</span>
+                      <span class="thumb"><span class="grid4">
+                        <span><span class="ph" style="height:26px;"></span><span class="ln"></span></span><span><span class="ph" style="height:26px;"></span><span class="ln"></span></span>
+                        <span><span class="ph" style="height:26px;"></span><span class="ln"></span></span><span><span class="ph" style="height:26px;"></span><span class="ln"></span></span>
+                      </span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-style="prod" data-v="s3">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <span class="so-lb">單列 4 則，左右拖曳切換，用遮罩效果滑過才顯示產品資訊</span>
+                      <span class="thumb"><span class="row4"><span class="arrowbox">‹</span><span class="grid4" style="flex:1;"><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span></span><span class="arrowbox">›</span></span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-style="prod" data-v="s4">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <span class="so-lb">單列 4 則，左右拖曳切換，直接列出產品資訊</span>
+                      <span class="thumb"><span class="row4"><span class="arrowbox">‹</span><span class="grid4" style="flex:1;">
+                        <span><span class="ph" style="height:24px;"></span><span class="ln"></span></span><span><span class="ph" style="height:24px;"></span><span class="ln"></span></span>
+                        <span><span class="ph" style="height:24px;"></span><span class="ln"></span></span><span><span class="ph" style="height:24px;"></span><span class="ln"></span></span>
+                      </span><span class="arrowbox">›</span></span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-style="prod" data-v="s5">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <span class="so-lb">分類樹搭配多列窗格展示</span>
+                      <span class="thumb"><span style="display:flex;gap:5px;"><span class="tree" style="height:52px;"></span><span style="flex:1;"><span class="grid3"><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span></span><span class="grid3" style="margin-top:4px;"><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span></span></span></span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-style="prod" data-v="s6">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <span class="so-lb">左右雙欄產品展示</span>
+                      <span class="thumb"><span style="display:flex;gap:6px;"><span style="flex:1;"><span class="ph" style="height:36px;"></span><span class="ln"></span></span><span style="flex:1;"><span class="ph" style="height:36px;"></span><span class="ln"></span></span></span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-style="prod" data-v="s7">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <span class="so-lb">左大、右 4 小展示</span>
+                      <span class="thumb"><span style="display:flex;gap:6px;"><span class="ph" style="width:64px;height:52px;"></span><span class="grid" style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:4px;"><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span></span></span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-style="prod" data-v="s8">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <span class="so-lb">右大、左 4 小展示</span>
+                      <span class="thumb"><span style="display:flex;gap:6px;"><span class="grid" style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:4px;"><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span></span><span class="ph" style="width:64px;height:52px;"></span></span></span>
+                    </span>
+                  </button>
+                </div>
+                <div class="redtip">※提醒您：使用「分類樹搭配」前，請確認分類已啟用，且分類中已有產品型錄，否則將無法顯示於企業網站。</div>
+
+                <div class="split"></div>
+                <div class="sechead"><span class="no">2</span><h4>資料條件</h4><span class="sub">決定這一區要顯示哪些產品</span></div>
+
+                <div id="prod-conds">
+                  <button class="sopt" data-cond="rec" style="display:flex;">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <b style="font-size:13.5px;">推薦產品 Recommendation</b>
+                      <span class="so-lb" style="margin:3px 0 0;">個性化預測買主有興趣的商品，提高買主與網頁產品的互動率。</span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-cond="products" style="display:flex;">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <b style="font-size:13.5px;">公司產品 Products</b>
+                      <span class="so-lb" style="margin:5px 0 0;"><span class="sel" style="min-width:150px;">更新時間</span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-cond="hot" style="display:flex;">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <b style="font-size:13.5px;">熱銷產品 Hot Sale</b>
+                      <span class="so-lb" style="margin:3px 0 0;">顯示銷售動最多的產品，不足時，系統會以最新異動的線上銷售產品自動補足。</span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-cond="popular" style="display:flex;">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <b style="font-size:13.5px;">人氣產品 Popular Products</b>
+                      <span class="so-lb" style="margin:3px 0 0;">顯示點擊數最高的 24 項線上販售產品，不足時，系統會以最新異動的線上販售產品自動補足。</span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-cond="new" style="display:flex;">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <b style="font-size:13.5px;">新產品 New Products</b>
+                      <span class="so-lb" style="margin:3px 0 0;">「News Products」會顯示會員最新的 24 則產品圖片（含品名）。設有「New Product」貼標的產品型錄優先，不足時，系統將以最新異動的產品自動補足，惟仍不滿 24 則，右邊即留白。</span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-cond="featured" style="display:flex;">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <b style="font-size:13.5px;">焦點產品 Featured Products</b>
+                      <span class="so-lb" style="margin:5px 0 0;"><span class="sel" style="min-width:150px;">全部</span></span>
+                      <span class="so-lb" style="margin:5px 0 0;">最多顯示 24 則設有「Featured」貼標的產品型錄；顯示順序會依據設定的優先排序方式：點閱次數、更新時間、3D模型、360°環物及 Video 影音等條件由多至少，由新到舊顯示。</span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-cond="collection" style="display:flex;">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <b style="font-size:13.5px;">自定義分類 Collection</b>
+                      <span class="so-lb" style="margin:5px 0 0;"><span class="sel" style="min-width:150px;">ebook</span></span>
+                      <span class="so-lb" style="margin:5px 0 0;">顯示指定分類項下的 24 則產品，貼有「New Product」標籤的產品優先顯示，其它則依上架日期由新到舊排序。</span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-cond="selection" style="display:flex;">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <b style="font-size:13.5px;">自選產品 Selection</b>
+                      <span class="so-lb" style="margin:3px 0 0;">顯示自行挑選的產品，順序依自訂的排序來顯示。</span>
+                    </span>
+                  </button>
+                </div>
+
+                <div class="split"></div>
+                <div class="sechead"><span class="no">3</span><h4>內容</h4><span class="sub" id="prod-subhint">依上方選擇的資料條件顯示</span></div>
+
+                <!-- 內容 A：尚未選擇條件 -->
+                <div id="prod-none">
+                  <div class="emptybox">
+                    請先在上方<b> ② 資料條件 </b>選擇這一區要顯示哪些產品，<br>選定後這裡會顯示對應的內容設定。
+                  </div>
+                </div>
+
+                <!-- 內容 B：自動撈取 -->
+                <div id="prod-auto" class="hide">
+                  <div class="autobox">
+                    <span class="ic">⚙</span>
+                    <span class="ab-body">
+                      目前條件：<b id="prod-cond-name">－</b><br>
+                      <span id="prod-cond-desc" class="muted"></span>
+                      <span class="okline">✓ 資料由系統自動帶入，無需手動挑選；產品有異動時前台會自動更新</span>
+                      <span class="linkrow">
+                        <button class="btn btn-sm">前往「產品型錄設定」管理產品</button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- 內容 C：自選產品 -->
+                <div id="prod-pick" class="hide">
+                  <div class="listhead">
+                    <span class="lh-t redtip" style="margin:0;">Tips: 自訂首頁重要的產品資訊，依您選擇的區塊模板，數量可能不同，最多可顯示24筆啟用中資料。</span>
+                    <button class="btn btn-sm">＋ 新增</button>
+                  </div>
+                  <div class="picked">
+                    <div class="prod"><span class="ord">1</span><div class="img"></div><div class="nm">Taiwan TPA F3.8x25 Drywall Self-Tapping Screw</div><button class="del">🗑</button></div>
+                    <div class="prod"><span class="ord">2</span><div class="img"></div><div class="nm">Classic Beef Patty Sandwich</div><button class="del">🗑</button></div>
+                    <div class="prod"><span class="ord">3</span><div class="img"></div><div class="nm">About Taiwantrade</div><button class="del">🗑</button></div>
+                    <button class="prod add"><span style="font-size:18px;">＋</span>新增產品</button>
+                  </div>
+                  <div class="tips">Tips: 拖曳產品可調整前台顯示順序。</div>
+                </div>
+
+                <div class="split"></div>
+                <div class="sechead"><h4>區塊名稱</h4><span class="sub">顯示在前台這一區的標題</span></div>
+                <div class="field">
+                  <label>區塊名稱</label>
+                  <div class="fv">
+                    <input class="inp mid" placeholder="未填寫時顯示系統預設名稱">
+                    <div class="fallback">未填寫時，前台將顯示系統預設名稱「<b id="prod-fallback">Products</b>」。區塊名稱可於各語系分別設定。</div>
+                  </div>
+                </div>
+
+                <div class="savewrap"><button class="btn btn-main" data-save="product">儲存區塊設定</button></div>
+              </div>
+
+              <!-- ---------- 公司新聞 ---------- -->
+              <div class="pane" id="pane-news">
+                <div class="panelhead">
+                  <span class="paneltitle">公司新聞</span>
+                  <span class="panelstate">狀態：<span class="badge auto">⚙ 系統自動帶入</span></span>
+                </div>
+                <div class="desc">
+                  顯示公司最新新聞條列。新增更多公司新聞，請至「內容管理 &gt; 公司新聞設定」管理。
+                </div>
+
+                <div class="sechead"><span class="no">1</span><h4>顯示樣式</h4><span class="sub">新聞在首頁的排列方式</span></div>
+                <div class="styleopts">
+                  <button class="sopt on" data-style="news" data-v="a">
+                    <span class="radio on"></span>
+                    <span class="so-body">
+                      <span class="so-lb">單列最多 6 則(頁面最大顯示數量)，左右拖曳切換，直接列出新聞圖文資訊</span>
+                      <span class="thumb"><span class="row4"><span class="arrowbox">‹</span><span class="grid3" style="flex:1;">
+                        <span><span class="ph" style="height:26px;"></span><span class="ln"></span><span class="ln m"></span></span>
+                        <span><span class="ph" style="height:26px;"></span><span class="ln"></span><span class="ln m"></span></span>
+                        <span><span class="ph" style="height:26px;"></span><span class="ln"></span><span class="ln m"></span></span>
+                      </span><span class="arrowbox">›</span></span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-style="news" data-v="b">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <span class="so-lb">垂直最多條列 6 則(頁面最大顯示數量)，直接列出新聞圖文資訊</span>
+                      <span class="thumb">
+                        <span style="display:flex;gap:6px;margin-bottom:5px;"><span class="ph" style="width:38px;height:20px;"></span><span style="flex:1;"><span class="ln"></span><span class="ln m"></span></span></span>
+                        <span style="display:flex;gap:6px;margin-bottom:5px;"><span class="ph" style="width:38px;height:20px;"></span><span style="flex:1;"><span class="ln"></span><span class="ln m"></span></span></span>
+                        <span style="display:flex;gap:6px;"><span class="ph" style="width:38px;height:20px;"></span><span style="flex:1;"><span class="ln"></span><span class="ln m"></span></span></span>
+                      </span>
+                    </span>
+                  </button>
+                </div>
+
+                <div class="split"></div>
+                <div class="sechead"><span class="no">2</span><h4>資料條件</h4><span class="sub">新聞由系統依條件自動撈取</span></div>
+                <div class="field">
+                  <label>按鈕資料更新</label>
+                  <div class="fv"><span class="sel" style="min-width:170px;">每次一排</span></div>
+                </div>
+
+                <div class="split"></div>
+                <div class="sechead"><span class="no">3</span><h4>內容</h4><span class="sub">自動帶入，無需在此填寫</span></div>
+                <div class="autobox">
+                  <span class="ic">⚙</span>
+                  <span class="ab-body">
+                    公司新聞為自動條件。新增更多多語公司新聞，請至「內容管理 &gt; 公司新聞設定」管理。
+                    <span class="okline">✓ 目前已有 8 則新聞可供顯示（英文）</span>
+                    <span class="linkrow">
+                      <button class="btn btn-sm">前往「內容管理 &gt; 公司新聞設定」</button>
+                    </span>
+                  </span>
+                </div>
+
+                <div class="savewrap"><button class="btn btn-main" data-save="news">儲存區塊設定</button></div>
+              </div>
+
+              <!-- ---------- 聯繫與訂閱 ---------- -->
+              <div class="pane" id="pane-subscribe">
+                <div class="panelhead">
+                  <span class="paneltitle">聯繫與訂閱</span>
+                  <span class="panelstate">狀態：<span class="badge auto">⚙ 系統固定區塊</span></span>
+                </div>
+                <div class="desc">
+                  您可於首頁插入「聯繫與訂閱」區塊，讓買主訂閱貴公司最新產品資訊。本區塊版面與欄位為系統固定，無需設定。
+                </div>
+
+                <div class="sechead"><h4>前台顯示</h4><span class="sub">實際樣式以前台為準</span></div>
+                <div class="thumb" style="padding:18px;">
+                  <div style="display:flex;gap:28px;justify-content:center;align-items:center;flex-wrap:wrap;">
+                    <div style="text-align:center;">
+                      <div style="font-size:12.5px;color:var(--ink-soft);margin-bottom:7px;">Contact Us</div>
+                      <div style="border:1px solid var(--line-strong);padding:5px 20px;font-size:12px;color:var(--ink-mute);">Contact Us</div>
+                    </div>
+                    <div style="text-align:center;">
+                      <div style="font-size:12.5px;color:var(--ink-soft);margin-bottom:7px;">Email Updates</div>
+                      <div style="display:flex;gap:6px;">
+                        <span style="border:1px solid var(--line-strong);padding:5px 34px;font-size:12px;color:var(--ink-mute);">&nbsp;</span>
+                        <span style="border:1px solid var(--line-strong);padding:5px 14px;font-size:12px;color:var(--ink-mute);">Subscribe</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="autobox" style="margin-top:14px;">
+                  <span class="ic">⚙</span>
+                  <span class="ab-body">
+                    訂閱名單會直接進入「會員管理」，買主按下 Contact Us 時，將依貴公司於「公司資料設定」登錄的聯絡信箱發送。
+                  </span>
+                </div>
+              </div>
+
+              <!-- ---------- 多媒體輪播 ---------- -->
+              <div class="pane" id="pane-media">
+                <div class="panelhead">
+                  <span class="paneltitle">多媒體輪播</span>
+                  <span class="panelstate">狀態：<span class="badge empty">無內容</span></span>
+                </div>
+                <div class="desc">
+                  可在首頁設定輪播展示Video影音、360°產品、720°實景、3D模型等多媒體資訊。<b>(最多顯示前 5 則)</b>
+                </div>
+
+                <div class="sechead"><span class="no">1</span><h4>內容</h4><span class="sub">本區塊版面固定，僅需設定內容</span></div>
+                <div class="listhead">
+                  <span class="lh-t">目前 0 / 5 則</span>
+                  <button class="btn btn-sm">＋ 新增</button>
+                </div>
+                <div class="emptybox">
+                  尚未新增多媒體內容。<br>
+                  點「＋ 新增」可加入 Video 影音、360°產品、720°實景或 3D 模型。
+                </div>
+                <div class="autobox" style="margin-top:12px;">
+                  <span class="ic">!</span>
+                  <span class="ab-body">
+                    這一區<b>還沒有內容</b>。在您新增之前，前台會自動跳過本區塊，不會出現空白區域。
+                  </span>
+                </div>
+
+                <div class="savewrap"><button class="btn btn-main" data-save="media">儲存區塊設定</button></div>
+              </div>
+
+              <!-- ---------- 圖文模板（三個區塊共用） ---------- -->
+              <div class="pane" id="pane-tpl">
+                <div class="panelhead">
+                  <span class="paneltitle">圖文模板</span>
+                  <span class="panelstate">狀態：<span class="badge auto">⚙ 範本內容已就緒</span></span>
+                </div>
+                <div class="desc">
+                  提供可插入圖文模板。圖文模板提供設計好的配置與樣式，讓您自由更換圖片、編輯文字、設定連結，更自由的設計您的首頁。
+                </div>
+
+                <div class="sechead"><span class="no">1</span><h4>顯示樣式</h4><span class="sub">選擇後，下方可選的範本會跟著調整</span></div>
+                <div class="styleopts">
+                  <button class="sopt on" data-style="tpl" data-v="full">
+                    <span class="radio on"></span>
+                    <span class="so-body">
+                      <span class="so-lb">全欄圖文模板（全欄圖文模板區）</span>
+                      <span class="thumb"><span class="ph" style="height:16px;"></span><span style="display:flex;gap:6px;margin-top:5px;"><span class="ph" style="width:52px;height:26px;"></span><span style="flex:1;"><span class="ln"></span><span class="ln m"></span><span class="ln s"></span></span></span></span>
+                    </span>
+                  </button>
+                  <button class="sopt" data-style="tpl" data-v="tree">
+                    <span class="radio"></span>
+                    <span class="so-body">
+                      <span class="so-lb">分類樹搭配圖文模板（圖文模板區）</span>
+                      <span class="thumb"><span style="display:flex;gap:5px;"><span class="tree" style="height:46px;"></span><span style="flex:1;"><span class="ph" style="height:20px;"></span><span class="ln" style="margin-top:5px;"></span><span class="ln m"></span></span></span></span>
+                    </span>
+                  </button>
+                </div>
+                <div class="redtip">※提醒您：使用「分類樹搭配」前，請確認分類已啟用，且分類中已有產品型錄，否則將無法顯示於企業網站。</div>
+
+                <div class="split"></div>
+                <div class="sechead"><span class="no">2</span><h4>選擇範本</h4><span class="sub">決定這一區的圖文配置</span></div>
+                <div class="tplgrid" id="tplgrid">
+                  <button class="tpl" data-tpl="s1"><div class="box"><span style="display:flex;gap:5px;"><span style="flex:1;"><span class="ln"></span><span class="ln m"></span></span><span class="ph" style="width:34px;height:30px;"></span></span></div>Smart Block Style1</button>
+                  <button class="tpl" data-tpl="s2"><div class="box"><span style="display:flex;gap:5px;"><span><span class="ph" style="width:24px;height:14px;"></span><span class="ph" style="width:24px;height:14px;margin-top:4px;"></span></span><span style="flex:1;"><span class="ln"></span><span class="ln m"></span><span class="ln s"></span></span></span></div>Smart Block Style2</button>
+                  <button class="tpl" data-tpl="s3"><div class="box"><span class="grid3"><span><span class="ph" style="height:16px;"></span><span class="ln"></span></span><span><span class="ph" style="height:16px;"></span><span class="ln"></span></span><span><span class="ph" style="height:16px;"></span><span class="ln"></span></span></span></div>Smart Block Style3</button>
+                  <button class="tpl" data-tpl="s4"><div class="box"><span style="display:flex;gap:5px;"><span class="ph" style="width:40px;height:30px;"></span><span style="flex:1;"><span class="ln"></span><span class="ln m"></span></span></span></div>Smart Block Style4</button>
+                  <button class="tpl" data-tpl="s5"><div class="box"><span style="display:flex;gap:5px;margin-bottom:4px;"><span style="flex:1;"><span class="ln"></span><span class="ln m"></span></span><span class="ph" style="width:26px;height:14px;"></span></span><span style="display:flex;gap:5px;"><span class="ph" style="width:26px;height:14px;"></span><span style="flex:1;"><span class="ln"></span><span class="ln m"></span></span></span></div>Smart Block Style5</button>
+                  <button class="tpl" data-tpl="cta1"><div class="box"><span class="ph" style="height:10px;"></span><span class="ln" style="width:52%;margin:5px auto;"></span><span class="ph" style="width:30px;height:8px;margin:0 auto;"></span></div>行動呼籲・橫幅式<span class="new">本次新增</span></button>
+                  <button class="tpl" data-tpl="cta2"><div class="box"><span style="display:flex;gap:5px;"><span style="flex:1;"><span class="ln"></span><span class="ln m"></span><span class="ph" style="width:24px;height:7px;margin-top:4px;"></span></span><span class="ph" style="width:34px;height:30px;"></span></span></div>行動呼籲・圖文分欄<span class="new">本次新增</span></button>
+                  <button class="tpl" data-tpl="stat"><div class="box"><span class="grid4" style="gap:5px;"><span><span class="ln" style="height:8px;"></span><span class="ln s"></span></span><span><span class="ln" style="height:8px;"></span><span class="ln s"></span></span><span><span class="ln" style="height:8px;"></span><span class="ln s"></span></span><span><span class="ln" style="height:8px;"></span><span class="ln s"></span></span></span></div>數據統計<span class="new">本次新增</span></button>
+                  <button class="tpl" data-tpl="mirror"><div class="box"><span style="display:flex;gap:5px;"><span class="ph" style="width:34px;height:30px;"></span><span style="flex:1;"><span class="ln"></span><span class="ln m"></span></span></span></div>左右對調款<span class="new">本次新增</span></button>
+                  <button class="tpl" data-tpl="catalog"><div class="box"><span class="grid3" style="gap:4px;"><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span></span><span class="ln" style="margin-top:5px;"></span></div>產品型錄圖文模板<span class="new">本次新增</span></button>
+                </div>
+
+                <div class="split"></div>
+                <div class="sechead"><span class="no">3</span><h4>內容</h4><span class="sub">依上方選擇的範本填寫圖片與文字</span></div>
+                <div class="listhead">
+                  <span class="lh-t">目前套用範本：<b id="tpl-cur">行動呼籲・橫幅式</b></span>
+                  <button class="btn btn-sm">＋ 新增</button>
+                </div>
+
+                <div class="itemlist">
+                  <!-- 內容預覽：CTA 橫幅式 -->
+                  <div class="item" id="tplprev-cta1">
+                    <span class="handle">≡</span>
+                    <span class="thumbimg">示意版面</span>
+                    <span class="meta">
+                      <div><span class="k">標題：</span><b>CTA 樣式一｜橫幅式行動呼籲</b></div>
+                      <div><span class="k">內文：</span>行動呼籲區塊文字示意・文字與按鈕文案皆可自訂…</div>
+                      <div><span class="k">按鈕：</span>行動按鈕　<span class="muted">連結：未設定</span></div>
+                    </span>
+                    <span class="acts">
+                      <button class="iconbtn">✎</button>
+                      <button class="iconbtn">🗑</button>
+                    </span>
+                  </div>
+
+                  <!-- 內容預覽：CTA 圖文分欄 -->
+                  <div class="item hide" id="tplprev-cta2">
+                    <span class="handle">≡</span>
+                    <span class="thumbimg">示意版面</span>
+                    <span class="meta">
+                      <div><span class="k">標題：</span><b>CTA 樣式二｜圖文分欄行動呼籲</b></div>
+                      <div><span class="k">內文：</span>圖文模板範本敘述・左文右圖，圖片與文案皆可替換…</div>
+                      <div><span class="k">按鈕：</span>行動按鈕　<span class="muted">連結：未設定</span></div>
+                    </span>
+                    <span class="acts">
+                      <button class="iconbtn">✎</button>
+                      <button class="iconbtn">🗑</button>
+                    </span>
+                  </div>
+
+                  <!-- 內容預覽：數據統計 -->
+                  <div class="item hide" id="tplprev-stat">
+                    <span class="handle">≡</span>
+                    <span class="thumbimg">示意版面</span>
+                    <span class="meta">
+                      <div><span class="k">數據：</span><b>40+ ／ 100+ ／ 3,000+ ／ 150+</b></div>
+                      <div><span class="k">標籤：</span>數據統計標題一、二、三、四</div>
+                      <div><span class="k">說明：</span>數字與標籤皆可自訂，最多 4 組</div>
+                    </span>
+                    <span class="acts">
+                      <button class="iconbtn">✎</button>
+                      <button class="iconbtn">🗑</button>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="autobox" style="margin-top:12px;">
+                  <span class="ic">!</span>
+                  <span class="ab-body">
+                    目前是<b>範本自帶的示意圖文</b>，前台已可正常顯示。點「✎」即可換成貴公司的圖片與文案。
+                  </span>
+                </div>
+
+                <div class="savewrap"><button class="btn btn-main" data-save="tpl">儲存區塊設定</button></div>
+              </div>
+
+              <!-- ---------- 聯絡我們表單 ---------- -->
+              <div class="pane" id="pane-contact">
+                <div class="panelhead">
+                  <span class="paneltitle">聯絡我們表單</span>
+                  <span class="panelstate">狀態：<span class="badge auto">⚙ 系統固定區塊</span></span>
+                </div>
+                <div class="desc">
+                  您可於首頁插入「聯絡我們」表單區塊，讓買主直接填寫詢問單與貴公司聯繫。本區塊版面與欄位為系統固定，無需設定。
+                </div>
+
+                <div class="sechead"><h4>前台顯示</h4><span class="sub">實際樣式以前台為準</span></div>
+                <div class="thumb" style="padding:16px;">
+                  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+                    <div style="width:150px;">
+                      <div style="font-size:12.5px;font-weight:700;margin-bottom:8px;">聯繫我們</div>
+                      <span class="ln"></span><span class="ln m"></span>
+                      <div style="border:1px solid var(--line-strong);padding:5px 12px;font-size:11.5px;color:var(--ink-mute);margin-top:9px;display:inline-block;">02-2123-4567</div>
+                    </div>
+                    <div style="flex:1;min-width:220px;border:1px solid var(--line-2);padding:10px;">
+                      <div style="font-size:12.5px;font-weight:700;margin-bottom:8px;">填寫表單</div>
+                      <span class="ln"></span><span class="ln m"></span>
+                      <span class="ln"></span><span class="ln m"></span>
+                      <span class="ln"></span><span class="ln s"></span>
+                      <div style="border:1px solid var(--line-strong);padding:4px 18px;font-size:11.5px;color:var(--ink-mute);margin-top:10px;display:inline-block;">送出</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="autobox" style="margin-top:14px;">
+                  <span class="ic">⚙</span>
+                  <span class="ab-body">
+                    買主送出的詢問單，會依貴公司於「<b>公司資料設定</b>」登錄的聯絡電話與收件信箱處理，並同步進入「商機管理」。
+                    <span class="okline">✓ 已帶入公司聯絡電話 02-2123-4567</span>
+                    <span class="linkrow">
+                      <button class="btn btn-sm">前往「公司資料設定」</button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- ---------- 頁尾 ---------- -->
+              <div class="pane" id="pane-footer">
+                <div class="panelhead">
+                  <span class="paneltitle">頁尾</span>
+                  <span class="panelstate">狀態：<span class="badge auto">⚙ 系統固定區塊</span></span>
+                </div>
+                <div class="desc">
+                  頁尾為系統固定區塊，顯示聯繫與訂閱、社群連結、企業網 QR Code 與台灣經貿網版權資訊，無需設定。
+                </div>
+
+                <div class="sechead"><h4>前台顯示</h4><span class="sub">實際樣式以前台為準</span></div>
+                <div class="thumb" style="padding:16px;background:#f2f4f5;">
+                  <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+                    <div style="flex:1;min-width:180px;">
+                      <span class="ln m"></span><span class="ln s"></span>
+                    </div>
+                    <div style="display:flex;gap:6px;">
+                      <span class="ph" style="width:16px;height:16px;border-radius:50%;"></span>
+                      <span class="ph" style="width:16px;height:16px;border-radius:50%;"></span>
+                      <span class="ph" style="width:16px;height:16px;border-radius:50%;"></span>
+                    </div>
+                    <div class="qr" style="width:40px;height:40px;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PANE-APPEND -->
+
+            </div>
+          </div>
+
+          <div class="actbar bottom">
+            <button class="btn" data-go="s1">‹ 回上一步</button>
+            <button class="btn">預覽前台</button>
+            <button class="btn btn-main" data-go="done">發布</button>
+            <button class="btn" data-go="entry">‹ 回建站引導</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           畫面四：其他語系內容編輯（譯本）
+      ============================================================ -->
+      <section class="screen" id="lang">
+        <div class="pagehead">
+          <h1>首頁(Home)資料編輯</h1>
+          <div class="crumb">企業網管理 ／ 建站引導 ／ 首頁(Home)資料編輯</div>
+        </div>
+        <div class="content">
+
+          <div class="actbar">
+            <button class="btn" data-go="entry">‹ 回建站引導</button>
+          </div>
+
+          <div class="workbar">
+            <span class="who">語系：正體中文</span>
+            <span class="sep"></span>
+            <span class="muted">版型：設計款｜白色（由英文母版設定）</span>
+            <span class="spacer"></span>
+            <span class="counter clear">未填寫 <em>4</em> 項｜將沿用英文</span>
+            <button class="btn btn-sm">預覽前台</button>
+            <button class="btn btn-sm btn-main" data-go="done">發布</button>
+          </div>
+
+          <div class="lockline">
+            <span>🔒</span>
+            <span>本頁只編輯<b>內容</b>。區塊的順序、顯示樣式與資料條件皆由英文（母版）設定，各語系一致。</span>
+          </div>
+
+          <div class="warnline" style="margin:0 0 14px;">
+            英文語系為唯一版型設定頁面，其他語系資料編輯仍需至各自語系進行。
+          </div>
+
+          <div class="two">
+
+            <!-- 左欄：唯讀清單（排序鎖定英文） -->
+            <div class="blocklist">
+              <div class="lsthead">
+                <span>首頁區塊（順序同英文，不可調整）</span>
+              </div>
+
+              <button class="blk ro fixed on" data-lblk="header" data-sub="已填寫">
+                <span class="mini"><span style="display:flex;gap:3px;align-items:center;"><span class="ph" style="width:12px;height:7px;"></span><span class="ln s" style="flex:1;margin:0;"></span></span></span>
+                <span class="nm"><b>頁首</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <button class="blk ro" data-lblk="hero" data-sub="未填寫，沿用英文">
+                <span class="mini"><span class="ph" style="height:20px;"></span><span class="dots"><i></i><i></i><i></i></span></span>
+                <span class="nm"><b>大圖輪播</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <button class="blk ro pend hide" data-lblk="news" data-sub="自動帶入">
+                <span class="mini"><span class="grid3"><span class="ph" style="height:14px;"></span><span class="ph" style="height:14px;"></span><span class="ph" style="height:14px;"></span></span><span class="ln" style="margin-top:3px;"></span></span>
+                <span class="nm"><b>公司新聞</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <button class="blk ro" data-lblk="about" data-sub="未填寫，沿用英文">
+                <span class="mini"><span style="display:flex;gap:4px;"><span class="ph" style="width:18px;height:20px;"></span><span style="flex:1;"><span class="ln"></span><span class="ln m"></span><span class="ln s"></span></span></span></span>
+                <span class="nm"><b>關於我們</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <button class="blk ro pend hide" data-lblk="subscribe" data-sub="系統固定">
+                <span class="mini"><span style="display:flex;gap:4px;"><span class="ph" style="flex:1;height:14px;"></span><span class="ph" style="flex:1;height:14px;"></span></span></span>
+                <span class="nm"><b>聯繫與訂閱</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <button class="blk ro pend hide" data-lblk="media" data-sub="英文尚無內容">
+                <span class="mini"><span class="ph-d ph" style="height:20px;"></span></span>
+                <span class="nm"><b>多媒體輪播</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <button class="blk ro" data-lblk="product" data-sub="未填寫，沿用英文">
+                <span class="mini"><span class="grid4"><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span><span class="ph sq"></span></span></span>
+                <span class="nm"><b>產品展示</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <button class="blk ro pend hide" data-lblk="cta1" data-sub="未填寫，沿用英文">
+                <span class="mini"><span class="ph" style="height:9px;"></span><span class="ln" style="width:40%;margin:4px auto;"></span></span>
+                <span class="nm"><b>圖文模板</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <button class="blk ro pend hide" data-lblk="cta2" data-sub="未填寫，沿用英文">
+                <span class="mini"><span style="display:flex;gap:4px;"><span style="flex:1;"><span class="ln"></span><span class="ln m"></span></span><span class="ph" style="width:18px;height:18px;"></span></span></span>
+                <span class="nm"><b>圖文模板</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <button class="blk ro pend hide" data-lblk="stat" data-sub="未填寫，沿用英文">
+                <span class="mini"><span class="grid4"><span class="ln" style="height:8px;"></span><span class="ln" style="height:8px;"></span><span class="ln" style="height:8px;"></span><span class="ln" style="height:8px;"></span></span></span>
+                <span class="nm"><b>圖文模板</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <button class="blk ro" data-lblk="contact" data-sub="系統固定">
+                <span class="mini"><span class="ln"></span><span class="ln"></span><span class="ph" style="width:24px;height:8px;margin-top:4px;"></span></span>
+                <span class="nm"><b>聯絡我們表單</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <button class="blk ro fixed" data-lblk="footer" data-sub="系統固定">
+                <span class="mini"><span class="ph-d ph" style="height:16px;"></span></span>
+                <span class="nm"><b>頁尾</b><span></span></span>
+                <span class="st"></span>
+              </button>
+
+              <div class="tips" style="padding:0 2px;">Tips: 要增減區塊或調整順序，請至英文（母版）設定。</div>
+            </div>
+
+            <!-- 右欄：內容面板（無樣式、無資料條件） -->
+            <div class="panel">
+
+              <!-- 頁首 -->
+              <div class="lpane on" id="lpane-header">
+                <div class="panelhead">
+                  <span class="paneltitle">頁首</span>
+                  <span class="panelstate">正體中文</span>
+                </div>
+                <div class="desc">頁首的網站名稱與 Logo 需要各語系分別設定。</div>
+
+                <div class="sechead"><h4>內容</h4><span class="sub">正體中文</span></div>
+                <div class="field">
+                  <label><span class="req">*</span>網站名稱</label>
+                  <div class="fv">
+                    <input class="inp wide" value="中華民國對外貿易發展協會">
+                    <div class="fallback">英文（母版）內容：<b>TAIWAN EXTERNAL TRADE DEVELOPMENT COUNCIL</b></div>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>企業網 Logo 設定</label>
+                  <div class="fv">
+                    <div class="uprow">
+                      <div class="upfilled">
+                        <span class="x">✕</span>
+                        <div class="img">logo_zh.png</div>
+                        <div class="cap">1 / 1</div>
+                      </div>
+                    </div>
+                    <div class="redtip">Tips: 各語系Logo需要分別上傳，建議Logo尺寸 至少高度超過100 px，單張圖片大小不可超過3MB。</div>
+                  </div>
+                </div>
+                <div class="savewrap"><button class="btn btn-main">儲存變更</button></div>
+              </div>
+
+              <!-- 大圖輪播 -->
+              <div class="lpane" id="lpane-hero">
+                <div class="panelhead">
+                  <span class="paneltitle">大圖輪播</span>
+                  <span class="panelstate">正體中文</span>
+                </div>
+                <div class="desc">
+                  顯示樣式為<b>形象大圖</b>（由英文母版設定）。本頁僅需替換各語系要顯示的圖片與標題文字。
+                </div>
+
+                <div class="sechead"><h4>內容</h4><span class="sub">最多 5 筆・順序同英文</span></div>
+                <div class="listhead">
+                  <span class="lh-t redtip" style="margin:0;">Tips: 設定大圖輪播，展現公司形象可設定連結至精選頁面（產品、外部連結、優惠活動）。最多顯示五筆資料。</span>
+                  <button class="btn btn-sm">＋ 新增</button>
+                </div>
+                <div class="itemlist">
+                  <div class="item">
+                    <span class="handle">≡</span>
+                    <span class="thumbimg">沿用英文圖片</span>
+                    <span class="meta">
+                      <div><span class="k">模式：</span>不顯示標題文字於圖上, 圖片不顯示遮罩效果</div>
+                      <div><span class="k">連結：</span>無連結</div>
+                      <div><span class="k">名稱：</span><b class="muted">未填寫</b></div>
+                      <div class="fallback">未填寫將沿用英文內容：<b>大圖輪播 1</b></div>
+                    </span>
+                    <span class="acts">
+                      <button class="iconbtn">✎</button>
+                      <button class="iconbtn">🗑</button>
+                    </span>
+                  </div>
+                </div>
+                <div class="savewrap"><button class="btn btn-main">儲存變更</button></div>
+              </div>
+
+              <!-- 關於我們 -->
+              <div class="lpane" id="lpane-about">
+                <div class="panelhead">
+                  <span class="paneltitle">關於我們</span>
+                  <span class="panelstate">正體中文</span>
+                </div>
+                <div class="desc">
+                  顯示樣式為<b>簡介文案搭配圖片與影片</b>（由英文母版設定）。本頁僅需填寫正體中文的內容。
+                </div>
+
+                <div class="sechead"><h4>內容</h4><span class="sub">正體中文</span></div>
+                <div class="pinktip">關於我們區塊所填寫的資料內容將寫回「公司資料設定的『About us』」欄位。</div>
+
+                <div class="field">
+                  <label>介紹</label>
+                  <div class="fv">
+                    <textarea class="ta" placeholder="未填寫將沿用英文內容"></textarea>
+                    <div class="cnt"><b>0</b> / 2,000</div>
+                    <div class="fallback">
+                      未填寫將沿用英文內容：<br>
+                      <b>TAIWAN EXTERNAL — Founded in 2002, Taiwantrade is the official B2B site of Taiwan…</b>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label>影片</label>
+                  <div class="fv">
+                    <input class="inp wide" placeholder="未填寫將沿用英文內容" style="margin-bottom:7px;">
+                    <input class="inp wide" placeholder="未填寫將沿用英文內容" style="margin-bottom:7px;">
+                    <input class="inp wide" placeholder="未填寫將沿用英文內容">
+                    <div class="fallback">未填寫將沿用英文內容：<b>3 部影片</b></div>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label>圖片</label>
+                  <div class="fv">
+                    <div class="upbox" style="width:100%;max-width:520px;">
+                      <span>拖拉檔案或選擇檔案上傳</span>
+                      <span class="btns">
+                        <button class="btn btn-xs">從圖庫選擇</button>
+                        <button class="btn btn-xs">從本機上傳</button>
+                      </span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;max-width:520px;">
+                      <span class="redtip">Tips: 最多可上傳3張簡介用圖。建議尺寸 640*360px，單張圖片大小不可超過3MB。</span>
+                      <span class="cnt" style="padding-top:8px;"><b>0</b> / 3</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="savewrap"><button class="btn btn-main">儲存變更</button></div>
+              </div>
+
+              <!-- 產品展示 -->
+              <div class="lpane" id="lpane-product">
+                <div class="panelhead">
+                  <span class="paneltitle">產品展示</span>
+                  <span class="panelstate">正體中文</span>
+                </div>
+                <div class="desc">
+                  資料條件為<b>自選產品 Selection</b>、顯示樣式為<b>單列 4 則多列窗格</b>（皆由英文母版設定）。
+                </div>
+
+                <div class="sechead"><h4>內容</h4><span class="sub">挑選正體中文語系要顯示的產品</span></div>
+                <div class="listhead">
+                  <span class="lh-t redtip" style="margin:0;">Tips: 自訂首頁重要的產品資訊，依您選擇的區塊模板，數量可能不同，最多可顯示24筆啟用中資料。</span>
+                  <button class="btn btn-sm">＋ 新增</button>
+                </div>
+                <div class="picked">
+                  <div class="prod"><span class="ord">1</span><div class="img"></div><div class="nm">台灣製 F3.8x25 自攻螺絲</div><button class="del">🗑</button></div>
+                  <div class="prod"><span class="ord">2</span><div class="img"></div><div class="nm">經典牛肉漢堡排</div><button class="del">🗑</button></div>
+                  <button class="prod add"><span style="font-size:18px;">＋</span>新增產品</button>
+                </div>
+                <div class="fallback" style="max-width:520px;">正體中文語系目前上架 7 筆型錄，可挑選的產品以本語系已上架者為限。</div>
+
+                <div class="split"></div>
+                <div class="sechead"><h4>區塊名稱</h4><span class="sub">顯示在前台這一區的標題</span></div>
+                <div class="field">
+                  <label>區塊名稱</label>
+                  <div class="fv">
+                    <input class="inp mid" placeholder="未填寫將沿用英文內容">
+                    <div class="fallback">未填寫時，前台將顯示英文（母版）的區塊名稱「<b>Selected Products</b>」。</div>
+                  </div>
+                </div>
+                <div class="savewrap"><button class="btn btn-main">儲存變更</button></div>
+              </div>
+
+              <!-- 多媒體輪播 -->
+              <div class="lpane" id="lpane-media">
+                <div class="panelhead">
+                  <span class="paneltitle">多媒體輪播</span>
+                  <span class="panelstate">正體中文</span>
+                </div>
+                <div class="desc">
+                  可在首頁設定輪播展示Video影音、360°產品、720°實景、3D模型等多媒體資訊。<b>(最多顯示前 5 則)</b>
+                </div>
+                <div class="sechead"><h4>內容</h4><span class="sub">正體中文</span></div>
+                <div class="listhead">
+                  <span class="lh-t">目前 0 / 5 則</span>
+                  <button class="btn btn-sm">＋ 新增</button>
+                </div>
+                <div class="emptybox">英文（母版）尚未新增多媒體內容，本語系亦無可沿用的內容。</div>
+                <div class="savewrap"><button class="btn btn-main">儲存變更</button></div>
+              </div>
+
+              <!-- 圖文模板（三塊共用） -->
+              <div class="lpane" id="lpane-tpl">
+                <div class="panelhead">
+                  <span class="paneltitle">圖文模板</span>
+                  <span class="panelstate">正體中文</span>
+                </div>
+                <div class="desc">
+                  套用範本為<b id="ltpl-cur">行動呼籲・橫幅式</b>（由英文母版設定）。本頁僅需填寫正體中文的圖片與文字。
+                </div>
+                <div class="sechead"><h4>內容</h4><span class="sub">正體中文</span></div>
+                <div class="itemlist">
+                  <div class="item">
+                    <span class="handle">≡</span>
+                    <span class="thumbimg">沿用英文版面</span>
+                    <span class="meta">
+                      <div><span class="k">標題：</span><b class="muted">未填寫</b></div>
+                      <div><span class="k">內文：</span><span class="muted">未填寫</span></div>
+                      <div class="fallback">未填寫將沿用英文內容：<b>CTA 樣式一｜橫幅式行動呼籲</b></div>
+                    </span>
+                    <span class="acts"><button class="iconbtn">✎</button></span>
+                  </div>
+                </div>
+                <div class="savewrap"><button class="btn btn-main">儲存變更</button></div>
+              </div>
+
+              <!-- 撈取型／系統固定型共用 -->
+              <div class="lpane" id="lpane-auto">
+                <div class="panelhead">
+                  <span class="paneltitle" id="lauto-title">公司新聞</span>
+                  <span class="panelstate">正體中文</span>
+                </div>
+                <div class="desc" id="lauto-desc">
+                  本區塊的資料由系統自動帶入，無需在此填寫。
+                </div>
+                <div class="sechead"><h4>內容</h4><span class="sub">自動帶入</span></div>
+                <div class="autobox">
+                  <span class="ic">⚙</span>
+                  <span class="ab-body" id="lauto-body">
+                    公司新聞為自動條件，會自動撈取本語系已發布的新聞。新增更多多語公司新聞，請至「內容管理 &gt; 公司新聞設定」管理。
+                  </span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="actbar bottom">
+            <button class="btn">預覽前台</button>
+            <button class="btn btn-main" data-go="done">發布</button>
+            <button class="btn" data-go="entry">‹ 回建站引導</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           畫面五：發布完成
+      ============================================================ -->
+      <section class="screen" id="done">
+        <div class="pagehead">
+          <h1>首頁(Home)設定</h1>
+          <div class="crumb">企業網管理 ／ 建站引導 ／ 發布</div>
+        </div>
+        <div class="content">
+          <div class="finish">
+            <div class="big">✓</div>
+            <h2>首頁已發布</h2>
+            <p>貴公司的企業網首頁已經上線，買主現在就能看到。</p>
+            <p class="muted">日後隨時可以回到「首頁(Home)設定」調整區塊與內容，改完再按一次發布即可。</p>
+
+            <div class="sumbox">
+              <div class="sh">本次發布內容</div>
+              <div class="sr"><span>版型與色系</span><b>設計款｜白色</b></div>
+              <div class="sr"><span>首頁區塊</span><b id="done-blk">6 個</b></div>
+              <div class="sr"><span>英文（母版）</span><b>已發布</b></div>
+              <div class="sr"><span>正體中文</span><b>已發布・部分內容沿用英文</b></div>
+              <div class="sr"><span>日文</span><b class="muted">尚未編輯・將沿用英文內容</b></div>
+            </div>
+
+            <div class="btns">
+              <button class="btn btn-main">檢視前台</button>
+              <button class="btn" data-go="s2">繼續編輯首頁</button>
+              <button class="btn" data-go="entry">‹ 回建站引導</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- APPEND-POINT -->
+
+    </main>
+  </div>
+  <div class="foot">Help Customer Service:+886-800506088　© 2002-2026 TAITRA</div>
+</div>
+</div>
+
+<script>
+/* ===== 畫面切換 ===== */
+function go(id){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.toggle('on', s.id===id); });
+  document.querySelectorAll('.chip').forEach(function(c){ c.classList.toggle('on', c.dataset.go===id); });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.addEventListener('click', function(e){
+  var g = e.target.closest('[data-go]');
+  if(g){ go(g.dataset.go); return; }
+});
+
+/* ===== 步驟 1：版型 → 風格連動 ===== */
+document.addEventListener('click', function(e){
+  var p = e.target.closest('[data-pick="tpl"]');
+  if(!p) return;
+  document.querySelectorAll('[data-pick="tpl"]').forEach(function(b){
+    b.classList.toggle('on', b===p);
+    b.querySelector('.radio').classList.toggle('on', b===p);
+  });
+  var isNew = p.dataset.v==='new';
+  var sn = document.getElementById('style-new'), so = document.getElementById('style-old');
+  sn.classList.toggle('hide', !isNew);
+  so.classList.toggle('hide', isNew);
+  (isNew?sn:so).classList.remove('dyn');
+  void (isNew?sn:so).offsetWidth;
+  (isNew?sn:so).classList.add('dyn');
+});
+
+/* ============================================================
+   步驟 2：區塊清單 ／ 三態 ／ 三段連動
+============================================================ */
+var PANE = {
+  header:'pane-header', hero:'pane-hero', news:'pane-news', about:'pane-about',
+  subscribe:'pane-subscribe', media:'pane-media', product:'pane-product',
+  cta1:'pane-tpl', cta2:'pane-tpl', stat:'pane-tpl',
+  contact:'pane-contact', footer:'pane-footer'
+};
+var TPLINFO = {
+  cta1:{key:'cta1', name:'行動呼籲・橫幅式'},
+  cta2:{key:'cta2', name:'行動呼籲・圖文分欄'},
+  stat:{key:'stat', name:'數據統計'}
+};
+var CONDS = {
+  rec:{name:'推薦產品 Recommendation', fb:'Recommendation', pick:false,
+       desc:'個性化預測買主有興趣的商品，提高買主與網頁產品的互動率。'},
+  products:{name:'公司產品 Products', fb:'Products', pick:false,
+       desc:'依「更新時間」排序，顯示貴公司已上架的產品。'},
+  hot:{name:'熱銷產品 Hot Sale', fb:'Hot Sale', pick:false,
+       desc:'顯示銷售動最多的產品，不足時，系統會以最新異動的線上銷售產品自動補足。'},
+  popular:{name:'人氣產品 Popular Products', fb:'Popular Products', pick:false,
+       desc:'顯示點擊數最高的 24 項線上販售產品，不足時，系統會以最新異動的線上販售產品自動補足。'},
+  new:{name:'新產品 New Products', fb:'New Products', pick:false,
+       desc:'顯示會員最新的 24 則產品圖片（含品名）。設有「New Product」貼標的產品型錄優先，不足時，系統將以最新異動的產品自動補足。'},
+  featured:{name:'焦點產品 Featured Products', fb:'Featured Products', pick:false,
+       desc:'最多顯示 24 則設有「Featured」貼標的產品型錄；顯示順序會依據設定的優先排序方式：點閱次數、更新時間、3D模型、360°環物及 Video 影音等條件由多至少，由新到舊顯示。'},
+  collection:{name:'自定義分類 Collection（ebook）', fb:'ebook', pick:false,
+       desc:'顯示指定分類項下的 24 則產品，貼有「New Product」標籤的產品優先顯示，其它則依上架日期由新到舊排序。'},
+  selection:{name:'自選產品 Selection', fb:'Selected Products', pick:true,
+       desc:'顯示自行挑選的產品，順序依自訂的排序來顯示。'}
+};
+var BADGE = {
+  todo:'<span class="badge todo">待設定</span>',
+  empty:'<span class="badge empty">無內容</span>',
+  quiet:'<span class="badge quiet">⚙</span>'
+};
+var curBlk = 'header';
+
+function renderStates(){
+  var todo = 0, shown = 0;
+  document.querySelectorAll('#s2 .blk').forEach(function(b){
+    if(b.classList.contains('hide')) return;
+    shown++;
+    var st = b.dataset.state || 'quiet';
+    if(st==='todo' || st==='empty') todo++;
+    var stEl = b.querySelector('.st');
+    if(stEl) stEl.innerHTML = BADGE[st] || BADGE.quiet;
+    var subEl = b.querySelector('.nm span');
+    if(subEl) subEl.textContent = b.dataset.sub || '';
+  });
+  var c = document.getElementById('counter');
+  if(todo>0){
+    c.classList.remove('clear');
+    c.innerHTML = '待完成 <em>'+todo+'</em> 項';
+  }else{
+    c.classList.add('clear');
+    c.innerHTML = '待完成項目已全數完成';
+  }
+  document.getElementById('pubtip').classList.toggle('on', todo===0);
+  document.getElementById('blkcount').textContent = '共 '+shown+' 個';
+  document.getElementById('done-blk').textContent = shown+' 個';
+}
+
+function setState(blk, st, sub){
+  var b = document.querySelector('#s2 .blk[data-blk="'+blk+'"]');
+  if(!b) return;
+  b.dataset.state = st;
+  if(sub) b.dataset.sub = sub;
+  renderStates();
+  syncPanelState(blk, st);
+}
+
+function syncPanelState(blk, st){
+  var pane = document.getElementById(PANE[blk]);
+  if(!pane) return;
+  var box = pane.querySelector('.panelstate');
+  if(!box) return;
+  var txt = {todo:'<span class="badge todo">待設定</span>',
+             empty:'<span class="badge empty">無內容</span>',
+             quiet:'<span class="badge auto">⚙ 已完成</span>'}[st];
+  box.innerHTML = '狀態：'+txt;
+}
+
+/* 左欄點選 → 右欄換面板 */
+function openBlk(blk){
+  curBlk = blk;
+  document.querySelectorAll('#s2 .blk').forEach(function(b){
+    b.classList.toggle('on', b.dataset.blk===blk);
+  });
+  var id = PANE[blk];
+  document.querySelectorAll('#s2 .pane').forEach(function(p){
+    p.classList.toggle('on', p.id===id);
+  });
+  if(TPLINFO[blk]) applyTpl(blk);
+}
+
+document.addEventListener('click', function(e){
+  /* 刪除區塊 */
+  var t = e.target.closest('#s2 .blk .trash');
+  if(t){
+    e.stopPropagation();
+    var blk = t.closest('.blk');
+    blk.classList.add('hide');
+    var prev = blk.previousElementSibling;
+    if(prev && prev.classList.contains('plus')) prev.classList.add('hide');
+    if(blk.classList.contains('on')) openBlk('header');
+    renderStates();
+    return;
+  }
+  /* 選區塊 */
+  var b = e.target.closest('#s2 .blk');
+  if(b){ openBlk(b.dataset.blk); return; }
+});
+
+/* 一鍵補齊設計款的完整首頁區塊 */
+document.addEventListener('click', function(e){
+  var a = e.target.closest('[data-addall]');
+  if(!a) return;
+  document.querySelectorAll('.pend').forEach(function(el){ el.classList.remove('hide'); });
+  renderStates();
+  var first = document.querySelector('#s2 .blk.pend');
+  if(first){
+    first.classList.remove('dyn'); void first.offsetWidth; first.classList.add('dyn');
+    openBlk(first.dataset.blk);
+  }
+});
+
+/* 顯示樣式單選（通用） */
+document.addEventListener('click', function(e){
+  var s = e.target.closest('[data-style]');
+  if(!s) return;
+  var g = s.dataset.style;
+  document.querySelectorAll('[data-style="'+g+'"]').forEach(function(o){
+    o.classList.toggle('on', o===s);
+    o.querySelector('.radio').classList.toggle('on', o===s);
+  });
+  if(g==='about') aboutStyle(s.dataset.v);
+  if(g==='hero'){
+    setState('hero', document.querySelector('#s2 .blk[data-blk="hero"]').dataset.state,
+             (s.dataset.v==='a'?'形象大圖':'分類樹 + 大圖輪播')+' · 1 筆（系統示意圖）');
+  }
+  if(g==='news'){
+    setState('news','quiet', (s.dataset.v==='a'?'單列最多 6 則':'垂直條列 6 則')+' · 自動帶入');
+  }
+});
+
+/* 關於我們：樣式 → 內容連動 */
+function aboutStyle(v){
+  var form = document.getElementById('about-form'),
+      auto = document.getElementById('about-auto'),
+      hint = document.getElementById('about-subhint');
+  var isFixed = (v==='fixed');
+  form.classList.toggle('hide', isFixed);
+  auto.classList.toggle('hide', !isFixed);
+  hint.textContent = isFixed ? '本樣式的內容由系統自動帶入' : '依上方選擇的樣式顯示對應欄位';
+  var live = isFixed ? auto : form;
+  live.classList.remove('dyn'); void live.offsetWidth; live.classList.add('dyn');
+  var sub = {intro:'簡介文案搭配圖片與影片', fixed:'固定撈取公司重點資訊欄位', tree:'分類樹搭配關於我們'}[v];
+  setState('about','quiet',sub);
+}
+
+/* 產品展示：資料條件 → 內容連動 */
+document.addEventListener('click', function(e){
+  var c = e.target.closest('[data-cond]');
+  if(!c) return;
+  var key = c.dataset.cond, info = CONDS[key];
+  document.querySelectorAll('[data-cond]').forEach(function(o){
+    o.classList.toggle('on', o===c);
+    o.querySelector('.radio').classList.toggle('on', o===c);
+  });
+  document.getElementById('prod-none').classList.add('hide');
+  document.getElementById('prod-auto').classList.toggle('hide', info.pick);
+  document.getElementById('prod-pick').classList.toggle('hide', !info.pick);
+  document.getElementById('prod-cond-name').textContent = info.name;
+  document.getElementById('prod-cond-desc').textContent = info.desc;
+  document.getElementById('prod-fallback').textContent = info.fb;
+  document.getElementById('prod-subhint').textContent =
+    info.pick ? '自選產品：請在下方挑選要顯示的產品' : '此條件的資料由系統自動帶入';
+  var live = document.getElementById(info.pick?'prod-pick':'prod-auto');
+  live.classList.remove('dyn'); void live.offsetWidth; live.classList.add('dyn');
+  setState('product','quiet', info.name);
+});
+
+/* 圖文模板：三個區塊共用面板 */
+function applyTpl(blk){
+  var info = TPLINFO[blk];
+  document.querySelectorAll('#tplgrid .tpl').forEach(function(t){
+    t.classList.toggle('on', t.dataset.tpl===info.key);
+  });
+  document.getElementById('tpl-cur').textContent = info.name;
+  ['cta1','cta2','stat'].forEach(function(k){
+    document.getElementById('tplprev-'+k).classList.toggle('hide', k!==info.key);
+  });
+}
+document.addEventListener('click', function(e){
+  var t = e.target.closest('#tplgrid .tpl');
+  if(!t) return;
+  document.querySelectorAll('#tplgrid .tpl').forEach(function(o){ o.classList.toggle('on', o===t); });
+  var nm = t.textContent.replace('本次新增','').trim();
+  document.getElementById('tpl-cur').textContent = nm;
+  setState(curBlk,'quiet','全欄圖文模板 · '+nm);
+});
+
+/* 儲存區塊設定 */
+document.addEventListener('click', function(e){
+  var s = e.target.closest('[data-save]');
+  if(!s) return;
+  var blk = (s.dataset.save==='tpl') ? curBlk : s.dataset.save;
+  var subs = {
+    header:'自動帶入公司名稱與 Logo',
+    hero:'形象大圖 · 1 筆',
+    media:'已新增多媒體內容'
+  };
+  setState(blk,'quiet', subs[blk] || undefined);
+  s.textContent = '已儲存 ✓';
+  setTimeout(function(){ s.textContent = '儲存區塊設定'; }, 1400);
+});
+
+/* ============================================================
+   其他語系內容編輯頁
+============================================================ */
+var LPANE = {
+  header:'lpane-header', hero:'lpane-hero', about:'lpane-about', product:'lpane-product',
+  media:'lpane-media', cta1:'lpane-tpl', cta2:'lpane-tpl', stat:'lpane-tpl',
+  news:'lpane-auto', subscribe:'lpane-auto', contact:'lpane-auto', footer:'lpane-auto'
+};
+var LAUTO = {
+  news:{t:'公司新聞', d:'本區塊的資料由系統自動帶入，無需在此填寫。',
+        b:'公司新聞為自動條件，會自動撈取本語系已發布的新聞。新增更多多語公司新聞，請至「內容管理 &gt; 公司新聞設定」管理。'},
+  subscribe:{t:'聯繫與訂閱', d:'本區塊版面與欄位為系統固定，各語系一致，無需設定。',
+        b:'買主訂閱後，名單會直接進入「會員管理」。'},
+  contact:{t:'聯絡我們表單', d:'本區塊版面與欄位為系統固定，各語系一致，無需設定。',
+        b:'買主送出的詢問單，會依貴公司於「公司資料設定」登錄的聯絡電話與收件信箱處理，並同步進入「商機管理」。'},
+  footer:{t:'頁尾', d:'頁尾為系統固定區塊，各語系一致，無需設定。',
+        b:'顯示聯繫與訂閱、社群連結、企業網 QR Code 與台灣經貿網版權資訊。'}
+};
+document.addEventListener('click', function(e){
+  var b = e.target.closest('#lang .blk');
+  if(!b) return;
+  var k = b.dataset.lblk;
+  document.querySelectorAll('#lang .blk').forEach(function(o){ o.classList.toggle('on', o===b); });
+  var id = LPANE[k];
+  document.querySelectorAll('#lang .lpane').forEach(function(p){ p.classList.toggle('on', p.id===id); });
+  if(LAUTO[k]){
+    document.getElementById('lauto-title').textContent = LAUTO[k].t;
+    document.getElementById('lauto-desc').textContent = LAUTO[k].d;
+    document.getElementById('lauto-body').innerHTML = LAUTO[k].b;
+  }
+  if(TPLINFO[k]) document.getElementById('ltpl-cur').textContent = TPLINFO[k].name;
+});
+
+/* 其他語系左欄狀態文字 */
+document.querySelectorAll('#lang .blk').forEach(function(b){
+  var s = b.querySelector('.nm span');
+  if(s) s.textContent = b.dataset.sub || '';
+});
+
+renderStates();
+</script>
+
+</body>
+</html>

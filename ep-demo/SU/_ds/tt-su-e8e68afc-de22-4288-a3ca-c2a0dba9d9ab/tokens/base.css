@@ -1,0 +1,12 @@
+html{font-size:var(--fs-root-desktop)}
+body{margin:0;padding:0;font-family:var(--font-body);color:var(--text-body);background:var(--surface-page)}
+*{box-sizing:border-box}
+h1,h2,h3,h4,h5,h6{font-family:var(--font-display);color:var(--text-heading);margin:1.5em 0 .5em;font-weight:var(--fw-regular)}
+h2{font-size:var(--fs-h2)}
+h3{font-size:var(--fs-h3)}
+h4{font-size:var(--fs-h4)}
+h1,h2,h3{line-height:var(--lh-heading)}
+h4,h5,h6{line-height:var(--lh-subheading)}
+a{color:var(--link);text-decoration:none;border-bottom:1px solid var(--border-subtle);cursor:pointer}
+a:hover{color:var(--link-hover);border-bottom-color:var(--link-hover)}
+em{font-style:normal}

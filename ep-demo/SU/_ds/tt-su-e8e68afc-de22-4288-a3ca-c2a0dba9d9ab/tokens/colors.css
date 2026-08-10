@@ -1,0 +1,51 @@
+:root{
+  /* base neutrals */
+  --n-ink:#000;
+  --n-text:#414b49;
+  --n-text-strong:#252929;
+  --n-border-light:#d7dfdd;
+  --n-border:#afbabb;
+  --n-slate:#7d979e;
+  --n-slate-hover:#436672;
+  --n-disabled:#d3dedf;
+  --n-muted:#8f9b9a;
+  --n-canvas:#e8e7dc;
+  --n-surface:#fff;
+  --n-surface-tint:#f0f4f5;
+
+  /* brand */
+  --b-teal:#436672;
+  --b-teal-deep:#1c5a6f;
+  --b-cyan:#0098c4;
+  --b-orange:#f82;
+  --b-yellow:#ffe05f;
+
+  /* semantic */
+  --c-danger:#d11;
+  --c-warning:#dd4e0c;
+  --c-success:#3a0;
+  --c-hint:#b63678;
+
+  /* microsite theme options (customer-facing storefront, not admin chrome) */
+  --theme-silver:#9aa7ab;
+  --theme-orange:#f82;
+  --theme-green:#3a0;
+
+  /* semantic aliases */
+  --text-body:var(--n-text);
+  --text-heading:var(--n-ink);
+  --text-muted:var(--n-muted);
+  --text-onDark:#fff;
+  --text-onBrand:var(--b-yellow);
+  --link:var(--b-teal-deep);
+  --link-hover:var(--b-cyan);
+  --surface-page:var(--n-canvas);
+  --surface-card:var(--n-surface);
+  --surface-subtle:var(--n-surface-tint);
+  --surface-brand:var(--b-teal);
+  --border-subtle:var(--n-border-light);
+  --border-default:var(--n-border);
+  --action-default:var(--n-slate);
+  --action-hover:var(--b-teal);
+  --focus-ring:var(--n-slate);
+}
