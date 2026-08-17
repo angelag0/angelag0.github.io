@@ -65,7 +65,7 @@ input,textarea,select,button{font-family:var(--font-body)}
               <div style="flex:1 1 auto">
                 <h3 style="font-size:1.25em;margin:3px 0 0;line-height:1.5;font-weight:normal;color:#000">企業網多語設定</h3>
                 <p style="margin:.8em 0 0">已啟用語系：英文｜正體中文｜日文</p>
-                <p style="margin:1em 0 0;font-size:.92em;color:#b63678;line-height:1.5">語系啟用與停用可於日後自由調整，請放心設定。<br>英文為版型設定的母版語系，首頁(Home)設定完成前無法停用英文語系。</p>
+                <p style="margin:1em 0 0;font-size:.92em;color:#b63678;line-height:1.5">語系啟用與停用可於日後自由調整，請放心設定。</p>
               </div>
               <div style="flex:0 1 auto;margin-left:15px;display:flex;align-items:flex-start;gap:8px;padding-top:3px">
                 <button type="button" style="height:2.4em;line-height:2.4em;padding:0 .8em;border:none;border-radius:4px;background:#7d979e;color:#fff;font-size:1em;cursor:pointer;transition:.2s" style-hover="background:#436672;box-shadow:#436672 0 0 0 2px">設定語系</button>
@@ -261,14 +261,14 @@ input,textarea,select,button{font-family:var(--font-body)}
                 <span style="flex:1"></span>
                 <span style="{{ counterCss }}">{{ counterText }}</span>
                 <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="90px,32px">預覽前台</x-import>
-                <button type="button" onClick="{{ goDone }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 .7em;height:1.8em;line-height:1.9em;font-size:.86em;background:var(--action-default);color:#fff;box-shadow:none;">發布</button>
+                <button type="button" onClick="{{ goDone }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 .7em;height:1.8em;line-height:1.9em;font-size:.86em;background:var(--action-default);color:#fff;box-shadow:none;">發布並檢視前台</button>
               </div>
               <div style="margin-top:10px;color:var(--c-hint);font-size:.92em">Tips: 系統已提供首頁預設區塊，你可增減、調整區塊順序；版型與區塊配置為各語系共用，其他語系只需編輯內容。</div>
             </div>
 
             <sc-if value="{{ allDone }}" hint-placeholder-val="{{ false }}">
               <div style="display:flex;align-items:center;gap:12px;background:#eef6ef;box-shadow:#a8ccb0 0 0 0 1px;border-radius:var(--radius-sm);color:#2f6b45;padding:10px 14px;font-size:.92em;margin-bottom:14px">
-                <b>首頁區塊都已有內容，可以發布了。</b>
+                <b>首頁的區塊都設定好了，可以發布了。</b>
                 <span style="flex:1"></span>
                 <button type="button" onClick="{{ goDone }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 .7em;height:1.8em;line-height:1.9em;font-size:.86em;background:var(--action-default);color:#fff;box-shadow:none;">立即發布</button>
               </div>
@@ -309,7 +309,7 @@ input,textarea,select,button{font-family:var(--font-body)}
                   </sc-for>
                 </div>
                 <button type="button" onClick="{{ addAll }}" style="width:100%;margin-top:10px;padding:10px;background:#fff;border:1px dashed var(--n-border);border-radius:var(--radius-sm);color:var(--text-body);font-size:.92em;cursor:pointer">＋ 新增區塊</button>
-                <div style="color:var(--c-hint);font-size:.86em;padding:8px 2px 0;line-height:1.7">Tips: 頁首與頁尾為固定區塊，不可刪除。<br>標示「無內容」的區塊，前台不會顯示這一區。</div>
+                <div style="color:var(--c-hint);font-size:.86em;padding:8px 2px 0">Tips: 頁首與頁尾為固定區塊，不可刪除。</div>
               </div>
 
               <div style="flex:1;min-width:420px;background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:20px">
@@ -320,24 +320,10 @@ input,textarea,select,button{font-family:var(--font-body)}
                 </div>
                 <div style="background:var(--surface-subtle);border-radius:var(--radius-sm);padding:11px 15px;font-size:.92em;line-height:1.7">{{ paneDesc }}</div>
 
-                <!-- 設定步驟頁籤：顯示樣式 → 資料條件 → 內容；後面的步驟依前面的選擇連動 -->
-                <sc-if value="{{ hasTabs }}" hint-placeholder-val="{{ true }}">
-                  <div>
-                    <div style="display:flex;gap:4px;margin-top:18px;border-bottom:1px solid var(--border-subtle);flex-wrap:wrap">
-                      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
-                        <button type="button" onClick="{{ t.go }}" style="{{ t.css }}">
-                          <span style="{{ t.numCss }}">{{ t.num }}</span>{{ t.title }}
-                        </button>
-                      </sc-for>
-                    </div>
-                    <div style="{{ tabHintCss }}">{{ tabHint }}</div>
-                  </div>
-                </sc-if>
-
                 <!-- 顯示樣式（共用區段） -->
                 <sc-if value="{{ hasStyles }}" hint-placeholder-val="{{ true }}">
                   <div>
-                    <button type="button" onClick="{{ sec1.toggle }}" style="{{ secHeadCss }}">
+                    <button type="button" onClick="{{ sec1.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
                       <span style="{{ sec1.numCss }}">{{ sec1.num }}</span>
                       <b style="font-size:1em;color:#000">{{ sec1.title }}</b>
                       <span style="{{ sec1.noteCss }}">{{ sec1.note }}</span>
@@ -377,7 +363,7 @@ input,textarea,select,button{font-family:var(--font-body)}
                 <!-- 頁首 -->
                 <sc-if value="{{ pane.header }}" hint-placeholder-val="{{ false }}">
                   <div>
-                    <button type="button" onClick="{{ sec1.toggle }}" style="{{ secHeadCss }}">
+                    <button type="button" onClick="{{ sec1.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
                       <span style="{{ sec1.numCss }}">{{ sec1.num }}</span>
                       <b style="font-size:1em;color:#000">{{ sec1.title }}</b>
                       <span style="{{ sec1.noteCss }}">{{ sec1.note }}</span>
@@ -408,7 +394,7 @@ input,textarea,select,button{font-family:var(--font-body)}
                 <!-- 大圖輪播 -->
                 <sc-if value="{{ pane.hero }}" hint-placeholder-val="{{ false }}">
                   <div>
-                    <button type="button" onClick="{{ sec2.toggle }}" style="{{ secHeadCss }}">
+                    <button type="button" onClick="{{ sec2.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
                       <span style="{{ sec2.numCss }}">{{ sec2.num }}</span>
                       <b style="font-size:1em;color:#000">{{ sec2.title }}</b>
                       <span style="{{ sec2.noteCss }}">{{ sec2.note }}</span>
@@ -446,7 +432,7 @@ input,textarea,select,button{font-family:var(--font-body)}
                 <!-- 關於我們 -->
                 <sc-if value="{{ pane.about }}" hint-placeholder-val="{{ false }}">
                   <div>
-                    <button type="button" onClick="{{ sec2.toggle }}" style="{{ secHeadCss }}">
+                    <button type="button" onClick="{{ sec2.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
                       <span style="{{ sec2.numCss }}">{{ sec2.num }}</span>
                       <b style="font-size:1em;color:#000">{{ sec2.title }}</b>
                       <span style="{{ sec2.noteCss }}">{{ sec2.note }}</span>
@@ -506,7 +492,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                 <!-- 產品展示 -->
                 <sc-if value="{{ pane.product }}" hint-placeholder-val="{{ false }}">
                   <div>
-                    <button type="button" onClick="{{ sec2.toggle }}" style="{{ secHeadCss }}">
+                    <button type="button" onClick="{{ sec2.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
                       <span style="{{ sec2.numCss }}">{{ sec2.num }}</span>
                       <b style="font-size:1em;color:#000">{{ sec2.title }}</b>
                       <span style="{{ sec2.noteCss }}">{{ sec2.note }}</span>
@@ -535,7 +521,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                     </div>
 
                     </div></div></div>
-                    <button type="button" onClick="{{ sec3.toggle }}" style="{{ secHeadCss }}">
+                    <button type="button" onClick="{{ sec3.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
                       <span style="{{ sec3.numCss }}">{{ sec3.num }}</span>
                       <b style="font-size:1em;color:#000">{{ sec3.title }}</b>
                       <span style="{{ sec3.noteCss }}">{{ sec3.note }}</span>
@@ -546,7 +532,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
 
                     <sc-if value="{{ prodNone }}" hint-placeholder-val="{{ true }}">
                       <div style="border:1px dashed var(--n-border);border-radius:var(--radius-sm);background:var(--surface-subtle);padding:26px;text-align:center;color:var(--text-muted);font-size:.92em;line-height:1.8">
-                        請先切換到 <b>② 資料條件</b> 選擇這一區要顯示哪些產品，<br>選定後這裡會顯示對應的內容設定。
+                        請先在上方 <b>② 資料條件</b> 選擇這一區要顯示哪些產品，<br>選定後這裡會顯示對應的內容設定。
                       </div>
                     </sc-if>
                     <sc-if value="{{ prodAuto }}" hint-placeholder-val="{{ false }}">
@@ -597,7 +583,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                 <!-- 公司新聞 -->
                 <sc-if value="{{ pane.news }}" hint-placeholder-val="{{ false }}">
                   <div>
-                    <button type="button" onClick="{{ sec2.toggle }}" style="{{ secHeadCss }}">
+                    <button type="button" onClick="{{ sec2.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
                       <span style="{{ sec2.numCss }}">{{ sec2.num }}</span>
                       <b style="font-size:1em;color:#000">{{ sec2.title }}</b>
                       <span style="{{ sec2.noteCss }}">{{ sec2.note }}</span>
@@ -611,7 +597,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                       </select>
                     </div>
                     </div></div></div>
-                    <button type="button" onClick="{{ sec3.toggle }}" style="{{ secHeadCss }}">
+                    <button type="button" onClick="{{ sec3.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
                       <span style="{{ sec3.numCss }}">{{ sec3.num }}</span>
                       <b style="font-size:1em;color:#000">{{ sec3.title }}</b>
                       <span style="{{ sec3.noteCss }}">{{ sec3.note }}</span>
@@ -629,7 +615,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                 <!-- 多媒體輪播 -->
                 <sc-if value="{{ pane.media }}" hint-placeholder-val="{{ false }}">
                   <div>
-                    <button type="button" onClick="{{ sec1.toggle }}" style="{{ secHeadCss }}">
+                    <button type="button" onClick="{{ sec1.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
                       <span style="{{ sec1.numCss }}">{{ sec1.num }}</span>
                       <b style="font-size:1em;color:#000">{{ sec1.title }}</b>
                       <span style="{{ sec1.noteCss }}">{{ sec1.note }}</span>
@@ -658,7 +644,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                 <!-- 圖文模板 -->
                 <sc-if value="{{ pane.tpl }}" hint-placeholder-val="{{ false }}">
                   <div>
-                    <button type="button" onClick="{{ sec2.toggle }}" style="{{ secHeadCss }}">
+                    <button type="button" onClick="{{ sec2.toggle }}" style="display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;margin:20px 0 11px;padding:0 0 8px;cursor:pointer;text-align:left;border-bottom:1px solid var(--border-subtle)">
                       <span style="{{ sec2.numCss }}">{{ sec2.num }}</span>
                       <b style="font-size:1em;color:#000">{{ sec2.title }}</b>
                       <span style="{{ sec2.noteCss }}">{{ sec2.note }}</span>
@@ -944,11 +930,9 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
           </div>
         </sc-if>
 
-        <!-- ================= 發布完成（燈箱） ================= -->
+        <!-- ================= 發布完成 ================= -->
         <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
-          <div style="position:fixed;top:0;right:0;bottom:0;left:0;z-index:60;background:rgba(15,18,17,.55);display:flex;align-items:center;justify-content:center;padding:24px">
-          <div style="background:#fff;border-radius:var(--radius-md);box-shadow:rgba(0,0,0,.28) 0 18px 48px;width:100%;max-width:680px;max-height:88vh;overflow:auto;padding:44px 28px 32px;text-align:center;position:relative">
-            <button type="button" onClick="{{ closePub }}" title="關閉" style="position:absolute;right:14px;top:14px;width:30px;height:30px;border-radius:50%;background:var(--surface-subtle);color:var(--text-body);border:none;font-size:.95em;line-height:1;cursor:pointer">✕</button>
+          <div style="background:#fff;border-radius:var(--radius-md);box-shadow:var(--shadow-card);padding:56px 20px;text-align:center">
             <div style="width:64px;height:64px;border-radius:50%;background:var(--b-teal);color:#fff;font-size:30px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px">✓</div>
             <h2 style="margin:0 0 8px;font-size:1.86em;color:#000">首頁已發布</h2>
             <p style="margin:0 0 6px">貴公司的企業網首頁已經上線，買主現在就能看到。</p>
@@ -958,9 +942,9 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
               <div style="background:var(--surface-subtle);padding:9px 16px;font-weight:bold;font-size:.95em">本次發布內容</div>
               <div style="display:flex;justify-content:space-between;padding:9px 16px;border-top:1px solid var(--border-subtle);font-size:.92em"><span style="color:var(--text-muted)">版型與色系</span><b>{{ setupSummary }}</b></div>
               <div style="display:flex;justify-content:space-between;padding:9px 16px;border-top:1px solid var(--border-subtle);font-size:.92em"><span style="color:var(--text-muted)">首頁區塊</span><b>{{ blockCount }} 個</b></div>
-              <div style="{{ pubRow }}"><span style="color:var(--text-muted)">英文（母版）</span><span style="{{ pubRowRight }}"><b>已發布</b><button type="button" onClick="{{ goS2 }}" style="{{ miniBtn }}">內容編輯</button><button type="button" style="{{ miniBtn }}">檢視前台</button></span></div>
-              <div style="{{ pubRow }}"><span style="color:var(--text-muted)">正體中文</span><span style="{{ pubRowRight }}"><b>已發布・部分內容沿用英文</b><button type="button" onClick="{{ goLangZh }}" style="{{ miniBtn }}">內容編輯</button><button type="button" style="{{ miniBtn }}">檢視前台</button></span></div>
-              <div style="{{ pubRow }}"><span style="color:var(--text-muted)">日文</span><span style="{{ pubRowRight }}"><b style="color:var(--text-muted)">尚未編輯・將沿用英文內容</b><button type="button" onClick="{{ goLangJa }}" style="{{ miniBtn }}">內容編輯</button><button type="button" style="{{ miniBtn }}">檢視前台</button></span></div>
+              <div style="display:flex;justify-content:space-between;padding:9px 16px;border-top:1px solid var(--border-subtle);font-size:.92em"><span style="color:var(--text-muted)">英文（母版）</span><b>已發布</b></div>
+              <div style="display:flex;justify-content:space-between;padding:9px 16px;border-top:1px solid var(--border-subtle);font-size:.92em"><span style="color:var(--text-muted)">正體中文</span><b>已發布・部分內容沿用英文</b></div>
+              <div style="display:flex;justify-content:space-between;padding:9px 16px;border-top:1px solid var(--border-subtle);font-size:.92em"><span style="color:var(--text-muted)">日文</span><b style="color:var(--text-muted)">尚未編輯・將沿用英文內容</b></div>
             </div>
 
             <div style="margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
@@ -968,7 +952,6 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
               <button type="button" onClick="{{ goS2 }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--surface-card);color:var(--text-body);box-shadow:var(--shadow-outline);">繼續編輯首頁</button>
               <button type="button" onClick="{{ goEntry }}" style="display:inline-block;font-family:var(--font-body);border:none;cursor:pointer;transition:box-shadow var(--dur-base) var(--ease-standard),background var(--dur-base) var(--ease-standard);text-align:center;white-space:nowrap;border-radius:var(--radius-pill);padding:0 16px;height:2.3em;line-height:2.3em;font-size:.95em;background:var(--surface-card);color:var(--text-body);box-shadow:var(--shadow-outline);">‹ 回建站引導</button>
             </div>
-          </div>
           </div>
         </sc-if>
 
@@ -997,7 +980,7 @@ const BLOCK_DEFS = [
     desc:'您可於首頁插入「聯繫與訂閱」區塊，讓買主訂閱貴公司最新產品資訊。本區塊版面與欄位為系統固定，無需設定。' },
   { key:'media', name:'多媒體輪播', sub:'Video 影音 · 1 則', state:'quiet', on:false, icon:'media-carousel.svg',
     desc:'可在首頁設定輪播展示Video影音、360°產品、720°實景、3D模型等多媒體資訊。(最多顯示前 5 則)' },
-  { key:'product', name:'產品展示', sub:'尚未選擇資料條件', state:'empty', on:true, icon:'product-queue-2.svg',
+  { key:'product', name:'產品展示', sub:'尚未選擇資料條件', state:'todo', on:true, icon:'product-queue-2.svg',
     desc:'設定顯示產品資料條件與樣式。您可將相關產品設定為「首頁產品推薦」，針對該產品的訂單紀錄、瀏覽紀錄以及貼標資訊等，推薦給買主最吸睛的產品。' },
   { key:'cta1', name:'圖文模板', sub:'全欄圖文模板 · 行動呼籲（橫幅式）', state:'empty', on:false, icon:'text-image.svg',
     desc:'提供可插入圖文模板。圖文模板提供設計好的配置與樣式，讓您自由更換圖片、編輯文字、設定連結，更自由的設計您的首頁。' },
@@ -1108,13 +1091,12 @@ class Component extends DCLogic {
     styles: { hero:'a', about:'intro', news:'a', product:'s1', tpl:'full' },
     tplPick: { cta1:'cta1', cta2:'cta2', stat:'stat' },
     cond: null,
-    tab: 1,
+    openSec: 1,
     touched: {},
     flash: null,
     savedFlash: false,
     lang: '正體中文',
     lcur: 'header',
-    pub: false,
   };
 
   def(key) { return BLOCK_DEFS.find(b => b.key === key); }
@@ -1134,16 +1116,16 @@ class Component extends DCLogic {
     const first = pending[0].key;
     this.setState(s => ({
       blocks: s.blocks.map(b => (b.on || b.removed) ? b : { ...b, on:true }),
-      cur: first, flash: first, savedFlash:false, tab:1,
+      cur: first, flash: first, savedFlash:false, openSec:1,
     }));
     clearTimeout(this._flash);
     this._flash = setTimeout(() => this.setState({ flash:null }), 1000);
   }
 
-  go(screen) { this.setState({ screen, pub:false }); window.scrollTo({ top:0, behavior:'smooth' }); }
+  go(screen) { this.setState({ screen }); window.scrollTo({ top:0, behavior:'smooth' }); }
 
   pickStyle(group, v) {
-    this.setState(s => ({ styles: { ...s.styles, [group]: v }, tab: 2 }));
+    this.setState(s => ({ styles: { ...s.styles, [group]: v }, openSec: 2 }));
     const label = STYLE_SETS[group].find(o => o.v === v).label;
     if (group === 'hero') this.setBlock('hero', { sub: label + ' · 1 筆（系統示意圖）' });
     if (group === 'about') this.setBlock('about', { sub: label, state:'quiet' });
@@ -1152,14 +1134,14 @@ class Component extends DCLogic {
   }
 
   pickCond(key) {
-    this.setState({ cond: key, tab: 3 });
+    this.setState({ cond: key, openSec: 3 });
     this.setBlock('product', { state:'quiet', sub: CONDS[key].name });
   }
 
   pickTpl(key) {
     const cur = this.state.cur;
     const name = TPL_GRID.find(t => t.key === key).name;
-    this.setState(s => ({ tplPick: { ...s.tplPick, [cur]: key }, tab: 3 }));
+    this.setState(s => ({ tplPick: { ...s.tplPick, [cur]: key }, openSec: 3 }));
     this.setBlock(cur, { state:'quiet', sub:'全欄圖文模板 · ' + name });
   }
 
@@ -1187,40 +1169,61 @@ class Component extends DCLogic {
       border: on ? '5px solid var(--b-teal)' : '2px solid var(--n-border)',
     };
   }
-  /* 區塊只有兩種狀態：無內容（前台預設隱藏）／已有內容 */
   badgeCss(state) {
     const base = { fontSize:'.78em', lineHeight:'1.8', padding:'0 8px', borderRadius:'2px', whiteSpace:'nowrap', flex:'0 0 auto' };
-    if (state === 'empty') return { ...base, color:'var(--c-warning)', background:'#fdf3ec', boxShadow:'#e6b892 0 0 0 1px' };
+    if (state === 'todo') return { ...base, color:'var(--c-warning)', background:'#fdf3ec', boxShadow:'#e6b892 0 0 0 1px' };
+    if (state === 'empty') return { ...base, color:'var(--text-muted)', background:'#fff', border:'1px dashed var(--n-border)' };
     return { ...base, color:'var(--text-muted)', background:'none', padding:0, fontSize:'.95em' };
   }
-  badgeText(state) { return state === 'empty' ? '無內容' : '⚙'; }
+  badgeText(state) { return state === 'todo' ? '待設定' : state === 'empty' ? '無內容' : '⚙'; }
 
-  /* 目前停在第幾個頁籤（1-based）。若停在被鎖住的步驟（前置步驟還沒選），退回最後一個可用的步驟 */
-  curTab(list) {
-    const t = this.state.tab;
-    if (t >= 1 && t <= list.length && !list[t - 1].lock) return t;
-    for (let i = list.length - 1; i >= 0; i--) if (!list[i].lock) return i + 1;
-    return 1;
-  }
-
-  /* 頁籤內容：只顯示目前頁籤那一段。段落自己的標題列不再出現，改由上方頁籤呈現 */
+  /* 折疊步驟：一次只展開一段，選完自動收合並展開下一段 */
   secObj(list, i) {
-    const hidden = { num:'', title:'', note:'', open:false, toggle:()=>{},
-      numCss:{ display:'none' }, arrowCss:{ display:'none' }, noteCss:{ display:'none' },
-      body:{ display:'none' } };
     const d = list[i];
-    if (!d) return hidden;
-    const open = this.curTab(list) === i + 1;
-    return { ...hidden, num:String(i + 1), title:d.title, note:d.hint, open,
-      body:{ display: open ? 'block' : 'none' } };
+    const blank = { num:'', title:'', note:'', open:false, toggle:()=>{},
+      numCss:{ display:'none' }, arrowCss:{ display:'none' }, noteCss:{ display:'none' },
+      body:{ display:'block' } };
+    if (!d) return blank;
+    const single = list.length === 1;
+    const open = single || this.state.openSec === i + 1;
+    return {
+      num: String(i + 1),
+      title: d.title,
+      note: open ? d.hint : (d.summary || d.hint),
+      open,
+      toggle: () => { if (single) return; this.setState(st => ({ openSec: st.openSec === i + 1 ? 0 : i + 1 })); },
+      numCss: {
+        display:'inline-flex', alignItems:'center', justifyContent:'center', width:'20px', height:'20px',
+        borderRadius:'50%', flex:'0 0 20px', fontSize:'.8em', fontWeight:'bold',
+        background: open ? 'var(--b-teal)' : (d.done ? 'var(--n-slate)' : 'var(--surface-subtle)'),
+        color: (open || d.done) ? '#fff' : 'var(--text-muted)',
+      },
+      noteCss: {
+        fontSize:'.86em', flex:1, minWidth:0, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+        color: open ? 'var(--text-muted)' : (d.done ? 'var(--text-body)' : 'var(--c-warning)'),
+      },
+      arrowCss: {
+        display: single ? 'none' : 'block', width:'8px', height:'8px', flex:'0 0 8px',
+        borderRight:'2px solid var(--n-slate)', borderBottom:'2px solid var(--n-slate)',
+        transform: open ? 'rotate(225deg)' : 'rotate(45deg)', marginTop: open ? '4px' : '-3px',
+        transition:'transform .3s cubic-bezier(.4,0,.2,1), margin-top .3s cubic-bezier(.4,0,.2,1)',
+      },
+      /* 展開收合動畫：grid-template-rows 0fr↔1fr 可對任意高度平滑過渡 */
+      body: {
+        display:'grid',
+        gridTemplateRows: open ? '1fr' : '0fr',
+        opacity: open ? 1 : 0,
+        pointerEvents: open ? 'auto' : 'none',
+        transition:'grid-template-rows .32s cubic-bezier(.4,0,.2,1), opacity .24s ease',
+      },
+    };
   }
 
   renderVals() {
     const ns = 'TaiwanTradeSUDesignSystem_e8e68a';
     const s = this.state;
     const visible = s.blocks.filter(b => b.on);
-    /* 只剩「無內容」一種未填狀態；無內容＝前台預設隱藏，不是待辦事項 */
-    const emptyCount = visible.filter(b => b.state === 'empty').length;
+    const todo = visible.filter(b => b.state === 'todo' || b.state === 'empty').length;
     const cur = s.cur;
     const curDef = this.def(cur);
     const isTplBlock = cur === 'cta1' || cur === 'cta2' || cur === 'stat';
@@ -1233,32 +1236,25 @@ class Component extends DCLogic {
       { id:'s1', label:'步驟 1　版型與色系' },
       { id:'s2', label:'步驟 2　版面與內容' },
       { id:'lang', label:'其他語系內容編輯' },
-      { id:'pub', label:'發布完成' },
+      { id:'done', label:'發布完成' },
     ];
-    const navChips = screens.map(x => {
-      const on = x.id === 'pub' ? s.pub : (s.screen === x.id && !s.pub);
-      return {
-        label: x.label,
-        /* 發布結果是燈箱，會蓋在步驟 2 上 */
-        go: () => {
-          if (x.id !== 'pub') return this.go(x.id);
-          this.setState({ screen:'s2', pub:true });
-          window.scrollTo({ top:0, behavior:'smooth' });
-        },
-        css: {
-          background: on ? '#fff' : 'transparent',
-          color: on ? 'var(--b-teal)' : '#fff',
-          border: '1px solid ' + (on ? '#fff' : 'rgba(255,255,255,.45)'),
-          borderRadius:'var(--radius-pill)', padding:'4px 14px', fontSize:'.86em',
-          fontWeight: on ? 'bold' : 'normal', cursor:'pointer', whiteSpace:'nowrap',
-        },
-      };
-    });
+    const navChips = screens.map(x => ({
+      label: x.label,
+      go: () => this.go(x.id),
+      css: {
+        background: s.screen === x.id ? '#fff' : 'transparent',
+        color: s.screen === x.id ? 'var(--b-teal)' : '#fff',
+        border: '1px solid ' + (s.screen === x.id ? '#fff' : 'rgba(255,255,255,.45)'),
+        borderRadius:'var(--radius-pill)', padding:'4px 14px', fontSize:'.86em',
+        fontWeight: s.screen === x.id ? 'bold' : 'normal', cursor:'pointer', whiteSpace:'nowrap',
+      },
+    }));
 
-    const titles = { entry:'建站引導', s1:'首頁(Home)設定', s2:'首頁(Home)設定', lang:'首頁(Home)資料編輯' };
+    const titles = { entry:'建站引導', s1:'首頁(Home)設定', s2:'首頁(Home)設定', lang:'首頁(Home)資料編輯', done:'首頁(Home)設定' };
     const paths = {
       entry:['企業網管理','建站引導'], s1:['企業網管理','建站引導','首頁(Home)設定'],
       s2:['企業網管理','建站引導','首頁(Home)設定'], lang:['企業網管理','建站引導','首頁(Home)資料編輯'],
+      done:['企業網管理','建站引導','發布'],
     };
 
     const tplCards = [
@@ -1292,7 +1288,7 @@ class Component extends DCLogic {
         selected: sel,
         showPlus: i > 0,
         addAll: () => this.addAll(),
-        open: () => this.setState({ cur:b.key, savedFlash:false, tab:1 }),
+        open: () => this.setState({ cur:b.key, savedFlash:false, openSec:1 }),
         del: () => {
           this.setState(st => ({
             blocks: st.blocks.map(x => x.key === b.key ? { ...x, on:false, removed:true } : x),
@@ -1367,8 +1363,7 @@ class Component extends DCLogic {
         summary: condInfo ? '已選：' + condInfo.name : '尚未選擇，請先設定', done: !!condInfo },
       { title:'內容',
         hint: condInfo ? (condInfo.pick ? '自選產品：請在下方挑選要顯示的產品' : '此條件的資料由系統自動帶入') : '依上方選擇的資料條件顯示',
-        summary: condInfo ? (condInfo.pick ? '已挑選 3 筆產品' : '系統自動帶入') : '請先選擇資料條件',
-        done: !!condInfo, lock: !condInfo },
+        summary: condInfo ? (condInfo.pick ? '已挑選 3 筆產品' : '系統自動帶入') : '請先選擇資料條件', done: !!condInfo },
     ];
     else if (isTplBlock) secList = [
       { title:'顯示樣式', hint:'選擇後，下方的內容欄位會跟著調整', summary:'已選：' + cut(styleLabel), done:true },
@@ -1377,42 +1372,6 @@ class Component extends DCLogic {
     const sec1 = this.secObj(secList, 0);
     const sec2 = this.secObj(secList, 1);
     const sec3 = this.secObj(secList, 2);
-
-    const curTabIdx = this.curTab(secList);
-    const hasLock = secList.some(d => d.lock);
-    const tabs = secList.map((d, i) => {
-      const on = curTabIdx === i + 1;
-      return {
-        num: String(i + 1), title: d.title,
-        go: () => { if (d.lock) return; this.setState({ tab: i + 1 }); },
-        css: {
-          display:'inline-flex', alignItems:'center', gap:'7px', background:'none', border:'none',
-          fontFamily:'var(--font-body)', fontSize:'.95em', padding:'9px 14px', marginBottom:'-1px',
-          cursor: d.lock ? 'not-allowed' : 'pointer',
-          color: d.lock ? 'var(--n-border)' : (on ? '#000' : 'var(--text-muted)'),
-          fontWeight: on ? 'bold' : 'normal',
-          borderBottom: '2px solid ' + (on ? 'var(--b-teal)' : 'transparent'),
-        },
-        numCss: {
-          display:'inline-flex', alignItems:'center', justifyContent:'center', width:'20px', height:'20px',
-          borderRadius:'50%', flex:'0 0 20px', fontSize:'.8em', fontWeight:'bold',
-          background: on ? 'var(--b-teal)' : (!d.lock && d.done ? 'var(--n-slate)' : 'var(--surface-subtle)'),
-          color: on ? '#fff' : (d.lock ? 'var(--n-border)' : (d.done ? '#fff' : 'var(--text-muted)')),
-        },
-      };
-    });
-    const curSec = secList[curTabIdx - 1];
-    /* 這一區還沒有內容時，分頁下方直接出提示，讓廠商知道前台不會顯示這一區 */
-    const paneEmpty = paneState === 'empty';
-    const tabHint = paneEmpty
-      ? ('這一區目前沒有內容，前台不會顯示這一區。'
-        + (hasLock ? '請先在「② 資料條件」選好條件，再設定內容。' : '填入內容後就會顯示在首頁。'))
-      : ((curSec ? curSec.hint : '') + (hasLock ? '　※ 選好「資料條件」後才能設定「內容」。' : ''));
-    const tabHintCss = paneEmpty
-      ? { marginTop:'12px', padding:'9px 13px', borderRadius:'var(--radius-sm)', background:'#fdf3ec',
-          boxShadow:'#e6b892 0 0 0 1px', color:'var(--c-warning)', fontSize:'.88em',
-          lineHeight:'1.7', fontWeight:'bold' }
-      : { marginTop:'10px', fontSize:'.86em', color:'var(--text-muted)', lineHeight:'1.6' };
     const langBlockKeys = visible.map(b => b.key);
     const lcur = langBlockKeys.indexOf(s.lcur) >= 0 ? s.lcur : 'header';
     const langSubs = { header:'已填寫', hero:'未填寫，沿用英文', about:'未填寫，沿用英文', product:'未填寫，沿用英文',
@@ -1443,37 +1402,29 @@ class Component extends DCLogic {
       headingProps: { path: paths[s.screen] },
       navChips,
       isEntry: s.screen === 'entry', isS1: s.screen === 's1', isS2: s.screen === 's2',
-      isLang: s.screen === 'lang', isDone: s.pub,
+      isLang: s.screen === 'lang', isDone: s.screen === 'done',
       goEntry: () => this.go('entry'), goS1: () => this.go('s1'), goS2: () => this.go('s2'),
-      /* 發布結果以燈箱蓋在目前畫面上，不再是獨立頁面 */
-      goDone: () => this.setState({ pub:true }),
-      closePub: () => this.setState({ pub:false }),
-      pubRow: { display:'flex', justifyContent:'space-between', alignItems:'center', gap:'10px',
-        padding:'10px 16px', borderTop:'1px solid var(--border-subtle)', fontSize:'.92em', flexWrap:'wrap' },
-      pubRowRight: { display:'flex', alignItems:'center', gap:'8px', flexWrap:'wrap', justifyContent:'flex-end' },
-      miniBtn: { display:'inline-block', fontFamily:'var(--font-body)', border:'none', cursor:'pointer',
-        background:'var(--surface-card)', color:'var(--text-body)', boxShadow:'var(--shadow-outline)',
-        borderRadius:'var(--radius-pill)', padding:'0 12px', height:'2em', lineHeight:'2em',
-        fontSize:'.92em', whiteSpace:'nowrap' },
+      goDone: () => this.go('done'),
       goLangZh: () => { this.setState({ lang:'正體中文' }); this.go('lang'); },
       goLangJa: () => { this.setState({ lang:'日文' }); this.go('lang'); },
       seniorityOn: s.seniorityOn,
       setSeniority: v => this.setState({ seniorityOn:v }),
 
       setupSummary: tplLabel + '｜' + colorLabel,
+      publishState: todo > 0 ? '尚未發布' : '可發布',
       tplCards, colorOpts,
       colorTip: s.tpl === 'new'
         ? 'Tips: 設計款目前提供白色系。色系可隨時調整，請放心設定。'
         : 'Tips: 經典款可選擇要搭配的網站色系。色系可隨時調整，請放心設定。',
       blocks, blockCount: visible.length,
-      counterText: emptyCount > 0 ? '無內容 ' + emptyCount + ' 區・前台不顯示' : '所有區塊都有內容',
+      counterText: todo > 0 ? '待完成 ' + todo + ' 項' : '待完成項目已全數完成',
       counterCss: {
         display:'inline-flex', alignItems:'center', gap:'7px', background:'#fff', padding:'4px 12px',
         borderRadius:'var(--radius-pill)', fontSize:'.86em', fontWeight:'bold', whiteSpace:'nowrap',
-        color: emptyCount > 0 ? 'var(--c-warning)' : 'var(--text-muted)',
-        boxShadow: emptyCount > 0 ? '#e6b892 0 0 0 1px' : 'var(--shadow-hairline)',
+        color: todo > 0 ? 'var(--c-warning)' : 'var(--text-muted)',
+        boxShadow: todo > 0 ? '#e6b892 0 0 0 1px' : 'var(--shadow-hairline)',
       },
-      allDone: emptyCount === 0,
+      allDone: todo === 0,
       addAll: () => this.addAll(),
       paneTitle: curDef.name,
       paneDesc: curDef.desc,
@@ -1488,11 +1439,7 @@ class Component extends DCLogic {
       secInner: { overflow:'hidden', minHeight:0 },
       /* 內層留白：卡片邊框是 box-shadow 畫的，繪製於元素外側，沒有留白會被 overflow:hidden 裁掉 */
       secPad: { padding:'6px' },
-      /* 段落標題列改由上方頁籤取代，這裡整列隱藏 */
-      secHeadCss: { display:'none' },
-      hasTabs: secList.length > 1,
-      tabs, tabHint, tabHintCss,
-      goSec3: () => this.setState({ tab:3 }),
+      goSec3: () => this.setState({ openSec:3 }),
       pane: {
         header: cur === 'header', hero: cur === 'hero', about: cur === 'about', product: cur === 'product',
         news: cur === 'news', media: cur === 'media', tpl: isTplBlock, system: isSystem,
