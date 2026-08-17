@@ -325,8 +325,8 @@ input,textarea,select,button{font-family:var(--font-body)}
                   <div>
                     <div style="display:flex;gap:4px;margin-top:18px;border-bottom:1px solid var(--border-subtle);flex-wrap:wrap">
                       <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
-                        <button type="button" onClick="{{ t.go }}" style="{{ t.css }}">
-                          <span style="{{ t.numCss }}">{{ t.num }}</span>{{ t.title }}
+                        <button type="button" onClick="{{ t.go }}" title="{{ t.tip }}" style="{{ t.css }}">
+                          <span style="{{ t.numCss }}">{{ t.num }}</span>{{ t.title }}<span style="{{ t.dotCss }}"></span>
                         </button>
                       </sc-for>
                     </div>
@@ -1380,10 +1380,21 @@ class Component extends DCLogic {
 
     const curTabIdx = this.curTab(secList);
     const hasLock = secList.some(d => d.lock);
+    /* 這一區還沒有內容時，只在「內容」那個分頁上點一個小橘點提醒，不占一整條版面 */
+    const paneEmpty = paneState === 'empty';
     const tabs = secList.map((d, i) => {
       const on = curTabIdx === i + 1;
+      const attn = paneEmpty && d.title === '內容';
       return {
         num: String(i + 1), title: d.title,
+        tip: attn
+          ? (d.lock ? '這一區還沒有內容，前台不會顯示。請先選好「② 資料條件」。'
+                    : '這一區還沒有內容，前台不會顯示。點這裡設定內容。')
+          : '',
+        dotCss: attn
+          ? { display:'inline-block', width:'7px', height:'7px', borderRadius:'50%',
+              background:'var(--c-warning)', marginLeft:'6px', flex:'0 0 7px' }
+          : { display:'none' },
         go: () => { if (d.lock) return; this.setState({ tab: i + 1 }); },
         css: {
           display:'inline-flex', alignItems:'center', gap:'7px', background:'none', border:'none',
@@ -1402,17 +1413,8 @@ class Component extends DCLogic {
       };
     });
     const curSec = secList[curTabIdx - 1];
-    /* 這一區還沒有內容時，分頁下方直接出提示，讓廠商知道前台不會顯示這一區 */
-    const paneEmpty = paneState === 'empty';
-    const tabHint = paneEmpty
-      ? ('這一區目前沒有內容，前台不會顯示這一區。'
-        + (hasLock ? '請先在「② 資料條件」選好條件，再設定內容。' : '填入內容後就會顯示在首頁。'))
-      : ((curSec ? curSec.hint : '') + (hasLock ? '　※ 選好「資料條件」後才能設定「內容」。' : ''));
-    const tabHintCss = paneEmpty
-      ? { marginTop:'12px', padding:'9px 13px', borderRadius:'var(--radius-sm)', background:'#fdf3ec',
-          boxShadow:'#e6b892 0 0 0 1px', color:'var(--c-warning)', fontSize:'.88em',
-          lineHeight:'1.7', fontWeight:'bold' }
-      : { marginTop:'10px', fontSize:'.86em', color:'var(--text-muted)', lineHeight:'1.6' };
+    const tabHint = curSec ? curSec.hint : '';
+    const tabHintCss = { marginTop:'10px', fontSize:'.86em', color:'var(--text-muted)', lineHeight:'1.6' };
     const langBlockKeys = visible.map(b => b.key);
     const lcur = langBlockKeys.indexOf(s.lcur) >= 0 ? s.lcur : 'header';
     const langSubs = { header:'已填寫', hero:'未填寫，沿用英文', about:'未填寫，沿用英文', product:'未填寫，沿用英文',
