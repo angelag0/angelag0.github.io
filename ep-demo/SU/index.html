@@ -359,16 +359,6 @@ input,textarea,select,button{font-family:var(--font-body)}
                     <sc-if value="{{ showTreeWarn }}" hint-placeholder-val="{{ true }}">
                       <div style="color:var(--c-warning);font-size:.86em;margin-top:9px">※提醒您：使用「分類樹搭配」前，請確認分類已啟用，且分類中已有產品型錄，否則將無法顯示於企業網站。</div>
                     </sc-if>
-                    <sc-if value="{{ showTplGrid }}" hint-placeholder-val="{{ false }}">
-                      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:16px">
-                        <sc-for list="{{ tplGrid }}" as="t" hint-placeholder-count="10">
-                          <div style="{{ t.css }}">
-                            <img src="{{ t.icon }}" alt="" style="width:100%;height:62px;object-fit:contain;object-position:center top;display:block;background:#fff;box-shadow:var(--shadow-hairline);border-radius:2px;margin-bottom:7px">
-                            {{ t.name }}<span style="{{ t.tagCss }}">{{ t.tag }}</span>
-                          </div>
-                        </sc-for>
-                      </div>
-                    </sc-if>
                     </div>
                     </div></div></div>
                   </div>
@@ -606,19 +596,11 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                     <div style="{{ secBody2 }}"><div style="{{ secInner }}"><div style="{{ secPad }}">
                     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
                       <label style="width:110px;flex:0 0 110px;text-align:right;font-weight:bold;font-size:.92em">按鈕資料更新</label>
-                      <select onChange="{{ goSec3 }}" style="min-width:180px;padding:6px 10px;border:1px solid var(--n-border);border-radius:var(--radius-sm);font-size:.92em">
+                      <select style="min-width:180px;padding:6px 10px;border:1px solid var(--n-border);border-radius:var(--radius-sm);font-size:.92em">
                         <option>每次一排</option>
                       </select>
                     </div>
-                    </div></div></div>
-                    <button type="button" onClick="{{ sec3.toggle }}" style="{{ secHeadCss }}">
-                      <span style="{{ sec3.numCss }}">{{ sec3.num }}</span>
-                      <b style="font-size:1em;color:#000">{{ sec3.title }}</b>
-                      <span style="{{ sec3.noteCss }}">{{ sec3.note }}</span>
-                      <span style="{{ sec3.arrowCss }}"></span>
-                    </button>
-                    <div style="{{ secBody3 }}"><div style="{{ secInner }}"><div style="{{ secPad }}">
-                    <div style="background:var(--surface-subtle);border-radius:var(--radius-sm);padding:13px 16px;font-size:.92em;line-height:1.75">
+                    <div style="margin-top:14px;background:var(--surface-subtle);border-radius:var(--radius-sm);padding:13px 16px;font-size:.92em;line-height:1.75">
                       公司新聞為自動條件。新增更多多語公司新聞，請至「內容管理 &gt; 公司新聞設定」管理。
                       <div style="margin-top:10px"><x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="230px,32px">前往「內容管理 &gt; 公司新聞設定」</x-import></div>
                     </div>
@@ -655,7 +637,7 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                   </div>
                 </sc-if>
 
-                <!-- 圖文模板 -->
+                <!-- 圖文模板：比照現行後台介面——左上角區塊標籤＋外框，框右上角「＋ 新增」，框內直接顯示前台圖文 -->
                 <sc-if value="{{ pane.tpl }}" hint-placeholder-val="{{ false }}">
                   <div>
                     <button type="button" onClick="{{ sec2.toggle }}" style="{{ secHeadCss }}">
@@ -665,28 +647,23 @@ Founded in 2002, Taiwantrade is the official B2B site of Taiwan. Taiwantrade is 
                       <span style="{{ sec2.arrowCss }}"></span>
                     </button>
                     <div style="{{ secBody2 }}"><div style="{{ secInner }}"><div style="{{ secPad }}">
-                    <div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px;flex-wrap:wrap">
-                      <span style="color:var(--c-warning);font-size:.86em;flex:1;min-width:240px">Tips: 點「＋ 新增」可挑選範本，並直接編輯圖片、文字與連結。</span>
-                      <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="70px,32px">＋ 新增</x-import>
+                    <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+                      <button type="button" onClick="{{ tplAdd }}" style="{{ addBtnCss }}">＋ 新增</button>
                     </div>
-                    <div style="box-shadow:var(--shadow-hairline);border-radius:var(--radius-sm);padding:16px">
-                      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
-                        <div style="flex:1;min-width:220px">
-                          <div style="font-size:1.1em;font-weight:bold;color:#000;margin-bottom:8px">{{ tplPreview.title }}</div>
-                          <div style="font-size:.92em;color:var(--text-muted);line-height:1.7">{{ tplPreview.body }}</div>
-                          <span style="display:inline-block;margin-top:10px;padding:5px 16px;background:var(--b-orange);color:#fff;font-size:.86em;border-radius:2px">Link Text</span>
-                        </div>
-                        <div style="width:200px;height:120px;background:var(--surface-subtle);flex:0 0 200px;display:flex;align-items:center;justify-content:center;font-size:.86em;color:var(--text-muted)">範本示意圖</div>
+                    <div style="position:relative;padding-top:14px">
+                      <span style="position:absolute;left:18px;top:0;z-index:2;background:#fff;border:1px solid var(--n-border);border-radius:3px;padding:5px 15px;font-size:.95em;color:#000;line-height:1.4">圖文模板</span>
+                      <div style="border:1px solid var(--n-border);border-radius:3px;padding:30px 20px 20px;min-height:126px">
+                        <sc-if value="{{ tplHasContent }}" hint-placeholder-val="{{ true }}">
+                          <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+                            <div style="flex:1;min-width:210px;text-align:center;padding:12px 0">
+                              <div style="font-size:1.35em;font-weight:bold;color:#000;margin-bottom:14px">{{ tplPreview.title }}</div>
+                              <div style="font-size:.95em;color:var(--text-muted);line-height:1.8;text-align:left">{{ tplPreview.body }}</div>
+                              <span style="display:inline-block;margin-top:18px;padding:7px 18px;background:var(--b-orange);color:#fff;font-size:.92em;border-radius:2px">Link Text</span>
+                            </div>
+                            <div style="flex:1;min-width:210px;height:208px;background:var(--surface-subtle);display:flex;align-items:center;justify-content:center;font-size:.86em;color:var(--text-muted)">範本示意圖</div>
+                          </div>
+                        </sc-if>
                       </div>
-                      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid var(--border-subtle)">
-                        <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="100px,32px">✎ 編輯內容</x-import>
-                        <x-import component-from-global-scope="{{ ns }}.Button" variant="outline" size="small" hint-size="70px,32px">🗑 刪除</x-import>
-                      </div>
-                    </div>
-                    <div style="margin-top:12px;background:var(--surface-subtle);border-radius:var(--radius-sm);padding:13px 16px;font-size:.92em;line-height:1.7">
-                      目前是<b>範本自帶的示意圖文</b>，前台已可正常顯示，可隨時換成貴公司的圖片與文案。
-                    </div>
                     </div>
                     </div></div></div>
                   </div>
@@ -1156,11 +1133,9 @@ class Component extends DCLogic {
     this.setBlock('product', { state:'quiet', sub: CONDS[key].name });
   }
 
-  pickTpl(key) {
-    const cur = this.state.cur;
-    const name = TPL_GRID.find(t => t.key === key).name;
-    this.setState(s => ({ tplPick: { ...s.tplPick, [cur]: key }, tab: 3 }));
-    this.setBlock(cur, { state:'quiet', sub:'全欄圖文模板 · ' + name });
+  /* ②內容框右上的「＋ 新增」：比照現行後台，按下後框內直接長出範本自帶的前台圖文 */
+  addTpl() {
+    this.setBlock(this.state.cur, { state:'quiet' });
   }
 
   save() {
@@ -1326,18 +1301,6 @@ class Component extends DCLogic {
     const condInfo = s.cond ? CONDS[s.cond] : null;
 
     const curTplKey = isTplBlock ? s.tplPick[cur] : 'cta1';
-    const tplGrid = TPL_GRID.map(t => ({
-      name:t.name, tag:t.tag || '', icon: SCHEMA + t.icon,
-      pick: () => this.pickTpl(t.key),
-      css: {
-        boxShadow: curTplKey === t.key ? 'var(--b-teal) 0 0 0 2px' : 'var(--shadow-hairline)',
-        border:'none', background:'#fff', borderRadius:'var(--radius-sm)', padding:'8px',
-        fontSize:'.86em', color: curTplKey === t.key ? '#000' : 'var(--text-body)',
-        fontWeight: curTplKey === t.key ? 'bold' : 'normal', cursor:'pointer', textAlign:'center',
-      },
-      tagCss: t.tag ? { display:'block', color:'var(--b-teal)', fontSize:'.9em', fontWeight:'normal' } : { display:'none' },
-    }));
-
     const paneState = this.blk(cur).state;
 
     const styleLabel = styleGroup ? ((STYLE_SETS[styleGroup].find(o => o.v === s.styles[styleGroup]) || {}).label || '') : '';
@@ -1356,10 +1319,10 @@ class Component extends DCLogic {
         hint: s.styles.about === 'fixed' ? '本樣式的內容由系統自動帶入' : '依上方選擇的樣式顯示對應欄位',
         summary: s.styles.about === 'fixed' ? '系統自動帶入 8 項重點資訊' : '已填寫公司簡介與影片' },
     ];
+    /* 公司新聞的內容全由系統自動帶入，沒有可填欄位，因此不設「內容」分頁 */
     else if (cur === 'news') secList = [
       { title:'顯示樣式', hint:'新聞在首頁的排列方式', summary:'已選：' + cut(styleLabel), done:true },
       { title:'資料條件', hint:'新聞由系統依條件自動撈取', summary:'按鈕資料更新：每次一排', done:true },
-      { title:'內容', hint:'自動帶入，無需在此填寫', summary:'系統自動帶入' },
     ];
     else if (cur === 'product') secList = [
       { title:'顯示樣式', hint:'產品在首頁的排列方式', summary:'已選：' + cut(styleLabel), done:true },
@@ -1372,7 +1335,7 @@ class Component extends DCLogic {
     ];
     else if (isTplBlock) secList = [
       { title:'顯示樣式', hint:'選擇後，下方的內容欄位會跟著調整', summary:'已選：' + cut(styleLabel), done:true },
-      { title:'內容', hint:'點「＋ 新增」可挑選範本並編輯圖文', summary:'範本自帶示意圖文（' + tplName + '）' },
+      { title:'內容', hint:'', summary:'範本自帶示意圖文（' + tplName + '）' },
     ];
     const sec1 = this.secObj(secList, 0);
     const sec2 = this.secObj(secList, 1);
@@ -1414,7 +1377,7 @@ class Component extends DCLogic {
     });
     const curSec = secList[curTabIdx - 1];
     const tabHint = curSec ? curSec.hint : '';
-    const tabHintCss = { marginTop:'10px', fontSize:'.86em', color:'var(--text-muted)', lineHeight:'1.6' };
+    const tabHintCss = { display: tabHint ? 'block' : 'none', marginTop:'10px', fontSize:'.86em', color:'var(--text-muted)', lineHeight:'1.6' };
     const langBlockKeys = visible.map(b => b.key);
     const lcur = langBlockKeys.indexOf(s.lcur) >= 0 ? s.lcur : 'header';
     const langSubs = { header:'已填寫', hero:'未填寫，沿用英文', about:'未填寫，沿用英文', product:'未填寫，沿用英文',
@@ -1494,14 +1457,12 @@ class Component extends DCLogic {
       secHeadCss: { display:'none' },
       hasTabs: secList.length > 1,
       tabs, tabHint, tabHintCss,
-      goSec3: () => this.setState({ tab:3 }),
       pane: {
         header: cur === 'header', hero: cur === 'hero', about: cur === 'about', product: cur === 'product',
         news: cur === 'news', media: cur === 'media', tpl: isTplBlock, system: isSystem,
       },
       hasStyles: !!styleGroup,
       styleOpts,
-      showTplGrid: isTplBlock,
       showTreeWarn: !!styleGroup && STYLE_SETS[styleGroup].some(o => o.tree),
       aboutIsAuto: s.styles.about === 'fixed',
       aboutIsForm: s.styles.about !== 'fixed',
@@ -1517,9 +1478,16 @@ class Component extends DCLogic {
         { ord:2, name:'Classic Beef Patty Sandwich' },
         { ord:3, name:'About Taiwantrade' },
       ],
-      tplGrid,
       curTplName: (TPL_GRID.find(t => t.key === curTplKey) || TPL_GRID[5]).name,
       tplPreview: TPL_PREVIEW[curTplKey] || TPL_PREVIEW.cta1,
+      /* 還沒按「＋ 新增」＝空框（照現行後台的無內容狀態）；按了就直接把前台圖文畫出來 */
+      tplHasContent: paneState !== 'empty',
+      tplAdd: () => this.addTpl(),
+      /* 外觀比照大圖輪播那顆「＋ 新增」（設計系統 outline / small，約 70×32） */
+      addBtnCss: { display:'inline-block', fontFamily:'var(--font-body)', border:'none', cursor:'pointer',
+        background:'var(--surface-card)', color:'var(--text-body)', boxShadow:'var(--shadow-outline)',
+        borderRadius:'var(--radius-pill)', padding:'0 14px', height:'32px', lineHeight:'32px',
+        fontSize:'.86em', whiteSpace:'nowrap' },
       systemPreviewIcon: SCHEMA + (SYSTEM_PANES[cur] ? SYSTEM_PANES[cur].icon : 'footer.svg'),
       systemNote: SYSTEM_PANES[cur] ? SYSTEM_PANES[cur].note : '',
       saveBlock: () => this.save(),
