@@ -55,14 +55,18 @@ a{color:#111}
 .figside{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
 .figside ul{margin-left:20px;font-size:19px;line-height:1.7}
 .figside li{margin-bottom:14px}
+/* 預置元件頁：右欄改編號清單，讓「順序」本身就是重點 */
+.figside ol{margin-left:26px;font-size:19px;line-height:1.7}
+.figside ol li::marker{font-weight:700}
 .figside .src{font-size:16px;color:#777;line-height:1.6;margin-top:4px;display:block}
 /* 需求確認 */
-.qa{flex:1;display:flex;flex-direction:column;justify-content:center;gap:26px}
-.qa .q{border-top:1px solid #E5E5E5;padding-top:22px}
+/* 四題版：字級與間距較 8/11 三題版微縮，確保 720 高度內排得下 */
+.qa{flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px}
+.qa .q{border-top:1px solid #E5E5E5;padding-top:18px}
 .qa .q:first-child{border-top:none;padding-top:0}
-.qa .qt{font-size:23px;line-height:1.6}
+.qa .qt{font-size:21px;line-height:1.6}
 .qa .no{font-weight:700;margin-right:8px}
-.opt{display:inline-block;border:1px solid #E5E5E5;padding:3px 22px;margin-top:12px;margin-right:10px;font-size:20px;cursor:pointer;white-space:nowrap}
+.opt{display:inline-block;border:1px solid #E5E5E5;padding:3px 22px;margin-top:10px;margin-right:10px;font-size:18px;cursor:pointer;white-space:nowrap}
 .opt.sel{background:#111;color:#FFF;border-color:#111}
 #pageNum{position:fixed;right:20px;bottom:14px;font-size:17px;color:#777}
 @page{size:338.7mm 190.5mm;margin:0}
@@ -98,11 +102,11 @@ a{color:#111}
     <div style="border-top:1px solid #E5E5E5;padding-top:22px;flex:1">
       <p class="t4 mut b" style="margin-bottom:12px">二、桌面版調整</p>
       <p class="t3">首頁　→　關於我們　→　產品選單　→　購物車</p>
-      <p class="t3">建站引導原型</p>
+      <p class="t3">預置元件　→　建站引導原型</p>
     </div>
     <div style="border-top:1px solid #E5E5E5;padding-top:22px;flex:1">
       <p class="t4 mut b" style="margin-bottom:12px">三、需求確認</p>
-      <p class="t3">三題請貴處裁示</p>
+      <p class="t3">四題請貴處裁示</p>
     </div>
   </div>
 </section>
@@ -222,7 +226,27 @@ a{color:#111}
   </div>
 </section>
 
-<!-- P10 建站引導原型 -->
+<!-- P10 桌面版 預置元件 -->
+<section class="slide figpage">
+  <h2 class="pt">桌面版　預置元件</h2>
+  <div class="figrow">
+    <div class="figcell figw">
+      <div class="figbox noflip"><a href="設計稿/桌面版/預設.jpg" target="_blank"><img src="設計稿/桌面版/預設.jpg" alt="首頁預置元件設計稿"></a></div>
+      <p class="cap">可上下捲動　｜　點圖另開原尺寸</p>
+    </div>
+    <div class="figside">
+      <p class="t4 mut b" style="margin-bottom:14px">全新企業網首次進入的預設內容</p>
+      <ol>
+        <li><span class="b">大圖輪播</span><span class="src">形象大圖樣式</span></li>
+        <li><span class="b">產品展示</span><span class="src">單列 4 則、多列窗格，滑過以遮罩顯示產品資訊</span></li>
+        <li><span class="b">關於我們</span><span class="src">簡介文案搭配圖片與影片</span></li>
+        <li><span class="b">聯絡我們表單</span><span class="src">本案新增元件，無樣式選項</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- P11 建站引導原型 -->
 <section class="slide">
   <h2 class="pt">建站引導原型</h2>
   <table style="margin-top:18px">
@@ -234,7 +258,7 @@ a{color:#111}
   <p class="t3" style="margin-top:36px"><a href="https://angelag0.github.io/ep-demo/SU/" target="_blank">開啟原型</a>　　<span class="t4 mut">angelag0.github.io/ep-demo/SU/</span></p>
 </section>
 
-<!-- P11 需求確認 -->
+<!-- P12 需求確認 -->
 <section class="slide">
   <h2 class="pt">需求確認</h2>
   <div class="qa">
@@ -250,10 +274,14 @@ a{color:#111}
       <p class="qt"><span class="no">3.</span>關於我們・公司重點資訊的樣式設計是否可以？</p>
       <div><span class="opt">可以</span><span class="opt">需調整</span></div>
     </div>
+    <div class="q">
+      <p class="qt"><span class="no">4.</span>首次進入的預置元件與順序＝大圖輪播、產品展示、關於我們、聯絡我們表單，樣式皆為現有預設，是否可以？</p>
+      <div><span class="opt">可以</span><span class="opt">需調整</span></div>
+    </div>
   </div>
 </section>
 
-<!-- P12 結束 -->
+<!-- P13 結束 -->
 <section class="slide" style="align-items:center;justify-content:center;text-align:center">
   <p class="t4 mut b" style="letter-spacing:.2em;margin-bottom:20px">本次會議結束</p>
   <h2 class="t1">謝謝各位</h2>
@@ -261,7 +289,7 @@ a{color:#111}
 </section>
 
 </div>
-<div id="pageNum">1 / 12</div>
+<div id="pageNum">1 / 13</div>
 <script>
 (function(){
 var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,N=slides.length;
