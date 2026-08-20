@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>台灣經貿網企業網・手機版設計稿確認｜2026-08-21</title>
+<style>
+/* ============================================================
+   沿用 8/11 第二次需求訪談簡報的版式（1280×720）
+   字級：T1 52/700 封面｜PT 38/700 頁題｜T3 24/400 內文｜T4 17/400 表格與註記
+   色彩：文字 #111｜次要 #777｜線 #E5E5E5｜表頭與淺塊 #F5F5F5｜選取 #111 底白字
+   設計稿頁圖區高＝720 −（32 上內距 ＋ 59 頁題 ＋ 28 下內距）− 30 圖說 ＝ 570px（寫死，舞台固定不會跑）
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:#FFF;color:#111;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+#stage{position:fixed;left:50%;top:50%;width:1280px;height:720px;transform:translate(-50%,-50%);background:#FFF}
+.slide{position:absolute;inset:0;background:#FFF;padding:56px 72px 48px;display:none;flex-direction:column}
+.slide.on{display:flex}
+.t1{font-size:52px;font-weight:700;line-height:1.3}
+.pt{font-size:38px;font-weight:700;line-height:1.3;margin-bottom:20px;text-align:center}
+.t3{font-size:24px;font-weight:400;line-height:1.75}
+.t4{font-size:17px;font-weight:400;line-height:1.6}
+.b{font-weight:700}
+.mut{color:#777}
+table{width:100%;border-collapse:collapse;font-size:17px;line-height:1.5}
+th,td{border:1px solid #E5E5E5;padding:6px 12px;text-align:left;vertical-align:middle}
+th{background:#F5F5F5;font-weight:700}
+a{color:#111}
+/* ── 設計稿框（.noflip 內點擊不換頁；點圖另開原尺寸） ── */
+.figrow{flex:1;display:flex;gap:36px;min-height:0}
+.figcell{display:flex;flex-direction:column;min-width:0}
+.figcell .figbox{flex:1;min-height:0}
+.figbox{overflow-y:auto;border:1px solid #E5E5E5;background:#F5F5F5}
+.figbox img{width:100%;display:block}
+.cap{font-size:15px;color:#777;margin-top:6px}
+/* 設計稿頁：上下內距收窄、標題貼高，把高度讓給圖 */
+.figpage{padding-top:32px;padding-bottom:28px}
+.figpage .pt{margin-bottom:10px}
+/* 整張看完、不捲動的圖框（桌機寬圖用） */
+.figfit{overflow:hidden;display:flex;align-items:center;justify-content:center}
+.figfit a{display:inline-block;line-height:0}
+.figfit img{width:auto;max-height:570px;display:block}
+.wide img{max-width:768px}         /* 桌機寬圖：圖欄 780 內留邊 */
+/* 手機圖：一律固定寬度 350px（原圖寬皆 682，固定寬度才能讓每張的手機比例一致），框內捲動 */
+.fixw{width:350px;margin:0 auto}
+/* 兩欄手機圖：高度隨圖片自然長短，不撐滿（撐滿會在圖片下方留一塊灰底） */
+.figcell .figbox.fixw{flex:0 1 auto;max-height:570px}
+.figrow.top{align-items:flex-start}
+.solo{width:350px;margin:0 auto;flex:none;height:100%}
+/* 兩欄各自的標題列 */
+.pthead{display:flex;gap:36px}
+.pthead .pt{flex:1;min-width:0}
+.figw{width:780px;flex:none}
+.figside{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.figside ul{margin-left:20px;font-size:19px;line-height:1.7}
+.figside li{margin-bottom:14px}
+.figside .src{font-size:16px;color:#777;line-height:1.6;margin-top:4px;display:block}
+/* 需求確認 */
+.qa{flex:1;display:flex;flex-direction:column;justify-content:center;gap:26px}
+.qa .q{border-top:1px solid #E5E5E5;padding-top:22px}
+.qa .q:first-child{border-top:none;padding-top:0}
+.qa .qt{font-size:23px;line-height:1.6}
+.qa .no{font-weight:700;margin-right:8px}
+.opt{display:inline-block;border:1px solid #E5E5E5;padding:3px 22px;margin-top:12px;margin-right:10px;font-size:20px;cursor:pointer;white-space:nowrap}
+.opt.sel{background:#111;color:#FFF;border-color:#111}
+#pageNum{position:fixed;right:20px;bottom:14px;font-size:17px;color:#777}
+@page{size:338.7mm 190.5mm;margin:0}
+@media print{
+ body{overflow:visible}
+ #pageNum{display:none}
+ #stage{position:static;transform:none;width:1280px;height:auto;left:auto;top:auto}
+ .slide{position:relative;inset:auto;display:flex !important;width:1280px;height:720px;page-break-after:always;break-after:page}
+ .slide:last-child{page-break-after:auto;break-after:auto}
+ .figbox{overflow:hidden}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- P1 封面 -->
+<section class="slide on" style="align-items:center;justify-content:center;text-align:center">
+  <h1 class="t1">台灣經貿網企業網</h1>
+  <p class="t1" style="margin-top:8px">手機版設計稿確認</p>
+  <p class="t3 b" style="margin-top:28px">2026-08-21</p>
+  <p class="t3" style="margin-top:56px">凌網資訊　Simmy</p>
+</section>
+
+<!-- P2 今天的流程 -->
+<section class="slide">
+  <h2 class="pt">今天的流程</h2>
+  <div style="flex:1;display:flex;flex-direction:column">
+    <div style="flex:1">
+      <p class="t4 mut b" style="margin-bottom:12px">一、手機版設計稿</p>
+      <p class="t3">首頁　→　導覽列與分類樹　→　選單與購物車</p>
+    </div>
+    <div style="border-top:1px solid #E5E5E5;padding-top:22px;flex:1">
+      <p class="t4 mut b" style="margin-bottom:12px">二、桌面版調整</p>
+      <p class="t3">首頁　→　關於我們　→　產品選單　→　購物車</p>
+      <p class="t3">建站引導原型</p>
+    </div>
+    <div style="border-top:1px solid #E5E5E5;padding-top:22px;flex:1">
+      <p class="t4 mut b" style="margin-bottom:12px">三、需求確認</p>
+      <p class="t3">三題請貴處裁示</p>
+    </div>
+  </div>
+</section>
+
+<!-- P3 手機版 首頁 -->
+<section class="slide figpage">
+  <h2 class="pt">手機版　首頁</h2>
+  <div class="figrow">
+    <div class="figcell solo">
+      <div class="figbox noflip"><a href="設計稿/行動版/RWD.jpg" target="_blank"><img src="設計稿/行動版/RWD.jpg" alt="手機版首頁設計稿"></a></div>
+      <p class="cap" style="text-align:center">可上下捲動　｜　點圖另開原尺寸</p>
+    </div>
+  </div>
+</section>
+
+<!-- P4 手機版 導覽列／分類樹 -->
+<section class="slide figpage">
+  <div class="pthead">
+    <h2 class="pt">導覽列</h2>
+    <h2 class="pt">分類樹</h2>
+  </div>
+  <div class="figrow top">
+    <div class="figcell" style="flex:1">
+      <div class="figbox fixw noflip"><a href="設計稿/行動版/左上導覽列.jpg" target="_blank"><img src="設計稿/行動版/左上導覽列.jpg" alt="手機版左上導覽列"></a></div>
+      <p class="cap" style="text-align:center">左上　｜　點圖另開原尺寸</p>
+    </div>
+    <div class="figcell" style="flex:1">
+      <div class="figbox fixw noflip"><a href="設計稿/行動版/左下分類樹.jpg" target="_blank"><img src="設計稿/行動版/左下分類樹.jpg" alt="手機版左下分類樹"></a></div>
+      <p class="cap" style="text-align:center">左下　｜　點圖另開原尺寸</p>
+    </div>
+  </div>
+</section>
+
+<!-- P5 手機版 選單／購物車 -->
+<section class="slide figpage">
+  <div class="pthead">
+    <h2 class="pt">選單</h2>
+    <h2 class="pt">購物車</h2>
+  </div>
+  <div class="figrow top">
+    <div class="figcell" style="flex:1">
+      <div class="figbox fixw noflip"><a href="設計稿/行動版/右上選單.jpg" target="_blank"><img src="設計稿/行動版/右上選單.jpg" alt="手機版右上選單"></a></div>
+      <p class="cap" style="text-align:center">右上　｜　點圖另開原尺寸</p>
+    </div>
+    <div class="figcell" style="flex:1">
+      <div class="figbox fixw noflip"><a href="設計稿/行動版/購物車.jpg" target="_blank"><img src="設計稿/行動版/購物車.jpg" alt="手機版購物車"></a></div>
+      <p class="cap" style="text-align:center">展開　｜　點圖另開原尺寸</p>
+    </div>
+  </div>
+</section>
+
+<!-- P6 桌面版 首頁 -->
+<section class="slide figpage">
+  <h2 class="pt">桌面版　首頁</h2>
+  <div class="figrow">
+    <div class="figcell figw">
+      <div class="figbox noflip"><a href="設計稿/桌面版/首頁_白.jpg" target="_blank"><img src="設計稿/桌面版/首頁_白.jpg" alt="桌面版首頁設計稿"></a></div>
+      <p class="cap">可上下捲動　｜　點圖另開原尺寸</p>
+    </div>
+    <div class="figside">
+      <ul>
+        <li><span class="b">頁首</span><span class="src">新增 Taiwantrade Logo 按鈕，底色整條換成白色。</span></li>
+        <li><span class="b">橫幅廣告</span><span class="src">高度比照現行版本。</span></li>
+        <li><span class="b">行動呼籲 樣式二</span><span class="src">示意圖換為水果圖。</span></li>
+        <li><span class="b">聯絡我們表單</span><span class="src">採無電話置中版本；移除數量、單位、金額、產品關鍵字；不做收合設計，欄位一律預設展開。</span></li>
+        <li><span class="b">頁尾</span><span class="src">移除電子郵件更新區塊。</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- P7 桌面版 元件樣式 -->
+<section class="slide figpage">
+  <h2 class="pt">桌面版　關於我們</h2>
+  <div class="figrow">
+    <div class="figcell figw">
+      <div class="figbox noflip"><a href="設計稿/桌面版/款2.jpg" target="_blank"><img src="設計稿/桌面版/款2.jpg" alt="桌面版元件樣式設計稿"></a></div>
+      <p class="cap">可上下捲動　｜　點圖另開原尺寸</p>
+    </div>
+    <div class="figside">
+      <ul>
+        <li><span class="b">關於我們</span><span class="src">固定撈取公司重點資訊欄位樣式，icon 重新設計。</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- P8 桌面版 產品選單 -->
+<section class="slide figpage">
+  <h2 class="pt">桌面版　產品選單</h2>
+  <div class="figrow">
+    <div class="figcell figw">
+      <div class="figbox figfit wide noflip"><a href="設計稿/桌面版/選單.jpg" target="_blank"><img src="設計稿/桌面版/選單.jpg" alt="桌面版產品選單設計稿"></a></div>
+      <p class="cap">點圖另開原尺寸</p>
+    </div>
+    <div class="figside">
+      <ul>
+        <li><span class="b">依照現有主選單結構調整</span><span class="src">移除 All 文字；移除設計稿上方分類圖片；廠商自訂圖片放在下方且置中，僅有兩張；廠商若未設定則不顯示該區塊。</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- P9 桌面版 購物車 -->
+<section class="slide figpage">
+  <h2 class="pt">桌面版　購物車</h2>
+  <div class="figrow">
+    <div class="figcell figw">
+      <div class="figbox figfit wide noflip"><a href="設計稿/桌面版/購物車.jpg" target="_blank"><img src="設計稿/桌面版/購物車.jpg" alt="桌面版購物車設計稿"></a></div>
+      <p class="cap">點圖另開原尺寸</p>
+    </div>
+    <div class="figside">
+      <ul>
+        <li><span class="b">新增捲軸</span><span class="src">購物車加上捲軸，採固定高度讓查看購物車並結帳按鈕固定呈現位置，不會因為瀏覽購物車捲動後看不到。</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- P10 建站引導原型 -->
+<section class="slide">
+  <h2 class="pt">建站引導原型</h2>
+  <table style="margin-top:18px">
+    <tr><th style="width:210px">區塊設定</th><td>操作流程由展開收合改為頁籤呈現</td></tr>
+    <tr><th>區塊提示</th><td>未填內容的區塊顯示「無內容」，並於頁籤加註紅點</td></tr>
+    <tr><th>公司新聞元件</th><td>移除內容頁籤，並將資料條件併進顯示樣式</td></tr>
+    <tr><th>發布頁</th><td>各語系新增「內容編輯」與「檢視前台」兩個按鈕</td></tr>
+  </table>
+  <p class="t3" style="margin-top:36px"><a href="https://angelag0.github.io/ep-demo/SU/" target="_blank">開啟原型</a>　　<span class="t4 mut">angelag0.github.io/ep-demo/SU/</span></p>
+</section>
+
+<!-- P11 需求確認 -->
+<section class="slide">
+  <h2 class="pt">需求確認</h2>
+  <div class="qa">
+    <div class="q">
+      <p class="qt"><span class="no">1.</span>手機版 Slider 是否保留左右按鈕？</p>
+      <div><span class="opt">是</span><span class="opt">否</span></div>
+    </div>
+    <div class="q">
+      <p class="qt"><span class="no">2.</span>新版設計元件與元件之間的高度為 64px。設計師建議舊版三款色系版型統一高度，未來會比較好維護——舊版是否同步改高度？</p>
+      <div><span class="opt">是</span><span class="opt">否</span></div>
+    </div>
+    <div class="q">
+      <p class="qt"><span class="no">3.</span>關於我們・公司重點資訊的樣式設計是否可以？</p>
+      <div><span class="opt">可以</span><span class="opt">需調整</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- P12 結束 -->
+<section class="slide" style="align-items:center;justify-content:center;text-align:center">
+  <p class="t4 mut b" style="letter-spacing:.2em;margin-bottom:20px">本次會議結束</p>
+  <h2 class="t1">謝謝各位</h2>
+  <p class="t3" style="margin-top:36px">今天的確認結果與待辦事項，會後以書面送給貴處。<br>其他問題歡迎現在提出。</p>
+</section>
+
+</div>
+<div id="pageNum">1 / 12</div>
+<script>
+(function(){
+var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,N=slides.length;
+function go(n){
+  cur=Math.max(0,Math.min(N-1,n));
+  for(var i=0;i<N;i++)slides[i].classList.toggle('on',i===cur);
+  var bs=slides[cur].querySelectorAll('.figbox');for(var j=0;j<bs.length;j++)bs[j].scrollTop=0;
+  document.getElementById('pageNum').textContent=(cur+1)+' / '+N;
+}
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')go(cur+1);else if(e.key==='ArrowLeft')go(cur-1);});
+document.addEventListener('click',function(e){
+  var t=e.target;
+  if(t.closest&&t.closest('a'))return;              // 連結照常開新分頁，不換頁
+  if(t.closest&&t.closest('.opt')){                  // 選項可勾選／再點取消
+    var el=t.closest('.opt');
+    if(el.classList.contains('sel')){el.classList.remove('sel');return;}
+    var scope=(el.closest('.q')||el.parentElement).querySelectorAll('.opt');
+    for(var i=0;i<scope.length;i++)scope[i].classList.remove('sel');
+    el.classList.add('sel');
+    return;
+  }
+  if(t.closest&&t.closest('.noflip'))return;         // 設計稿框內點擊不換頁
+  var w=window.innerWidth;
+  if(e.clientX<w*0.2)go(cur-1);
+  else if(e.clientX>w*0.8)go(cur+1);
+});
+function fit(){var s=Math.min(window.innerWidth/1280,window.innerHeight/720);document.getElementById('stage').style.transform='translate(-50%,-50%) scale('+s+')';}
+window.addEventListener('resize',fit);fit();
+var m=location.hash.match(/^#p(\d+)$/);if(m)go(parseInt(m[1],10)-1);else go(0);
+})();
+</script>
+</body>
+</html>
