@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>產品型錄操作調整</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/su-design.css">
+<style>
+/* ══ 原型導覽（獨立於後台樣式，五顆等寬等高） ══ */
+#protoNav{background:#0f1211;display:flex;align-items:center;gap:6px;padding:10px 16px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:9999;box-shadow:rgba(0,0,0,.35) 0 3px 10px -3px;
+  font-family:"Red Hat Display","微軟正黑體",Helvetica,Arial,sans-serif}
+#protoNav .lab{color:#fff;font-size:12px;opacity:.55;letter-spacing:.12em;margin-right:6px}
+#protoNav .navItem{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
+  width:140px;height:34px;padding:0 8px;margin:0;
+  font-family:inherit;font-size:13px;line-height:1;font-weight:400;
+  background:transparent;color:#cfd8d8;border:1px solid #3a4443;border-radius:4px;
+  text-decoration:none;cursor:pointer;transition:.15s;box-shadow:none}
+#protoNav .navItem:hover{border-color:#7d979e;color:#fff;background:transparent;box-shadow:none}
+#protoNav .navItem.on{background:#fff;color:#0f1211;border-color:#fff;font-weight:700}
+#protoNav .sep{flex:1 1 auto}
+#protoNav .sw{display:flex;border:1px solid #3a4443;border-radius:4px;overflow:hidden}
+#protoNav .sw button{box-sizing:border-box;height:34px;padding:0 18px;margin:0;border:none;border-radius:0;
+  font-family:inherit;font-size:13px;line-height:1;background:transparent;color:#cfd8d8;cursor:pointer;box-shadow:none}
+#protoNav .sw button:hover{color:#fff;background:transparent;box-shadow:none}
+#protoNav .sw button.on{background:#f82;color:#fff}
+
+/* ══ 只顯示後台的內容區，不做左側選單與頁首 ══ */
+.main{margin:0;min-height:0;padding-bottom:40px}
+.tabContainer.noTabs{border-radius:6px}
+/* 三個畫面的內容區左右內縮一致（後台原樣式左右不等寬） */
+.multiTabSetting,.listTable{margin-left:20px;margin-right:20px}
+.listTable table{width:100%}
+/* 後台原樣式的 .page:first-of-type 會讓分頁縮成一直條，這裡還原成橫排 */
+.listTable>.page:first-of-type{display:flex;margin:12px 0 6px}
+.listTable td.pd{text-align:left}
+.listTable td.pd .caption{font-size:1em;color:#252929}
+.listTable .priceCell{display:inline-block;line-height:1.35;text-align:left}
+.listTable .priceCell .cur{color:#626771;font-size:.9em}
+.listTable .priceCell .amt,.listTable .priceCell .unit{white-space:nowrap}
+.listTable .priceCell .unit{color:#626771}
+
+/* ══ 補後台圖檔缺漏（本機無 icon 檔，改用向量繪製） ══ */
+select,.selectImitating div.selectBtn{
+  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='%23436672' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position:right .7em center;background-size:14px auto}
+
+/* ══ 頁籤：僅目前頁籤可點，其餘僅供辨識 ══ */
+.tabs li.noClick{cursor:default}
+.tabs li.noClick:hover::after{width:0;margin-left:50%;background:none}
+
+/* ══ 表單細節：各列控制項對齊成同一組直欄 ══ */
+.formLayout .inlineSet,.formLayout .quantityAndUnit{
+  display:flex;align-items:center;flex-wrap:wrap;margin:3px 0 3px 0;width:auto}
+.formLayout .inlineSet>.cur,.formLayout .quantityAndUnit>.cur{
+  flex:0 0 3.4em;text-align:right;padding-right:.5em;color:#000}
+.formLayout .inlineSet input[type=number],
+.formLayout .quantityAndUnit input[type=number]{width:8em!important;margin:3px}
+.formLayout .inlineSet select,.formLayout .quantityAndUnit select{width:12em!important;margin:3px}
+.formLayout .inlineSet .mid{color:#626771;margin:0 .4em}
+.formLayout .inlineSet .unitTxt{display:inline-block;min-width:7.5em;color:#000;margin-left:.6em}
+/* 核取方塊群組也對齊到同一條直欄（3.34em≈60px，與數字框左緣同一條線） */
+.formLayout>tbody>tr>td>.optionPool{margin-left:3.34em}
+.formLayout .pdLabelImg{vertical-align:middle;margin-left:6px;height:20px}
+.listTable .pdLabelImg{height:20px;margin:0 2px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+
+<div id="protoNav">
+  <span class="lab">原型導覽</span>
+  <button class="navItem on" data-go="s1">①型錄內容設定</button>
+  <button class="navItem" data-go="s2">②型錄啟用設定</button>
+  <button class="navItem" data-go="s3">③產品型錄列表</button>
+  <a class="navItem" href="cp-open.html">④企業網－有開販售</a>
+  <a class="navItem" href="cp-closed.html">⑤企業網－未開販售</a>
+  <span class="sep"></span>
+  <span class="sw"><button data-mode="now">現況</button><button data-mode="new" class="on">調整後</button></span>
+</div>
+
+<div class="wrapAll">
+<div class="main">
+
+<header class="pageHeading">
+  <h2>產品型錄設定(2025)</h2>
+  <ul class="path">
+    <li><a>內容管理</a></li>
+    <li>產品型錄設定(2025)</li>
+  </ul>
+</header>
+
+<!-- ══════════ ① 型錄內容設定 ══════════ -->
+<section id="s1">
+  <section class="steps">
+    <ol><li>語系選擇</li><li class="now">型錄內容設定</li><li>型錄啟用設定</li></ol>
+  </section>
+
+  <section class="multiTabSetting catalogSetting">
+    <div class="tabGroup">
+      <div class="tabs"><ul id="tabs1"></ul></div>
+
+      <div class="tabContainer show">
+        <h3 id="s1title">供應能力與報價</h3>
+
+        <table class="formLayout">
+          <tr>
+            <td>付款方式</td>
+            <td>
+              <div class="optionPool hasTextInput">
+                <label class="isSelected"><input type="checkbox" checked>L/C</label>
+                <label class="isSelected"><input type="checkbox" checked>TT</label>
+                <label><input type="checkbox">DA</label>
+                <label class="isSelected"><input type="checkbox" checked>PayPal</label>
+                <label><input type="checkbox">支付寶</label>
+                <label><input type="checkbox">其他<input type="text" placeholder="請輸入其他付款資訊"></label>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>最少訂購量</td>
+            <td>
+              <div class="quantityAndUnit">
+                <span class="cur"></span>
+                <input type="number" min="1" value="1" id="moqNum">
+                <select id="moqUnit">
+                  <option>Piece(s)</option><option>Set(s)</option><option>Box(es)</option>
+                  <option>20' Container</option><option>Kilogram(s)</option><option>Carton(s)</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="newfields">
+            <td>線下價格</td>
+            <td>
+              <div class="inlineSet">
+                <span class="cur">USD</span>
+                <input type="number" class="mini" placeholder="10.00">
+                <span class="mid">到</span>
+                <input type="number" class="mini" placeholder="50.00">
+                <span class="mid">（僅供參考）</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="newfields">
+            <td>供應能力</td>
+            <td>
+              <div class="inlineSet">
+                <span class="cur"></span>
+                <input type="number" class="mini" placeholder="5000">
+                <span class="unitTxt" id="saUnit">Piece(s)</span>
+                <span class="mid">每</span>
+                <select class="autoWidth">
+                  <option>month(s)</option><option>day(s)</option><option>quarter(s)</option><option>year(s)</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="newfields">
+            <td>交貨時間</td>
+            <td>
+              <div class="inlineSet">
+                <span class="cur"></span>
+                <input type="number" class="mini" id="dltNum" placeholder="14">
+                <select class="autoWidth" id="dltUnit">
+                  <option>Negotiable</option><option selected>day(s)</option>
+                  <option>month(s)</option><option>quarter(s)</option><option>year(s)</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="bottomControler">
+    <div class="leftGroup"></div>
+    <div class="rightGroup">
+      <button type="button" class="roundBtn white">儲存</button>
+      <button type="button" class="roundBtn white">預覽</button>
+      <button type="button" class="roundBtn white">上一步</button>
+      <button type="button" class="roundBtn hilight">下一步，型錄啟用設定</button>
+    </div>
+  </section>
+</section>
+
+<!-- ══════════ ② 型錄啟用設定 ══════════ -->
+<section id="s2" class="hide">
+  <section class="steps">
+    <ol><li>語系選擇</li><li>型錄內容設定</li><li class="now">型錄啟用設定</li></ol>
+  </section>
+
+  <section class="multiTabSetting catalogSetting">
+    <div class="tabGroup">
+      <div class="tabContainer show noTabs">
+        <h3>啟用型錄設定</h3>
+
+        <fieldset>
+          <legend><abbr title="必填欄位" class="required">*</abbr> 啟用型錄</legend>
+          <table class="formLayout">
+            <tr>
+              <td><abbr title="必填欄位" class="required">*</abbr> 啟用語系</td>
+              <td>
+                <div class="onOffItems"><ul>
+                  <li>英文<span class="switchOnOff on"></span></li>
+                  <li>正中<span class="switchOnOff on"></span></li>
+                  <li>日文<span class="switchOnOff"></span></li>
+                  <li>簡中<span class="switchOnOff"></span></li>
+                  <li>法文<span class="switchOnOff on"></span></li>
+                  <li>俄文<span class="switchOnOff"></span></li>
+                  <li>西文<span class="switchOnOff"></span></li>
+                  <li>葡文<span class="switchOnOff"></span></li>
+                </ul></div>
+                <p class="hint">Tips: 請開啟此型錄欲啟用的語系。</p>
+              </td>
+            </tr>
+
+            <tr>
+              <td><abbr title="必填欄位" class="required">*</abbr> 啟用販售</td>
+              <td>
+                <div class="onOffItems"><ul>
+                  <li>英文<span class="switchOnOff on"></span></li>
+                  <li>正中<span class="switchOnOff"></span></li>
+                  <li>日文<span class="switchOnOff"></span></li>
+                  <li>簡中<span class="switchOnOff"></span></li>
+                  <li>法文<span class="switchOnOff"></span></li>
+                  <li>俄文<span class="switchOnOff"></span></li>
+                  <li>西文<span class="switchOnOff"></span></li>
+                  <li>葡文<span class="switchOnOff"></span></li>
+                </ul></div>
+                <p class="hint">Tips: 請開啟此型錄欲販售的語系。</p>
+              </td>
+            </tr>
+
+            <tr class="newfields">
+              <td>顯示型錄<span style="font-size:.88em;display:block">各語系共用</span></td>
+              <td>
+                <div class="onOffItems"><ul><li><span class="switchOnOff on"></span></li></ul></div>
+                <p class="hint">Tips: 開啟後，本型錄可於台灣經貿網外語網、商機推薦等企業網以外的平台顯示。</p>
+              </td>
+            </tr>
+
+            <tr>
+              <td>貼標設定<span style="font-size:.88em;display:block">各語系共用</span></td>
+              <td>
+                <div class="optionPool">
+                  <label><input type="checkbox">New Product<img src="assets/label_new.png" alt="新產品標籤" class="pdLabelImg"></label>
+                  <label><input type="checkbox">Featured<img src="assets/label_feathured.png" alt="特色產品標籤" class="pdLabelImg"></label>
+                </div>
+                <p class="hint">Tips:為產品新增「新產品(New Product)」或「特色產品(Featured Product)」標籤，有貼標的產品將於前台顯示New或Featured圖示，並可依照貼標內容被篩選與展示。</p>
+              </td>
+            </tr>
+
+            <tr>
+              <td>設為加密型錄<span style="font-size:.88em;display:block">各語系共用</span></td>
+              <td>
+                <div class="optionPool singleSelection">
+                  <label><input type="radio" name="enc">是</label>
+                  <label class="isSelected"><input type="radio" name="enc" checked>否</label>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </fieldset>
+
+        <section class="dataTable">
+          <div class="onListTop"><h4>審核結果</h4></div>
+          <table>
+            <tr><th>建立時間</th><td><time>2026-02-23 14:36:17</time></td><th>建立人員</th><td>S******</td></tr>
+            <tr><th>最後更新時間</th><td><time>2026-08-18 14:53:36</time></td><th>最後更新人員</th><td>boan</td></tr>
+            <tr><th>內容審核狀態</th><td>審核通過</td><th>內容審核時間</th><td><time>2026/08/18 14:53:41</time></td></tr>
+            <tr><th>販售審核狀態</th><td>審核通過</td><th>販售審核時間</th><td><time>2026/08/18 14:53:40</time></td></tr>
+          </table>
+        </section>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ══════════ ③ 產品型錄列表 ══════════ -->
+<section id="s3" class="hide">
+  <section class="listTable">
+    <div class="onListTop">
+      <div class="funcBtnGp"><ul>
+        <li><a>停用</a></li><li><a>刪除</a></li><li><a>新增標籤</a></li>
+        <li><a>移動分類</a></li><li><a>匯出</a></li>
+      </ul></div>
+      <div class="funcBtnGp"><ul>
+        <li><a>自選顯示欄位</a></li><li><a>新增</a></li>
+      </ul></div>
+    </div>
+
+    <table id="listtable">
+      <thead><tr id="listhead"></tr></thead>
+      <tbody id="listbody"></tbody>
+    </table>
+
+    <section class="page">
+      <p>每頁顯示 <select><option>20</option><option>50</option><option>100</option></select> 筆</p>
+      <p>本頁顯示 <em>1</em> 到 <em>3</em> 筆，共有 <em>3</em> 筆</p>
+      <ul>
+        <li class="prev disabled"><a>上一頁</a></li>
+        <li class="here"><a>1</a></li>
+        <li class="next disabled"><a>下一頁</a></li>
+      </ul>
+    </section>
+  </section>
+</section>
+
+</div>
+</div>
+
+
+<script>
+var MODE = 'new';   // now | new
+
+/* ── ① 型錄內容設定的頁籤（僅目前頁籤可點） ── */
+var TAB_NOW = [
+  {n:'產品基本資料', req:true}, {n:'產品圖片', req:true}, {n:'產品規格'},
+  {n:'產品多媒體與上傳檔案'}, {n:'產品認證'}, {n:'採購資訊', on:true}, {n:'線上販售'}
+];
+var TAB_NEW = [
+  {n:'基本資料', req:true}, {n:'產品圖片', req:true},
+  {n:'供應能力與報價', on:true}, {n:'產品規格'},
+  {n:'產品認證'}, {n:'多媒體與附件'}, {n:'線上販售'}
+];
+
+function renderTabs1(){
+  var list = (MODE==='new') ? TAB_NEW : TAB_NOW;
+  document.getElementById('tabs1').innerHTML = list.map(function(t){
+    return '<li class="' + (t.on ? 'active' : 'noClick') + '">'
+         + (t.req ? '<abbr title="必填欄位" class="required">*</abbr> ' : '') + t.n + '</li>';
+  }).join('');
+  document.getElementById('s1title').textContent = (MODE==='new') ? '供應能力與報價' : '採購資訊';
+}
+
+/* ── ③ 產品型錄列表 ── */
+var COLS_BASE = [
+  {k:'ck', h:'<input type="checkbox">'},
+  {k:'no', h:'序號'},
+  {k:'pd', h:'產品資訊'},
+  {k:'lang', h:'語系'},
+  {k:'done', h:'完成度'},
+  {k:'score', h:'優化分數'},
+  {k:'edit', h:'最後編修'},
+  {k:'cert', h:'認證'},
+  {k:'type', h:'類型'},
+  {k:'act', h:'動作'}
+];
+var ROWS = [
+  {no:'3366514', nm:'Taiwan Si Ji Chun Oolong Tea Bags - Charcoal Mid-Roasted Premium Loose Leaf', cat:'自訂分類：Tea', mod:'產品型號：6444-02',
+   online:'', offline:'USD 12.00-15.00', unit:'Boxes', done:'100%', score:'100分', edit:'2026/03/19',
+   type:'<img src="assets/label_new.png" alt="NEW" class="pdLabelImg"><img src="assets/label_feathured.png" alt="Featured" class="pdLabelImg">'},
+  {no:'5474011', nm:'Taiwan Premium Bicycle', cat:'自訂分類：Bicycle', mod:'產品型號：test bike 123',
+   online:'USD 100.00-200.00', offline:'USD 10.00-50.00', unit:'Pieces', done:'100%', score:'100分', edit:'2026/08/18',
+   type:'<img src="assets/label_feathured.png" alt="Featured" class="pdLabelImg">'},
+  {no:'2636811', nm:'Automatic Burrito Production Line', cat:'自訂分類：Food Machine', mod:'產品型號：BR-1500',
+   online:'', offline:'', unit:'Sets', done:'60%', score:'80分', edit:'2026/08/17',
+   type:'<img src="assets/label_new.png" alt="NEW" class="pdLabelImg">'}
+];
+
+function priceCell(v, unit){
+  if(!v) return '<span style="color:#a6aab0">—</span>';
+  var p = v.split(' ');
+  return '<span class="priceCell"><span class="cur">'+p[0]+'</span> '
+       + '<span class="amt">'+p.slice(1).join(' ')+'</span> '
+       + '<span class="unit">/ '+unit+'</span></span>';
+}
+
+function renderList(){
+  var cols = COLS_BASE.slice();
+  if(MODE==='new'){
+    cols = cols.slice(0,3)
+      .concat([{k:'online', h:'線上價格'}, {k:'offline', h:'線下價格'}], cols.slice(3));
+  }
+
+  document.getElementById('listhead').innerHTML =
+    cols.map(function(c){ return '<th>'+c.h+'</th>'; }).join('');
+
+  document.getElementById('listbody').innerHTML = ROWS.map(function(r){
+    return '<tr>' + cols.map(function(c){
+      switch(c.k){
+        case 'ck':   return '<td class="check"><input type="checkbox"></td>';
+        case 'no':   return '<td>'+r.no+'</td>';
+        case 'pd':   return '<td class="pd"><span class="caption">'+r.nm+'</span>'
+                          + '<span style="color:#626771;font-size:.92em">'+r.cat+'　'+r.mod+'</span></td>';
+        case 'lang': return '<td>英／中</td>';
+        case 'done': return '<td>'+r.done+'</td>';
+        case 'score':return '<td>'+r.score+'</td>';
+        case 'edit': return '<td><time>'+r.edit+'</time></td>';
+        case 'cert': return '<td>—</td>';
+        case 'type': return '<td>'+r.type+'</td>';
+        case 'act':  return '<td style="white-space:nowrap"><a>編輯</a>　<a>複製</a>　<a>預覽</a></td>';
+        case 'online':  return '<td>'+priceCell(r.online, r.unit)+'</td>';
+        case 'offline': return '<td>'+priceCell(r.offline, r.unit)+'</td>';
+      }
+      return '<td></td>';
+    }).join('') + '</tr>';
+  }).join('');
+}
+
+/* ── 共用 ── */
+function applyMode(){
+  document.querySelectorAll('.newfields').forEach(function(el){
+    el.classList.toggle('hide', MODE!=='new');
+  });
+  // 最少訂購量的單位預設值：現況＝請選擇／調整後＝Piece(s)
+  var mo = document.getElementById('moqUnit');
+  if(mo){
+    var hasPlaceholder = (mo.options[0].text === '請選擇');
+    if(MODE==='new' && hasPlaceholder) mo.remove(0);
+    if(MODE!=='new' && !hasPlaceholder) mo.add(new Option('請選擇','請選擇'), 0);
+    mo.selectedIndex = 0;
+    var sa = document.getElementById('saUnit');
+    if(sa) sa.textContent = (MODE==='new') ? mo.value : 'Piece(s)';
+  }
+  // 前台頁連結帶著目前模式
+  document.querySelectorAll('#protoNav a.navItem').forEach(function(a){
+    var base = a.getAttribute('href').split('?')[0];
+    a.setAttribute('href', base + (MODE==='now' ? '?mode=now' : ''));
+  });
+  renderTabs1(); renderList();
+}
+
+document.addEventListener('click', function(e){
+  var t = e.target.closest('button');
+  if(!t) return;
+
+  if(t.dataset.go){
+    ['s1','s2','s3'].forEach(function(id){
+      document.getElementById(id).classList.toggle('hide', id!==t.dataset.go);
+    });
+    document.querySelectorAll('#protoNav button[data-go]').forEach(function(b){ b.classList.toggle('on', b===t); });
+    window.scrollTo(0,0);
+    return;
+  }
+  if(t.dataset.mode){
+    MODE = t.dataset.mode;
+    document.querySelectorAll('#protoNav .sw button').forEach(function(b){ b.classList.toggle('on', b===t); });
+    applyMode();
+    return;
+  }
+});
+
+/* 後台欄位連動（依客戶指定規格） */
+document.addEventListener('change', function(e){
+  if(e.target.id==='dltUnit'){
+    var n = document.getElementById('dltNum');
+    n.disabled = (e.target.value==='Negotiable');
+    if(n.disabled) n.value = '';
+  }
+  if(e.target.id==='moqUnit'){
+    document.getElementById('saUnit').textContent = e.target.value;
+  }
+  /* optionPool 勾選外觀 */
+  if(e.target.type==='checkbox' && e.target.closest('.optionPool')){
+    e.target.closest('label').classList.toggle('isSelected', e.target.checked);
+  }
+  if(e.target.type==='radio' && e.target.closest('.optionPool')){
+    e.target.closest('.optionPool').querySelectorAll('label').forEach(function(l){
+      l.classList.toggle('isSelected', l.querySelector('input').checked);
+    });
+  }
+});
+
+/* 開關可點 */
+document.addEventListener('click', function(e){
+  if(e.target.classList && e.target.classList.contains('switchOnOff')){
+    e.target.classList.toggle('on');
+  }
+});
+
+// 進站時若帶 ?mode=now 則以現況開啟
+if(location.search.indexOf('mode=now') > -1){
+  MODE = 'now';
+  document.querySelectorAll('#protoNav .sw button').forEach(function(b){ b.classList.toggle('on', b.dataset.mode==='now'); });
+}
+applyMode();
+
+// 由前台頁回來時直接跳到指定畫面
+if(location.hash){
+  var target = location.hash.slice(1);
+  if(['s1','s2','s3'].indexOf(target) > -1){
+    ['s1','s2','s3'].forEach(function(id){
+      document.getElementById(id).classList.toggle('hide', id!==target);
+    });
+    document.querySelectorAll('#protoNav button[data-go]').forEach(function(b){
+      b.classList.toggle('on', b.dataset.go===target);
+    });
+  }
+}
+</script>
+</body>
+</html>

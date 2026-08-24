@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>企業網產品頁－有開販售</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styleC.css">
+<style>
+/* 原型導覽（獨立於前台樣式，五顆等寬等高） */
+#protoNav{background:#0f1211;display:flex;align-items:center;gap:6px;padding:10px 16px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:9999;box-shadow:rgba(0,0,0,.35) 0 3px 10px -3px;
+  font-family:"Red Hat Display","微軟正黑體",Helvetica,Arial,sans-serif}
+#protoNav .lab{color:#fff;font-size:12px;opacity:.55;letter-spacing:.12em;margin-right:6px}
+#protoNav .navItem{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
+  width:140px;height:34px;padding:0 8px;margin:0;
+  font-family:inherit;font-size:13px;line-height:1;font-weight:400;
+  background:transparent;color:#cfd8d8;border:1px solid #3a4443;border-radius:4px;
+  text-decoration:none;cursor:pointer;transition:.15s}
+#protoNav .navItem:hover{border-color:#7d979e;color:#fff}
+#protoNav .navItem.on{background:#fff;color:#0f1211;border-color:#fff;font-weight:700}
+#protoNav .sep{flex:1 1 auto}
+#protoNav .sw{display:flex;border:1px solid #3a4443;border-radius:4px;overflow:hidden}
+#protoNav .sw a{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
+  height:34px;padding:0 18px;border:none;border-radius:0;
+  font-family:inherit;font-size:13px;line-height:1;color:#cfd8d8;text-decoration:none;transition:.15s}
+#protoNav .sw a:hover{color:#fff}
+#protoNav .sw a.on{background:#f82;color:#fff}
+body{padding-bottom:60px}
+
+/* 附件檔名前的迴紋針（前台原圖檔在本機取不到，改用向量繪製） */
+.attachment li>a::before{
+  background:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2347606a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48'/%3E%3C/svg%3E") no-repeat center center;
+  background-size:18px auto;border-radius:0}
+
+/* 純文字欄位列：標籤與內容切齊（原本標籤上緣留白較多而錯位） */
+#specificationZone tr.textRow>td:nth-child(odd),
+#specificationZone tr.textRow>td:nth-child(even){padding-top:.5em;padding-bottom:.35em;line-height:1.5}
+@media screen and (min-width:1000px){
+  .thisProduct .pdDeatils .toggleSlide .formLayout{width:100%}
+  .thisProduct .pdDeatils .toggleSlide .formLayout td:nth-child(odd){width:16%;min-width:5em}
+}
+
+/* Free Shipping 的貨車 icon（前台原圖檔在本機取不到，改用向量繪製） */
+.freeShippingLabel::before{
+  background:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none' stroke='%231e7aa0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8h13v12H3z'/%3E%3Cpath d='M16 12h5.5l3.5 4v4h-9z'/%3E%3Ccircle cx='9' cy='22.5' r='2.5'/%3E%3Ccircle cx='21' cy='22.5' r='2.5'/%3E%3Cpath d='M11.5 20h7'/%3E%3C/svg%3E") no-repeat center center;
+  background-size:26px auto}
+/* Payment 那一列的標籤與內容切齊 */
+#specificationZone tr.payment>td:nth-child(odd),
+#specificationZone tr.payment>td:nth-child(even){padding-top:.5em}
+#specificationZone tr.payment>td:nth-child(even)>.morePayment:first-child{margin-top:0}
+
+/* 產品圖上的 New 角標（前台原底圖在本機取不到，改用色塊重繪；
+   綠色 #6EB700 取自後台的貼標圖 label_new.png） */
+.labelNew{background-image:none;background-color:#6EB700;color:#fff;
+  height:auto;line-height:1.15;padding:5px 18px 5px 10px;
+  clip-path:polygon(0 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,0 100%)}
+
+/* 本原型不開放點選的頁籤 */
+.tabItems li.noClick,.tabItems li.noClick a{cursor:default}
+.tabItems li.noClick:hover,.tabItems li.noClick a:hover{color:#dce3e4}
+</style>
+</head>
+<body>
+
+<div id="protoNav">
+  <span class="lab">原型導覽</span>
+  <a class="navItem" href="index.html#s1">①型錄內容設定</a>
+  <a class="navItem" href="index.html#s2">②型錄啟用設定</a>
+  <a class="navItem" href="index.html#s3">③產品型錄列表</a>
+  <a class="navItem on" href="cp-open.html">④企業網－有開販售</a>
+  <a class="navItem" href="cp-closed.html">⑤企業網－未開販售</a>
+  <span class="sep"></span>
+  <span class="sw"><a href="?mode=now" id="mNow">現況</a><a href="?mode=new" id="mNew">調整後</a></span>
+</div>
+
+<div class="main">
+
+  <section class="pageHeader"><h2>Products</h2></section>
+
+  <section class="thisProduct">
+
+    <section class="pdDisplay">
+      <div class="pdPhotoShow">
+        <div class="image">
+          <picture class="pdImg"><img src="assets/T-01919828.webp" alt=""></picture>
+        </div>
+      </div>
+      <span class="labelNew">New</span>
+    </section>
+
+    <section class="pdDeatils">
+      <div class="labels">
+        <span class="labelExpiredays">7 Days Left</span>
+        <span class="freeShippingLabel">Free Shipping</span>
+      </div>
+      <div class="pdName"><span class="labelFeatured">Featured</span>Taiwan Premium Bicycle</div>
+
+      <div class="dataTb noBorder">
+        <table>
+          <tbody>
+            <tr><th>Model No.</th> <td>test bike 123</td></tr>
+            <tr><th>Made in</th> <td>Taiwan</td></tr>
+            <tr><th>Unit Price</th>
+              <td><span class="oldPrice"><span class="currency">USD</span> 100.00-200.00 / Pieces</span></td></tr>
+            <tr><th>Discount Price</th>
+              <td><span class="discountPrice">USD 98.00-196.00</span> / (Pieces)</td></tr>
+            <tr><th>Price</th>
+              <td>
+                <div class="hrScrollArea">
+                  <table class="priceList">
+                    <tr><th>Quantity</th> <th>Price</th> <th>Processing time</th></tr>
+                    <tr><td>1-2</td> <td>USD 98.00</td> <td>0 Days</td></tr>
+                    <tr><td>3-4</td> <td>USD 196.00</td> <td>1 Days</td></tr>
+                  </table>
+                </div>
+              </td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="toggleSlide">
+        <div class="toggleCtrl">Choose your specifications</div>
+        <div class="toggleArea">
+          <table id="specificationZone" class="formLayout">
+            <tr>
+              <td>Quantity</td>
+              <td>
+                <div class="quantityInput"><span class="decrease"></span> <input type="number" min="1" max="4" value="1"> <span class="increase"></span></div>
+                <p>4 Pieces available</p>
+              </td>
+            </tr>
+            <tr>
+              <td>Total Price</td>
+              <td><span class="totalPrice">USD 98.00 X 1 = USD 98.00</span></td>
+            </tr>
+            <tr class="payment">
+              <td id="payLabel">Payment</td>
+              <td>
+                <ul class="paymentIcons">
+                  <li><img src="assets/paypal.png" alt="paypal"></li>
+                  <li><img src="assets/card.png" alt="card"></li>
+                  <li><img src="assets/googlepay.png" alt="googlepay"></li>
+                  <li><img src="assets/applepay.png" alt="applepay"></li>
+                  <li><img src="assets/alipay.png" alt="alipay"></li>
+                </ul>
+                <p class="morePayment"><span id="alsoTxt">We also support</span>&nbsp; <em>DA,L/C,TT,PayPal,AliPay</em> for offline orders.</p>
+                Min. Order : 1 Boxes
+              </td>
+            </tr>
+            <tr class="isNew textRow"><td id="offPriceK">Price (Offline)</td> <td>USD 10.00 - 50.00　(Reference)</td></tr>
+            <tr class="isNew textRow"><td>Supply Ability</td> <td>5,000 Piece per Month</td></tr>
+            <tr class="isNew textRow"><td>Delivery Lead Time</td> <td>Negotiable</td></tr>
+          </table>
+
+          <div class="actions">
+            <ul class="buttons">
+              <li class="rfq"><a href="javascript:void(0)" title="Request for Quotation">Request for Quotation</a></li>
+              <li class="buy"><a href="javascript:void(0)" title="Buy Now">Buy Now</a></li>
+              <li class="contSu"><a href="javascript:void(0)" title="Contact Supplier">Contact Supplier</a></li>
+            </ul>
+            <ul class="addTo">
+              <li class="addtoCart product-addtocart active">Add To Cart</li>
+              <li class="likeThis"><a>Add to favorites</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </section>
+
+  <div id="tabGroup" class="tabGroup">
+    <div class="tabItems">
+      <ul>
+        <li data-tab="t1"><a href="javascript:;">Product Details</a></li>
+        <li data-tab="t2"><a href="javascript:;">Shipping &amp; Packaging</a></li>
+        <li class="active" data-tab="t3"><a href="javascript:;">Payment Terms</a></li>
+        <li data-tab="t4"><a href="javascript:;">Return Policy</a></li>
+        <li data-tab="t5"><a href="javascript:;">Safety Info (EU GPSR)</a></li>
+        <li class="isNew" data-tab="t6"><a href="javascript:;">Attachment</a></li>
+      </ul>
+    </div>
+
+    <div class="tabContainer">
+
+      <div class="tabContent thisPdDetails" data-pane="t1" style="display:none">
+        <h3 class="tabHead">Product Details</h3>
+        <div class="tabBody">
+          <div class="toggleSlide">
+            <h4 class="toggleCtrl">Key Features</h4>
+            <div class="toggleArea">
+              <article class="keyFeatures">
+                <p>Professional grade Taiwanese folding bicycle with enhanced stability and safety certification.</p>
+              </article>
+            </div>
+          </div>
+          <div id="attachmentDiv" class="toggleSlide isOld">
+            <h4 class="toggleCtrl">Attachment</h4>
+            <div class="toggleArea">
+              <div class="attachment">
+                <ul>
+                  <li><a href="javascript:;">.jpeg (0.10 MB)</a></li>
+                  <li><a href="javascript:;">1.webp (0.02 MB)</a></li>
+                  <li><a href="javascript:;">元件1.html (0.02 MB)</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabContent" data-pane="t2" style="display:none">
+        <h3 class="tabHead">Shipping &amp; Packaging</h3>
+        <div class="tabBody">
+          <h4>Calculate your shipping cost by country/region and quantity.</h4>
+          <div class="listTb">
+            <table>
+              <tr><th>Shipping Company</th> <th>Shipping Cost</th> <th>Estimated Delivery Time</th></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabContent show" data-pane="t3" style="display:block">
+        <h3 class="tabHead active">Payment Terms</h3>
+        <div class="tabBody">
+          <div class="listTb">
+            <table>
+              <tr><th>Accepted payment method</th> <th>Currency</th></tr>
+              <tr><td><img src="assets/paypal.png" alt="paypal"></td> <td>EUR,GBP,HKD,JPY,TWD,USD</td></tr>
+              <tr><td><img src="assets/card.png" alt="card"></td> <td>TWD</td></tr>
+              <tr><td><img src="assets/googlepay.png" alt="googlepay"></td> <td>TWD</td></tr>
+              <tr><td><img src="assets/applepay.png" alt="applepay"></td> <td>TWD</td></tr>
+              <tr><td><img src="assets/alipay.png" alt="alipay"></td> <td>TWD</td></tr>
+            </table>
+          </div>
+          <h4>Payment Details for Offline Orders</h4>
+          <div class="listTb">
+            <table>
+              <tr><th>Payment Terms</th> <th>Minimum Order</th></tr>
+              <tr><td>DA,L/C,TT,PayPal,AliPay</td> <td>Min. Order : 1 Boxes</td></tr>
+            </table>
+          </div>
+          <div class="listTb isNew">
+            <table>
+              <tr><th id="offPriceK2">Price (Offline)</th> <th>Supply Ability</th> <th>Delivery Lead Time</th></tr>
+              <tr><td>USD 10.00 - 50.00　(Reference)</td> <td>5,000 Piece per Month</td> <td>Negotiable</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabContent" data-pane="t4" style="display:none">
+        <h3 class="tabHead">Return Policy</h3>
+        <div class="tabBody">
+          <article>
+            <p>We will accept applications for returns within 7 days of the date of receipt.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="tabContent" data-pane="t5" style="display:none">
+        <h3 class="tabHead">Safety Info (EU GPSR)</h3>
+        <div class="tabBody">
+          <div class="listTb">
+            <table>
+              <tr><th>Manufacturer</th> <td>TAIWAN EXTERNAL TRADE DEVELOPMENT COUNCIL</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabContent isNew" data-pane="t6" style="display:none">
+        <h3 class="tabHead">Attachment</h3>
+        <div class="tabBody">
+          <div class="attachment">
+            <ul>
+              <li><a href="javascript:;">.jpeg (0.10 MB)</a></li>
+              <li><a href="javascript:;">1.webp (0.02 MB)</a></li>
+              <li><a href="javascript:;">元件1.html (0.02 MB)</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+(function(){
+  var mode = (location.search.indexOf('mode=now') > -1) ? 'now' : 'new';
+
+  document.getElementById('mNow').className = (mode==='now') ? 'on' : '';
+  document.getElementById('mNew').className = (mode==='new') ? 'on' : '';
+
+  // 導覽列的模式跟著走（query 要放在 hash 之前，否則會被當成 hash 的一部分）
+  Array.prototype.forEach.call(document.querySelectorAll('#protoNav a.navItem'), function(a){
+    var raw = a.getAttribute('href').split('?')[0];
+    var hash = raw.indexOf('#') > -1 ? raw.slice(raw.indexOf('#')) : '';
+    var base = hash ? raw.slice(0, raw.indexOf('#')) : raw;
+    a.setAttribute('href', base + (mode==='now' ? '?mode=now' : '') + hash);
+  });
+
+  // 頁籤內容（.tabContent）的顯示由下面的頁籤邏輯決定，這裡不動它
+  function show(sel, on){
+    Array.prototype.forEach.call(document.querySelectorAll(sel), function(el){
+      if(el.classList.contains('tabContent')) return;
+      el.style.display = on ? '' : 'none';
+    });
+  }
+  show('.isNew', mode==='new');
+  show('.isOld', mode!=='new');
+
+  document.getElementById('payLabel').textContent =
+    (mode==='new') ? 'Payment Details for Offline Orders' : 'Payment';
+  document.getElementById('alsoTxt').textContent =
+    (mode==='new') ? 'We support' : 'We also support';
+
+  // 本原型只開放這些頁籤可點；現況模式沒有 Attachment 頁籤，附件在 Product Details 內
+  var CLICKABLE = (mode==='new') ? ['t3','t6'] : ['t3','t1'];
+
+  var tabs = document.querySelectorAll('.tabItems li');
+  Array.prototype.forEach.call(tabs, function(li){
+    var id = li.getAttribute('data-tab');
+    if(CLICKABLE.indexOf(id) < 0){ li.className += ' noClick'; return; }
+    li.addEventListener('click', function(){
+      Array.prototype.forEach.call(tabs, function(x){ x.className = x.className.replace(/\s*active/,''); });
+      li.className += ' active';
+      Array.prototype.forEach.call(document.querySelectorAll('.tabContent'), function(p){
+        var on = (p.getAttribute('data-pane')===id);
+        p.style.display = on ? 'block' : 'none';
+        var h = p.querySelector('.tabHead');
+        if(h) h.className = on ? 'tabHead active' : 'tabHead';
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
