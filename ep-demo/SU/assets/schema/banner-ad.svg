@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100%" height="100%" viewBox="0 0 240 50" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="240" height="50" fill="#ffffff"/>
+  <rect x="8" y="8" width="224" height="34" rx="0" fill="#c4c4c4"/><circle cx="79.7" cy="20.2" r="2.7" fill="#c9c9c9"/><path d="M34.9 35.9 L84.2 24.3 L120.0 31.1 L160.3 20.9 L209.6 35.9 Z" fill="#c9c9c9"/><text x="120" y="28" font-family="'Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif" font-size="9" fill="#ffffff" font-weight="bold" text-anchor="middle">首頁廣告</text>
+</svg>

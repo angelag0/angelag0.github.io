@@ -1,14 +1,5 @@
-<?xml version="1.0"?>
-<svg width="100%" height="100%" viewBox="0 0 240 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-    <rect x="0" y="0" width="240" height="80" style="fill:white;"></rect>
-    <g id="stat">
-        <rect x="16" y="26" width="30" height="13" style="fill:rgb(115,115,115);"></rect>
-        <rect x="14" y="45" width="34" height="4" style="fill:rgb(204,204,204);"></rect>
-        <rect x="76" y="26" width="34" height="13" style="fill:rgb(115,115,115);"></rect>
-        <rect x="74" y="45" width="38" height="4" style="fill:rgb(204,204,204);"></rect>
-        <rect x="134" y="26" width="40" height="13" style="fill:rgb(115,115,115);"></rect>
-        <rect x="132" y="45" width="44" height="4" style="fill:rgb(204,204,204);"></rect>
-        <rect x="198" y="26" width="30" height="13" style="fill:rgb(115,115,115);"></rect>
-        <rect x="196" y="45" width="34" height="4" style="fill:rgb(204,204,204);"></rect>
-    </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100%" height="100%" viewBox="0 0 240 56" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="240" height="56" fill="#ffffff"/>
+  <rect x="0" y="0" width="240" height="56" rx="0" fill="#f2f4f6"/><text x="30" y="28" font-family="'Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif" font-size="13" fill="#16304d" font-weight="bold" text-anchor="middle">40+</text><text x="30" y="40" font-family="'Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif" font-size="5.4" fill="#8a8a8a" font-weight="normal" text-anchor="middle">數據統計標籤一</text><text x="90" y="28" font-family="'Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif" font-size="13" fill="#16304d" font-weight="bold" text-anchor="middle">100+</text><text x="90" y="40" font-family="'Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif" font-size="5.4" fill="#8a8a8a" font-weight="normal" text-anchor="middle">數據統計標籤二</text><text x="150" y="28" font-family="'Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif" font-size="13" fill="#16304d" font-weight="bold" text-anchor="middle">3,000+</text><text x="150" y="40" font-family="'Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif" font-size="5.4" fill="#8a8a8a" font-weight="normal" text-anchor="middle">數據統計標籤三</text><text x="210" y="28" font-family="'Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif" font-size="13" fill="#16304d" font-weight="bold" text-anchor="middle">150+</text><text x="210" y="40" font-family="'Noto Sans TC','Microsoft JhengHei','PingFang TC',sans-serif" font-size="5.4" fill="#8a8a8a" font-weight="normal" text-anchor="middle">數據統計標籤四</text>
 </svg>

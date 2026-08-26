@@ -39,8 +39,8 @@
 .listTable td.pd{text-align:left}
 .listTable td.pd .caption{font-size:1em;color:#252929}
 .listTable .priceCell{display:inline-block;line-height:1.35;text-align:left}
+.listTable .priceCell .amt,.listTable .priceCell .unit{white-space:normal}
 .listTable .priceCell .cur{color:#626771;font-size:.9em}
-.listTable .priceCell .amt,.listTable .priceCell .unit{white-space:nowrap}
 .listTable .priceCell .unit{color:#626771}
 
 /* ══ 補後台圖檔缺漏（本機無 icon 檔，改用向量繪製） ══ */
@@ -66,7 +66,90 @@ select,.selectImitating div.selectBtn{
 .formLayout>tbody>tr>td>.optionPool{margin-left:3.34em}
 .formLayout .pdLabelImg{vertical-align:middle;margin-left:6px;height:20px}
 .listTable .pdLabelImg{height:20px;margin:0 2px}
+/* 序號欄：編號＋產品縮圖佔位（比照實機，列高由縮圖撐出） */
+.listTable td.noCell{text-align:center}
+.listTable td.noCell .pdNo{display:block;margin-bottom:6px}
+.listTable td.noCell .thumb{display:inline-block;width:96px;height:96px;border:1px solid #e3e8e9;
+  border-radius:3px;background:#f2f5f6;position:relative}
+.listTable td.noCell .thumb::before{content:'';position:absolute;left:50%;top:50%;
+  width:34px;height:26px;transform:translate(-50%,-50%);border:2px solid #c3ced1;border-radius:3px}
+.listTable td.noCell .thumb::after{content:'';position:absolute;left:50%;top:56%;
+  width:16px;height:10px;transform:translate(-50%,-50%);
+  border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:10px solid #c3ced1}
 .hide{display:none!important}
+
+/* ══════════ ③ 列表：實機環境模擬（側欄＋自選欄位＋即時欄寬） ══════════ */
+#s3.simEnv:not(.hide){display:flex;align-items:stretch;gap:0;background:#eef2f3;border-radius:6px;overflow:hidden}
+#simSide{flex:0 0 240px;width:240px;background:#fff;border-right:1px solid #dfe5e6;
+  transition:width .18s,flex-basis .18s;overflow:hidden;min-height:520px}
+#s3.sideHidden #simSide{flex-basis:48px;width:48px}
+#simSide .sideTop{display:flex;align-items:center;height:44px;border-bottom:1px solid #eceff0;padding:0 8px;gap:8px}
+#simSide .burger{width:32px;height:32px;flex:0 0 32px;border:1px solid #cdd6d8;border-radius:4px;background:#fff;
+  cursor:pointer;padding:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;box-shadow:none}
+#simSide .burger span{display:block;width:14px;height:2px;background:#436672}
+#simSide .sideTop b{font-size:13px;color:#436672;white-space:nowrap}
+#s3.sideHidden #simSide .sideTop b,#s3.sideHidden #simSide .sideNav span{display:none}
+#simSide .sideNav{list-style:none;margin:0;padding:6px 0}
+#simSide .sideNav li{display:flex;align-items:center;gap:10px;padding:9px 14px;font-size:13px;color:#546a70;white-space:nowrap}
+#simSide .sideNav li.on{background:#eef6f8;color:#10243e;font-weight:700;box-shadow:inset 3px 0 0 #436672}
+#simSide .sideNav i{flex:0 0 18px;height:18px;border-radius:3px;background:#c9d6da;display:block}
+#simMain{flex:1 1 auto;min-width:0;padding:0 0 8px}
+
+/* 量尺列 */
+#widthBar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:8px 20px;margin:0;
+  background:#0f1211;color:#cfd8d8;font-size:12px;font-family:"Red Hat Display",monospace,sans-serif}
+#widthBar b{color:#fff;font-weight:700}
+#widthBar .num{font-variant-numeric:tabular-nums;color:#8fe3c4;font-weight:700}
+#widthBar .warn{color:#ff8a6b;font-weight:700}
+#widthBar .ok{color:#8fe3c4;font-weight:700}
+#widthBar button{height:26px;padding:0 10px;font-size:12px;border:1px solid #3a4443;border-radius:4px;
+  background:transparent;color:#cfd8d8;cursor:pointer;box-shadow:none;margin:0}
+#widthBar button:hover{border-color:#7d979e;color:#fff;background:transparent;box-shadow:none}
+
+/* 表頭欄寬標籤 */
+#listtable thead th{position:relative}
+#listtable thead th .wTag{display:block;margin-top:3px;font-size:10px;line-height:1.2;font-weight:400;
+  color:#0f6f52;font-variant-numeric:tabular-nums;letter-spacing:0}
+#listtable thead th .wTag.tight{color:#c0392b;font-weight:700}
+#s3.noRuler #listtable thead th .wTag{display:none}
+#s3.noRuler #widthBar{display:none}
+
+.listScroll{overflow-x:auto}
+
+/* 自選顯示欄位燈箱（比照現行介面：橘色系、方塊式選項） */
+#colBox{display:none;position:fixed;inset:0;z-index:10000;background:rgba(15,18,17,.45);
+  align-items:center;justify-content:center}
+#colBox.show{display:flex}
+#colBox .box{background:#fff;border-radius:6px;width:620px;max-width:94vw;max-height:88vh;overflow:auto;
+  box-shadow:0 10px 40px rgba(0,0,0,.3)}
+#colBox .bxHd{padding:20px 26px 14px;border-bottom:1px solid #e6ebec}
+#colBox .bxHd h4{margin:0;font-size:21px;font-weight:700;color:#252929}
+#colBox .bxBd{padding:20px 26px}
+#colBox .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#colBox .grid.lang{grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0 0 26px}
+#colBox .full{grid-column:1 / -1}
+#colBox label.opt{display:flex;align-items:center;gap:10px;border:1px solid #d7dfdd;border-radius:4px;
+  padding:11px 14px;font-size:14px;color:#3a4547;cursor:pointer;background:#fff;transition:.12s}
+#colBox label.opt.on{border-color:#f82}
+#colBox label.opt.dis{color:#b6bfc0;cursor:not-allowed;background:#fafbfb}
+#colBox label.opt input{appearance:none;-webkit-appearance:none;width:17px;height:17px;flex:0 0 17px;margin:0;
+  border:1.5px solid #c3cdcd;border-radius:3px;background:#fff;position:relative;cursor:inherit}
+#colBox label.opt input:checked{background:#f82;border-color:#f82}
+#colBox label.opt input:checked::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:10px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+#colBox label.opt .px{margin-left:auto;font-size:11px;color:#9aa4a6;font-variant-numeric:tabular-nums}
+#colBox .bxFt{display:flex;align-items:center;justify-content:center;gap:14px;padding:16px 26px 22px;border-top:1px solid #e6ebec}
+#colBox .bxFt button{height:40px;min-width:104px;padding:0 26px;border:none;border-radius:20px;
+  font-size:15px;cursor:pointer;margin:0;box-shadow:none;color:#fff}
+#colBox .bxFt .go{background:#f82}
+#colBox .bxFt .cc{background:#9aa4a6}
+/* 量測到的 min 值已含內距 → 儲存格改 border-box，避免重複再加一次 padding
+   （拿掉這行會讓每欄多出約 23px，15 欄就多 345px，現況也會破版） */
+#listtable th,#listtable td{box-sizing:border-box}
+/* 表格必須先被容器寬度壓縮到各欄 min-width，壓不下去才溢出捲動；
+   少了 max-width，可捲動容器會讓表格直接用「不折行的最大寬度」排版，每欄多出一截 */
+#listtable{max-width:100%}
+.onListTop .funcBtnGp li a{cursor:pointer}
 </style>
 </head>
 <body>
@@ -241,7 +324,7 @@ select,.selectImitating div.selectBtn{
             </tr>
 
             <tr class="newfields">
-              <td>顯示型錄<span style="font-size:.88em;display:block">各語系共用</span></td>
+              <td>同時曝光於台灣經貿網<span style="font-size:.88em;display:block">各語系共用</span></td>
               <td>
                 <div class="onOffItems"><ul><li><span class="switchOnOff on"></span></li></ul></div>
                 <p class="hint">Tips: 開啟後，本型錄可於台灣經貿網外語網、商機推薦等企業網以外的平台顯示。</p>
@@ -286,34 +369,79 @@ select,.selectImitating div.selectBtn{
 </section>
 
 <!-- ══════════ ③ 產品型錄列表 ══════════ -->
-<section id="s3" class="hide">
-  <section class="listTable">
-    <div class="onListTop">
-      <div class="funcBtnGp"><ul>
-        <li><a>停用</a></li><li><a>刪除</a></li><li><a>新增標籤</a></li>
-        <li><a>移動分類</a></li><li><a>匯出</a></li>
-      </ul></div>
-      <div class="funcBtnGp"><ul>
-        <li><a>自選顯示欄位</a></li><li><a>新增</a></li>
-      </ul></div>
+<section id="s3" class="hide simEnv">
+
+  <!-- 左側選單（模擬實機：展開 240px／收合 48px） -->
+  <nav id="simSide">
+    <div class="sideTop">
+      <button class="burger" id="sideToggle" title="展開／收合左側選單"><span></span><span></span><span></span></button>
+      <b>供應商後台</b>
+    </div>
+    <ul class="sideNav">
+      <li><i></i><span>基本資料管理</span></li>
+      <li class="on"><i></i><span>內容管理</span></li>
+      <li><i></i><span>產品型錄設定(2025)</span></li>
+      <li><i></i><span>詢價與商機</span></li>
+      <li><i></i><span>訂單管理</span></li>
+      <li><i></i><span>行銷工具</span></li>
+      <li><i></i><span>數據報表</span></li>
+    </ul>
+  </nav>
+
+  <div id="simMain">
+    <!-- 量尺列 -->
+    <div id="widthBar">
+      <b>欄寬量尺</b>
+      <span>左側選單 <span class="num" id="mSide">240</span>px</span>
+      <span>表格可用 <span class="num" id="mAvail">—</span>px</span>
+      <span>表格實寬 <span class="num" id="mTable">—</span>px</span>
+      <span id="mState" class="ok">未溢出</span>
+      <span>顯示欄位 <span class="num" id="mCols">—</span> 欄</span>
+      <button id="btnRuler">隱藏量尺</button>
     </div>
 
-    <table id="listtable">
-      <thead><tr id="listhead"></tr></thead>
-      <tbody id="listbody"></tbody>
-    </table>
+    <section class="listTable">
+      <div class="onListTop">
+        <div class="funcBtnGp"><ul>
+          <li><a>停用</a></li><li><a>刪除</a></li><li><a>新增標籤</a></li>
+          <li><a>移動分類</a></li><li><a>匯出</a></li>
+        </ul></div>
+        <div class="funcBtnGp"><ul>
+          <li><a id="btnCols">自選顯示欄位</a></li><li><a>新增</a></li>
+        </ul></div>
+      </div>
 
-    <section class="page">
-      <p>每頁顯示 <select><option>20</option><option>50</option><option>100</option></select> 筆</p>
-      <p>本頁顯示 <em>1</em> 到 <em>3</em> 筆，共有 <em>3</em> 筆</p>
-      <ul>
-        <li class="prev disabled"><a>上一頁</a></li>
-        <li class="here"><a>1</a></li>
-        <li class="next disabled"><a>下一頁</a></li>
-      </ul>
+      <div class="listScroll">
+        <table id="listtable">
+          <thead><tr id="listhead"></tr></thead>
+          <tbody id="listbody"></tbody>
+        </table>
+      </div>
+
+      <section class="page">
+        <p>每頁顯示 <select><option>20</option><option>50</option><option>100</option></select> 筆</p>
+        <p>本頁顯示 <em>1</em> 到 <em>3</em> 筆，共有 <em>3</em> 筆</p>
+        <ul>
+          <li class="prev disabled"><a>上一頁</a></li>
+          <li class="here"><a>1</a></li>
+          <li class="next disabled"><a>下一頁</a></li>
+        </ul>
+      </section>
     </section>
-  </section>
+  </div>
 </section>
+
+<!-- 自選顯示欄位燈箱（比照現行介面） -->
+<div id="colBox">
+  <div class="box">
+    <div class="bxHd"><h4>自選顯示欄位</h4></div>
+    <div class="bxBd"><div id="colList"></div></div>
+    <div class="bxFt">
+      <button class="go" id="bxApply">確定</button>
+      <button class="cc" id="bxCancel">取消</button>
+    </div>
+  </div>
+</div>
 
 </div>
 </div>
@@ -342,28 +470,79 @@ function renderTabs1(){
   document.getElementById('s1title').textContent = (MODE==='new') ? '供應能力與報價' : '採購資訊';
 }
 
-/* ── ③ 產品型錄列表 ── */
+/* ── ③ 產品型錄列表 ──
+   欄位與最小寬度＝2026-08-26 以 Chrome 無頭量測實機存檔所得（可折行的 min-content，含內距）
+   來源：raw-input/優先３．現有後台/SU產品型錄設定/產品型錄列表.html；分析見 ＵＸ５ §2e-2 */
 var COLS_BASE = [
-  {k:'ck', h:'<input type="checkbox">'},
-  {k:'no', h:'序號'},
-  {k:'pd', h:'產品資訊'},
-  {k:'lang', h:'語系'},
-  {k:'done', h:'完成度'},
-  {k:'score', h:'優化分數'},
-  {k:'edit', h:'最後編修'},
-  {k:'cert', h:'認證'},
-  {k:'type', h:'類型'},
-  {k:'act', h:'動作'}
+  {k:'ck',    h:'<input type="checkbox">', min:50,  fix:true},
+  {k:'idx',   h:'',          min:42,  fix:true},
+  {k:'no',    h:'序號',      min:123, fix:true},
+  {k:'pd',    h:'產品資訊',  min:163, fix:true},
+  // 17 語系＝實機「啟用語系」清單；列表預設只顯示已啟用的四個，其餘併入「其他語系」
+  {k:'en',    h:'英文',      min:53,  lang:'en'},
+  {k:'zh',    h:'正中',      min:53,  lang:'zh'},
+  {k:'ja',    h:'日文',      min:53,  lang:'ja'},
+  {k:'cn',    h:'簡中',      min:53,  lang:'cn'},
+  {k:'ru',    h:'俄文',      min:53,  lang:'ru',  off:true},
+  {k:'es',    h:'西文',      min:53,  lang:'es',  off:true},
+  {k:'pt',    h:'葡文',      min:53,  lang:'pt',  off:true},
+  {k:'ar',    h:'阿文',      min:53,  lang:'ar',  off:true},
+  {k:'id',    h:'印尼文',      min:53,  lang:'id',  off:true},
+  {k:'ko',    h:'韓文',      min:53,  lang:'ko',  off:true},
+  {k:'de',    h:'德文',      min:53,  lang:'de',  off:true},
+  {k:'fr',    h:'法文',      min:53,  lang:'fr',  off:true},
+  {k:'vi',    h:'越文',      min:53,  lang:'vi',  off:true},
+  {k:'th',    h:'泰文',      min:53,  lang:'th',  off:true},
+  {k:'tr',    h:'土文',      min:53,  lang:'tr',  off:true},
+  {k:'pl',    h:'波蘭語',      min:53,  lang:'pl',  off:true},
+  {k:'cs',    h:'捷克語',      min:53,  lang:'cs',  off:true},
+  {k:'oth',   h:'其他語系',  min:48},
+  {k:'done',  h:'完成度',    min:71},
+  {k:'score', h:'優化分數',  min:71, box:'優化分數（分）'},
+  {k:'edit',  h:'最後編修',  min:109},
+  {k:'cert',  h:'認證',      min:71},
+  {k:'type',  h:'類型',      min:97},
+  {k:'act',   h:'動作',      min:67, fix:true}
 ];
+var COLS_NEW = [
+  {k:'online',  h:'線上價格', min:107},
+  {k:'offline', h:'線下價格', min:107}
+];
+/* 目前勾選顯示的欄位（key 集合）；固定欄位永遠在內、off:true 者預設不勾 */
+var VISIBLE = null;
+
+function allCols(){
+  var cols = COLS_BASE.slice();
+  if(MODE==='new'){
+    // 兩個價格欄插在「產品資訊」之後
+    cols = cols.slice(0,4).concat(COLS_NEW, cols.slice(4));
+  }
+  return cols;
+}
+function ensureVisible(){
+  if(!VISIBLE){
+    VISIBLE = {};
+    COLS_BASE.concat(COLS_NEW).forEach(function(c){ VISIBLE[c.k] = !c.off; });
+  }
+  allCols().forEach(function(c){ if(!(c.k in VISIBLE)) VISIBLE[c.k] = !c.off; });
+}
+function shownCols(){
+  ensureVisible();
+  return allCols().filter(function(c){ return c.fix || VISIBLE[c.k]; });
+}
+
 var ROWS = [
   {no:'3366514', nm:'Taiwan Si Ji Chun Oolong Tea Bags - Charcoal Mid-Roasted Premium Loose Leaf', cat:'自訂分類：Tea', mod:'產品型號：6444-02',
    online:'', offline:'USD 12.00-15.00', unit:'Boxes', done:'100%', score:'100分', edit:'2026/03/19',
+   lang:{en:1,zh:1,ja:0,cn:0},
    type:'<img src="assets/label_new.png" alt="NEW" class="pdLabelImg"><img src="assets/label_feathured.png" alt="Featured" class="pdLabelImg">'},
   {no:'5474011', nm:'Taiwan Premium Bicycle', cat:'自訂分類：Bicycle', mod:'產品型號：test bike 123',
    online:'USD 100.00-200.00', offline:'USD 10.00-50.00', unit:'Pieces', done:'100%', score:'100分', edit:'2026/08/18',
+   lang:{en:1,zh:1,ja:1,cn:0},
    type:'<img src="assets/label_feathured.png" alt="Featured" class="pdLabelImg">'},
   {no:'2636811', nm:'Automatic Burrito Production Line', cat:'自訂分類：Food Machine', mod:'產品型號：BR-1500',
    online:'', offline:'', unit:'Sets', done:'60%', score:'80分', edit:'2026/08/17',
+   lang:{en:1,zh:0,ja:0,cn:0},
    type:'<img src="assets/label_new.png" alt="NEW" class="pdLabelImg">'}
 ];
 
@@ -374,37 +553,49 @@ function priceCell(v, unit){
        + '<span class="amt">'+p.slice(1).join(' ')+'</span> '
        + '<span class="unit">/ '+unit+'</span></span>';
 }
+function langCell(on){
+  return '<td style="text-align:center">'
+       + (on ? '<span style="display:inline-block;padding:1px 7px;border-radius:9px;background:#e4f4ee;color:#0f6f52;font-size:.82em">On</span>'
+             : '<span style="display:inline-block;padding:1px 7px;border-radius:9px;background:#eef0f1;color:#9aa4a6;font-size:.82em">Off</span>')
+       + '</td>';
+}
 
 function renderList(){
-  var cols = COLS_BASE.slice();
-  if(MODE==='new'){
-    cols = cols.slice(0,3)
-      .concat([{k:'online', h:'線上價格'}, {k:'offline', h:'線下價格'}], cols.slice(3));
-  }
+  var cols = shownCols();
 
   document.getElementById('listhead').innerHTML =
-    cols.map(function(c){ return '<th>'+c.h+'</th>'; }).join('');
+    cols.map(function(c){
+      return '<th data-k="'+c.k+'" style="min-width:'+c.min+'px">'+c.h
+           + '<span class="wTag" data-w="'+c.k+'"></span></th>';
+    }).join('');
 
-  document.getElementById('listbody').innerHTML = ROWS.map(function(r){
+  document.getElementById('listbody').innerHTML = ROWS.map(function(r, ri){
     return '<tr>' + cols.map(function(c){
+      if(c.lang) return langCell(r.lang[c.lang] || 0);
       switch(c.k){
         case 'ck':   return '<td class="check"><input type="checkbox"></td>';
-        case 'no':   return '<td>'+r.no+'</td>';
+        case 'idx':  return '<td>'+(ri+1)+'</td>';
+        case 'no':   return '<td class="noCell"><span class="pdNo">'+r.no+'</span>'
+                          + '<span class="thumb" aria-hidden="true"></span></td>';
         case 'pd':   return '<td class="pd"><span class="caption">'+r.nm+'</span>'
                           + '<span style="color:#626771;font-size:.92em">'+r.cat+'　'+r.mod+'</span></td>';
-        case 'lang': return '<td>英／中</td>';
+        case 'oth':  return '<td style="text-align:center;color:#626771">('
+                          + (17 - cols.filter(function(x){ return x.lang; }).length) + ')</td>';
         case 'done': return '<td>'+r.done+'</td>';
         case 'score':return '<td>'+r.score+'</td>';
         case 'edit': return '<td><time>'+r.edit+'</time></td>';
-        case 'cert': return '<td>—</td>';
+        case 'cert': return '<td style="text-align:center">✓</td>';
         case 'type': return '<td>'+r.type+'</td>';
-        case 'act':  return '<td style="white-space:nowrap"><a>編輯</a>　<a>複製</a>　<a>預覽</a></td>';
+        case 'act':  return '<td><span class="actBtns" title="編輯／複製／預覽">'
+                          + '<i>✎</i><i>❐</i><i>◉</i></span></td>';
         case 'online':  return '<td>'+priceCell(r.online, r.unit)+'</td>';
         case 'offline': return '<td>'+priceCell(r.offline, r.unit)+'</td>';
       }
       return '<td></td>';
     }).join('') + '</tr>';
   }).join('');
+
+  measureCols();
 }
 
 /* ── 共用 ── */
@@ -440,6 +631,7 @@ document.addEventListener('click', function(e){
     });
     document.querySelectorAll('#protoNav button[data-go]').forEach(function(b){ b.classList.toggle('on', b===t); });
     window.scrollTo(0,0);
+    if(t.dataset.go==='s3') setTimeout(measureCols, 60);
     return;
   }
   if(t.dataset.mode){
@@ -449,6 +641,176 @@ document.addEventListener('click', function(e){
     return;
   }
 });
+
+/* ══════════ ③ 列表：量尺／側欄／自選顯示欄位 ══════════ */
+function measureCols(){
+  var sec = document.getElementById('s3');
+  if(!sec || sec.classList.contains('hide')) return;
+  var scroll = sec.querySelector('.listScroll');
+  var tb = document.getElementById('listtable');
+  if(!scroll || !tb) return;
+
+  var ths = [].slice.call(tb.querySelectorAll('thead th'));
+  var cols = shownCols();
+  ths.forEach(function(th, i){
+    var w = Math.round(th.getBoundingClientRect().width);
+    var tag = th.querySelector('.wTag');
+    if(tag){
+      tag.textContent = w + 'px';
+      var min = cols[i] ? cols[i].min : 0;
+      tag.classList.toggle('tight', w <= min + 2);
+    }
+  });
+
+  var avail = Math.round(scroll.clientWidth);
+  var need  = Math.round(tb.getBoundingClientRect().width);
+  var over  = Math.max(0, Math.round(scroll.scrollWidth - scroll.clientWidth));
+  var side  = Math.round(document.getElementById('simSide').getBoundingClientRect().width);
+
+  document.getElementById('mSide').textContent  = side;
+  document.getElementById('mAvail').textContent = avail;
+  document.getElementById('mTable').textContent = need;
+  document.getElementById('mCols').textContent  = cols.length;
+
+  var st = document.getElementById('mState');
+  if(over > 0){
+    st.className = 'warn';
+    st.textContent = '超出 ' + over + 'px';
+  }else{
+    var slack = Math.max(0, avail - need);
+    st.className = 'ok';
+    st.textContent = '未溢出（尚餘 ' + slack + 'px）';
+  }
+}
+
+(function initListSim(){
+  var sec = document.getElementById('s3');
+  if(!sec) return;
+
+  // 側欄展開／收合
+  var side = document.getElementById('simSide');
+  // 動畫期間持續量測，數字才會跟著側欄一起變（展示時看得到變化過程）
+  function measureDuring(ms){
+    var t0 = Date.now();
+    (function loop(){
+      measureCols();
+      if(Date.now() - t0 < ms) requestAnimationFrame(loop);
+    })();
+  }
+  document.getElementById('sideToggle').addEventListener('click', function(){
+    sec.classList.toggle('sideHidden');
+    measureDuring(600);
+  });
+  side.addEventListener('transitionend', measureCols);
+
+  // 量尺顯示切換
+  document.getElementById('btnRuler').addEventListener('click', function(){
+    sec.classList.toggle('noRuler');
+    this.textContent = sec.classList.contains('noRuler') ? '顯示量尺' : '隱藏量尺';
+  });
+
+  // 自選顯示欄位燈箱（比照現行介面：語系為父子結構，最多選 4 項）
+  var box = document.getElementById('colBox');
+  var LANG_MAX = 4;
+  function langCols(){ return allCols().filter(function(c){ return c.lang; }); }
+  function optCols(){  // 燈箱中可自選的非語系欄位（固定欄位不列入）
+    return allCols().filter(function(c){ return !c.fix && !c.lang && c.k!=='oth'; });
+  }
+  function openBox(){
+    ensureVisible();
+    var showPx = !sec.classList.contains('noRuler');
+    function item(c, cls){
+      return '<label class="opt' + (VISIBLE[c.k] ? ' on' : '') + (cls ? ' '+cls : '') + '">'
+        + '<input type="checkbox" data-col="' + c.k + '"' + (VISIBLE[c.k] ? ' checked' : '') + '>'
+        + (c.box || c.h.replace(/<[^>]+>/g,''))
+        + (showPx ? '<span class="px">' + c.min + 'px</span>' : '')
+        + '</label>';
+    }
+    var opts = optCols();
+    var langOn = langCols().some(function(c){ return VISIBLE[c.k]; });
+    var html = '<div class="grid">';
+    opts.forEach(function(c){
+      html += '<div' + (c.k==='type' ? ' class="full"' : '') + '>' + item(c) + '</div>';
+    });
+    // 語系狀態（父項）
+    html += '<div class="full"><label class="opt' + (langOn ? ' on' : '') + '">'
+          + '<input type="checkbox" id="langParent"' + (langOn ? ' checked' : '') + '>'
+          + '語系狀態（可選 ' + LANG_MAX + ' 項語系於條列頁顯示）</label></div>';
+    html += '</div>';
+    // 語系子項
+    html += '<div class="grid lang" id="langGrid">';
+    langCols().forEach(function(c){
+      html += item(c, 'langOpt');
+    });
+    html += '</div>';
+    document.getElementById('colList').innerHTML = html;
+    syncLang();
+    box.classList.add('show');
+  }
+  // 依現行邏輯同步：父項關→子項全停用；已選滿 4 項→其餘停用
+  function syncLang(){
+    var parent = document.getElementById('langParent');
+    if(!parent) return;
+    var boxes = [].slice.call(document.querySelectorAll('#langGrid input[data-col]'));
+    var n = boxes.filter(function(b){ return b.checked; }).length;
+    if(!parent.checked) n = 0;
+    boxes.forEach(function(b){
+      var dis = (!b.checked && n >= LANG_MAX);
+      b.disabled = dis;
+      var lb = b.closest('label');
+      lb.classList.toggle('dis', dis);
+      lb.classList.toggle('on', b.checked);
+    });
+    parent.closest('label').classList.toggle('on', parent.checked);
+    parent.closest('label').classList.toggle('dis', !parent.checked);
+  }
+  document.getElementById('btnCols').addEventListener('click', openBox);
+  document.getElementById('bxCancel').addEventListener('click', function(){ box.classList.remove('show'); });
+  box.addEventListener('click', function(e){ if(e.target===box) box.classList.remove('show'); });
+  box.addEventListener('change', function(e){
+    if(e.target.id==='langParent'){
+      if(e.target.checked){
+        // 現行邏輯：語系狀態無法直接勾選，只能由子項帶動
+        e.target.checked = false;
+      }else{
+        // 取消語系狀態 → 下方已勾選的語系一併取消
+        document.querySelectorAll('#langGrid input[data-col]').forEach(function(b){ b.checked = false; });
+      }
+      syncLang();
+    }else if(e.target.closest('#langGrid')){
+      // 勾選任一語系 → 語系狀態同步被勾選
+      var parent = document.getElementById('langParent');
+      if(e.target.checked) parent.checked = true;
+      else if(![].slice.call(document.querySelectorAll('#langGrid input[data-col]')).some(function(b){ return b.checked; })) parent.checked = false;
+      syncLang();
+    }else if(e.target.dataset.col){
+      e.target.closest('label').classList.toggle('on', e.target.checked);
+    }
+  });
+  document.getElementById('bxApply').addEventListener('click', function(){
+    var parent = document.getElementById('langParent');
+    document.querySelectorAll('#colList input[data-col]').forEach(function(cb){
+      VISIBLE[cb.dataset.col] = cb.checked;
+    });
+    // 語系：父項關掉＝全部不顯示
+    var anyLang = false;
+    langCols().forEach(function(c){
+      if(!parent.checked) VISIBLE[c.k] = false;
+      if(VISIBLE[c.k]) anyLang = true;
+    });
+    // 「其他語系」欄：有勾任一語系才出現，一個都沒勾就不顯示
+    VISIBLE['oth'] = anyLang;
+    box.classList.remove('show');
+    renderList();
+    measureDuring(300);
+  });
+
+  // 視窗縮放／捲動時即時更新數字
+  window.addEventListener('resize', measureCols);
+  if(window.ResizeObserver){
+    new ResizeObserver(measureCols).observe(sec);
+  }
+})();
 
 /* 後台欄位連動（依客戶指定規格） */
 document.addEventListener('change', function(e){
@@ -495,6 +857,7 @@ if(location.hash){
     document.querySelectorAll('#protoNav button[data-go]').forEach(function(b){
       b.classList.toggle('on', b.dataset.go===target);
     });
+    if(target==='s3') setTimeout(measureCols, 60);
   }
 }
 </script>

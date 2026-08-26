@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>台灣經貿網企業網・第三次需求訪談｜產品型錄操作調整｜2026-08-28</title>
+<style>
+/* ============================================================
+   沿用 8/11 第二次訪談、8/21 手機版確認會議的版式（1280×720）
+   字級：T1 52/700 封面｜PT 38/700 頁題｜T3 24/400 內文｜T4 17/400 表格與註記
+   色彩：文字 #111｜次要 #777｜線 #E5E5E5｜表頭與淺塊 #F5F5F5｜選取 #111 底白字
+   本場為第三次（最後一次）需求訪談：主體為原型展示，另含前次調整回報、
+   規格書與決議不一致項目的複述、前次未及討論項目、待提供事項與簽版
+   ============================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:#FFF;color:#111;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+#stage{position:fixed;left:50%;top:50%;width:1280px;height:720px;transform:translate(-50%,-50%);background:#FFF}
+.slide{position:absolute;inset:0;background:#FFF;padding:56px 72px 48px;display:none;flex-direction:column}
+.slide.on{display:flex}
+.t1{font-size:52px;font-weight:700;line-height:1.3}
+.pt{font-size:38px;font-weight:700;line-height:1.3;margin-bottom:20px;text-align:center}
+.t3{font-size:24px;font-weight:400;line-height:1.75}
+.t4{font-size:17px;font-weight:400;line-height:1.6}
+.b{font-weight:700}
+.mut{color:#777}
+.body{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center}
+table{width:100%;border-collapse:collapse;font-size:19px;line-height:1.5}
+th,td{border:1px solid #E5E5E5;padding:9px 14px;text-align:left;vertical-align:middle}
+th{background:#F5F5F5;font-weight:700}
+a{color:#111}
+
+/* ── P3 ＲＦＰ 對照表（附件二編號已併入內容欄，故不再有第 2 欄 nowrap） ── */
+table.rfp{table-layout:fixed}
+table.rfp td:first-child a{text-decoration:underline;text-underline-offset:3px}
+table.rfp td{font-size:16px;line-height:1.5;word-break:break-word;vertical-align:top}
+table.rfp th,table.rfp td{padding:7px 12px}
+table.rfp td:first-child{font-size:18px;vertical-align:middle}
+table.rfp .no{display:inline-block;background:#F5F5F5;color:#111;font-weight:700;
+  padding:0 7px;margin-right:7px;font-size:14px;white-space:nowrap;vertical-align:1px}
+
+/* ── 原型連結列 ── */
+.proto{margin-top:22px;text-align:center;font-size:16px;color:#777}
+.proto a{display:inline-block;border:1px solid #111;padding:6px 18px;margin:0 4px;
+  text-decoration:none;font-size:17px;color:#111}
+.proto a:hover{background:#111;color:#FFF}
+
+/* ── 需求確認題（表格式，沿用第二次訪談排版：題／問題／選項，選項置右） ── */
+table.qtb{font-size:20px;line-height:1.6}
+table.qtb th,table.qtb td{padding:14px}
+table.qtb td.b{font-size:22px;text-align:center}
+.note{font-size:17px;color:#555;line-height:1.55;display:inline-block;margin-top:6px}
+.grp{display:inline-block}
+.opt{display:inline-block;border:1px solid #E5E5E5;padding:3px 14px;margin:3px 0;
+  font-size:19px;cursor:pointer;white-space:nowrap}
+.opt.sel{background:#111;color:#FFF;border-color:#111}
+.sep{color:#777;margin:0 5px}
+
+#pageNum{position:fixed;right:20px;bottom:14px;font-size:17px;color:#777}
+@page{size:338.7mm 190.5mm;margin:0}
+@media print{
+ body{overflow:visible}
+ #pageNum{display:none}
+ #stage{position:static;transform:none;width:1280px;height:auto;left:auto;top:auto}
+ .slide{position:relative;inset:auto;display:flex !important;width:1280px;height:720px;page-break-after:always;break-after:page}
+ .slide:last-child{page-break-after:auto;break-after:auto}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+<!-- P1 封面 -->
+<section class="slide on" style="align-items:center;justify-content:center;text-align:center">
+  <h1 class="t1">台灣經貿網企業網</h1>
+  <p class="t1" style="margin-top:8px">產品型錄操作調整</p>
+  <p class="t3 b" style="margin-top:28px">第三次需求訪談　2026-08-28</p>
+  <p class="t3" style="margin-top:56px">凌網資訊　Simmy</p>
+</section>
+
+<!-- P2 今天的流程 -->
+<section class="slide">
+  <h2 class="pt">今天的流程</h2>
+  <div class="body">
+    <div style="flex:1">
+      <p class="t4 mut b" style="margin-bottom:10px">一、產品型錄操作調整</p>
+      <p class="t3">ＲＦＰ 附件二六項，彙整成五個調整位置　→　直接開操作原型展示</p>
+    </div>
+    <div style="border-top:1px solid #E5E5E5;padding-top:20px;flex:1">
+      <p class="t4 mut b" style="margin-bottom:10px">二、需求確認</p>
+      <p class="t3">六個項目請貴處裁示</p>
+    </div>
+    <div style="border-top:1px solid #E5E5E5;padding-top:20px;flex:1">
+      <p class="t4 mut b" style="margin-bottom:10px">三、ＴＰ 專輯下架</p>
+      <p class="t3">ＲＦＰ 附件一第 8 項，說明下架範圍與做法</p>
+    </div>
+    <div style="border-top:1px solid #E5E5E5;padding-top:20px;flex:1">
+      <p class="t4 mut b" style="margin-bottom:10px">四、待貴處提供事項與簽版</p>
+      <p class="t3">本次為第三次需求訪談，確認完畢後進行簽版</p>
+    </div>
+  </div>
+</section>
+
+<!-- P3 ＲＦＰ 對應調整位置 -->
+<section class="slide">
+  <h2 class="pt">ＲＦＰ 對應調整位置</h2>
+  <div class="body">
+    <table class="rfp">
+      <tr><th style="width:228px">調整位置</th><th style="width:auto">內容</th></tr>
+      <tr>
+        <td><a href="../index.html" target="_blank">① 型錄內容設定</a></td>
+        <td><span class="no">附件二 1</span>於採購資訊頁籤中新增三項欄位：<span class="b">線下價格、供應能力及交貨時間</span>，並同步於 EP 產品詳細頁進行顯示；將既有 Payment 欄位名稱調整為 Payment Details for Offline Orders、移除 also<br>
+            <span class="no">附件二 3</span>調整頁籤順序並更改名稱：基本資料 → 產品圖片 → <span class="b">供應能力與報價（原採購資訊）</span> → 產品規格 → 產品認證 → <span class="b">多媒體與附件</span> → 線上販售</td>
+      </tr>
+      <tr>
+        <td><a href="../index.html#s2" target="_blank">② 型錄啟用設定</a></td>
+        <td><span class="no">附件二 4</span>新增顯示型錄之開關，讓會員可自行決定是否於企業網以外平台（例如外語網、商機推薦等）顯示，<span class="b">預設為顯示</span></td>
+      </tr>
+      <tr>
+        <td><a href="../index.html#s3" target="_blank">③ 產品型錄列表</a></td>
+        <td><span class="no">附件二 5</span>新增價格資訊欄位，供會員於瀏覽列表時即可快速確認產品價格（<span class="b">價格需 2 欄：線上價格和線下價格</span>）</td>
+      </tr>
+      <tr>
+        <td><a href="../cp-open.html" target="_blank">④ 企業網－有開販售</a></td>
+        <td><span class="no">附件二 1</span>三項新增欄位同步於 EP 產品詳細頁顯示<br>
+            <span class="no">附件二 6</span>於 CP 頁下方新增「附件」頁籤，並<span class="b">將現行附件內容移至該新增頁籤中統一呈現</span></td>
+      </tr>
+      <tr>
+        <td><a href="../cp-closed.html" target="_blank">⑤ 企業網－未開販售</a></td>
+        <td><span class="no">附件二 1・6</span>同上；另將 Payment 欄位名稱調整為 <span class="b">Payment Details for Offline Orders</span>、移除 also</td>
+      </tr>
+      <tr>
+        <td>ＡＰＩ</td>
+        <td><span class="no">附件二 2</span>外語網相關 API 調整。本項工作範圍<span class="b">僅包含 API 等相關功能調整，不含前端頁面之設計與呈現</span></td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- P4 需求確認 -->
+<section class="slide">
+  <h2 class="pt" style="margin-bottom:20px">需求確認</h2>
+  <div class="body">
+    <table class="qtb">
+      <tr><th style="width:56px">題</th><th style="width:46%">問題</th><th>選項</th></tr>
+      <tr>
+        <td class="b">1</td>
+        <td><span class="b">線下價格是否保留「(Reference)」？</span><br>
+            <span class="note">ＲＦＰ 寫 Price (Offline)，靖慈簡報畫的是 Price…(Reference)，原型兩個都保留</span></td>
+        <td><span class="grp"><span class="opt">保留</span><span class="sep">／</span><span class="opt">不保留</span></span></td>
+      </tr>
+      <tr>
+        <td class="b">2</td>
+        <td><span class="b">第一個頁籤是否刪除「產品」兩個字？</span><br>
+            <span class="note">現況為「產品基本資料」，ＲＦＰ 的新順序寫的是「基本資料」</span></td>
+        <td><span class="grp"><span class="opt">改為「基本資料」</span><span class="sep">／</span><span class="opt">維持原名</span></span></td>
+      </tr>
+      <tr>
+        <td class="b">3</td>
+        <td><span class="b">Payment Details for Offline Orders 的位置要不要統一？</span><br>
+            <span class="note">原型依靖慈簡報：未開販售放三欄下方、有開販售放三欄上方</span></td>
+        <td><span class="grp"><span class="opt">統一放三欄上方</span><span class="sep">／</span><span class="opt">統一放三欄下方</span><br>
+            <span class="opt">維持現況兩種</span></span></td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- P5 需求確認（二） -->
+<section class="slide">
+  <h2 class="pt" style="margin-bottom:20px">需求確認（二）</h2>
+  <div class="body">
+    <table class="qtb">
+      <tr><th style="width:56px">題</th><th style="width:46%">問題</th><th>選項</th></tr>
+      <tr>
+        <td class="b">4</td>
+        <td><span class="b">「顯示型錄」開關的名稱是否調整？</span><br>
+            <span class="note">此開關控制的是企業網<span class="b">以外</span>平台（外語網、商機推薦等）的曝光，現行名稱未指明對象，易與企業網本身的顯示混淆</span></td>
+        <td><span class="grp"><span class="opt">改為「同時曝光於台灣經貿網」</span><br>
+            <span class="opt">維持「顯示型錄」</span><span class="sep">／</span><span class="opt">貴處另訂</span></span></td>
+      </tr>
+      <tr>
+        <td class="b">5</td>
+        <td><span class="b">型錄列表新增兩欄的呈現方式？</span><br>
+            <span class="note">現有欄位在筆電螢幕已達寬度上限，新增兩欄需調整呈現方式</span></td>
+        <td><span class="grp"><span class="opt">併入「產品資訊」欄</span><br>
+            <span class="opt">獨立兩欄，讓出部分現有欄位</span><br>
+            <span class="opt">預設不顯示，由自選顯示欄位開啟</span></span></td>
+      </tr>
+      <tr>
+        <td class="b">6</td>
+        <td><span class="b">三個新欄位的多語文字由誰設定？</span><br>
+            <span class="note">選項文字（day(s)、Negotiable 等）可於 ADM 依語系設定，方式與「最少訂購量」單位相同</span></td>
+        <td><span class="grp"><span class="opt">貴處自行設定</span><br>
+            <span class="opt">提供各語系翻譯，由凌網代為上架</span></span></td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- P6 ＴＰ 專輯下架 -->
+<section class="slide">
+  <h2 class="pt" style="margin-bottom:14px">ＴＰ 專輯下架</h2>
+  <div class="body" style="flex-direction:row;gap:36px;align-items:center;justify-content:flex-start">
+    <div style="flex:0 0 500px">
+      <img src="TP.jpg" alt="About Us 頁的 Taiwan Product Magazines 區塊" style="width:100%;border:1px solid #E5E5E5">
+      <p class="t4" style="margin-top:10px;word-break:break-all">
+        <a href="https://peiping.en.taiwantrade.com/about-us" target="_blank">https://peiping.en.taiwantrade.com/about-us</a>
+      </p>
+    </div>
+    <div style="flex:1">
+      <table style="font-size:23px;line-height:1.65">
+        <tr><th style="width:112px;padding:16px 14px">現況</th>
+            <td style="padding:16px 14px">ＴＰ 專輯目前僅出現在企業網「About Us」頁的
+            <span class="b">Taiwan Product Magazines</span> 區塊</td></tr>
+        <tr><th style="padding:16px 14px">做法</th>
+            <td style="padding:16px 14px">由程式移除，<span class="b">系統上線後不再顯示 ＴＰ 專輯</span></td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- P7 待貴處提供 -->
+<section class="slide">
+  <h2 class="pt">待貴處提供</h2>
+  <div class="body">
+    <table>
+      <tr><th style="width:200px">項目</th><th style="width:290px">提出場合</th><th>說明</th></tr>
+      <tr>
+        <td>聯絡我們表單<br>附件提示詞文案</td>
+        <td>８／１１ 第二次需求訪談</td>
+        <td>手機版需精簡，避免折行</td>
+      </tr>
+      <tr>
+        <td>語系說明區塊文案</td>
+        <td>８／１１ 第二次需求訪談</td>
+        <td>停用英文語系時的警語與說明，目前為凌網擬稿</td>
+      </tr>
+      <tr>
+        <td>聯絡我們表單<br>Message 預設文字</td>
+        <td>８／２１ ＲＷＤ 版型確認會議</td>
+        <td>依該次決議<span class="b">沿用現行系統文案，不另提供</span></td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- P8 結束 -->
+<section class="slide" style="align-items:center;justify-content:center;text-align:center">
+  <p class="t4 mut b" style="letter-spacing:.2em;margin-bottom:20px">本次會議結束</p>
+  <h2 class="t1">謝謝各位</h2>
+  <p class="t3" style="margin-top:36px">今天的確認結果與待辦事項，會後以書面送給貴處。<br>其他問題歡迎現在提出。</p>
+</section>
+
+</div>
+<div id="pageNum">1 / 8</div>
+<script>
+(function(){
+var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,N=slides.length;
+function go(n){
+  cur=Math.max(0,Math.min(N-1,n));
+  for(var i=0;i<N;i++)slides[i].classList.toggle('on',i===cur);
+  document.getElementById('pageNum').textContent=(cur+1)+' / '+N;
+}
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')go(cur+1);else if(e.key==='ArrowLeft')go(cur-1);});
+document.addEventListener('click',function(e){
+  var t=e.target;
+  if(t.closest&&t.closest('a'))return;              // 連結照常開新分頁，不換頁
+  if(t.closest&&t.closest('.opt')){                  // 選項可勾選／再點取消
+    var el=t.closest('.opt');
+    if(el.classList.contains('sel')){el.classList.remove('sel');return;}
+    var scope=(el.closest('.grp')||el.closest('td')||el.parentElement).querySelectorAll('.opt');
+    for(var i=0;i<scope.length;i++)scope[i].classList.remove('sel');
+    el.classList.add('sel');
+    return;
+  }
+  var w=window.innerWidth;
+  if(e.clientX<w*0.2)go(cur-1);
+  else if(e.clientX>w*0.8)go(cur+1);
+});
+function fit(){var s=Math.min(window.innerWidth/1280,window.innerHeight/720);document.getElementById('stage').style.transform='translate(-50%,-50%) scale('+s+')';}
+window.addEventListener('resize',fit);fit();
+var m=location.hash.match(/^#p(\d+)$/);if(m)go(parseInt(m[1],10)-1);else go(0);
+})();
+</script>
+</body>
+</html>
