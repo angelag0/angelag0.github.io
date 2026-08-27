@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#111111">
+<title>8/28 第三次需求訪談　手機版逐字稿</title>
+<style>
+/* 沿用簡報.html 版式色彩：文字 #111｜次要 #777｜線 #E5E5E5｜淺塊 #F5F5F5 */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--fs:17px;--bg:#FFF;--fg:#111;--mut:#777;--line:#E5E5E5;--soft:#F5F5F5;--hi:rgba(255,206,0,.38)}
+html[data-t="dark"]{--bg:#121212;--fg:#ECECEC;--mut:#9A9A9A;--line:#333;--soft:#1E1E1E;--hi:rgba(255,206,0,.22)}
+html{scroll-behavior:smooth;scroll-padding-top:112px}
+body{background:var(--bg);color:var(--fg);font-size:var(--fs);line-height:1.85;
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-text-size-adjust:100%;padding-bottom:96px}
+#bar{position:fixed;top:0;left:0;height:3px;background:var(--fg);width:0;z-index:60}
+header{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--line);
+  padding:calc(env(safe-area-inset-top) + 8px) 12px 0}
+.hd{display:flex;align-items:center;gap:8px}
+.hd .ti{flex:1;min-width:0;font-size:15px;font-weight:700;line-height:1.35}
+.hd .ti span{display:block;font-size:11px;font-weight:400;color:var(--mut)}
+.btn{border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:8px;
+  min-width:36px;height:36px;font-size:14px;font-family:inherit;cursor:pointer;padding:0 9px}
+.btn:active{background:var(--soft)}
+nav{display:flex;gap:6px;overflow-x:auto;padding:8px 0 9px;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{flex:0 0 auto;font-size:12.5px;line-height:1;padding:9px 12px;border:1px solid var(--line);
+  border-radius:999px;text-decoration:none;color:var(--mut);white-space:nowrap}
+nav a.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+main{padding:14px 14px 0;max-width:760px;margin:0 auto}
+h1{font-size:1.24em;line-height:1.5;margin:2px 0 12px}
+h2{font-size:1.05em;background:var(--fg);color:var(--bg);padding:8px 13px;border-radius:6px;
+  margin:28px 0 12px;line-height:1.5}
+h3{font-size:1.02em;margin:24px 0 9px;padding:6px 0 6px 11px;border-left:4px solid var(--fg);line-height:1.5}
+p{margin:0 0 12px}
+b{font-weight:700;background:linear-gradient(transparent 58%,var(--hi) 58%);padding:0 1px}
+hr{border:0;border-top:1px dashed var(--line);margin:20px 0}
+a{color:inherit;word-break:break-all}
+.mini{font-size:.82em;color:var(--mut)}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;background:var(--soft);
+  border:1px solid var(--line);border-radius:4px;padding:1px 5px;word-break:break-all}
+.li{margin:0 0 8px;padding-left:16px;position:relative}
+.li:before{content:"・";position:absolute;left:0}
+.cue{font-size:.92em;line-height:1.6;border-radius:8px;padding:9px 13px;margin:0 0 12px;font-weight:700}
+.cue.turn{background:var(--fg);color:var(--bg)}
+.cue.turn a{color:var(--bg)}
+.cue.ask{background:#B3261E;color:#FFF}
+.cue.ask a{color:#FFF}
+.cue.act{background:var(--soft);color:var(--mut);font-weight:400;border-left:4px solid var(--line)}
+.tw{margin:0 0 14px}
+table{width:100%;border-collapse:collapse;font-size:.94em}
+thead{display:none}
+tbody tr{display:block;border:1px solid var(--line);border-radius:10px;padding:4px 0;margin:0 0 10px;
+  background:var(--soft)}
+td{display:block;padding:8px 13px;line-height:1.7}
+td:before{content:attr(data-l);display:block;font-size:11px;color:var(--mut);letter-spacing:.06em;
+  margin-bottom:2px}
+td[data-l=""]:before{display:none}
+td+td{border-top:1px dashed var(--line)}
+@media(min-width:720px){
+  thead{display:table-header-group}
+  tbody tr{display:table-row;background:none;border:0}
+  td{display:table-cell;border:1px solid var(--line);vertical-align:top}
+  td+td{border-top:1px solid var(--line)}
+  td:before{display:none}
+  th{border:1px solid var(--line);background:var(--soft);padding:8px 13px;text-align:left}
+}
+.opt{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:8px 15px;
+  margin:4px 6px 4px 0;font-size:.92em;line-height:1.3;cursor:pointer;background:var(--bg)}
+.opt.sel{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.opt.sel b{background:none;color:var(--bg)}
+.fin{display:block;width:100%;margin:6px 0 2px;border:1px solid var(--line);border-radius:8px;
+  background:var(--bg);color:var(--fg);font:inherit;font-size:.92em;padding:9px 11px}
+.fin::placeholder{color:var(--mut)}
+.chk{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;
+  padding:11px 13px;margin:0 0 9px;background:var(--soft);line-height:1.7}
+.chk input{width:22px;height:22px;margin-top:4px;flex:0 0 auto;accent-color:#111}
+.chk .sub{display:block;font-size:.85em;color:var(--mut);margin-top:3px}
+.chk.done>span{color:var(--mut);text-decoration:line-through}
+.chk.done b{background:none}
+.qk{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 12px}
+.qk a{flex:1 1 46%;text-align:center;border:1px solid var(--line);border-radius:9px;padding:11px 6px;
+  font-size:13px;text-decoration:none;background:var(--soft);word-break:keep-all}
+.tool{display:flex;gap:8px;margin:0 0 16px}
+.tool button{flex:1;padding:10px}
+#top{position:fixed;right:14px;bottom:calc(env(safe-area-inset-bottom) + 16px);z-index:55;
+  width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
+  color:var(--fg);font-size:18px;box-shadow:0 2px 10px rgba(0,0,0,.18);display:none;cursor:pointer}
+#top.on{display:block}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<header>
+  <div class="hd">
+    <div class="ti">第三次需求訪談　逐字稿<span>2026-08-28　產品型錄操作調整</span></div>
+    <button class="btn" id="fdn" aria-label="縮小字級">A−</button>
+    <button class="btn" id="fup" aria-label="放大字級">A＋</button>
+    <button class="btn" id="thm" aria-label="切換夜間模式">🌙</button>
+  </div>
+  <nav id="nav"><a href="#S1">P1-3 開場</a><a href="#S2">①內容設定</a><a href="#S3">②啟用設定</a><a href="#S4">③型錄列表</a><a href="#S5">④有開販售</a><a href="#S6">⑤未開販售</a><a href="#S7">P4 確認一</a><a href="#S8">P6 桌面稿</a><a href="#S9">P7 手機稿</a><a href="#S10">P8 建站</a><a href="#S11">P9 ＴＰ</a><a href="#S12">P1-3 開場</a><a href="#S13">P1-3 開場</a><a href="#S14">小抄</a><a href="#S15">確認表</a><a href="#S16">會前檢查</a></nav>
+</header>
+<main>
+<div class="qk">
+  <a href="../" target="_blank">📊 簡報</a>
+  <a href="../../" target="_blank">🖥 原型後台 ①②③</a>
+  <a href="../../cp-open.html" target="_blank">④ 有開販售</a>
+  <a href="../../cp-closed.html" target="_blank">⑤ 未開販售</a>
+  <a href="https://angelag0.github.io/ep-demo/SU/" target="_blank">🏗 建站引導 ＳＵ</a>
+  <a href="https://peiping.en.taiwantrade.com/about-us" target="_blank">📕 About Us（ＴＰ）</a>
+</div>
+<div class="tool">
+  <button class="btn" id="clr">清除所有勾選與填寫</button>
+</div>
+<h1>8/28 第三次需求訪談　筆記（產品型錄操作調整）</h1>
+<h2 id="S1">逐字稿</h2>
+<h3 id="S1">簡報 P1〜P3</h3>
+<p class="cue turn">翻到 P1</p>
+<p>各位長官、各位先進，早安。我是凌網的 Simmy。今天是第三次需求訪談，主題是產品型錄的操作調整，也就是ＲＦＰ附件二的部分。</p>
+<p class="cue turn">翻到 P2</p>
+<p>今天分三段。</p>
+<p>第一段是<b>產品型錄的需求訪談</b>，ＲＦＰ 附件二六項，我們彙整成五個調整位置，等一下直接開原型給貴處看，過程中有幾個地方要請貴處確認。</p>
+<p>第二段是<b>首頁設計稿</b>，依 8/21 會議調整過了，做了兩款請貴處<b>擇一</b>；接著看建站引導原型。</p>
+<p>第三段是<b>本次需求確認</b>，包含 ＴＰ 專輯的下架時間，還有要麻煩貴處提供的文案。</p>
+<p class="cue turn">翻到 P3</p>
+<p>ＲＦＰ 六項，我們彙整成五個調整位置。</p>
+<p>後台三個——型錄內容設定、型錄啟用設定、產品型錄列表。</p>
+<p>前台兩個——企業網產品頁，分成有開線上販售跟沒有開兩種。</p>
+<p>第 2 項外語網 API，<b>不含前端頁面之設計與呈現</b>，所以沒有畫面。</p>
+<p>我直接開原型給貴處看。</p>
+<hr>
+<h3 id="S2">原型 ①　型錄內容設定</h3>
+<p class="cue act">「現況」</p>
+<p>這是目前型錄內容設定的七個頁籤，採購資訊排在第 6 個，點進去只有付款方式跟最少訂購量兩個欄位。</p>
+<p class="cue act">「調整後」</p>
+<p>調整後，依照組長的需求，頁籤順序依序為：基本資料、產品圖片、供應能力與報價、產品規格、產品認證、多媒體與附件、線上販售。</p>
+<p class="cue ask"><b>當場問第 2 題</b></p>
+<p>但這裡想再確認一下，第一個頁籤原本叫「產品基本資料」，ＲＦＰ只寫「基本資料」，想問<b>這個頁籤是否要刪除「產品」兩個字？</b></p>
+<p>好，接下來下面的欄位，新增：<b>線下價格、供應能力、交貨時間</b>。</p>
+<p>這些欄位規格是依照靖慈之前的簡報規劃的，</p>
+<p>線下價格有區間，後面加註「僅供參考」。</p>
+<p>供應能力的單位和最少訂購量連動，最少訂購量的單位有變動，供應能力這一列也會跟著變動。時間單位可下拉。這邊要說明一下多語問題，這裡的時間單位到時可以在ADM進行設定，看是貴處直接設定或是把各語系翻譯給我們，我們幫貴處設定也可以。</p>
+<p>交貨時間是數字加時間單位，選項若選Negotiable，前面的數字欄就反灰、不能填了。</p>
+<p>另外最少訂購量的單位，現況預設是「請選擇」，這次改成<b>預設帶 Piece(s)</b>。</p>
+<p>這三個欄位，<b>會員沒有填，企業網就不會顯示</b>，跟現行規則一樣。</p>
+<hr>
+<h3 id="S3">原型 ②　型錄啟用設定</h3>
+<p>這是型錄啟用設定，精靈的第三步。</p>
+<p>新增的是中間這個開關，<b>預設開啟</b>。它管的是這個型錄要不要讓企業網以外的平台取用，像外語網、商機推薦。</p>
+<p>這裡要請貴處確認的是<b>ＲＦＰ 上寫的名稱是「顯示型錄」，我們原型改成「同時曝光於台灣經貿網」</b>。</p>
+<p>原因是「顯示型錄」沒有講清楚是對誰顯示，會跟上面「啟用語系」管的企業網顯示混在一起；</p>
+<p>看貴處覺得這樣是否ＯＫ</p>
+<p>下面這行說明文字也是我們先擬的，貴處如果有要調整文字都可以說。</p>
+<hr>
+<h3 id="S4">原型 ③　產品型錄列表</h3>
+<p class="cue act">「現況」</p>
+<p>產品型錄列表這頁的需求，主要是要增加線上價格跟線下價格兩個欄位，但我們內部在規劃時遇到一個大問題，因此這邊需要跟貴處討論。</p>
+<p>這是現況，考量到我們ＳＵ後台沒有做ＲＷＤ，當使用者在筆電之類比較小的螢幕上操作時，大家可以看到目前的畫面已經爆版了，必須把左側導覽列收合才能看到最後面的操作列。</p>
+<p>我這邊畫面做的是一般筆電的寬度，也就是 1366px。</p>
+<p>在導覽列展開的情境下，現況就已經超出 176px，縮合才能剛剛好。</p>
+<p class="cue act">「說明」</p>
+<p>也就是說，當我們把兩個價格欄位加上去後，就算是導覽列收合狀態也會爆版，超過198px。</p>
+<p>所以我們內部研究後，準備了兩個解法跟大家討論。</p>
+<p class="cue act">按「方案Ａ」</p>
+<p>方案Ａ 是把線上、線下價格併進左邊「產品資訊」欄，跟自訂分類、產品型號排在一起，用淡色區塊隔開。</p>
+<p><b>這一欄的寬度我們一個 px 都沒有加</b>，價格是用折行的方式塞進去的，</p>
+<p>所以整張表還是 1126px，跟現況一模一樣。</p>
+<p>換句話說，方案Ａ 的好處是不用動任何現有欄位；不過使用者還是必須收合導覽列。</p>
+<p class="cue act">切「線上價格」那組按鈕</p>
+<p>這裡有一件事要請貴處一起決定。線上價格會員可以設好幾段數量級距，不同數量不同價。</p>
+<p>列表這種一列一筆的地方，我們建議<b>只顯示總區間</b>，像這樣 USD 88.88 到 111.11。</p>
+<p class="cue act">切成「區間＋可展開明細」</p>
+<p>如果貴處要看完整的，我們可以加一個「查看明細」，點開才顯示級距表——</p>
+<p>就是產品內容頁那張表的內容：數量、單價、備貨天數。<b>列表頁塞不下這整張表</b>，</p>
+<p>所以我們的建議是<b>列表只顯示區間，明細用點開的</b>。</p>
+<p class="cue act">按「方案Ｂ」</p>
+<p>方案Ｂ 是從<b>空間本身</b>下手。這個方案會動到現有介面，我們把各語系狀態整併，完成度和優化分數整併，認證和類型整併，這樣可以空出欄寬放價格。</p>
+<p>語系狀態我們把它收成<b>一欄</b>：一列一個語系，語系名稱後面四個圖示<b>橫的排</b>，</p>
+<p>一樣滑鼠移上去有說明，<b>該有的資訊一個都沒有少</b>。</p>
+<p>同樣的做法再用在「認證」跟「類型」、「完成度」跟「優化分數」——這幾欄本來各佔一欄，現在各自併成一欄。</p>
+<p class="cue act">切「價格欄位」那組按鈕</p>
+<p>價格這裡還有兩種做法，<b>兩種都放得進去</b>。</p>
+<p><b>分兩欄</b>跟現在的欄位邏輯一致，會員比較熟悉，但收完之後<b>只剩 17px 的餘裕</b>；</p>
+<p><b>整併成一欄</b>、線上線下上下排，<b>還留著 84px</b>——以後若還要再加欄位，這個餘裕就用得上。</p>
+<p>兩種我們都做得到，請貴處挑一個。我們的建議是<b>整併成一欄</b>，把餘裕留著。</p>
+<p>第 5 題就是請貴處決定走哪一個方向。兩個方案不衝突，如果貴處兩個都要，我們會後評估一起做的版本。</p>
+<hr>
+<h3 id="S5">原型 ④　企業網－有開販售</h3>
+<p class="cue act">「現況」</p>
+<p>接下來是企業網產品頁，先看有開線上販售的。現有頁面下方是數量、總價，然後付款方式。</p>
+<p class="cue act">「調整後」</p>
+<p>付款方式下面接上三個新欄位：<b>Price (Offline)、Supply Ability、Delivery Lead Time</b>，英文名稱是ＲＦＰ給的。</p>
+<p>這一列想確認一下。ＲＦＰ寫的是 Price (Offline)，靖慈簡報畫的是 Price 後面加一個括號 Reference，我們兩個都保留了，想問<b>這個 (Reference) 要保留嗎？</b></p>
+<p>另外兩處文字調整：Payment 改成 <b>Payment Details for Offline Orders</b>，句子裡的 <b>also 移除</b>。</p>
+<p>下面的頁籤，Payment Terms 這裡也放了一份 Payment Details for Offline Orders 跟這三個欄位。<b>上下兩個地方都放，是照靖慈簡報畫的。</b></p>
+<p>最後這個 附件 是新增的頁籤。</p>
+<p>看看這樣ＯＫ嗎？</p>
+<hr>
+<h3 id="S6">原型 ⑤　企業網－未開販售</h3>
+<p class="cue act">「調整後」</p>
+<p>那沒開線上販售的產品，三個欄位會補在這個位置。</p>
+<p class="cue ask"><b>當場問第 3 題</b></p>
+<p>這裡也想確認一下。這一頁的 Payment Details for Offline Orders 排在三個新欄位<b>下面</b>，剛才有開販售那一頁是排在<b>上面</b>。靖慈簡報那兩張圖本來就這樣畫的，我們照著做，想問<b>這兩頁要不要統一？</b></p>
+<p>頁籤的部分，下面這邊一樣有增加附件。</p>
+<hr>
+<h3 id="S7">簡報 P4　需求確認（一）</h3>
+<p>剛才有三個地方請貴處確認，我在這邊複述一次。</p>
+<p>第一，線下價格後面的 <b>(Reference)</b> ——貴處的裁示是＿＿＿。</p>
+<p>第二，第一個頁籤<b>刪除「產品」兩個字</b>——貴處的裁示是＿＿＿。</p>
+<p>第三，<b>Payment Details for Offline Orders 的位置</b>——貴處的裁示是＿＿＿。</p>
+<p class="cue turn">翻到 P5</p>
+<p>還有三題。</p>
+<p>第四，剛才提過的<b>開關名稱</b>——要不要從「顯示型錄」改成「同時曝光於台灣經貿網」。</p>
+<p>第五，<b>型錄列表那兩欄怎麼放</b>——就是剛才原型上看到的<b>方案Ａ</b> 跟<b>方案Ｂ</b>。</p>
+<p><b>5-1</b>，如果貴處選方案Ｂ，價格要<b>整併成一欄還是分兩欄</b>。</p>
+<p>這兩種都放得下，差別在於<b>整併一欄還留著 84px、分兩欄只剩 17px</b>。</p>
+<p>我們建議<b>整併一欄</b>，把餘裕留給以後可能再加的欄位。</p>
+<p><b>5-2</b>，這題<b>不管選Ａ還是Ｂ都要決定</b>：列表的線上價格要<b>只顯示總區間</b>，</p>
+<p>還是<b>加一個「查看明細」可以點開級距表</b>。剛才原型上兩種都切給貴處看過了。</p>
+<p>第六，三個新欄位的<b>多語文字誰來設定</b>。這件事我們已經跟工程師確認過了，</p>
+<p><b>這些欄位可以在 ADM 依語系設定，方式跟現在的「最少訂購量」單位一樣</b>，</p>
+<p>所以技術上沒有問題，只是要請貴處決定：<b>貴處自己設定，或是把各語系翻譯給我們、我們幫貴處上架。</b></p>
+<hr>
+<h3 id="S8">簡報 P6　桌面版設計稿（款１／款２ 擇一）</h3>
+<p class="cue turn">翻到 P6</p>
+<p>接下來回報上次的調整。設計稿已經依 <b>8/21 版型確認會議</b>跟 <b>8/17、8/18 來信</b>改好了。</p>
+<p>上次組長說<b>黑底白字太重</b>，所以我們做了兩款請貴處挑。</p>
+<p><b>兩款只差在主要按鈕的樣式，其他地方完全一樣</b>——</p>
+<p>左邊<b>款１是白底黑框黑字</b>，右邊<b>款２是深灰漸層底白字</b>。</p>
+<p><b>這一題今天要請貴處選一款</b>，選定之後切版就照那一款做。</p>
+<p>其他調整這一版都在裡面了：聯絡我們表單的「聯繫方式」新增登入提示的文字跟連結。</p>
+<hr>
+<h3 id="S9">簡報 P7　手機版設計稿（款１／款２ 擇一）</h3>
+<p>手機版同樣兩款，<b>跟桌面版是同一組</b>。</p>
+<p>8/21 交辦的四項都改好了：<b>輪播的左右箭頭保留、透明度調高</b>；</p>
+<p><b>頁尾徽章改成一排</b>，大小跟社群圖示一樣、超出的可以左右滑；<b>頁尾的 QR code 移除</b>；</p>
+<p><b>置底功能列參考外語網重新設計</b>，由左到右是類別、聯繫供應商、購物車、分享企業網。</p>
+<hr>
+<h3 id="S10">簡報 P8　ＳＵ 建站引導原型</h3>
+<p class="cue turn"><a href="https://angelag0.github.io/ep-demo/SU/" target="_blank" rel="noopener">https://angelag0.github.io/ep-demo/SU/</a></p>
+<p>建站引導這邊，<b>版型的預設元件改成八項</b>，依序是多媒體輪播、大圖輪播、產品展示、公司新聞、關於我們、</p>
+<p>橫幅廣告、圖文模板，<b>聯絡我們表單放在最後</b>，「聯繫與訂閱」移除。</p>
+<p>圖文模板的部分，範本示意圖移到「顯示樣式」裡面並加上編號。</p>
+<p><b>台灣經貿網標誌的顯示開關</b>，還有<b>元件的前台呈現樣板</b>，</p>
+<p>這部份我們也做了是示意，設計圖完成之後會換成實際的樣板。</p>
+<p>來信提到的幾項也一併調整完成了，貴處可以直接在原型上看。</p>
+<p>以上，<b>請貴處確認有沒有跟貴處的認知不一樣的地方</b>。</p>
+<hr>
+<h3 id="S11">簡報 P9　ＴＰ 專輯下架</h3>
+<p class="cue turn">翻到 P9</p>
+<p>規格書附件一最後一項是下架 ＴＰ 專輯，這一項前兩次都還沒談到。</p>
+<p>我們盤過了，<b>ＴＰ 專輯目前只出現在企業網 About Us 這一頁的 Taiwan Product Magazines 區塊</b>，</p>
+<p>畫面就是簡報上這張。</p>
+<p>做法是<b>從程式移除</b>，<b>預計 12 月系統上線之後就不會再顯示 ＴＰ 專輯</b>。</p>
+<p>不過<b>確切什麼時候移除，這個要再跟貴處討論</b>。</p>
+<hr>
+<h3 id="S12">簡報 P10　待貴處提供</h3>
+<p>最後是要麻煩貴處提供的文案，兩項，簡報下面都有畫面可以對。</p>
+<p>第一項是<b>聯絡我們表單的附件提示詞</b>，就是這個上傳附件旁邊的說明文字。</p>
+<p>手機版的寬度比較窄，<b>這段文字需要精簡一點，不然會折行</b>。</p>
+<p>第二項是<b>語系說明區塊的文案</b>，在企業網多語設定這一區。</p>
+<p><b>圖上這兩行紅字是我們先擬的</b>，請貴處確認要不要照這樣寫，或是貴處另外給。</p>
+<p>表單 Message 欄位的預設文字，8/21 貴處已經指示沿用現行系統的文案，<b>這項就不用再提供了</b>。</p>
+<hr>
+<h3 id="S13">簡報 P11　結束</h3>
+<p class="cue turn">翻到 P11</p>
+<p>今天就到這裡，謝謝各位。確認結果跟待辦事項會後以書面送給貴處。</p>
+<h2 id="S14">小抄</h2>
+<div class="tw"><table><thead><tr><th>問</th><th>答</th></tr></thead><tbody>
+<tr><td data-l="問">顯示型錄關掉之後，<b>外語網上已經上架的</b>那筆會怎樣？</td><td data-l="答">這牽涉到外語網那一端的介接行為，屬於ＲＦＰ第 2 項的 API 範圍。<b>我們會跟外語網一起確認下架的時機與方式</b>，會後書面回覆貴處。</td></tr>
+<tr><td data-l="問">為什麼不乾脆讓表格<b>左右捲動</b>？</td><td data-l="答">我原本有設計這個方案，不過內部討論時，有聽說之前有人提過這個方案，貴處不滿意，如果現在要加上當然沒問題。</td></tr>
+<tr><td data-l="問">量尺這些數字<b>怎麼來的</b>？</td><td data-l="答">是我們把實機那一頁存下來，<b>用瀏覽器實際量出每一欄不破版所需要的最小寬度</b>，不是估的。原型上的數字是<b>即時算的</b>，貴處現在收合選單、勾選欄位，數字都會跟著動。</td></tr>
+<tr><td data-l="問">為什麼要<b>鎖在 1366</b>？</td><td data-l="答">因為後台沒有做 RWD，而會員實際上多半是用 13〜14 吋筆電。<b>在大螢幕上看不出問題，一到筆電就爆</b>，所以原型直接鎖成筆電的寬度。</td></tr>
+</tbody></table></div>
+<hr>
+<h2 id="S15">確認表（現場勾選，會後回填 RTM）</h2>
+<h3 id="S16">一、ＲＦＰ 附件二逐條確認</h3>
+<div class="tw"><table><thead><tr><th>ＲＦＰ</th><th>調整內容</th><th>調整位置</th><th>現行設計</th></tr></thead><tbody>
+<tr><td data-l="ＲＦＰ"><b>1</b></td><td data-l="調整內容">採購資訊新增線下價格、供應能力、交貨時間；企業網產品頁同步顯示；Payment 改名為 Payment Details for Offline Orders、移除 also</td><td data-l="調整位置">①④⑤</td><td data-l="現行設計">☐ OK　☐ 需調整：</td></tr>
+<tr><td data-l="ＲＦＰ"><b>3</b></td><td data-l="調整內容">型錄內容設定頁籤順序調整與改名</td><td data-l="調整位置">①</td><td data-l="現行設計">☐ OK　☐ 需調整：</td></tr>
+<tr><td data-l="ＲＦＰ"><b>4</b></td><td data-l="調整內容">新增顯示型錄開關，預設為顯示</td><td data-l="調整位置">②</td><td data-l="現行設計">☐ OK　☐ 需調整：</td></tr>
+<tr><td data-l="ＲＦＰ"><b>5</b></td><td data-l="調整內容">型錄列表新增線上價格、線下價格 2 欄</td><td data-l="調整位置">③</td><td data-l="現行設計">☐ OK　☐ 需調整：</td></tr>
+<tr><td data-l="ＲＦＰ"><b>6</b></td><td data-l="調整內容">企業網產品頁新增附件頁籤，現行附件內容移過去</td><td data-l="調整位置">④⑤</td><td data-l="現行設計">☐ OK　☐ 需調整：</td></tr>
+</tbody></table></div>
+<h3 id="S16">二、七道裁示題</h3>
+<div class="tw"><table><thead><tr><th>#</th><th>題目</th><th>選項</th><th>裁示結果</th></tr></thead><tbody>
+<tr><td data-l="#"><b>0</b></td><td data-l="題目"><b>首頁設計稿擇一</b>（桌機與手機同一組，簡報 P6／P7）</td><td data-l="選項">☐ <b>款１</b> 白底黑框黑字　☐ <b>款２</b> 深灰漸層底白字　☐ 需再修：</td><td data-l="裁示結果"></td></tr>
+<tr><td data-l="#">1</td><td data-l="題目">線下價格是否保留「(Reference)」</td><td data-l="選項">☐ 保留　☐ 不保留</td><td data-l="裁示結果"></td></tr>
+<tr><td data-l="#">2</td><td data-l="題目">第一個頁籤是否刪除「產品」兩個字</td><td data-l="選項">☐ 改為「基本資料」　☐ 維持原名</td><td data-l="裁示結果"></td></tr>
+<tr><td data-l="#">3</td><td data-l="題目">Payment Details for Offline Orders 的位置</td><td data-l="選項">☐ 統一放三欄上方　☐ 統一放三欄下方　☐ 維持現況兩種</td><td data-l="裁示結果"></td></tr>
+<tr><td data-l="#">4</td><td data-l="題目">開關名稱</td><td data-l="選項">☐ 改為「同時曝光於台灣經貿網」　☐ 維持「顯示型錄」　☐ 貴處另訂：</td><td data-l="裁示結果"></td></tr>
+<tr><td data-l="#">5</td><td data-l="題目">型錄列表兩欄的呈現方式<br><span class="mini">（簡報 P5 已直接標 Ａ／Ｂ，與原型分頁一致）</span></td><td data-l="選項">☐ <b>方案Ａ</b> 併入「產品資訊」欄（1126px，與現況同寬）　☐ <b>方案Ｂ</b> 語系狀態收合（1053px，放得下）　☐ Ａ＋Ｂ 併用（會後評估）</td><td data-l="裁示結果"></td></tr>
+<tr><td data-l="#">5-1</td><td data-l="題目">（若選方案Ｂ）價格欄位</td><td data-l="選項">☐ 整併一欄（放得下，餘裕 84px）　☐ 分兩欄（放得下，餘裕 17px）</td><td data-l="裁示結果"></td></tr>
+<tr><td data-l="#">5-2</td><td data-l="題目">列表的線上價格呈現</td><td data-l="選項">☐ 僅顯示總區間　☐ 區間＋可展開級距明細</td><td data-l="裁示結果"></td></tr>
+<tr><td data-l="#">5-3</td><td data-l="題目">是否一併加「同時顯示欄位數上限」</td><td data-l="選項">☐ 加（人天另評）　☐ 不加</td><td data-l="裁示結果"></td></tr>
+<tr><td data-l="#">6</td><td data-l="題目">三欄位多語文字</td><td data-l="選項">☐ 貴處自行於 ADM 設定　☐ 提供翻譯由凌網上架</td><td data-l="裁示結果"></td></tr>
+</tbody></table></div>
+<h3 id="S16">三、前次會議調整回報　⚠ <b>簡報 P6／P7 設計稿、P8 建站引導原型</b></h3>
+<div class="tw"><table><thead><tr><th>項目</th><th>確認</th></tr></thead><tbody>
+<tr><td data-l="項目">手機版四項（Slider 箭頭／頁尾徽章／QR code／置底功能列）</td><td data-l="確認">☐ OK　☐ 需調整：</td></tr>
+<tr><td data-l="項目">按鈕色系改亮、CTA 改白底黑字</td><td data-l="確認">☐ OK　☐ 需調整：</td></tr>
+<tr><td data-l="項目">表單新增登入提示</td><td data-l="確認">☐ OK　☐ 需調整：</td></tr>
+<tr><td data-l="項目">元件間距 64、舊版三款色系統一</td><td data-l="確認">☐ OK　☐ 需調整：</td></tr>
+<tr><td data-l="項目">建站引導：預設元件八項與排序、圖文模板範本移入顯示樣式並加編號</td><td data-l="確認">☐ OK　☐ 需調整：</td></tr>
+<tr><td data-l="項目">產品展示「單列4則多列窗格」取現行預設的遮罩款</td><td data-l="確認">☐ OK　☐ 需調整：</td></tr>
+<tr><td data-l="項目">產品分類選單移除「ALL」（8/17 來信）</td><td data-l="確認">☐ OK　☐ 需調整：</td></tr>
+<tr><td data-l="項目">關於我們 Icon 圓圈框（8/17 來信，<b>請組長當場確認</b>）</td><td data-l="確認">☐ 組長確認　☐ 需調整：</td></tr>
+<tr><td data-l="項目">建站引導：內容頁籤規則、圖文模板實際樣式、公司新聞資料條件併入樣式（8/17–18 來信）</td><td data-l="確認">☐ OK　☐ 需調整：</td></tr>
+</tbody></table></div>
+<h3 id="S16">四、待貴處提供（P10）</h3>
+<div class="tw"><table><thead><tr><th>項目</th><th>到期</th><th>現場回應</th></tr></thead><tbody>
+<tr><td data-l="項目">附件提示詞文案</td><td data-l="到期">8/31</td><td data-l="現場回應"></td></tr>
+<tr><td data-l="項目">語系說明區塊文案</td><td data-l="到期">—</td><td data-l="現場回應"></td></tr>
+<tr><td data-l="項目">「同時曝光於台灣經貿網」開關說明文字　⚠ <b>簡報未列，口頭催</b></td><td data-l="到期">—</td><td data-l="現場回應"></td></tr>
+<tr><td data-l="項目">客服圖示由貴處以 GTM 設定不放置　⚠ <b>簡報未列，口頭催</b></td><td data-l="到期">8/31</td><td data-l="現場回應"></td></tr>
+</tbody></table></div>
+<hr>
+<h2 id="S16">會前檢查</h2>
+<label class="chk"><input type="checkbox"><span>簡報 <code>簡報.html</code> 全螢幕開好，翻到 P1（<b>共 11 頁</b>）</span></label>
+<label class="chk"><input type="checkbox"><span><b>原型三個分頁先開好備著</b>：<code>../demo3/index.html</code>（後台①②③）、<code>cp-open.html</code>（④）、<code>cp-closed.html</code>（⑤）</span></label>
+<label class="chk"><input type="checkbox"><span><b>P6／P7 設計稿兩款先開好</b>：<code>../設計稿/首頁1.jpg</code>、<code>首頁2.jpg</code>、<code>RWD1.jpg</code>、<code>RWD2.jpg</code><span class="sub">（<b>款１＝白底黑框黑字／款２＝深灰漸層底白字，只差按鈕樣式</b>；簡報上點圖可另開原尺寸）</span></span></label>
+<label class="chk"><input type="checkbox"><span><b>P8 ＳＵ 建站引導原型</b>先開好：<a href="https://angelag0.github.io/ep-demo/SU/" target="_blank" rel="noopener">https://angelag0.github.io/ep-demo/SU/</a></span></label>
+<label class="chk"><input type="checkbox"><span>靖慈簡報第 9 頁（欄位規格紅字）另開一個分頁——被問「你哪來的規格」時直接調出來</span></label>
+<label class="chk"><input type="checkbox"><span>ＲＦＰ 第 10、11 頁另開備查</span></label>
+<label class="chk"><input type="checkbox"><span><b>About Us 頁的 ＴＰ 專輯區塊</b>另開一個分頁（<a href="https://peiping.en.taiwantrade.com/about-us" target="_blank" rel="noopener">https://peiping.en.taiwantrade.com/about-us</a>），P9 時直接指給客戶看</span></label>
+</main>
+<button id="top" aria-label="回到最上面">↑</button>
+<script>
+(function(){
+var K='ep3-simmy-v1', S={};
+try{S=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){S={}}
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+
+var fs=parseFloat(S._fs)||17;
+function setFs(v){fs=Math.min(24,Math.max(14,v));
+  document.documentElement.style.setProperty('--fs',fs+'px');S._fs=fs;save()}
+setFs(fs);
+document.getElementById('fup').onclick=function(){setFs(fs+1)};
+document.getElementById('fdn').onclick=function(){setFs(fs-1)};
+
+function setT(v){document.documentElement.setAttribute('data-t',v);S._t=v;save();
+  document.getElementById('thm').textContent=(v==='dark'?'☀':'🌙')}
+setT(S._t||'light');
+document.getElementById('thm').onclick=function(){
+  setT(document.documentElement.getAttribute('data-t')==='dark'?'light':'dark')};
+
+var ti=0;
+[].forEach.call(document.querySelectorAll('table'),function(tb){
+  ti++;var ri=0;
+  [].forEach.call(tb.querySelectorAll('tbody tr'),function(tr){
+    ri++;var ci=0;
+    [].forEach.call(tr.querySelectorAll('td'),function(td){
+      ci++;
+      var h=td.innerHTML;
+      if(h.indexOf('☐')>=0){
+        var parts=h.split('☐').slice(1);
+        td.innerHTML='';
+        parts.forEach(function(p,pi){
+          var txt=p.replace(/　+/g,' ').replace(/^\s+|\s+$/g,'');
+          if(!txt){return}
+          var plain=txt.replace(/<[^>]+>/g,'').replace(/\s+$/,'');
+          var need=/[：:]$/.test(plain);
+          var key='o'+ti+'-'+ri+'-'+ci+'-'+pi, ik='i'+ti+'-'+ri+'-'+ci+'-'+pi;
+          var b=document.createElement('span');
+          b.className='opt';b.innerHTML=txt;
+          if(S[key]){b.classList.add('sel')}
+          td.appendChild(b);
+          var inp=null;
+          if(need){
+            inp=document.createElement('input');
+            inp.className='fin';inp.placeholder='填寫…';inp.value=S[ik]||'';
+            inp.style.display=S[key]?'block':'none';
+            inp.oninput=function(){S[ik]=inp.value;save()};
+            td.appendChild(inp);
+          }
+          b.onclick=function(){
+            b.classList.toggle('sel');
+            S[key]=b.classList.contains('sel')?1:0;save();
+            if(inp){inp.style.display=b.classList.contains('sel')?'block':'none';
+              if(b.classList.contains('sel')){inp.focus()}}
+          };
+        });
+      }else if(td.textContent.replace(/\s/g,'')===''){
+        var k2='f'+ti+'-'+ri+'-'+ci;
+        var i2=document.createElement('input');
+        i2.className='fin';i2.placeholder='現場填寫…';i2.value=S[k2]||'';
+        i2.oninput=function(){S[k2]=i2.value;save()};
+        td.innerHTML='';td.appendChild(i2);
+      }
+    });
+  });
+});
+
+[].forEach.call(document.querySelectorAll('.chk'),function(l,n){
+  var b=l.querySelector('input'),k='c'+n;
+  b.checked=!!S[k];l.classList.toggle('done',b.checked);
+  b.onchange=function(){S[k]=b.checked?1:0;save();l.classList.toggle('done',b.checked)};
+});
+
+document.getElementById('clr').onclick=function(){
+  if(!confirm('清除本頁所有勾選與填寫內容？')){return}
+  var fsv=S._fs,tv=S._t;S={_fs:fsv,_t:tv};save();location.reload();
+};
+
+var bar=document.getElementById('bar'),topb=document.getElementById('top'),
+    nv=document.getElementById('nav'),
+    ls=[].slice.call(nv.querySelectorAll('a')),
+    tg=ls.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+topb.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})};
+var tick=false;
+function upd(){
+  var h=document.documentElement,y=h.scrollTop||document.body.scrollTop,
+      m=(h.scrollHeight-h.clientHeight)||1;
+  bar.style.width=Math.min(100,y/m*100)+'%';
+  topb.classList.toggle('on',y>500);
+  var cur=0;
+  tg.forEach(function(el,n){if(el&&el.getBoundingClientRect().top<150){cur=n}});
+  ls.forEach(function(a,n){a.classList.toggle('on',n===cur)});
+  var act=ls[cur];
+  if(act){nv.scrollTo({left:act.offsetLeft-nv.clientWidth/2+act.clientWidth/2,behavior:'smooth'})}
+  tick=false;
+}
+addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(upd)}},{passive:true});
+upd();
+})();
+</script>
+</body>
+</html>
