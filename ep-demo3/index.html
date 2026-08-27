@@ -189,12 +189,16 @@ select,.selectImitating div.selectBtn{
 .langRow .ics{display:flex;gap:3px}
 .langStack .moreLang{display:inline-block;margin-top:2px;font-size:11px;color:#9aa4a6;cursor:default}
 
-/* 認證／類型整併欄 */
+/* 類型欄：現況比照實機橫排（float 換行）；方案Ｂ 的整併欄欄寬吃緊，改為全部垂直堆疊 */
 .ctStack{display:flex;flex-direction:column;gap:5px;align-items:flex-start}
 .ctRow{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-.ctRow .certIco{display:inline-flex;align-items:center;gap:3px;color:#0f6f52;font-size:12px}
-.ctRow .certIco svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6;
-  stroke-linecap:round;stroke-linejoin:round}
+.ctStack.vert .ctRow{flex-direction:column;align-items:flex-start}
+.certIco{display:inline-flex;align-items:center;gap:3px;color:#414b49;font-size:12px}
+/* 認證勾＝原樣照抄實機 .statusIcon.yes 的畫法（24px 容器／8×16 邊框旋轉 45°），等比縮到 18px */
+.certMark{display:inline-block;position:relative;width:18px;height:18px;flex:0 0 18px}
+.certMark::before{content:'';position:absolute;left:50%;top:50%;width:6px;height:12px;
+  border:2.5px solid #414b49;border-left:none;border-top:none;transform:rotate(45deg);
+  margin-top:-9px;margin-left:-4px}
 .tIco{display:inline-flex;align-items:center;justify-content:center;height:16px;min-width:16px;
   padding:0 3px;border:1px solid #cdd6d8;border-radius:3px;background:#fff;
   color:#436672;font-size:9px;line-height:1;letter-spacing:.02em;cursor:default}
@@ -209,20 +213,21 @@ select,.selectImitating div.selectBtn{
 .dsCell .n2{font-size:.86em;color:#626771}
 
 /* 價格：整併欄／方案Ａ 產品資訊內區塊 */
+/* 價格：標籤固定寬、金額自己佔滿剩餘寬度並可折行（min-width:0 讓 flex 子項真的能被壓縮） */
 .priceSum{display:flex;flex-direction:column;gap:3px;line-height:1.45;text-align:left}
-/* 允許折行；懸掛縮排讓折下來的第二行對齊到標籤右側，不會跑到最左邊 */
-.priceSum .ln{font-size:.94em;color:#252929;white-space:normal;padding-left:3.1em;text-indent:-3.1em}
-.priceSum .ln b{font-weight:400;color:#626771;display:inline-block;min-width:3.1em}
+.priceSum .ln{display:flex;gap:5px;align-items:baseline;font-size:.85em;color:#252929}
+.priceSum .ln b{flex:0 0 auto;font-weight:400;color:#626771}
+.priceSum .ln .priceCell,.priceSum .ln .noPrice{flex:1 1 auto;min-width:0}
 .priceSum .unit{color:#626771}
 .listTable .moreLink{display:inline-block;margin-top:2px;font-size:.86em;color:#436672;
   text-decoration:underline;cursor:pointer;white-space:nowrap}
 .listTable .noPrice{color:#a6aab0}
 td.pd .pdPrice{display:block;margin-top:8px;padding:7px 9px;background:#f0f4f5;
   border-left:3px solid #c9d6da;border-radius:0 3px 3px 0}
-/* 產品資訊欄寬度維持現行不變，價格改以折行呈現（懸掛縮排對齊標籤右側） */
-td.pd .pdPrice .ln{display:block;font-size:.9em;line-height:1.6;color:#252929;
-  white-space:normal;padding-left:4.6em;text-indent:-4.6em}
-td.pd .pdPrice .ln b{font-weight:400;color:#626771;display:inline-block;min-width:4.6em}
+/* 產品資訊欄寬度維持現行不變，價格排法與整併欄一致（標籤固定寬、金額可折行） */
+td.pd .pdPrice .ln{display:flex;gap:5px;align-items:baseline;font-size:.85em;line-height:1.6;color:#252929}
+td.pd .pdPrice .ln b{flex:0 0 auto;font-weight:400;color:#626771}
+td.pd .pdPrice .ln .priceCell,td.pd .pdPrice .ln .noPrice{flex:1 1 auto;min-width:0}
 td.pd .pdSub{display:block;color:#626771;font-size:.92em}
 
 /* 階梯價明細浮層 */
@@ -643,8 +648,8 @@ var COLS_BASE = [
   {k:'score', h:'優化分數',  min:71, box:'優化分數（分）'},
   {k:'edit',  h:'最後編修',  min:109},
   {k:'cert',  h:'認證',      min:71},
-  // 類型欄補上實機的多媒體 icon（影片／360／3D）後於 2026-08-27 重新實測：97 → 102
-  {k:'type',  h:'類型',      min:102},
+  // 類型欄沿用 0826 實機量測值（實機為 float 換行，本檔亦允許換行）
+  {k:'type',  h:'類型',      min:97},
   {k:'act',   h:'動作',      min:67, fix:true}
 ];
 var COLS_NEW = [
@@ -668,7 +673,7 @@ var COL_PD_A = {k:'pd', h:'產品資訊', min:163, fix:true, price:true};
 function colsB(){
   var price = (PCOL==='two')
     ? [{k:'online', h:'線上價格', min:110}, {k:'offline', h:'線下價格', min:107}]
-    : [{k:'price',  h:'價格',     min:85}];
+    : [{k:'price',  h:'價格',     min:154}];
   return [
     {k:'ck',  h:'<input type="checkbox">', min:50, fix:true},
     {k:'idx', h:'',         min:42,  fix:true},
@@ -678,7 +683,7 @@ function colsB(){
     {k:'langAll', h:'語系狀態',     min:130, fix:true},
     {k:'ds',      h:'完成度／分數', min:74},
     {k:'edit',    h:'最後編修',     min:109},
-    {k:'ct',      h:'認證／類型',   min:102},
+    {k:'ct',      h:'認證／類型',   min:61},
     {k:'act',     h:'動作',         min:67,  fix:true}
   ]);
 }
@@ -775,10 +780,10 @@ function langStackCell(r){
 }
 
 /* ── 認證／類型 ── */
-function certMark(r){
+function certMark(r, withText){
   return r.cert
-    ? '<span class="certIco" data-tip="已通過產品認證">'
-      + '<svg viewBox="0 0 16 16"><path d="M3.4 8.4l3 3 6.2-7"/></svg>認證</span>'
+    ? '<span class="certIco" data-tip="已通過產品認證"><span class="certMark"></span>'
+      + (withText ? '認證' : '') + '</span>'
     : '<span class="noPrice">—</span>';
 }
 function typeChips(r){
@@ -797,7 +802,7 @@ function labelChips(r){
   }).join('');
 }
 function ctCell(r){
-  var h = '<div class="ctStack"><div class="ctRow">'+certMark(r)+'</div>';
+  var h = "<div class=\"ctStack vert\"><div class=\"ctRow\">"+certMark(r, true)+"</div>";
   var t = typeChips(r), lb = labelChips(r);
   if(t)  h += '<div class="ctRow">'+t+'</div>';
   if(lb) h += '<div class="ctRow">'+lb+'</div>';
@@ -842,9 +847,10 @@ function pdCell(r, withPrice){
   var h = '<td class="pd"><span class="caption">'+r.nm+'</span>'
         + '<span class="pdSub">自訂分類：'+r.cat+'　產品型號：'+r.mod+'</span>';
   if(withPrice){
+    // 欄寬不得增加，故金額不帶單位（單位在明細視窗內）
     h += '<span class="pdPrice">'
-       + '<span class="ln"><b>線上價格</b>'+(onlineTxt(r, true) || '<span class="noPrice">未開放線上販售</span>')+'</span>'
-       + '<span class="ln"><b>線下價格</b>'+(offlineTxt(r) || '<span class="noPrice">—</span>')+'</span>'
+       + '<span class="ln"><b>線上</b>'+(onlineTxt(r, false) || '<span class="noPrice">未開放</span>')+'</span>'
+       + '<span class="ln"><b>線下</b>'+(offlineTxt(r) || '<span class="noPrice">—</span>')+'</span>'
        + tierLink(r) + '</span>';
   }
   return h + '</td>';
