@@ -169,28 +169,6 @@ select,.selectImitating div.selectBtn{
 .segs button:hover{background:#eef6f8;color:#10243e;box-shadow:none}
 .segs button.on{background:#436672;color:#fff}
 
-/* 說明卡 */
-#introCard{margin:12px 20px 12px;padding:18px 22px 20px;background:#fff;
-  border:1px solid #e6ebec;border-radius:6px}
-#introCard h4{margin:0 0 10px;font-size:17px;font-weight:700;color:#10243e}
-#introCard ul.pts{margin:0;padding:0;list-style:none;display:grid;gap:7px}
-#introCard ul.pts li{position:relative;padding-left:16px;font-size:13.5px;line-height:1.75;color:#414b49}
-#introCard ul.pts li::before{content:'';position:absolute;left:3px;top:.72em;width:5px;height:5px;
-  border-radius:50%;background:#436672}
-#introCard ul.pts em{font-style:normal;font-weight:700;color:#10243e;font-variant-numeric:tabular-nums}
-.wChart{margin-top:16px;display:flex;flex-direction:column;gap:9px}
-.wChart .cap{font-size:12.5px;color:#9aa4a6}
-.wRow{display:flex;align-items:center;gap:12px;font-size:13px}
-.wRow .nm{flex:0 0 168px;color:#414b49;white-space:nowrap}
-.wRow .track{flex:1 1 auto;height:18px;background:#eef2f3;border-radius:3px;position:relative;overflow:hidden}
-.wRow .fill{height:100%;background:#7d979e;border-radius:3px 0 0 3px;transition:width .25s}
-.wRow .fill.over{background:#c0392b}
-.wRow .lim{position:absolute;top:0;bottom:0;width:2px;background:#10243e}
-.wRow .val{flex:0 0 116px;text-align:right;color:#414b49;font-variant-numeric:tabular-nums;white-space:nowrap}
-.wRow .val b{font-weight:700}
-.wRow .val .over{color:#c0392b;font-weight:700}
-.wRow .val .fit{color:#0f6f52;font-weight:700}
-.wChart .limLab{font-size:12px;color:#626771;padding-left:180px}
 
 /* 語系狀態 icon（四組：啟用／販售／內容審核／販售審核） */
 .stIco{display:inline-flex;width:15px;height:15px;flex:0 0 15px;align-items:center;justify-content:center;cursor:default}
@@ -231,8 +209,9 @@ select,.selectImitating div.selectBtn{
 .dsCell .n2{font-size:.86em;color:#626771}
 
 /* 價格：整併欄／方案Ａ 產品資訊內區塊 */
-.priceSum{display:flex;flex-direction:column;gap:2px;line-height:1.45;text-align:left}
-.priceSum .ln{white-space:nowrap;font-size:.94em;color:#252929}
+.priceSum{display:flex;flex-direction:column;gap:3px;line-height:1.45;text-align:left}
+/* 允許折行；懸掛縮排讓折下來的第二行對齊到標籤右側，不會跑到最左邊 */
+.priceSum .ln{font-size:.94em;color:#252929;white-space:normal;padding-left:3.1em;text-indent:-3.1em}
 .priceSum .ln b{font-weight:400;color:#626771;display:inline-block;min-width:3.1em}
 .priceSum .unit{color:#626771}
 .listTable .moreLink{display:inline-block;margin-top:2px;font-size:.86em;color:#436672;
@@ -240,7 +219,9 @@ select,.selectImitating div.selectBtn{
 .listTable .noPrice{color:#a6aab0}
 td.pd .pdPrice{display:block;margin-top:8px;padding:7px 9px;background:#f0f4f5;
   border-left:3px solid #c9d6da;border-radius:0 3px 3px 0}
-td.pd .pdPrice .ln{display:block;font-size:.9em;line-height:1.6;white-space:nowrap;color:#252929}
+/* 產品資訊欄寬度維持現行不變，價格改以折行呈現（懸掛縮排對齊標籤右側） */
+td.pd .pdPrice .ln{display:block;font-size:.9em;line-height:1.6;color:#252929;
+  white-space:normal;padding-left:4.6em;text-indent:-4.6em}
 td.pd .pdPrice .ln b{font-weight:400;color:#626771;display:inline-block;min-width:4.6em}
 td.pd .pdSub{display:block;color:#626771;font-size:.92em}
 
@@ -525,18 +506,6 @@ td.pd .pdSub{display:block;color:#626771;font-size:.92em}
       <button id="btnRuler">隱藏量尺</button>
     </div>
 
-    <!-- 說明頁：問題陳述＋各方案需求寬度對照 -->
-    <div id="introCard" class="hide">
-      <h4>列表欄位空間現況</h4>
-      <ul class="pts">
-        <li>供應商後台為固定寬版面，未支援 RWD；供應商實際作業裝置以 13–14 吋筆電（<em>1366×768</em>）為多。</li>
-        <li>目前列表預設顯示 15 欄，各欄在不破版前提下的最小寬度合計約 <em id="pNow">—</em>px，扣除左側選單後，表格可用寬度僅約 <em id="pAvail">—</em>px。</li>
-        <li>本次新增「線上價格」「線下價格」兩欄，需求寬度再增加約 <em id="pAdd">—</em>px，右側欄位必須水平捲動才看得到。</li>
-        <li>以下即為加入兩欄後的實際排版，供對照。</li>
-      </ul>
-      <div class="wChart" id="wChart"></div>
-    </div>
-
     <!-- 方案標頭（Ａ／Ｂ 才顯示） -->
     <div class="planBar hide" id="planBar">
       <h4 class="pTit" id="planTit"></h4>
@@ -691,15 +660,15 @@ var TIER = 'range';  // 線上價格呈現：range＝僅顯示區間／detail＝
 /* 方案Ａ／Ｂ 新欄位的最小寬度＝2026-08-27 以 Chrome 無頭實測本檔所得
    （量法同 COLS_BASE：表格 width:min-content、解除 min-width，並取「價格行不折行、
      含『查看價格明細』連結」的最寬狀態，故為不破版的下限值） */
-/* 方案Ａ：價格併入「產品資訊」欄，其餘欄位配置不動（產品資訊欄最小寬度隨之放大） */
-var COL_PD_A = {k:'pd', h:'產品資訊', min:200, fix:true, price:true};
+/* 方案Ａ：價格併入「產品資訊」欄，欄寬與其餘欄位配置一律不變，價格以折行呈現 */
+var COL_PD_A = {k:'pd', h:'產品資訊', min:163, fix:true, price:true};
 
 /* 方案Ｂ：語系四欄＋其他語系→「語系狀態」一欄；認證＋類型、完成度＋優化分數各自整併。
    欄序刻意與「加兩個價格欄」完全相同，方便逐欄對照收合前後的寬度 */
 function colsB(){
   var price = (PCOL==='two')
     ? [{k:'online', h:'線上價格', min:110}, {k:'offline', h:'線下價格', min:107}]
-    : [{k:'price',  h:'價格',     min:110}];
+    : [{k:'price',  h:'價格',     min:85}];
   return [
     {k:'ck',  h:'<input type="checkbox">', min:50, fix:true},
     {k:'idx', h:'',         min:42,  fix:true},
@@ -861,7 +830,7 @@ function offlineTxt(r){
 }
 function tierLink(r){
   return (TIER==='detail' && r.tiers && r.tiers.length)
-    ? '<span class="moreLink" data-tierno="'+r.no+'">查看價格明細 &gt;</span>' : '';
+    ? '<span class="moreLink" data-tierno="'+r.no+'">查看明細 &gt;</span>' : '';
 }
 function priceSumCell(r){
   return '<div class="priceSum">'
@@ -955,7 +924,6 @@ var PLAN_TXT = {
      d:'四個語系欄與「其他語系」收合為單一「語系狀態」欄（一列一語系，四種狀態橫列）；「認證」與「類型」、「完成度」與「優化分數」再各自整併為一欄。'}
 };
 function applyView(){
-  document.getElementById('introCard').classList.toggle('hide', VIEW!=='intro');
   document.getElementById('planBar').classList.toggle('hide', !PLAN_TXT[VIEW]);
   if(PLAN_TXT[VIEW]){
     document.getElementById('planTit').textContent  = PLAN_TXT[VIEW].t;
@@ -1047,48 +1015,16 @@ function measureCols(){
     st.className = 'ok';
     st.textContent = '未溢出（尚餘 ' + slack + 'px）';
   }
-
-  renderChart(avail);
 }
 
-/* 各方案在「不破版」前提下的最小需求寬度（＝各欄最小寬度合計，與量尺同源） */
+/* 各方案在「不破版」前提下的最小需求寬度（＝各欄最小寬度合計，與量尺同源）
+   ——不顯示於畫面，供隨時以主控台核對訪談簡報引用的數字 */
 function sumMin(v, pcol){
   var keep = PCOL;
   if(pcol) PCOL = pcol;
   var s = shownColsFor(v).reduce(function(a, c){ return a + c.min; }, 0);
   PCOL = keep;
   return s;
-}
-function renderChart(avail){
-  if(VIEW !== 'intro') return;
-  var wrap = document.getElementById('wChart');
-  if(!wrap || !avail) return;
-
-  var now = sumMin('now'), intro = sumMin('intro');
-  document.getElementById('pNow').textContent   = now;
-  document.getElementById('pAvail').textContent = avail;
-  document.getElementById('pAdd').textContent   = intro - now;
-
-  var rows = [
-    {nm:'現況（未含價格欄）',       w:now},
-    {nm:'現況＋兩個價格欄',         w:intro},
-    {nm:'方案Ａ',                   w:sumMin('a')},
-    {nm:'方案Ｂ（價格分兩欄）',     w:sumMin('b','two')},
-    {nm:'方案Ｂ（價格整併一欄）',   w:sumMin('b','one')}
-  ];
-  var max = Math.max(avail, Math.max.apply(null, rows.map(function(r){ return r.w; }))) * 1.05;
-
-  wrap.innerHTML = rows.map(function(r){
-    var over = r.w - avail;
-    return '<div class="wRow"><span class="nm">'+r.nm+'</span>'
-      + '<span class="track">'
-      + '<span class="fill'+(over>0 ? ' over' : '')+'" style="width:'+(r.w/max*100).toFixed(1)+'%"></span>'
-      + '<span class="lim" style="left:'+(avail/max*100).toFixed(1)+'%"></span></span>'
-      + '<span class="val"><b>'+r.w+'</b>px　'
-      + (over>0 ? '<span class="over">超出 '+over+'</span>' : '<span class="fit">尚餘 '+(-over)+'</span>')
-      + '</span></div>';
-  }).join('')
-  + '<p class="cap limLab">深色直線＝目前表格可用寬度 '+avail+'px；橫條為各方案的最小需求寬度，超出直線者必須水平捲動。</p>';
 }
 
 (function initListSim(){
