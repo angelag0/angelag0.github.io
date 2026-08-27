@@ -39,6 +39,15 @@ table.rfp td:first-child{font-size:18px;vertical-align:middle}
 table.rfp .no{display:inline-block;background:#F5F5F5;color:#111;font-weight:700;
   padding:0 7px;margin-right:7px;font-size:14px;white-space:nowrap;vertical-align:1px}
 
+/* ── P6 前次調整回報（雙欄表，左＝設計稿／右＝ＳＵ 原型） ── */
+table.rpt{table-layout:fixed;font-size:16px;line-height:1.5}
+table.rpt th{font-size:18px;text-align:center;padding:8px 10px}
+table.rpt td{padding:7px 10px;vertical-align:top;word-break:break-word}
+table.rpt td.src{width:66px;text-align:center;color:#777;white-space:nowrap;font-size:15px}
+table.rpt .fx{display:inline-block;border:1px solid #111;padding:0 6px;font-size:13px;
+  line-height:1.7;margin-top:3px}
+table.rpt .mut{font-size:14px}
+
 /* ── 原型連結列 ── */
 .proto{margin-top:22px;text-align:center;font-size:16px;color:#777}
 .proto a{display:inline-block;border:1px solid #111;padding:6px 18px;margin:0 4px;
@@ -56,6 +65,24 @@ table.qtb td.b{font-size:22px;text-align:center}
 .opt.sel{background:#111;color:#FFF;border-color:#111}
 .sep{color:#777;margin:0 5px}
 
+
+/* ── 設計稿框（沿用 0821 版式；.noflip 內點擊不換頁，點圖另開原尺寸） ── */
+.figrow{flex:1;display:flex;gap:36px;min-height:0}
+.figcell{display:flex;flex-direction:column;min-width:0}
+.figcell .figbox{flex:1;min-height:0}
+.figbox{overflow-y:auto;border:1px solid #E5E5E5;background:#F5F5F5}
+.figbox img{width:100%;display:block}
+.cap{font-size:15px;color:#777;margin-top:6px;text-align:center}
+.figpage{padding-top:32px;padding-bottom:28px}
+.figpage .pt{margin-bottom:10px}
+.fixw{width:330px;margin:0 auto}
+.figcell .figbox.fixw{flex:0 1 auto;max-height:520px}
+.figrow.top{align-items:flex-start}
+.pthead{display:flex;gap:36px}
+.pthead .pt{flex:1;min-width:0;margin-bottom:6px}
+/* 待貴處提供頁：文字左、示意圖右 */
+.shot{border:1px solid #E5E5E5;background:#F5F5F5;overflow:hidden}
+.shot img{width:100%;display:block}
 #pageNum{position:fixed;right:20px;bottom:14px;font-size:17px;color:#777}
 @page{size:338.7mm 190.5mm;margin:0}
 @media print{
@@ -82,20 +109,16 @@ table.qtb td.b{font-size:22px;text-align:center}
   <h2 class="pt">今天的流程</h2>
   <div class="body">
     <div style="flex:1">
-      <p class="t4 mut b" style="margin-bottom:10px">一、產品型錄操作調整</p>
+      <p class="t4 mut b" style="margin-bottom:10px">一、產品型錄需求訪談</p>
       <p class="t3">ＲＦＰ 附件二六項，彙整成五個調整位置　→　直接開操作原型展示</p>
     </div>
-    <div style="border-top:1px solid #E5E5E5;padding-top:20px;flex:1">
-      <p class="t4 mut b" style="margin-bottom:10px">二、需求確認</p>
-      <p class="t3">六個項目請貴處裁示</p>
+    <div style="border-top:1px solid #E5E5E5;padding-top:22px;flex:1">
+      <p class="t4 mut b" style="margin-bottom:10px">二、首頁設計稿選擇　→　建站引導原型</p>
+      <p class="t3">依 ８／２１ 會議調整後的設計稿，請貴處擇一款；接著檢視建站引導原型</p>
     </div>
-    <div style="border-top:1px solid #E5E5E5;padding-top:20px;flex:1">
-      <p class="t4 mut b" style="margin-bottom:10px">三、ＴＰ 專輯下架</p>
-      <p class="t3">ＲＦＰ 附件一第 8 項，說明下架範圍與做法</p>
-    </div>
-    <div style="border-top:1px solid #E5E5E5;padding-top:20px;flex:1">
-      <p class="t4 mut b" style="margin-bottom:10px">四、待貴處提供事項與簽版</p>
-      <p class="t3">本次為第三次需求訪談，確認完畢後進行簽版</p>
+    <div style="border-top:1px solid #E5E5E5;padding-top:22px;flex:1">
+      <p class="t4 mut b" style="margin-bottom:10px">三、本次需求確認</p>
+      <p class="t3">ＴＰ 專輯下架時間　｜　待貴處提供之文案</p>
     </div>
   </div>
 </section>
@@ -130,7 +153,7 @@ table.qtb td.b{font-size:22px;text-align:center}
       </tr>
       <tr>
         <td>ＡＰＩ</td>
-        <td><span class="no">附件二 2</span>外語網相關 API 調整。本項工作範圍<span class="b">僅包含 API 等相關功能調整，不含前端頁面之設計與呈現</span></td>
+        <td><span class="no">附件二 2</span>外語網相關 API 調整。本項工作範圍僅包含 API 等相關功能調整，<span class="b">不含前端頁面之設計與呈現</span></td>
       </tr>
     </table>
   </div>
@@ -182,9 +205,8 @@ table.qtb td.b{font-size:22px;text-align:center}
         <td class="b">5</td>
         <td><span class="b">型錄列表新增兩欄的呈現方式？</span><br>
             <span class="note">現有欄位在筆電螢幕已達寬度上限，新增兩欄需調整呈現方式</span></td>
-        <td><span class="grp"><span class="opt">併入「產品資訊」欄</span><br>
-            <span class="opt">獨立兩欄，讓出部分現有欄位</span><br>
-            <span class="opt">預設不顯示，由自選顯示欄位開啟</span></span></td>
+        <td><span class="grp"><span class="opt">併入產品資訊欄</span><br>
+            <span class="opt">合併其它欄位</span><span class="sep">／</span><span class="opt">貴處另訂</span></span></td>
       </tr>
       <tr>
         <td class="b">6</td>
@@ -197,7 +219,66 @@ table.qtb td.b{font-size:22px;text-align:center}
   </div>
 </section>
 
-<!-- P6 ＴＰ 專輯下架 -->
+<!-- P6 桌面版設計稿（擇一） -->
+<section class="slide figpage">
+  <div class="pthead">
+    <h2 class="pt">桌面版　款１</h2>
+    <h2 class="pt">桌面版　款２</h2>
+  </div>
+  <p class="t4 mut" style="text-align:center;margin-bottom:8px">
+    已依 ８／２１ 會議調整，並於<span class="b">聯絡我們表單新增登入提示</span>；兩款差異為<span class="b">主要按鈕的樣式</span>，其餘完全相同——<span class="b">請貴處擇一</span>
+  </p>
+  <div class="figrow">
+    <div class="figcell" style="flex:1">
+      <div class="figbox noflip"><a href="../設計稿/首頁1.jpg" target="_blank"><img src="../設計稿/首頁1.jpg" alt="桌面版首頁設計稿 款一"></a></div>
+      <p class="cap"><span class="b">白底黑框黑字</span>　｜　可上下捲動、點圖另開原尺寸</p>
+    </div>
+    <div class="figcell" style="flex:1">
+      <div class="figbox noflip"><a href="../設計稿/首頁2.jpg" target="_blank"><img src="../設計稿/首頁2.jpg" alt="桌面版首頁設計稿 款二"></a></div>
+      <p class="cap"><span class="b">深灰漸層底白字</span>　｜　可上下捲動、點圖另開原尺寸</p>
+    </div>
+  </div>
+</section>
+
+<!-- P7 手機版設計稿（擇一） -->
+<section class="slide figpage">
+  <div class="pthead">
+    <h2 class="pt">手機版　款１</h2>
+    <h2 class="pt">手機版　款２</h2>
+  </div>
+  <p class="t4 mut" style="text-align:center;margin-bottom:8px">
+    ８／２１ 四項調整均已完成：Slider 箭頭保留並調高透明度、頁尾徽章改一排、移除 QR code、置底功能列重新設計
+  </p>
+  <div class="figrow top">
+    <div class="figcell" style="flex:1">
+      <div class="figbox fixw noflip"><a href="../設計稿/RWD1.jpg" target="_blank"><img src="../設計稿/RWD1.jpg" alt="手機版設計稿 款一"></a></div>
+      <p class="cap"><span class="b">白底黑框黑字</span>　｜　點圖另開原尺寸</p>
+    </div>
+    <div class="figcell" style="flex:1">
+      <div class="figbox fixw noflip"><a href="../設計稿/RWD2.jpg" target="_blank"><img src="../設計稿/RWD2.jpg" alt="手機版設計稿 款二"></a></div>
+      <p class="cap"><span class="b">深灰漸層底白字</span>　｜　點圖另開原尺寸</p>
+    </div>
+  </div>
+</section>
+
+<!-- P8 ＳＵ 建站引導原型 -->
+<section class="slide">
+  <h2 class="pt">ＳＵ 建站引導原型</h2>
+  <div class="body">
+    <table>
+      <tr><th style="width:180px">項目</th><th>調整內容</th></tr>
+      <tr><td>版型預設元件</td><td>調整為<span class="b">八項並重新排序</span>，移除「聯繫與訂閱」、聯絡我們表單置底；元件<span class="b">無資料時前台不顯示</span>該區塊</td></tr>
+      <tr><td>圖文模板</td><td>範本示意圖移至<span class="b">「顯示樣式」並加編號</span></td></tr>
+      <tr><td>台灣經貿網標誌</td><td>版型設定新增<span class="b">顯示開關</span>，預設為顯示　<span class="mut">（非本案範圍，凌網同意免費新增）</span></td></tr>
+      <tr><td>元件樣式</td><td>由線框稿改為<span class="b">前台呈現樣板</span>　<span class="mut">（非本案範圍，凌網同意免費新增）</span></td></tr>
+    </table>
+    <p class="proto">操作原型：
+      <a href="https://angelag0.github.io/ep-demo/SU/" target="_blank">ＳＵ 建站引導</a>
+    </p>
+  </div>
+</section>
+
+<!-- P9 ＴＰ 專輯下架 -->
 <section class="slide">
   <h2 class="pt" style="margin-bottom:14px">ＴＰ 專輯下架</h2>
   <div class="body" style="flex-direction:row;gap:36px;align-items:center;justify-content:flex-start">
@@ -213,38 +294,47 @@ table.qtb td.b{font-size:22px;text-align:center}
             <td style="padding:16px 14px">ＴＰ 專輯目前僅出現在企業網「About Us」頁的
             <span class="b">Taiwan Product Magazines</span> 區塊</td></tr>
         <tr><th style="padding:16px 14px">做法</th>
-            <td style="padding:16px 14px">由程式移除，<span class="b">系統上線後不再顯示 ＴＰ 專輯</span></td></tr>
+            <td style="padding:16px 14px">由程式移除，<span class="b">預計 １２ 月系統上線，未來不再顯示 ＴＰ 專輯</span>，需討論確切移除上線時程。</td></tr>
       </table>
     </div>
   </div>
 </section>
 
-<!-- P7 待貴處提供 -->
-<section class="slide">
-  <h2 class="pt">待貴處提供</h2>
-  <div class="body">
-    <table>
-      <tr><th style="width:200px">項目</th><th style="width:290px">提出場合</th><th>說明</th></tr>
-      <tr>
-        <td>聯絡我們表單<br>附件提示詞文案</td>
-        <td>８／１１ 第二次需求訪談</td>
-        <td>手機版需精簡，避免折行</td>
-      </tr>
-      <tr>
-        <td>語系說明區塊文案</td>
-        <td>８／１１ 第二次需求訪談</td>
-        <td>停用英文語系時的警語與說明，目前為凌網擬稿</td>
-      </tr>
-      <tr>
-        <td>聯絡我們表單<br>Message 預設文字</td>
-        <td>８／２１ ＲＷＤ 版型確認會議</td>
-        <td>依該次決議<span class="b">沿用現行系統文案，不另提供</span></td>
-      </tr>
-    </table>
+<!-- P10 待貴處提供 -->
+<section class="slide figpage">
+  <h2 class="pt" style="margin-bottom:12px">待貴處提供</h2>
+  <table style="font-size:17px">
+    <tr><th style="width:34%">項目</th><th style="width:26%">提出場合</th><th>說明</th></tr>
+    <tr>
+      <td><span class="b">①</span>　聯絡我們表單－附件提示詞文案</td>
+      <td>８／１１ 第二次需求訪談</td>
+      <td>手機版需精簡，避免折行</td>
+    </tr>
+    <tr>
+      <td><span class="b">②</span>　語系說明區塊文案</td>
+      <td>８／１１ 第二次需求訪談</td>
+      <td>停用英文語系時的警語與說明，目前為凌網擬稿</td>
+    </tr>
+    <tr>
+      <td>　　聯絡我們表單－Message 預設文字</td>
+      <td>８／２１ 首頁ＲＷＤ版型確認會議</td>
+      <td>依該次決議<span class="b">沿用現行系統文案，不另提供</span></td>
+    </tr>
+  </table>
+
+  <div class="figrow top" style="margin-top:18px;gap:28px;flex:0 1 auto">
+    <div class="figcell" style="flex:0 0 380px">
+      <div class="shot"><a href="1.jpg" target="_blank" class="noflip"><img src="1.jpg" alt="附件提示詞位置"></a></div>
+      <p class="cap"><span class="b">①</span> 附件提示詞的位置</p>
+    </div>
+    <div class="figcell" style="flex:1;min-width:0">
+      <div class="shot"><a href="2.jpg" target="_blank" class="noflip"><img src="2.jpg" alt="語系說明區塊位置"></a></div>
+      <p class="cap"><span class="b">②</span> 語系說明區塊的位置（紅字為凌網擬稿）</p>
+    </div>
   </div>
 </section>
 
-<!-- P8 結束 -->
+<!-- P11 結束 -->
 <section class="slide" style="align-items:center;justify-content:center;text-align:center">
   <p class="t4 mut b" style="letter-spacing:.2em;margin-bottom:20px">本次會議結束</p>
   <h2 class="t1">謝謝各位</h2>
@@ -252,7 +342,7 @@ table.qtb td.b{font-size:22px;text-align:center}
 </section>
 
 </div>
-<div id="pageNum">1 / 8</div>
+<div id="pageNum" data-variant="A">1 / 9</div>
 <script>
 (function(){
 var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,N=slides.length;
