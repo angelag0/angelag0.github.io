@@ -214,20 +214,24 @@ select,.selectImitating div.selectBtn{
 
 /* 價格：整併欄／方案Ａ 產品資訊內區塊 */
 /* 價格：標籤固定寬、金額自己佔滿剩餘寬度並可折行（min-width:0 讓 flex 子項真的能被壓縮） */
-.priceSum{display:flex;flex-direction:column;gap:3px;line-height:1.45;text-align:left}
-.priceSum .ln{display:flex;gap:5px;align-items:baseline;font-size:.85em;color:#252929}
-.priceSum .ln b{flex:0 0 auto;font-weight:400;color:#626771}
-.priceSum .ln .priceCell,.priceSum .ln .noPrice{flex:1 1 auto;min-width:0}
+.priceSum{display:flex;flex-direction:column;gap:4px;line-height:1.5;text-align:left}
+.priceSum .ln{font-size:.9em;color:#252929}
+.priceSum .ln b{font-weight:400;color:#626771;margin-right:.35em}
+/* 全域的 priceCell 是 inline-block（整塊不可切斷），這裡改回 inline，
+   讓幣別／金額／區間／單位可以各自換行 */
+.priceSum .ln .priceCell{display:inline}
 .priceSum .unit{color:#626771}
+/* 最後編修：實機格式為 YYYY/MM/DD hh:mm:ss，這裡把時間排到日期下一行 */
+.listTable td time .tm{display:block;color:#626771;font-size:.92em;line-height:1.4}
 .listTable .moreLink{display:inline-block;margin-top:2px;font-size:.86em;color:#436672;
   text-decoration:underline;cursor:pointer;white-space:nowrap}
 .listTable .noPrice{color:#a6aab0}
 td.pd .pdPrice{display:block;margin-top:8px;padding:7px 9px;background:#f0f4f5;
   border-left:3px solid #c9d6da;border-radius:0 3px 3px 0}
 /* 產品資訊欄寬度維持現行不變，價格排法與整併欄一致（標籤固定寬、金額可折行） */
-td.pd .pdPrice .ln{display:flex;gap:5px;align-items:baseline;font-size:.85em;line-height:1.6;color:#252929}
-td.pd .pdPrice .ln b{flex:0 0 auto;font-weight:400;color:#626771}
-td.pd .pdPrice .ln .priceCell,td.pd .pdPrice .ln .noPrice{flex:1 1 auto;min-width:0}
+td.pd .pdPrice .ln{display:block;font-size:.9em;line-height:1.55;color:#252929}
+td.pd .pdPrice .ln b{font-weight:400;color:#626771;margin-right:.35em}
+td.pd .pdPrice .ln .priceCell{display:inline}
 td.pd .pdSub{display:block;color:#626771;font-size:.92em}
 
 /* 階梯價明細浮層 */
@@ -673,7 +677,7 @@ var COL_PD_A = {k:'pd', h:'產品資訊', min:163, fix:true, price:true};
 function colsB(){
   var price = (PCOL==='two')
     ? [{k:'online', h:'線上價格', min:110}, {k:'offline', h:'線下價格', min:107}]
-    : [{k:'price',  h:'價格',     min:154}];
+    : [{k:'price',  h:'價格',     min:150}];
   return [
     {k:'ck',  h:'<input type="checkbox">', min:50, fix:true},
     {k:'idx', h:'',         min:42,  fix:true},
@@ -725,19 +729,19 @@ var ROWS = [
   {no:'3366514', nm:'Taiwan Si Ji Chun Oolong Tea Bags - Charcoal Mid-Roasted Premium Loose Leaf',
    cat:'Tea', mod:'6444-02', unit:'Boxes',
    tiers:[{q:'10–50', p:'USD 15.00', d:'20 Days'}, {q:'51–200', p:'USD 12.00', d:'35 Days'}],
-   offline:'USD 10.00–12.00', done:100, score:100, edit:'2026/03/19',
+   offline:'USD 10.00–12.00', done:100, score:100, edit:'2026/03/19', tm:'09:12:40',
    cert:1, types:['video'], labels:['new','feat'],
    lang:{en:{a:1,t:1,c:'ok',s:'ok'}, zh:{a:1,t:0,c:'ok'}, ja:{a:0,t:0}, cn:{a:0,t:0}}},
 
   {no:'5474011', nm:'Taiwan Premium Bicycle', cat:'Bicycle', mod:'test bike 123', unit:'Pieces',
    tiers:[{q:'10–20', p:'USD 111.11', d:'25 Days'}, {q:'21–100', p:'USD 99.50', d:'40 Days'},
           {q:'101–150', p:'USD 88.88', d:'60 Days'}],
-   offline:'USD 10.00–50.00', done:100, score:100, edit:'2026/08/18',
+   offline:'USD 10.00–50.00', done:100, score:100, edit:'2026/08/18', tm:'14:53:36',
    cert:1, types:['video','360','3d'], labels:['feat'],
    lang:{en:{a:1,t:1,c:'ok',s:'ok'}, zh:{a:1,t:1,c:'ok',s:'wait'}, ja:{a:1,t:0,c:'wait'}, cn:{a:0,t:0}}},
 
   {no:'2636811', nm:'Automatic Burrito Production Line', cat:'Food Machine', mod:'BR-1500', unit:'Sets',
-   tiers:[], offline:'', done:60, score:80, edit:'2026/08/17',
+   tiers:[], offline:'', done:60, score:80, edit:'2026/08/17', tm:'17:04:28',
    cert:0, types:[], labels:['new'],
    lang:{en:{a:1,t:0,c:'bad'}, zh:{a:0,t:0}, ja:{a:0,t:0}, cn:{a:0,t:0}}}
 ];
@@ -831,7 +835,8 @@ function onlineTxt(r, withUnit){
 function offlineTxt(r){
   if(!r.offline) return null;
   var p = r.offline.split(' ');
-  return '<span class="priceCell"><span class="cur">'+p[0]+'</span> <span class="amt">'+p.slice(1).join(' ')+'</span></span>';
+  return '<span class="priceCell"><span class="cur">'+p[0]+'</span> <span class="amt">'+p.slice(1).join(' ')+'</span>'
+       + ' <span class="unit">/ '+r.unit+'</span></span>';
 }
 function tierLink(r){
   return (TIER==='detail' && r.tiers && r.tiers.length)
@@ -839,18 +844,18 @@ function tierLink(r){
 }
 function priceSumCell(r){
   return '<div class="priceSum">'
-       + '<span class="ln"><b>線上</b>'+(onlineTxt(r, false) || '<span class="noPrice">未開放</span>')+'</span>'
-       + '<span class="ln"><b>線下</b>'+(offlineTxt(r) || '<span class="noPrice">—</span>')+'</span>'
+       + '<span class="ln"><b>線上價格</b>'+(onlineTxt(r, true) || '<span class="noPrice">未開放線上販售</span>')+'</span>'
+       + '<span class="ln"><b>線下價格</b>'+(offlineTxt(r) || '<span class="noPrice">—</span>')+'</span>'
        + tierLink(r) + '</div>';
 }
 function pdCell(r, withPrice){
   var h = '<td class="pd"><span class="caption">'+r.nm+'</span>'
         + '<span class="pdSub">自訂分類：'+r.cat+'　產品型號：'+r.mod+'</span>';
   if(withPrice){
-    // 欄寬不得增加，故金額不帶單位（單位在明細視窗內）
+    // 欄寬維持現行不變，幣別／金額／區間／單位均可自由換行
     h += '<span class="pdPrice">'
-       + '<span class="ln"><b>線上</b>'+(onlineTxt(r, false) || '<span class="noPrice">未開放</span>')+'</span>'
-       + '<span class="ln"><b>線下</b>'+(offlineTxt(r) || '<span class="noPrice">—</span>')+'</span>'
+       + '<span class="ln"><b>線上價格</b>'+(onlineTxt(r, true) || '<span class="noPrice">未開放線上販售</span>')+'</span>'
+       + '<span class="ln"><b>線下價格</b>'+(offlineTxt(r) || '<span class="noPrice">—</span>')+'</span>'
        + tierLink(r) + '</span>';
   }
   return h + '</td>';
@@ -878,7 +883,7 @@ function renderList(){
                           + (17 - cols.filter(function(x){ return x.lang; }).length) + ')</td>';
         case 'done': return '<td class="aCenter">'+r.done+'%</td>';
         case 'score':return '<td class="aCenter">'+r.score+'分</td>';
-        case 'edit': return '<td><time>'+r.edit+'</time></td>';
+        case 'edit': return '<td><time>'+r.edit+'<span class="tm">'+r.tm+'</span></time></td>';
         case 'cert': return '<td style="text-align:center">'+certMark(r)+'</td>';
         case 'type': return '<td><div class="ctStack"><div class="ctRow">'+typeChips(r)+'</div>'
                           + '<div class="ctRow">'+labelChips(r)+'</div></div></td>';
@@ -1209,7 +1214,7 @@ function sumMin(v, pcol){
       return '<tr><td class="q">'+t.q+' '+r.unit+'</td><td>'+t.p+'</td><td>'+t.d+'</td></tr>';
     }).join('');
     document.getElementById('tierOffline').textContent =
-      r.offline ? '線下價格（僅供參考）：' + r.offline : '線下價格：尚未設定';
+      r.offline ? '線下價格（僅供參考）：' + r.offline + ' / ' + r.unit : '線下價格：尚未設定';
     box.classList.add('show');
   }
   document.addEventListener('click', function(e){
