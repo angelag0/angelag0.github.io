@@ -60,11 +60,10 @@ table.qtb th,table.qtb td{padding:9px 14px}
 table.qtb td.b{font-size:22px;text-align:center}
 .note{font-size:17px;color:#555;line-height:1.55;display:inline-block;margin-top:6px}
 .grp{display:inline-block}
-.subq{display:block;margin-top:7px;padding-top:7px;border-top:1px dashed #E5E5E5}
-.subq+.subq{margin-top:4px;padding-top:4px;border-top:none}
-.subq .sq{display:inline-block;font-size:17px;color:#555;margin-right:10px}
-.subq .opt{font-size:16px;padding:2px 11px}
-.subq .mu{color:#777;font-size:14px;margin-left:6px}
+.subq{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed #E5E5E5}
+.subq[hidden]{display:none}
+.subq .sq{display:inline-block;font-size:17px;margin-right:10px}
+.subq .opt{font-size:17px;padding:3px 12px}
 .opt{display:inline-block;border:1px solid #E5E5E5;padding:3px 14px;margin:3px 0;
   font-size:19px;cursor:pointer;white-space:nowrap}
 .opt.sel{background:#111;color:#FFF;border-color:#111}
@@ -210,10 +209,9 @@ table.qtb td.b{font-size:22px;text-align:center}
         <td class="b">5</td>
         <td><span class="b">型錄列表新增兩欄的呈現方式？</span><br>
             <span class="note">13 吋筆電實測：<span class="b">現況 15 欄已超出 73px</span>，再加兩欄超出 287px</span></td>
-        <td><span class="grp"><span class="opt"><span class="b">方案Ａ</span>　併入產品資訊欄<br><span class="note" style="margin:0">與現況同寬，仍超出 73px</span></span><br>
-            <span class="opt"><span class="b">方案Ｂ</span>　語系狀態收合<br><span class="note" style="margin:0">1053px，完整放得下</span></span></span>
-            <span class="subq"><span class="sq">5-1　選Ｂ時的價格欄位</span><span class="grp"><span class="opt">整併一欄<span class="mu">餘裕 84px</span></span><span class="sep">／</span><span class="opt">分兩欄<span class="mu">餘裕 17px</span></span></span></span>
-            <span class="subq"><span class="sq">5-2　列表的線上價格</span><span class="grp"><span class="opt">僅顯示總區間</span><span class="sep">／</span><span class="opt">區間＋可展開明細</span></span></span></td>
+        <td><span class="grp"><span class="opt" data-plan="a"><span class="b">方案Ａ</span>　併入產品資訊欄</span><span class="sep">／</span><span class="opt" data-plan="b"><span class="b">方案Ｂ</span>　語系狀態收合</span></span>
+            <span class="subq" id="q5b" hidden><span class="sq">5-1　價格欄位</span><span class="grp"><span class="opt">整併一欄</span><span class="sep">／</span><span class="opt">分兩欄</span></span></span>
+            <span class="subq" id="q5t" hidden><span class="sq">5-2　列表的線上價格</span><span class="grp"><span class="opt">僅顯示總區間</span><span class="sep">／</span><span class="opt">區間＋可展開明細</span></span></span></td>
       </tr>
       <tr>
         <td class="b">6</td>
@@ -353,6 +351,17 @@ table.qtb td.b{font-size:22px;text-align:center}
 <script>
 (function(){
 var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,N=slides.length;
+// 第 5 題：選了方案才顯示子題。方案Ａ 只需決定線上價格呈現，方案Ｂ 另需決定價格欄位
+function syncQ5(){
+  var a=document.querySelector('.opt[data-plan="a"]'), b=document.querySelector('.opt[data-plan="b"]');
+  var qb=document.getElementById('q5b'), qt=document.getElementById('q5t');
+  if(!a||!qb) return;
+  var pick = a.classList.contains('sel') ? 'a' : (b.classList.contains('sel') ? 'b' : null);
+  qb.hidden = (pick !== 'b');
+  qt.hidden = (pick === null);
+  var clear = (pick === null) ? '#q5b .opt,#q5t .opt' : (pick === 'a' ? '#q5b .opt' : null);
+  if(clear) [].forEach.call(document.querySelectorAll(clear), function(o){ o.classList.remove('sel'); });
+}
 function go(n){
   cur=Math.max(0,Math.min(N-1,n));
   for(var i=0;i<N;i++)slides[i].classList.toggle('on',i===cur);
@@ -364,10 +373,11 @@ document.addEventListener('click',function(e){
   if(t.closest&&t.closest('a'))return;              // 連結照常開新分頁，不換頁
   if(t.closest&&t.closest('.opt')){                  // 選項可勾選／再點取消
     var el=t.closest('.opt');
-    if(el.classList.contains('sel')){el.classList.remove('sel');return;}
+    if(el.classList.contains('sel')){el.classList.remove('sel');syncQ5();return;}
     var scope=(el.closest('.grp')||el.closest('td')||el.parentElement).querySelectorAll('.opt');
     for(var i=0;i<scope.length;i++)scope[i].classList.remove('sel');
     el.classList.add('sel');
+    syncQ5();
     return;
   }
   var w=window.innerWidth;
