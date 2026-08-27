@@ -56,10 +56,15 @@ table.rpt .mut{font-size:14px}
 
 /* ── 需求確認題（表格式，沿用第二次訪談排版：題／問題／選項，選項置右） ── */
 table.qtb{font-size:20px;line-height:1.6}
-table.qtb th,table.qtb td{padding:14px}
+table.qtb th,table.qtb td{padding:9px 14px}
 table.qtb td.b{font-size:22px;text-align:center}
 .note{font-size:17px;color:#555;line-height:1.55;display:inline-block;margin-top:6px}
 .grp{display:inline-block}
+.subq{display:block;margin-top:7px;padding-top:7px;border-top:1px dashed #E5E5E5}
+.subq+.subq{margin-top:4px;padding-top:4px;border-top:none}
+.subq .sq{display:inline-block;font-size:17px;color:#555;margin-right:10px}
+.subq .opt{font-size:16px;padding:2px 11px}
+.subq .mu{color:#777;font-size:14px;margin-left:6px}
 .opt{display:inline-block;border:1px solid #E5E5E5;padding:3px 14px;margin:3px 0;
   font-size:19px;cursor:pointer;white-space:nowrap}
 .opt.sel{background:#111;color:#FFF;border-color:#111}
@@ -130,25 +135,25 @@ table.qtb td.b{font-size:22px;text-align:center}
     <table class="rfp">
       <tr><th style="width:228px">調整位置</th><th style="width:auto">內容</th></tr>
       <tr>
-        <td><a href="../index.html" target="_blank">① 型錄內容設定</a></td>
+        <td><a href="../demo3/index.html" target="_blank">① 型錄內容設定</a></td>
         <td><span class="no">附件二 1</span>於採購資訊頁籤中新增三項欄位：<span class="b">線下價格、供應能力及交貨時間</span>，並同步於 EP 產品詳細頁進行顯示；將既有 Payment 欄位名稱調整為 Payment Details for Offline Orders、移除 also<br>
             <span class="no">附件二 3</span>調整頁籤順序並更改名稱：基本資料 → 產品圖片 → <span class="b">供應能力與報價（原採購資訊）</span> → 產品規格 → 產品認證 → <span class="b">多媒體與附件</span> → 線上販售</td>
       </tr>
       <tr>
-        <td><a href="../index.html#s2" target="_blank">② 型錄啟用設定</a></td>
+        <td><a href="../demo3/index.html#s2" target="_blank">② 型錄啟用設定</a></td>
         <td><span class="no">附件二 4</span>新增顯示型錄之開關，讓會員可自行決定是否於企業網以外平台（例如外語網、商機推薦等）顯示，<span class="b">預設為顯示</span></td>
       </tr>
       <tr>
-        <td><a href="../index.html#s3" target="_blank">③ 產品型錄列表</a></td>
+        <td><a href="../demo3/index.html#s3" target="_blank">③ 產品型錄列表</a></td>
         <td><span class="no">附件二 5</span>新增價格資訊欄位，供會員於瀏覽列表時即可快速確認產品價格（<span class="b">價格需 2 欄：線上價格和線下價格</span>）</td>
       </tr>
       <tr>
-        <td><a href="../cp-open.html" target="_blank">④ 企業網－有開販售</a></td>
+        <td><a href="../demo3/cp-open.html" target="_blank">④ 企業網－有開販售</a></td>
         <td><span class="no">附件二 1</span>三項新增欄位同步於 EP 產品詳細頁顯示<br>
             <span class="no">附件二 6</span>於 CP 頁下方新增「附件」頁籤，並<span class="b">將現行附件內容移至該新增頁籤中統一呈現</span></td>
       </tr>
       <tr>
-        <td><a href="../cp-closed.html" target="_blank">⑤ 企業網－未開販售</a></td>
+        <td><a href="../demo3/cp-closed.html" target="_blank">⑤ 企業網－未開販售</a></td>
         <td><span class="no">附件二 1・6</span>同上；另將 Payment 欄位名稱調整為 <span class="b">Payment Details for Offline Orders</span>、移除 also</td>
       </tr>
       <tr>
@@ -161,7 +166,7 @@ table.qtb td.b{font-size:22px;text-align:center}
 
 <!-- P4 需求確認 -->
 <section class="slide">
-  <h2 class="pt" style="margin-bottom:20px">需求確認</h2>
+  <h2 class="pt" style="margin-bottom:14px">需求確認</h2>
   <div class="body">
     <table class="qtb">
       <tr><th style="width:56px">題</th><th style="width:46%">問題</th><th>選項</th></tr>
@@ -190,7 +195,7 @@ table.qtb td.b{font-size:22px;text-align:center}
 
 <!-- P5 需求確認（二） -->
 <section class="slide">
-  <h2 class="pt" style="margin-bottom:20px">需求確認（二）</h2>
+  <h2 class="pt" style="margin-bottom:14px">需求確認（二）</h2>
   <div class="body">
     <table class="qtb">
       <tr><th style="width:56px">題</th><th style="width:46%">問題</th><th>選項</th></tr>
@@ -204,9 +209,11 @@ table.qtb td.b{font-size:22px;text-align:center}
       <tr>
         <td class="b">5</td>
         <td><span class="b">型錄列表新增兩欄的呈現方式？</span><br>
-            <span class="note">現有欄位在筆電螢幕已達寬度上限，新增兩欄需調整呈現方式</span></td>
-        <td><span class="grp"><span class="opt">併入產品資訊欄</span><br>
-            <span class="opt">合併其它欄位</span><span class="sep">／</span><span class="opt">貴處另訂</span></span></td>
+            <span class="note">13 吋筆電實測：<span class="b">現況 15 欄已超出 73px</span>，再加兩欄超出 287px</span></td>
+        <td><span class="grp"><span class="opt"><span class="b">方案Ａ</span>　併入產品資訊欄<br><span class="note" style="margin:0">與現況同寬，仍超出 73px</span></span><br>
+            <span class="opt"><span class="b">方案Ｂ</span>　語系狀態收合<br><span class="note" style="margin:0">1053px，完整放得下</span></span></span>
+            <span class="subq"><span class="sq">5-1　選Ｂ時的價格欄位</span><span class="grp"><span class="opt">整併一欄<span class="mu">餘裕 84px</span></span><span class="sep">／</span><span class="opt">分兩欄<span class="mu">餘裕 17px</span></span></span></span>
+            <span class="subq"><span class="sq">5-2　列表的線上價格</span><span class="grp"><span class="opt">僅顯示總區間</span><span class="sep">／</span><span class="opt">區間＋可展開明細</span></span></span></td>
       </tr>
       <tr>
         <td class="b">6</td>
@@ -342,7 +349,7 @@ table.qtb td.b{font-size:22px;text-align:center}
 </section>
 
 </div>
-<div id="pageNum" data-variant="A">1 / 9</div>
+<div id="pageNum">1 / 11</div>
 <script>
 (function(){
 var slides=[].slice.call(document.querySelectorAll('.slide')),cur=0,N=slides.length;
