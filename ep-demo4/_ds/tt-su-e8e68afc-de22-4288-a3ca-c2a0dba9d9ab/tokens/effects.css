@@ -1,0 +1,21 @@
+:root{
+  --radius-sm:4px;
+  --radius-md:6px;
+  --radius-lg:8px;
+  --radius-pill:2em;
+  --radius-circle:50%;
+
+  --shadow-outline:var(--n-slate) 0 0 0 1px;
+  --shadow-outline-hover:var(--n-slate) 0 0 0 2px;
+  --shadow-card:#778b8e 0 0 6px;
+  --shadow-hairline:#afbabb 0 0 0 1px;
+  --shadow-panel:rgba(0,0,0,.3) 0 0 3px;
+  --shadow-dropdown:rgba(0,0,0,.3) 0 1px 6px;
+  --shadow-modal:rgba(0,0,0,.3) 0 5px 16px -5px;
+  --shadow-sidebar:0 6px 12px rgba(0,0,0,.3);
+
+  --ease-standard:cubic-bezier(.4,0,.2,1);
+  --dur-fast:.15s;
+  --dur-base:.2s;
+  --dur-slow:.3s;
+}

@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>產品型錄操作調整</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/su-design.css">
+<style>
+/* ══ 原型導覽（獨立於後台樣式，五顆等寬等高） ══ */
+#protoNav{background:#0f1211;display:flex;align-items:center;gap:6px;padding:10px 16px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:9999;box-shadow:rgba(0,0,0,.35) 0 3px 10px -3px;
+  font-family:"Red Hat Display","微軟正黑體",Helvetica,Arial,sans-serif}
+#protoNav .lab{color:#fff;font-size:12px;opacity:.55;letter-spacing:.12em;margin-right:6px}
+#protoNav .navItem{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
+  width:140px;height:34px;padding:0 8px;margin:0;
+  font-family:inherit;font-size:13px;line-height:1;font-weight:400;
+  background:transparent;color:#cfd8d8;border:1px solid #3a4443;border-radius:4px;
+  text-decoration:none;cursor:pointer;transition:.15s;box-shadow:none}
+#protoNav .navItem:hover{border-color:#7d979e;color:#fff;background:transparent;box-shadow:none}
+#protoNav .navItem.on{background:#fff;color:#0f1211;border-color:#fff;font-weight:700}
+#protoNav .sep{flex:1 1 auto}
+#protoNav .sw{display:flex;border:1px solid #3a4443;border-radius:4px;overflow:hidden}
+#protoNav .sw button{box-sizing:border-box;height:34px;padding:0 18px;margin:0;border:none;border-radius:0;
+  font-family:inherit;font-size:13px;line-height:1;background:transparent;color:#cfd8d8;cursor:pointer;box-shadow:none}
+#protoNav .sw button:hover{color:#fff;background:transparent;box-shadow:none}
+#protoNav .sw button.on{background:#f82;color:#fff}
+
+/* ══ 只顯示後台的內容區，不做左側選單與頁首 ══ */
+.main{margin:0;min-height:0;padding-bottom:40px}
+.tabContainer.noTabs{border-radius:6px}
+/* 三個畫面的內容區左右內縮一致（後台原樣式左右不等寬） */
+.multiTabSetting,.listTable{margin-left:20px;margin-right:20px}
+.listTable table{width:100%}
+/* 後台原樣式的 .page:first-of-type 會讓分頁縮成一直條，這裡還原成橫排 */
+.listTable>.page:first-of-type{display:flex;margin:12px 0 6px}
+.listTable td.pd{text-align:left}
+.listTable td.pd .caption{font-size:1em;color:#252929}
+.listTable .priceCell{display:inline-block;line-height:1.35;text-align:left}
+.listTable .priceCell .amt,.listTable .priceCell .unit{white-space:normal}
+.listTable .priceCell .cur{color:#626771;font-size:.9em}
+.listTable .priceCell .unit{color:#626771}
+
+/* ══ 補後台圖檔缺漏（本機無 icon 檔，改用向量繪製） ══ */
+select,.selectImitating div.selectBtn{
+  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='%23436672' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position:right .7em center;background-size:14px auto}
+
+/* ══ 頁籤：僅目前頁籤可點，其餘僅供辨識 ══ */
+.tabs li.noClick{cursor:default}
+.tabs li.noClick:hover::after{width:0;margin-left:50%;background:none}
+
+/* ══ 表單細節：各列控制項對齊成同一組直欄 ══ */
+.formLayout .inlineSet,.formLayout .quantityAndUnit{
+  display:flex;align-items:center;flex-wrap:wrap;margin:3px 0 3px 0;width:auto}
+.formLayout .inlineSet>.cur,.formLayout .quantityAndUnit>.cur{
+  flex:0 0 3.4em;text-align:right;padding-right:.5em;color:#000}
+.formLayout .inlineSet input[type=number],
+.formLayout .quantityAndUnit input[type=number]{width:8em!important;margin:3px}
+.formLayout .inlineSet select,.formLayout .quantityAndUnit select{width:12em!important;margin:3px}
+.formLayout .inlineSet .mid{color:#626771;margin:0 .4em}
+.formLayout .inlineSet .unitTxt{display:inline-block;min-width:7.5em;color:#000;margin-left:.6em}
+/* 核取方塊群組也對齊到同一條直欄（3.34em≈60px，與數字框左緣同一條線） */
+.formLayout>tbody>tr>td>.optionPool{margin-left:3.34em}
+.formLayout .pdLabelImg{vertical-align:middle;margin-left:6px;height:20px}
+.listTable .pdLabelImg{height:20px;margin:0 2px}
+/* 序號欄：編號＋產品縮圖佔位（比照實機，列高由縮圖撐出） */
+.listTable td.noCell{text-align:center}
+.listTable td.noCell .pdNo{display:block;margin-bottom:6px}
+.listTable td.noCell .thumb{display:inline-block;width:96px;height:96px;border:1px solid #e3e8e9;
+  border-radius:3px;background:#f2f5f6;position:relative}
+.listTable td.noCell .thumb::before{content:'';position:absolute;left:50%;top:50%;
+  width:34px;height:26px;transform:translate(-50%,-50%);border:2px solid #c3ced1;border-radius:3px}
+.listTable td.noCell .thumb::after{content:'';position:absolute;left:50%;top:56%;
+  width:16px;height:10px;transform:translate(-50%,-50%);
+  border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:10px solid #c3ced1}
+.hide{display:none!important}
+
+/* ══════════ ③ 列表：實機環境模擬（側欄＋自選欄位＋即時欄寬） ══════════ */
+#s3.simEnv:not(.hide){display:flex;align-items:stretch;gap:0;background:#eef2f3;border-radius:6px;overflow:hidden}
+#simSide{flex:0 0 240px;width:240px;background:#fff;border-right:1px solid #dfe5e6;
+  transition:width .18s,flex-basis .18s;overflow:hidden;min-height:520px}
+#s3.sideHidden #simSide{flex-basis:48px;width:48px}
+#simSide .sideTop{display:flex;align-items:center;height:44px;border-bottom:1px solid #eceff0;padding:0 8px;gap:8px}
+#simSide .burger{width:32px;height:32px;flex:0 0 32px;border:1px solid #cdd6d8;border-radius:4px;background:#fff;
+  cursor:pointer;padding:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;box-shadow:none}
+#simSide .burger span{display:block;width:14px;height:2px;background:#436672}
+#simSide .sideTop b{font-size:13px;color:#436672;white-space:nowrap}
+#s3.sideHidden #simSide .sideTop b,#s3.sideHidden #simSide .sideNav span{display:none}
+#simSide .sideNav{list-style:none;margin:0;padding:6px 0}
+#simSide .sideNav li{display:flex;align-items:center;gap:10px;padding:9px 14px;font-size:13px;color:#546a70;white-space:nowrap}
+#simSide .sideNav li.on{background:#eef6f8;color:#10243e;font-weight:700;box-shadow:inset 3px 0 0 #436672}
+#simSide .sideNav i{flex:0 0 18px;height:18px;border-radius:3px;background:#c9d6da;display:block}
+#simMain{flex:1 1 auto;min-width:0;padding:0 0 8px}
+
+/* 量尺列 */
+#widthBar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:8px 20px;margin:0;
+  background:#0f1211;color:#cfd8d8;font-size:12px;font-family:"Red Hat Display",monospace,sans-serif}
+#widthBar b{color:#fff;font-weight:700}
+#widthBar .num{font-variant-numeric:tabular-nums;color:#8fe3c4;font-weight:700}
+#widthBar .warn{color:#ff8a6b;font-weight:700}
+#widthBar .ok{color:#8fe3c4;font-weight:700}
+#widthBar button{height:26px;padding:0 10px;font-size:12px;border:1px solid #3a4443;border-radius:4px;
+  background:transparent;color:#cfd8d8;cursor:pointer;box-shadow:none;margin:0}
+#widthBar button:hover{border-color:#7d979e;color:#fff;background:transparent;box-shadow:none}
+/* 量尺列上的選項切換（價格欄位分兩欄／整併一欄） */
+#widthBar .optSet{display:inline-flex;align-items:center;gap:6px}
+#widthBar .segs{display:inline-flex;border:1px solid #3a4443;border-radius:4px;overflow:hidden}
+#widthBar .segs button{height:26px;padding:0 10px;margin:0;border:0;border-radius:0;
+  background:transparent;color:#cfd8d8;font-size:12px;line-height:1;cursor:pointer;box-shadow:none}
+#widthBar .segs button+button{border-left:1px solid #3a4443}
+#widthBar .segs button:hover{color:#fff;background:transparent}
+#widthBar .segs button.on{background:#f82;color:#fff;border-color:#f82}
+
+/* 表頭欄寬標籤 */
+#listtable thead th{position:relative}
+#listtable thead th .wTag{display:block;margin-top:3px;font-size:10px;line-height:1.2;font-weight:400;
+  color:#0f6f52;font-variant-numeric:tabular-nums;letter-spacing:0}
+#listtable thead th .wTag.tight{color:#c0392b;font-weight:700}
+#s3.noRuler #listtable thead th .wTag{display:none}
+#s3.noRuler #widthBar{display:none}
+
+.listScroll{overflow-x:auto}
+
+/* 自選顯示欄位燈箱（比照現行介面：橘色系、方塊式選項） */
+#colBox{display:none;position:fixed;inset:0;z-index:10000;background:rgba(15,18,17,.45);
+  align-items:center;justify-content:center}
+#colBox.show{display:flex}
+#colBox .box{background:#fff;border-radius:6px;width:620px;max-width:94vw;max-height:88vh;overflow:auto;
+  box-shadow:0 10px 40px rgba(0,0,0,.3)}
+#colBox .bxHd{padding:20px 26px 14px;border-bottom:1px solid #e6ebec}
+#colBox .bxHd h4{margin:0;font-size:21px;font-weight:700;color:#252929}
+#colBox .bxBd{padding:20px 26px}
+#colBox .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#colBox .grid.lang{grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0 0 26px}
+#colBox .full{grid-column:1 / -1}
+#colBox label.opt{display:flex;align-items:center;gap:10px;border:1px solid #d7dfdd;border-radius:4px;
+  padding:11px 14px;font-size:14px;color:#414b49;cursor:pointer;background:#fff;transition:.12s}
+#colBox label.opt.on{border-color:#f82}
+#colBox label.opt.dis{color:#b6bfc0;cursor:not-allowed;background:#fafbfb}
+#colBox label.opt input{appearance:none;-webkit-appearance:none;width:17px;height:17px;flex:0 0 17px;margin:0;
+  border:1.5px solid #c3cdcd;border-radius:3px;background:#fff;position:relative;cursor:inherit}
+#colBox label.opt input:checked{background:#f82;border-color:#f82}
+#colBox label.opt input:checked::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:10px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+#colBox label.opt .px{margin-left:auto;font-size:11px;color:#9aa4a6;font-variant-numeric:tabular-nums}
+#colBox .bxFt{display:flex;align-items:center;justify-content:center;gap:14px;padding:16px 26px 22px;border-top:1px solid #e6ebec}
+#colBox .bxFt button{height:40px;min-width:104px;padding:0 26px;border:none;border-radius:20px;
+  font-size:15px;cursor:pointer;margin:0;box-shadow:none;color:#fff}
+#colBox .bxFt .go{background:#f82}
+#colBox .bxFt .cc{background:#9aa4a6}
+/* 量測到的 min 值已含內距 → 儲存格改 border-box，避免重複再加一次 padding
+   （拿掉這行會讓每欄多出約 23px，15 欄就多 345px，現況也會破版） */
+#listtable th,#listtable td{box-sizing:border-box}
+/* 表格必須先被容器寬度壓縮到各欄 min-width，壓不下去才溢出捲動；
+   少了 max-width，可捲動容器會讓表格直接用「不折行的最大寬度」排版，每欄多出一截 */
+#listtable{max-width:100%}
+.onListTop .funcBtnGp li a{cursor:pointer}
+
+/* ══════════ ③ 三種方案共用元件 ══════════ */
+/* 模擬筆電寬度：整個後台可視區鎖在 1366px，投影機上也能重現實機擁擠度 */
+#s3.lap{max-width:1366px;border-right:2px dashed #c3ced1}
+
+/* 語系狀態 icon（四組：啟用／販售／內容審核／販售審核） */
+.stIco{display:inline-flex;width:15px;height:15px;flex:0 0 15px;align-items:center;justify-content:center;cursor:default}
+.stIco svg{width:15px;height:15px;display:block;fill:none;stroke:currentColor;
+  stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.stIco.ok{color:#0f6f52}
+.stIco.no{color:#c3ced1}
+.stIco.wait{color:#d99400}  /* 審核中：後台色票無適合的深黃，依需求的「黃色警示」語意新增 */
+.stIco.bad{color:#c0392b}
+.stIco.none{visibility:hidden}
+/* 現況：每個語系一欄，四個 icon 垂直排列（比照實機） */
+.cataStatusV{display:flex;flex-direction:column;align-items:center;gap:4px;padding:2px 0}
+/* 調整後：語系收合成一欄，每列＝語系名稱＋啟用狀態 */
+.langStack{display:flex;flex-direction:column;gap:4px;padding:1px 0;text-align:left}
+.langRow{display:flex;align-items:center;gap:5px;white-space:nowrap;position:relative}
+.langRow .lc{flex:0 0 auto;min-width:28px;padding:0 3px;text-align:center;
+  font-size:10px;line-height:15px;color:#546a70;background:#f2f5f6;border-radius:2px}
+.langRow .ics{display:flex;gap:3px}
+/* 四項狀態平時收起，滑過該列才浮出，不佔欄寬。
+   白框內每個 icon 都帶自己的文字說明；框本身掛在畫面最上層（見 #langTip），
+   表格會水平捲動，寫在儲存格內會被裁掉。 */
+.langRow .ics .rest{display:none}
+.langRow:hover{background:#f6fafb}
+#langTip{display:none;position:fixed;z-index:10060;align-items:center;
+  padding:4px 10px;background:#fff;border:1px solid #dfe5e6;border-radius:3px;
+  box-shadow:0 2px 8px rgba(0,0,0,.16);white-space:nowrap;pointer-events:none}
+#langTip.on{display:flex}
+#langTip .restItem{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+#langTip .restItem+.restItem{margin-left:10px}
+#langTip .restItem em{font-style:normal;font-size:11px;line-height:1.4;color:#414b49}
+/* 其餘語系：預設收起，點「其他 N 語系」展開（字級與樣式同「查看明細 ＞」） */
+.langStack .langRow.more{display:none}
+.langStack.open .langRow.more{display:flex}
+.langStack .moreLang{display:inline-block;margin-top:2px;font-size:.86em;color:#436672;
+  cursor:pointer;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.langStack .moreLang:hover{color:#10243e}
+
+/* 類型欄：現況比照實機橫排（float 換行）；方案Ｂ 的整併欄欄寬吃緊，改為全部垂直堆疊 */
+.ctStack{display:flex;flex-direction:column;gap:5px;align-items:flex-start}
+.ctRow{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.ctStack.vert .ctRow{flex-direction:column;align-items:flex-start}
+.certIco{display:inline-flex;align-items:center;gap:3px;color:#414b49;font-size:12px}
+/* 認證勾＝原樣照抄實機 .statusIcon.yes 的畫法（24px 容器／8×16 邊框旋轉 45°），等比縮到 18px */
+.certMark{display:inline-block;position:relative;width:18px;height:18px;flex:0 0 18px}
+.certMark::before{content:'';position:absolute;left:50%;top:50%;width:6px;height:12px;
+  border:2.5px solid #414b49;border-left:none;border-top:none;transform:rotate(45deg);
+  margin-top:-9px;margin-left:-4px}
+.tIco{display:inline-flex;align-items:center;justify-content:center;height:16px;min-width:16px;
+  padding:0 3px;border:1px solid #cdd6d8;border-radius:3px;background:#fff;
+  color:#436672;font-size:9px;line-height:1;letter-spacing:.02em;cursor:default}
+.tIco svg{width:9px;height:9px;fill:currentColor;stroke:none}
+.ctRow .pdLabelImg{height:15px;margin:0}
+
+/* 完成度／優化分數整併欄 */
+.dsCell{display:flex;flex-direction:column;align-items:center;gap:3px;font-variant-numeric:tabular-nums}
+.dsCell .bar{width:52px;height:3px;border-radius:2px;background:#e6ebec;overflow:hidden}
+.dsCell .bar i{display:block;height:100%;background:#0f6f52}
+.dsCell .n1{font-size:.94em;color:#252929}
+.dsCell .n2{font-size:.86em;color:#626771}
+
+/* 價格：整併欄／方案Ａ 產品資訊內區塊 */
+/* 價格：標籤固定寬、金額自己佔滿剩餘寬度並可折行（min-width:0 讓 flex 子項真的能被壓縮） */
+.priceSum{display:flex;flex-direction:column;gap:4px;line-height:1.5;text-align:left}
+.priceSum .ln{font-size:.9em;color:#252929}
+.priceSum .ln b{font-weight:400;color:#626771;margin-right:.35em}
+/* 全域的 priceCell 是 inline-block（整塊不可切斷），這裡改回 inline，
+   讓幣別／金額／區間／單位可以各自換行 */
+.priceSum .ln .priceCell{display:inline}
+.priceSum .unit{color:#626771}
+/* 最後編修：實機格式為 YYYY/MM/DD hh:mm:ss，這裡把時間排到日期下一行 */
+.listTable td time .tm{display:block;color:#626771;font-size:.92em;line-height:1.4}
+.listTable .moreLink{display:inline-block;margin-top:2px;font-size:.86em;color:#436672;
+  text-decoration:underline;cursor:pointer;white-space:nowrap}
+.listTable .noPrice{color:#a6aab0}
+td.pd .pdPrice{display:block;margin-top:8px;padding:7px 9px;background:#f0f4f5;
+  border-left:3px solid #c9d6da;border-radius:0 3px 3px 0}
+/* 產品資訊欄寬度維持現行不變，價格排法與整併欄一致（標籤固定寬、金額可折行） */
+td.pd .pdPrice .ln{display:block;font-size:.9em;line-height:1.55;color:#252929}
+td.pd .pdPrice .ln b{font-weight:400;color:#626771;margin-right:.35em}
+td.pd .pdPrice .ln .priceCell{display:inline}
+td.pd .pdSub{display:block;color:#626771;font-size:.92em}
+
+/* 價格明細燈箱：沿用現行後台的 .lightbox／.closeThis／.dataTable／.btnDv，
+   僅把整頁級的尺寸縮成適合此內容的視窗 */
+#tierBox.lightbox{width:640px;max-width:94vw;left:50%;margin-left:-320px;
+  top:12vh;height:auto;max-height:76vh;z-index:10000}
+@media screen and (max-width:700px){#tierBox.lightbox{left:3vw;margin-left:0;width:94vw}}
+#tierBox.show,#priceCover.show{display:block}
+#tierBox>.head{margin:0 24px 16px;padding:26px 0 .2em}
+#tierBox .priceSect{margin:0 24px 18px}
+#tierBox .priceSect h4{margin:0 0 7px;font-size:15px;font-weight:700;color:#252929}
+#tierBox .dataTable table{width:calc(100% - 8px);border-collapse:collapse}
+#tierBox .dataTable th{background:#f2f5f6;color:#546a70;font-weight:400;font-size:13px;
+  text-align:left;padding:9px 12px;white-space:nowrap}
+#tierBox .dataTable td{padding:10px 12px;font-size:13.5px;color:#252929}
+#tierBox .dataTable td.q{color:#436672}
+#tierBox .noSet{color:#a6aab0}
+#tierBox .btnDv{margin:0 24px;text-align:center}
+
+/* 滑鼠說明泡泡（表格有水平捲動，故以 fixed 掛在 body，不會被裁切） */
+#tipLayer{position:fixed;z-index:10050;background:#10243e;color:#fff;font-size:12px;line-height:1.55;
+  padding:5px 9px;border-radius:3px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .1s;
+  box-shadow:0 3px 10px rgba(0,0,0,.25);font-family:"Red Hat Display","微軟正黑體",Helvetica,Arial,sans-serif}
+#tipLayer.on{opacity:1}
+#tipLayer::after{content:'';position:absolute;left:50%;top:100%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:#10243e}
+/* 長說明（欄位說明文案）改為可換行 */
+#tipLayer.wrap{white-space:normal;max-width:340px;text-align:left}
+[data-tip]{cursor:default}
+
+/* ══ 欄位說明符號 i（線下價格／供應能力／交貨時間三欄位） ══
+   符號與說明泡泡全部沿用現行後台既有的 .icon_i 與 .popupTip，滑過即顯示、泡泡在 i 上方。 */
+.tipHost{position:relative;display:inline-block;vertical-align:middle;margin-left:5px}
+.tipHost .popupTip{left:50%;transform:translateX(-50%);bottom:100%;top:auto;
+  width:max-content;max-width:320px;text-align:left;font-weight:400}
+.tipHost:hover .popupTip{display:block}
+
+/* ══ 動作欄：沿用現行後台的 .editThis（44px 圓鈕、垂直排列、滑過浮出名稱）
+   本機無 icon_function.png 圖組，三個圖示改用向量繪製 ══ */
+#listtable .editThis.vertical{width:44px;margin:0 auto}
+#listtable .editThis li a{background-position:center center;background-size:22px auto}
+#listtable .editThis li.edit a{background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17v3z'/%3E%3Cpath d='M14.5 6.5l3 3'/%3E%3C/svg%3E")}
+#listtable .editThis li.duplicate a{background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='11' height='11' rx='2'/%3E%3Cpath d='M5 15H4.5A1.5 1.5 0 0 1 3 13.5V5a2 2 0 0 1 2-2h8.5A1.5 1.5 0 0 1 15 4.5V5'/%3E%3C/svg%3E")}
+#listtable .editThis li.preview a{background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z'/%3E%3Ccircle cx='12' cy='12' r='2.6'/%3E%3C/svg%3E")}
+</style>
+</head>
+<body>
+
+<div id="protoNav">
+  <span class="lab">原型導覽</span>
+  <button class="navItem on" data-go="s1">①型錄內容設定</button>
+  <button class="navItem" data-go="s3">②產品型錄列表</button>
+  <a class="navItem" href="cp-open.html">③企業網－有開販售</a>
+  <a class="navItem" href="cp-closed.html">④企業網－未開販售</a>
+  <a class="navItem" href="guide.html">⑤建站引導</a>
+  <span class="sep"></span>
+  <span class="sw" id="swMode"><button data-mode="now">現況</button><button data-mode="new" class="on">調整後</button></span>
+  <span class="sw hide" id="swView"><button data-view="now">現況</button><button data-view="b" class="on">調整後</button></span>
+</div>
+
+<div class="wrapAll">
+<div class="main">
+
+<header class="pageHeading">
+  <h2>產品型錄設定(2025)</h2>
+  <ul class="path">
+    <li><a>內容管理</a></li>
+    <li>產品型錄設定(2025)</li>
+  </ul>
+</header>
+
+<!-- ══════════ ① 型錄內容設定 ══════════ -->
+<section id="s1">
+  <section class="steps">
+    <ol><li>語系選擇</li><li class="now">型錄內容設定</li><li>型錄啟用設定</li></ol>
+  </section>
+
+  <section class="multiTabSetting catalogSetting">
+    <div class="tabGroup">
+      <div class="tabs"><ul id="tabs1"></ul></div>
+
+      <div class="tabContainer show">
+        <h3 id="s1title">供應能力與報價</h3>
+
+        <table class="formLayout">
+          <tr>
+            <td>付款方式</td>
+            <td>
+              <div class="optionPool hasTextInput">
+                <label class="isSelected"><input type="checkbox" checked>L/C</label>
+                <label class="isSelected"><input type="checkbox" checked>TT</label>
+                <label><input type="checkbox">DA</label>
+                <label class="isSelected"><input type="checkbox" checked>PayPal</label>
+                <label><input type="checkbox">支付寶</label>
+                <label><input type="checkbox">其他<input type="text" placeholder="請輸入其他付款資訊"></label>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>最少訂購量</td>
+            <td>
+              <div class="quantityAndUnit">
+                <span class="cur"></span>
+                <input type="number" min="1" value="1" id="moqNum">
+                <select id="moqUnit">
+                  <option>Piece(s)</option><option>Set(s)</option><option>Box(es)</option>
+                  <option>20' Container</option><option>Kilogram(s)</option><option>Carton(s)</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="newfields">
+            <td>線下價格<span class="tipHost"><span class="icon_i"></span><span class="popupTip arrowBottom">（說明文字待提供）</span></span></td>
+            <td>
+              <div class="inlineSet">
+                <span class="cur">USD</span>
+                <input type="number" class="mini" placeholder="10.00">
+                <span class="mid">到</span>
+                <input type="number" class="mini" placeholder="50.00">
+              </div>
+            </td>
+          </tr>
+
+          <tr class="newfields">
+            <td>供應能力<span class="tipHost"><span class="icon_i"></span><span class="popupTip arrowBottom">（說明文字待提供）</span></span></td>
+            <td>
+              <div class="inlineSet">
+                <span class="cur"></span>
+                <input type="number" class="mini" placeholder="5000">
+                <span class="unitTxt" id="saUnit">Piece(s)</span>
+                <span class="mid">每</span>
+                <select class="autoWidth" id="saUnitTime">
+                  <option>month(s)</option><option>day(s)</option><option>quarter(s)</option><option>year(s)</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="newfields">
+            <td>交貨時間<span class="tipHost"><span class="icon_i"></span><span class="popupTip arrowBottom">（說明文字待提供）</span></span></td>
+            <td>
+              <div class="inlineSet">
+                <span class="cur"></span>
+                <input type="number" class="mini" id="dltNum" placeholder="14">
+                <select class="autoWidth" id="dltUnit">
+                  <option>Negotiable</option><option selected>day(s)</option>
+                  <option>month(s)</option><option>quarter(s)</option><option>year(s)</option>
+                </select>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="bottomControler">
+    <div class="leftGroup"></div>
+    <div class="rightGroup">
+      <button type="button" class="roundBtn white">儲存</button>
+      <button type="button" class="roundBtn white">預覽</button>
+      <button type="button" class="roundBtn white">上一步</button>
+      <button type="button" class="roundBtn hilight">下一步，型錄啟用設定</button>
+    </div>
+  </section>
+</section>
+
+<!-- ══════════ ② 產品型錄列表 ══════════ -->
+<section id="s3" class="hide simEnv">
+
+  <!-- 左側選單（模擬實機：展開 240px／收合 48px） -->
+  <nav id="simSide">
+    <div class="sideTop">
+      <button class="burger" id="sideToggle" title="展開／收合左側選單"><span></span><span></span><span></span></button>
+      <b>供應商後台</b>
+    </div>
+    <ul class="sideNav">
+      <li><i></i><span>基本資料管理</span></li>
+      <li class="on"><i></i><span>內容管理</span></li>
+      <li><i></i><span>產品型錄設定(2025)</span></li>
+      <li><i></i><span>詢價與商機</span></li>
+      <li><i></i><span>訂單管理</span></li>
+      <li><i></i><span>行銷工具</span></li>
+      <li><i></i><span>數據報表</span></li>
+    </ul>
+  </nav>
+
+  <div id="simMain">
+    <!-- 量尺列 -->
+    <div id="widthBar">
+      <b>欄寬量尺</b>
+      <span>左側選單 <span class="num" id="mSide">240</span>px</span>
+      <span>表格可用 <span class="num" id="mAvail">—</span>px</span>
+      <span>表格實寬 <span class="num" id="mTable">—</span>px</span>
+      <span id="mState" class="ok">未溢出</span>
+      <span>顯示欄位 <span class="num" id="mCols">—</span> 欄</span>
+      <span class="optSet hide" id="optPriceCol">價格欄位
+        <span class="segs"><button data-pcol="two">分兩欄</button><button data-pcol="one" class="on">整併一欄</button></span>
+      </span>
+      <button id="btnLap">切換為自適應寬度</button>
+      <button id="btnRuler">隱藏量尺</button>
+    </div>
+
+    <section class="listTable">
+      <div class="onListTop">
+        <div class="funcBtnGp"><ul>
+          <li><a>停用</a></li><li><a>刪除</a></li><li><a>新增標籤</a></li>
+          <li><a>移動分類</a></li><li><a>匯出</a></li>
+        </ul></div>
+        <div class="funcBtnGp"><ul>
+          <li><a id="btnCols">自選顯示欄位</a></li><li><a>新增</a></li>
+        </ul></div>
+      </div>
+
+      <div class="listScroll">
+        <table id="listtable">
+          <thead><tr id="listhead"></tr></thead>
+          <tbody id="listbody"></tbody>
+        </table>
+      </div>
+
+      <section class="page">
+        <p>每頁顯示 <select><option>20</option><option>50</option><option>100</option></select> 筆</p>
+        <p>本頁顯示 <em>1</em> 到 <em>3</em> 筆，共有 <em>3</em> 筆</p>
+        <ul>
+          <li class="prev disabled"><a>上一頁</a></li>
+          <li class="here"><a>1</a></li>
+          <li class="next disabled"><a>下一頁</a></li>
+        </ul>
+      </section>
+    </section>
+  </div>
+</section>
+
+<!-- 自選顯示欄位燈箱（比照現行介面） -->
+<div id="colBox">
+  <div class="box">
+    <div class="bxHd"><h4>自選顯示欄位</h4></div>
+    <div class="bxBd"><div id="colList"></div></div>
+    <div class="bxFt">
+      <button class="go" id="bxApply">確定</button>
+      <button class="cc" id="bxCancel">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- 價格明細（線上有數量區間、線下無區間；燈箱樣式比照現行後台） -->
+<div id="priceCover" class="coverLightbox"></div>
+<section id="tierBox" class="lightbox">
+  <button type="button" title="close" class="closeThis"></button>
+
+  <div class="head"><h3>價格<span class="subhead" id="tierSub"></span></h3></div>
+
+  <div class="priceSect">
+    <h4>線上價格</h4>
+    <section class="dataTable">
+      <table>
+        <thead><tr><th>Quantity</th><th>Price</th><th>Processing time</th></tr></thead>
+        <tbody id="tierBody"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <div class="priceSect">
+    <h4>線下價格</h4>
+    <section class="dataTable">
+      <table>
+        <thead><tr><th>Price</th></tr></thead>
+        <tbody><tr><td id="tierOffline"></td></tr></tbody>
+      </table>
+    </section>
+  </div>
+
+  <div class="btnDv"><span class="btnLook closePop"><a>關閉</a></span></div>
+</section>
+
+<div id="tipLayer"></div>
+
+</div>
+</div>
+
+
+<script>
+var MODE = 'new';   // now | new
+
+/* ── ① 型錄內容設定的頁籤（僅目前頁籤可點） ── */
+var TAB_NOW = [
+  {n:'產品基本資料', req:true}, {n:'產品圖片', req:true}, {n:'產品規格'},
+  {n:'產品多媒體與上傳檔案'}, {n:'產品認證'}, {n:'採購資訊', on:true}, {n:'線上販售'}
+];
+var TAB_NEW = [
+  {n:'產品資料', req:true}, {n:'產品圖片', req:true},
+  {n:'供應能力與報價', on:true}, {n:'產品規格'},
+  {n:'產品認證'}, {n:'多媒體與附件'}, {n:'線上販售'}
+];
+
+function renderTabs1(){
+  var list = (MODE==='new') ? TAB_NEW : TAB_NOW;
+  document.getElementById('tabs1').innerHTML = list.map(function(t){
+    return '<li class="' + (t.on ? 'active' : 'noClick') + '">'
+         + (t.req ? '<abbr title="必填欄位" class="required">*</abbr> ' : '') + t.n + '</li>';
+  }).join('');
+  document.getElementById('s1title').textContent = (MODE==='new') ? '供應能力與報價' : '採購資訊';
+}
+
+/* ── ③ 產品型錄列表 ──
+   欄位與最小寬度＝2026-08-26 以 Chrome 無頭量測實機存檔所得（可折行的 min-content，含內距）
+   來源：現行後台的產品型錄列表 */
+var COLS_BASE = [
+  {k:'ck',    h:'<input type="checkbox">', min:50,  fix:true},
+  {k:'idx',   h:'',          min:42,  fix:true},
+  {k:'no',    h:'序號',      min:123, fix:true},
+  {k:'pd',    h:'產品資訊',  min:163, fix:true},
+  // 17 語系＝實機「啟用語系」清單；列表預設只顯示已啟用的四個，其餘併入「其他語系」
+  {k:'en',    h:'英文',      min:53,  lang:'en'},
+  {k:'zh',    h:'正中',      min:53,  lang:'zh'},
+  {k:'ja',    h:'日文',      min:53,  lang:'ja'},
+  {k:'cn',    h:'簡中',      min:53,  lang:'cn'},
+  {k:'ru',    h:'俄文',      min:53,  lang:'ru',  off:true},
+  {k:'es',    h:'西文',      min:53,  lang:'es',  off:true},
+  {k:'pt',    h:'葡文',      min:53,  lang:'pt',  off:true},
+  {k:'ar',    h:'阿文',      min:53,  lang:'ar',  off:true},
+  {k:'id',    h:'印尼文',      min:53,  lang:'id',  off:true},
+  {k:'ko',    h:'韓文',      min:53,  lang:'ko',  off:true},
+  {k:'de',    h:'德文',      min:53,  lang:'de',  off:true},
+  {k:'fr',    h:'法文',      min:53,  lang:'fr',  off:true},
+  {k:'vi',    h:'越文',      min:53,  lang:'vi',  off:true},
+  {k:'th',    h:'泰文',      min:53,  lang:'th',  off:true},
+  {k:'tr',    h:'土文',      min:53,  lang:'tr',  off:true},
+  {k:'pl',    h:'波蘭語',      min:53,  lang:'pl',  off:true},
+  {k:'cs',    h:'捷克語',      min:53,  lang:'cs',  off:true},
+  {k:'oth',   h:'其他語系',  min:48},
+  {k:'done',  h:'完成度',    min:71},
+  {k:'score', h:'優化分數',  min:71, box:'優化分數（分）'},
+  {k:'edit',  h:'最後編修',  min:109},
+  {k:'cert',  h:'認證',      min:71},
+  // 類型欄沿用 0826 實機量測值（實機為 float 換行，本檔亦允許換行）
+  {k:'type',  h:'類型',      min:97},
+  {k:'act',   h:'動作',      min:67, fix:true}
+];
+var COLS_NEW = [
+  {k:'online',  h:'線上價格', min:107},
+  {k:'offline', h:'線下價格', min:107}
+];
+
+/* ② 的檢視：now＝現況／b＝調整後。 */
+var VIEW = 'b';
+var PCOL = 'one';     // 價格欄位：two＝分兩欄／one＝整併一欄
+var TIER = 'detail';  // 線上價格呈現：區間＋可展開明細
+
+/* 方案Ａ／Ｂ 新欄位的最小寬度＝2026-08-27 以 Chrome 無頭實測本檔所得
+   （量法同 COLS_BASE：表格 width:min-content、解除 min-width，並取「價格行不折行、
+     含『查看價格明細』連結」的最寬狀態，故為不破版的下限值） */
+/* 方案Ａ：價格併入「產品資訊」欄，欄寬與其餘欄位配置一律不變，價格以折行呈現 */
+var COL_PD_A = {k:'pd', h:'產品資訊', min:163, fix:true, price:true};
+
+/* 調整後：語系四欄＋其他語系→「語系狀態」一欄；認證＋類型、完成度＋優化分數各自整併。
+   欄序刻意與「加兩個價格欄」完全相同，方便逐欄對照收合前後的寬度。
+   langAll 最小寬度＝2026-08-31 改版後（只顯示語系＋啟用狀態）以 Chrome 無頭重測
+   所得的 min-content 76px；改版前顯示四個 icon 時為 130px。 */
+function colsB(){
+  var price = (PCOL==='two')
+    ? [{k:'online', h:'線上價格', min:110}, {k:'offline', h:'線下價格', min:107}]
+    : [{k:'price',  h:'價格',     min:150}];
+  return [
+    {k:'ck',  h:'<input type="checkbox">', min:50, fix:true},
+    {k:'idx', h:'',         min:42,  fix:true},
+    {k:'no',  h:'序號',     min:123, fix:true},
+    {k:'pd',  h:'產品資訊', min:163, fix:true}
+  ].concat(price, [
+    {k:'langAll', h:'語系狀態',     min:76,  fix:true},
+    {k:'ds',      h:'完成度／優化分數', min:74},
+    {k:'edit',    h:'最後編修',     min:109},
+    {k:'ct',      h:'認證／類型',   min:61},
+    {k:'act',     h:'動作',         min:67,  fix:true}
+  ]);
+}
+function colsFor(v){
+  if(v==='b') return colsB();
+  var cols = COLS_BASE.slice();
+  if(v==='a'){ cols[3] = COL_PD_A; return cols; }
+  if(v==='intro') return cols.slice(0,4).concat(COLS_NEW, cols.slice(4));
+  return cols;  // now
+}
+
+/* 目前勾選顯示的欄位（key 集合）；固定欄位永遠在內、off:true 者預設不勾 */
+var VISIBLE = null;
+
+function allCols(){ return colsFor(VIEW); }
+function ensureVisible(){
+  if(!VISIBLE){
+    VISIBLE = {};
+    COLS_BASE.concat(COLS_NEW).forEach(function(c){ VISIBLE[c.k] = !c.off; });
+  }
+  ['price','ds','ct'].forEach(function(k){ if(!(k in VISIBLE)) VISIBLE[k] = true; });
+  allCols().forEach(function(c){ if(!(c.k in VISIBLE)) VISIBLE[c.k] = !c.off; });
+}
+function shownColsFor(v){
+  ensureVisible();
+  return colsFor(v).filter(function(c){ return c.fix || VISIBLE[c.k]; });
+}
+function shownCols(){ return shownColsFor(VIEW); }
+/* 已勾選要顯示的語系（最多 4 個，由自選顯示欄位燈箱決定） */
+function shownLangs(){
+  ensureVisible();
+  return COLS_BASE.filter(function(c){ return c.lang && VISIBLE[c.k]; });
+}
+
+/* 展示資料。語系狀態＝實機的四組 icon：
+   a 啟用｜t 販售｜c 內容審核｜s 販售審核（'ok' 通過／'wait' 審核中／'bad' 未通過／未設＝尚未送審；
+   未開放販售者不顯示販售審核）。tiers＝線上販售的數量階梯報價，列表只顯示總區間，明細另開視窗。 */
+var ROWS = [
+  {no:'3366514', nm:'Taiwan Si Ji Chun Oolong Tea Bags - Charcoal Mid-Roasted Premium Loose Leaf',
+   cat:'Tea', mod:'6444-02', unit:'Boxes',
+   tiers:[{q:'10–50', p:'USD 15.00', d:'20 Days'}, {q:'51–200', p:'USD 12.00', d:'35 Days'}],
+   offline:'USD 10.00–12.00', done:100, score:100, edit:'2026/03/19', tm:'09:12:40',
+   cert:1, types:['video'], labels:['new','feat'],
+   lang:{en:{a:1,t:1,c:'ok',s:'ok'}, zh:{a:1,t:0,c:'ok'}, ja:{a:0,t:0}, cn:{a:0,t:0}}},
+
+  {no:'5474011', nm:'Taiwan Premium Bicycle', cat:'Bicycle', mod:'test bike 123', unit:'Pieces',
+   tiers:[{q:'10–20', p:'USD 111.11', d:'25 Days'}, {q:'21–100', p:'USD 99.50', d:'40 Days'},
+          {q:'101–150', p:'USD 88.88', d:'60 Days'}],
+   offline:'USD 10.00–50.00', done:100, score:100, edit:'2026/08/18', tm:'14:53:36',
+   cert:1, types:['video','360','3d'], labels:['feat'],
+   lang:{en:{a:1,t:1,c:'ok',s:'ok'}, zh:{a:1,t:1,c:'ok',s:'wait'}, ja:{a:1,t:0,c:'wait'}, cn:{a:0,t:0}}},
+
+  {no:'2636811', nm:'Automatic Burrito Production Line', cat:'Food Machine', mod:'BR-1500', unit:'Sets',
+   tiers:[], offline:'', done:60, score:80, edit:'2026/08/17', tm:'17:04:28',
+   cert:0, types:[], labels:['new'],
+   lang:{en:{a:1,t:0,c:'bad'}, zh:{a:0,t:0}, ja:{a:0,t:0}, cn:{a:0,t:0}}}
+];
+
+/* ── 語系狀態 icon（四組，單色線條風格，以顏色帶語意） ── */
+var ICO_PATH = {
+  act:  '<path d="M8 2.6v5.1"/><path d="M4.8 4.7a4.3 4.3 0 1 0 6.4 0"/>',
+  trade:'<path d="M13.1 2.9H9.3L2.9 9.3l3.8 3.8 6.4-6.4z"/><circle cx="10.6" cy="5.4" r=".85"/>',
+  ctt:  '<path d="M4.2 2.6h4.6l3 3v7.8H4.2z"/><path d="M8.8 2.6v3h3"/><path d="M6 9.4h4"/>',
+  sell: '<circle cx="8" cy="8" r="5.3"/><path d="M5.7 8.1l1.7 1.7 3-3.3"/>'
+};
+var CK_TXT = {ok:'審核通過', wait:'審核中', bad:'審核未通過'};
+function stIco(kind, state, tip){
+  return '<span class="stIco '+state+'"'+(tip ? ' data-tip="'+tip+'"' : '')+'>'
+       + '<svg viewBox="0 0 16 16" aria-hidden="true">'+ICO_PATH[kind]+'</svg></span>';
+}
+function langIcons(nm, st){
+  st = st || {};
+  var h = stIco('act',   st.a ? 'ok' : 'no', nm+' · '+(st.a ? '已啟用' : '未啟用'))
+        + stIco('trade', st.t ? 'ok' : 'no', nm+' · '+(st.t ? '已販售' : '未販售'))
+        + stIco('ctt',   st.c || 'no', nm+' · 內容'+(CK_TXT[st.c] || '尚未送審'));
+  h += st.t ? stIco('sell', st.s || 'no', nm+' · 販售'+(CK_TXT[st.s] || '尚未送審'))
+            : '<span class="stIco none"><svg viewBox="0 0 16 16"></svg></span>';
+  return h;
+}
+/* 現況：一個語系一欄，四個 icon 垂直排列（比照實機） */
+function langCell(nm, st){
+  return '<td class="vaTop"><div class="cataStatusV">'+langIcons(nm, st)+'</div></td>';
+}
+/* 調整後：語系收合成一欄
+   ——只顯示語系名稱與該語系的啟用狀態；滑過該列才顯示販售、內容審核、販售審核
+     三項的 icon 與文字；未列出的其餘語系收在「其他 N 語系」內，可點開、可收合。 */
+/* 浮出白框內的一項：icon＋自己的文字說明 */
+function restItem(kind, state, txt){
+  return '<span class="restItem">' + stIco(kind, state) + '<em>' + txt + '</em></span>';
+}
+function langStackCell(r){
+  var all   = COLS_BASE.filter(function(c){ return c.lang; });
+  var shown = shownLangs().map(function(c){ return c.k; });
+  var h = all.map(function(c){
+    var st = r.lang[c.lang] || {};
+    // 浮出的白框含四項：啟用、販售、內容審核、販售審核（未開放販售者無販售審核）
+    var rest = restItem('act',   st.a ? 'ok' : 'no', st.a ? '已啟用' : '未啟用')
+             + restItem('trade', st.t ? 'ok' : 'no', st.t ? '已販售' : '未販售')
+             + restItem('ctt',   st.c || 'no', '內容' + (CK_TXT[st.c] || '尚未送審'))
+             + (st.t ? restItem('sell', st.s || 'no', '販售' + (CK_TXT[st.s] || '尚未送審')) : '');
+    return '<div class="langRow' + (shown.indexOf(c.k) < 0 ? ' more' : '') + '">'
+         + '<span class="lc">' + c.h + '</span>'
+         + '<span class="ics">' + stIco('act', st.a ? 'ok' : 'no')
+         + '<span class="rest">' + rest + '</span></span></div>';
+  }).join('');
+  var other = all.length - shown.length;
+  if(other > 0) h += '<span class="moreLang">其他 ' + other + ' 語系 &gt;</span>';
+  return '<div class="langStack">' + h + '</div>';
+}
+
+/* ── 認證／類型 ── */
+function certMark(r, withText){
+  return r.cert
+    ? '<span class="certIco" data-tip="已通過產品認證"><span class="certMark"></span>'
+      + (withText ? '認證' : '') + '</span>'
+    : '<span class="noPrice">—</span>';
+}
+function typeChips(r){
+  return (r.types || []).map(function(k){
+    if(k==='video') return '<span class="tIco" data-tip="產品影片"><svg viewBox="0 0 10 10"><path d="M2 1.3l6 3.7-6 3.7z"/></svg></span>';
+    if(k==='360')   return '<span class="tIco" data-tip="360 度環景圖">360</span>';
+    if(k==='3d')    return '<span class="tIco" data-tip="3D 模型">3D</span>';
+    return '';
+  }).join('');
+}
+function labelChips(r){
+  return (r.labels || []).map(function(k){
+    return k==='new'
+      ? '<img src="assets/label_new.png" alt="New Product" class="pdLabelImg" data-tip="New Product">'
+      : '<img src="assets/label_feathured.png" alt="Featured Product" class="pdLabelImg" data-tip="Featured Product">';
+  }).join('');
+}
+function ctCell(r){
+  var h = "<div class=\"ctStack vert\"><div class=\"ctRow\">"+certMark(r, true)+"</div>";
+  var t = typeChips(r), lb = labelChips(r);
+  if(t)  h += '<div class="ctRow">'+t+'</div>';
+  if(lb) h += '<div class="ctRow">'+lb+'</div>';
+  return h + '</div>';
+}
+function dsCell(r){
+  return '<div class="dsCell"><span class="n1">'+r.done+'%</span>'
+       + '<span class="bar"><i style="width:'+r.done+'%"></i></span>'
+       + '<span class="n2">'+r.score+'分</span></div>';
+}
+
+/* ── 價格 ── */
+function onlineRange(r){
+  if(!r.tiers || !r.tiers.length) return null;
+  var cur = r.tiers[0].p.split(' ')[0];
+  var ns  = r.tiers.map(function(t){ return parseFloat(t.p.split(' ')[1]); });
+  var lo  = Math.min.apply(null, ns), hi = Math.max.apply(null, ns);
+  return {cur:cur, txt:(lo===hi ? lo.toFixed(2) : lo.toFixed(2)+'–'+hi.toFixed(2))};
+}
+function onlineTxt(r, withUnit){
+  var o = onlineRange(r);
+  if(!o) return null;
+  return '<span class="priceCell"><span class="cur">'+o.cur+'</span> <span class="amt">'+o.txt+'</span>'
+       + (withUnit ? ' <span class="unit">/ '+r.unit+'</span>' : '') + '</span>';
+}
+function offlineTxt(r){
+  if(!r.offline) return null;
+  var p = r.offline.split(' ');
+  return '<span class="priceCell"><span class="cur">'+p[0]+'</span> <span class="amt">'+p.slice(1).join(' ')+'</span>'
+       + ' <span class="unit">/ '+r.unit+'</span></span>';
+}
+function tierLink(r){
+  return (TIER==='detail' && r.tiers && r.tiers.length)
+    ? '<span class="moreLink" data-tierno="'+r.no+'">查看明細 &gt;</span>' : '';
+}
+function priceSumCell(r){
+  return '<div class="priceSum">'
+       + '<span class="ln"><b>線上價格</b>'+(onlineTxt(r, true) || '<span class="noPrice">—</span>')+'</span>'
+       + '<span class="ln"><b>線下價格</b>'+(offlineTxt(r) || '<span class="noPrice">—</span>')+'</span>'
+       + tierLink(r) + '</div>';
+}
+function pdCell(r, withPrice){
+  var h = '<td class="pd"><span class="caption">'+r.nm+'</span>'
+        + '<span class="pdSub">自訂分類：'+r.cat+'　產品型號：'+r.mod+'</span>';
+  if(withPrice){
+    // 欄寬維持現行不變，幣別／金額／區間／單位均可自由換行
+    h += '<span class="pdPrice">'
+       + '<span class="ln"><b>線上價格</b>'+(onlineTxt(r, true) || '<span class="noPrice">—</span>')+'</span>'
+       + '<span class="ln"><b>線下價格</b>'+(offlineTxt(r) || '<span class="noPrice">—</span>')+'</span>'
+       + tierLink(r) + '</span>';
+  }
+  return h + '</td>';
+}
+
+function renderList(){
+  var cols = shownCols();
+
+  document.getElementById('listhead').innerHTML =
+    cols.map(function(c){
+      return '<th data-k="'+c.k+'" style="min-width:'+c.min+'px">'+c.h
+           + '<span class="wTag" data-w="'+c.k+'"></span></th>';
+    }).join('');
+
+  document.getElementById('listbody').innerHTML = ROWS.map(function(r, ri){
+    return '<tr>' + cols.map(function(c){
+      if(c.lang) return langCell(c.h, r.lang[c.lang]);
+      switch(c.k){
+        case 'ck':   return '<td class="check"><input type="checkbox"></td>';
+        case 'idx':  return '<td>'+(ri+1)+'</td>';
+        case 'no':   return '<td class="noCell"><span class="pdNo">'+r.no+'</span>'
+                          + '<span class="thumb" aria-hidden="true"></span></td>';
+        case 'pd':   return pdCell(r, !!c.price);
+        case 'oth':  return '<td style="text-align:center;color:#626771">('
+                          + (17 - cols.filter(function(x){ return x.lang; }).length) + ')</td>';
+        case 'done': return '<td class="aCenter">'+r.done+'%</td>';
+        case 'score':return '<td class="aCenter">'+r.score+'分</td>';
+        case 'edit': return '<td><time>'+r.edit+'<span class="tm">'+r.tm+'</span></time></td>';
+        case 'cert': return '<td style="text-align:center">'+certMark(r)+'</td>';
+        case 'type': return '<td><div class="ctStack"><div class="ctRow">'+typeChips(r)+'</div>'
+                          + '<div class="ctRow">'+labelChips(r)+'</div></div></td>';
+        // 調整後＝比照現行後台的圓鈕並垂直排列；現況維持原樣不動
+        case 'act':  return (VIEW==='b')
+                          ? '<td><ul class="editThis vertical">'
+                          + '<li class="edit"><a title="編輯"></a></li>'
+                          + '<li class="duplicate"><a title="複製"></a></li>'
+                          + '<li class="preview"><a title="預覽"></a></li></ul></td>'
+                          : '<td><span class="actBtns" title="編輯／複製／預覽">'
+                          + '<i>✎</i><i>❐</i><i>◉</i></span></td>';
+        case 'langAll': return '<td class="vaTop">'+langStackCell(r)+'</td>';
+        case 'ct':      return '<td class="vaTop">'+ctCell(r)+'</td>';
+        case 'ds':      return '<td>'+dsCell(r)+'</td>';
+        case 'price':   return '<td class="vaTop">'+priceSumCell(r)+'</td>';
+        case 'online':  return '<td>'+(onlineTxt(r, true) || '<span class="noPrice">—</span>')
+                             + (VIEW==='b' ? tierLink(r) : '') + '</td>';
+        case 'offline': return '<td>'+(offlineTxt(r) || '<span class="noPrice">—</span>')+'</td>';
+      }
+      return '<td></td>';
+    }).join('') + '</tr>';
+  }).join('');
+
+  measureCols();
+}
+
+/* ── 共用 ── */
+/* 供應能力的數量單位取自「最少訂購量」，隨其連動，不另設一組 */
+function syncSupplyUnit(){
+  var mo = document.getElementById('moqUnit'), sa = document.getElementById('saUnit');
+  if(!mo || !sa) return;
+  var v = mo.value;
+  sa.textContent = (MODE==='new' && v && v!=='請選擇') ? v : 'Piece(s)';
+}
+
+function applyMode(){
+  document.querySelectorAll('.newfields').forEach(function(el){
+    el.classList.toggle('hide', MODE!=='new');
+  });
+  // 最少訂購量的單位預設值：現況＝請選擇／調整後＝Piece(s)
+  var mo = document.getElementById('moqUnit');
+  if(mo){
+    var hasPlaceholder = (mo.options[0].text === '請選擇');
+    if(MODE==='new' && hasPlaceholder) mo.remove(0);
+    if(MODE!=='new' && !hasPlaceholder) mo.add(new Option('請選擇','請選擇'), 0);
+    mo.selectedIndex = 0;
+    syncSupplyUnit();
+  }
+  // 前台頁連結帶著目前模式
+  document.querySelectorAll('#protoNav a.navItem').forEach(function(a){
+    var base = a.getAttribute('href').split('?')[0];
+    a.setAttribute('href', base + (MODE==='now' ? '?mode=now' : ''));
+  });
+  renderTabs1(); applyView();
+}
+
+/* ── ② 列表的檢視 ── */
+function applyView(){
+  // 價格欄位的切換掛在量尺列上，只在「調整後」出現
+  document.getElementById('optPriceCol').classList.toggle('hide', VIEW!=='b');
+  document.querySelectorAll('#widthBar [data-pcol]').forEach(function(b){ b.classList.toggle('on', b.dataset.pcol===PCOL); });
+  document.querySelectorAll('#swView button').forEach(function(b){ b.classList.toggle('on', b.dataset.view===VIEW); });
+  document.querySelectorAll('#swMode button').forEach(function(b){ b.classList.toggle('on', b.dataset.mode===MODE); });
+  renderList();
+}
+/* 「現況」在 ①②③ 三個畫面語意一致，故兩組切換鈕互相牽動 */
+function setMode(m){
+  MODE = m;
+  if(m==='now') VIEW = 'now';
+  else if(VIEW==='now') VIEW = 'b';
+  applyMode();
+}
+function setView(v){
+  VIEW = v;
+  MODE = (v==='now') ? 'now' : 'new';
+  applyMode();
+}
+function showScreen(id){
+  ['s1','s3'].forEach(function(s){
+    document.getElementById(s).classList.toggle('hide', s!==id);
+  });
+  document.querySelectorAll('#protoNav button[data-go]').forEach(function(b){
+    b.classList.toggle('on', b.dataset.go===id);
+  });
+  // 右側切換鈕：① 為現況／調整後，② 為現況／調整後（列表）
+  document.getElementById('swMode').classList.toggle('hide', id==='s3');
+  document.getElementById('swView').classList.toggle('hide', id!=='s3');
+  if(id==='s3') setTimeout(measureCols, 60);
+}
+
+document.addEventListener('click', function(e){
+  var t = e.target.closest('button');
+  if(!t) return;
+
+  if(t.dataset.go){
+    showScreen(t.dataset.go);
+    window.scrollTo(0,0);
+    return;
+  }
+  if(t.dataset.mode){ setMode(t.dataset.mode); return; }
+  if(t.dataset.view){ setView(t.dataset.view); return; }
+  if(t.dataset.pcol){ PCOL = t.dataset.pcol; applyView(); measureCols(); return; }
+  if(t.dataset.tier){ TIER = t.dataset.tier; applyView(); measureCols(); return; }
+});
+
+/* ══════════ ③ 列表：量尺／側欄／自選顯示欄位 ══════════ */
+function measureCols(){
+  var sec = document.getElementById('s3');
+  if(!sec || sec.classList.contains('hide')) return;
+  var scroll = sec.querySelector('.listScroll');
+  var tb = document.getElementById('listtable');
+  if(!scroll || !tb) return;
+
+  var ths = [].slice.call(tb.querySelectorAll('thead th'));
+  var cols = shownCols();
+  ths.forEach(function(th, i){
+    var w = Math.round(th.getBoundingClientRect().width);
+    var tag = th.querySelector('.wTag');
+    if(tag){
+      tag.textContent = w + 'px';
+      var min = cols[i] ? cols[i].min : 0;
+      tag.classList.toggle('tight', w <= min + 2);
+    }
+  });
+
+  var avail = Math.round(scroll.clientWidth);
+  var need  = Math.round(tb.getBoundingClientRect().width);
+  var over  = Math.max(0, Math.round(scroll.scrollWidth - scroll.clientWidth));
+  var side  = Math.round(document.getElementById('simSide').getBoundingClientRect().width);
+
+  document.getElementById('mSide').textContent  = side;
+  document.getElementById('mAvail').textContent = avail;
+  document.getElementById('mTable').textContent = need;
+  document.getElementById('mCols').textContent  = cols.length;
+
+  var st = document.getElementById('mState');
+  if(over > 0){
+    st.className = 'warn';
+    st.textContent = '超出 ' + over + 'px';
+  }else{
+    var slack = Math.max(0, avail - need);
+    st.className = 'ok';
+    st.textContent = '未溢出（尚餘 ' + slack + 'px）';
+  }
+}
+
+/* 各方案在「不破版」前提下的最小需求寬度（＝各欄最小寬度合計，與量尺同源）
+   ——不顯示於畫面，供隨時以主控台核對訪談簡報引用的數字 */
+function sumMin(v, pcol){
+  var keep = PCOL;
+  if(pcol) PCOL = pcol;
+  var s = shownColsFor(v).reduce(function(a, c){ return a + c.min; }, 0);
+  PCOL = keep;
+  return s;
+}
+
+(function initListSim(){
+  var sec = document.getElementById('s3');
+  if(!sec) return;
+
+  // 側欄展開／收合
+  var side = document.getElementById('simSide');
+  // 動畫期間持續量測，數字才會跟著側欄一起變（展示時看得到變化過程）
+  function measureDuring(ms){
+    var t0 = Date.now();
+    (function loop(){
+      measureCols();
+      if(Date.now() - t0 < ms) requestAnimationFrame(loop);
+    })();
+  }
+  document.getElementById('sideToggle').addEventListener('click', function(){
+    sec.classList.toggle('sideHidden');
+    measureDuring(600);
+  });
+  side.addEventListener('transitionend', measureCols);
+
+  // 量尺顯示切換
+  document.getElementById('btnRuler').addEventListener('click', function(){
+    sec.classList.toggle('noRuler');
+    this.textContent = sec.classList.contains('noRuler') ? '顯示量尺' : '隱藏量尺';
+  });
+
+  // 模擬筆電寬度：預設開啟，投影機或大螢幕上也能重現實機（1366×768）的實際擁擠度
+  sec.classList.add('lap');
+  document.getElementById('btnLap').addEventListener('click', function(){
+    sec.classList.toggle('lap');
+    this.textContent = sec.classList.contains('lap') ? '切換為自適應寬度' : '模擬 1366px 筆電';
+    measureDuring(400);
+  });
+
+  // 自選顯示欄位燈箱（比照現行介面：語系為父子結構，最多選 4 項）
+  var box = document.getElementById('colBox');
+  var LANG_MAX = 4;
+  // 語系清單固定取自現況欄位定義：方案Ｂ 雖已收合成一欄，仍由此決定顯示哪 4 個語系
+  function langCols(){ return COLS_BASE.filter(function(c){ return c.lang; }); }
+  function optCols(){  // 燈箱中可自選的非語系欄位（固定欄位不列入）
+    return allCols().filter(function(c){ return !c.fix && !c.lang && c.k!=='oth'; });
+  }
+  function openBox(){
+    ensureVisible();
+    var showPx = !sec.classList.contains('noRuler');
+    function item(c, cls){
+      return '<label class="opt' + (VISIBLE[c.k] ? ' on' : '') + (cls ? ' '+cls : '') + '">'
+        + '<input type="checkbox" data-col="' + c.k + '"' + (VISIBLE[c.k] ? ' checked' : '') + '>'
+        + (c.box || c.h.replace(/<[^>]+>/g,''))
+        + (showPx ? '<span class="px">' + c.min + 'px</span>' : '')
+        + '</label>';
+    }
+    var opts = optCols();
+    var langOn = langCols().some(function(c){ return VISIBLE[c.k]; });
+    var html = '<div class="grid">';
+    opts.forEach(function(c){
+      html += '<div' + (c.k==='type' ? ' class="full"' : '') + '>' + item(c) + '</div>';
+    });
+    // 語系狀態（父項）
+    html += '<div class="full"><label class="opt' + (langOn ? ' on' : '') + '">'
+          + '<input type="checkbox" id="langParent"' + (langOn ? ' checked' : '') + '>'
+          + '語系狀態（可選 ' + LANG_MAX + ' 項語系於條列頁顯示）</label></div>';
+    html += '</div>';
+    // 語系子項
+    html += '<div class="grid lang" id="langGrid">';
+    langCols().forEach(function(c){
+      html += item(c, 'langOpt');
+    });
+    html += '</div>';
+    document.getElementById('colList').innerHTML = html;
+    syncLang();
+    box.classList.add('show');
+  }
+  // 依現行邏輯同步：父項關→子項全停用；已選滿 4 項→其餘停用
+  function syncLang(){
+    var parent = document.getElementById('langParent');
+    if(!parent) return;
+    var boxes = [].slice.call(document.querySelectorAll('#langGrid input[data-col]'));
+    var n = boxes.filter(function(b){ return b.checked; }).length;
+    if(!parent.checked) n = 0;
+    boxes.forEach(function(b){
+      var dis = (!b.checked && n >= LANG_MAX);
+      b.disabled = dis;
+      var lb = b.closest('label');
+      lb.classList.toggle('dis', dis);
+      lb.classList.toggle('on', b.checked);
+    });
+    parent.closest('label').classList.toggle('on', parent.checked);
+    parent.closest('label').classList.toggle('dis', !parent.checked);
+  }
+  document.getElementById('btnCols').addEventListener('click', openBox);
+  document.getElementById('bxCancel').addEventListener('click', function(){ box.classList.remove('show'); });
+  box.addEventListener('click', function(e){ if(e.target===box) box.classList.remove('show'); });
+  box.addEventListener('change', function(e){
+    if(e.target.id==='langParent'){
+      if(e.target.checked){
+        // 現行邏輯：語系狀態無法直接勾選，只能由子項帶動
+        e.target.checked = false;
+      }else{
+        // 取消語系狀態 → 下方已勾選的語系一併取消
+        document.querySelectorAll('#langGrid input[data-col]').forEach(function(b){ b.checked = false; });
+      }
+      syncLang();
+    }else if(e.target.closest('#langGrid')){
+      // 勾選任一語系 → 語系狀態同步被勾選
+      var parent = document.getElementById('langParent');
+      if(e.target.checked) parent.checked = true;
+      else if(![].slice.call(document.querySelectorAll('#langGrid input[data-col]')).some(function(b){ return b.checked; })) parent.checked = false;
+      syncLang();
+    }else if(e.target.dataset.col){
+      e.target.closest('label').classList.toggle('on', e.target.checked);
+    }
+  });
+  document.getElementById('bxApply').addEventListener('click', function(){
+    var parent = document.getElementById('langParent');
+    document.querySelectorAll('#colList input[data-col]').forEach(function(cb){
+      VISIBLE[cb.dataset.col] = cb.checked;
+    });
+    // 語系：父項關掉＝全部不顯示
+    var anyLang = false;
+    langCols().forEach(function(c){
+      if(!parent.checked) VISIBLE[c.k] = false;
+      if(VISIBLE[c.k]) anyLang = true;
+    });
+    // 「其他語系」欄：有勾任一語系才出現，一個都沒勾就不顯示
+    VISIBLE['oth'] = anyLang;
+    box.classList.remove('show');
+    renderList();
+    measureDuring(300);
+  });
+
+  // 視窗縮放／捲動時即時更新數字
+  window.addEventListener('resize', measureCols);
+  if(window.ResizeObserver){
+    new ResizeObserver(measureCols).observe(sec);
+  }
+})();
+
+/* ── 滑鼠說明泡泡：表格會水平捲動，泡泡若寫在儲存格內會被裁掉，故統一掛在畫面最上層 ── */
+(function initTips(){
+  var layer = document.getElementById('tipLayer');
+  var cur = null;
+  function hide(){ cur = null; layer.classList.remove('on'); }
+  document.addEventListener('mouseover', function(e){
+    var el = e.target && e.target.closest ? e.target.closest('[data-tip]') : null;
+    if(!el){ if(cur) hide(); return; }
+    if(el === cur) return;
+    cur = el;
+    var txt = el.getAttribute('data-tip');
+    layer.textContent = txt;
+    layer.classList.toggle('wrap', txt.length > 24);
+    layer.classList.add('on');
+    var r = el.getBoundingClientRect(), b = layer.getBoundingClientRect();
+    var left = Math.min(Math.max(6, r.left + r.width/2 - b.width/2), window.innerWidth - b.width - 6);
+    var top  = r.top - b.height - 8;
+    if(top < 4) top = r.bottom + 8;
+    layer.style.left = Math.round(left) + 'px';
+    layer.style.top  = Math.round(top) + 'px';
+  });
+  document.addEventListener('mouseout', function(e){
+    var el = e.target && e.target.closest ? e.target.closest('[data-tip]') : null;
+    if(el && el === cur) hide();
+  });
+  window.addEventListener('scroll', hide, true);
+})();
+
+/* ── 語系狀態的白框：掛在畫面最上層，才不會被會捲動的表格裁掉 ── */
+(function initLangTip(){
+  var layer = document.createElement('div');
+  layer.id = 'langTip';
+  document.body.appendChild(layer);
+  function hide(){ layer.classList.remove('on'); }
+  document.addEventListener('mouseover', function(e){
+    var row = e.target && e.target.closest ? e.target.closest('.langRow') : null;
+    if(!row){ hide(); return; }
+    var rest = row.querySelector('.rest');
+    if(!rest){ hide(); return; }
+    layer.innerHTML = rest.innerHTML;
+    layer.classList.add('on');
+    var r = row.getBoundingClientRect(), b = layer.getBoundingClientRect();
+    var left = r.right + 8;
+    if(left + b.width > window.innerWidth - 6) left = r.left - b.width - 8;  // 右邊放不下就翻到左邊
+    layer.style.left = Math.round(Math.max(6, left)) + 'px';
+    layer.style.top  = Math.round(Math.max(4, r.top + r.height/2 - b.height/2)) + 'px';
+  });
+  document.addEventListener('mouseout', function(e){
+    var row = e.target && e.target.closest ? e.target.closest('.langRow') : null;
+    if(row) hide();
+  });
+  window.addEventListener('scroll', hide, true);
+})();
+
+/* ── 線上價格明細（階梯報價）：列表只顯示總區間，明細另開視窗 ── */
+(function initTier(){
+  var box   = document.getElementById('tierBox');
+  var cover = document.getElementById('priceCover');
+  function close(){ box.classList.remove('show'); cover.classList.remove('show'); }
+  function open(no){
+    var r = null;
+    ROWS.forEach(function(x){ if(x.no === no) r = x; });
+    if(!r) return;
+    document.getElementById('tierSub').textContent = r.nm + '（產品型號：' + r.mod + '）';
+    document.getElementById('tierBody').innerHTML = r.tiers.length
+      ? r.tiers.map(function(t){
+          return '<tr><td class="q">'+t.q+' '+r.unit+'</td><td>'+t.p+'</td><td>'+t.d+'</td></tr>';
+        }).join('')
+      : '<tr><td colspan="3" class="noSet">未開放線上販售</td></tr>';
+    var off = document.getElementById('tierOffline');
+    off.className = r.offline ? '' : 'noSet';
+    off.textContent = r.offline ? (r.offline + ' / ' + r.unit) : '尚未設定';
+    box.classList.add('show'); cover.classList.add('show');
+  }
+  document.addEventListener('click', function(e){
+    var lk = e.target && e.target.closest ? e.target.closest('[data-tierno]') : null;
+    if(lk){ open(lk.getAttribute('data-tierno')); return; }
+    if(e.target === cover || (e.target.closest && e.target.closest('#tierBox .closeThis, #tierBox .btnLook'))) close();
+  });
+})();
+
+/* 後台欄位連動（依指定規格） */
+document.addEventListener('change', function(e){
+  if(e.target.id==='dltUnit'){
+    var n = document.getElementById('dltNum');
+    n.disabled = (e.target.value==='Negotiable');
+    if(n.disabled) n.value = '';
+  }
+  if(e.target.id==='moqUnit'){ syncSupplyUnit(); }
+  /* optionPool 勾選外觀 */
+  if(e.target.type==='checkbox' && e.target.closest('.optionPool')){
+    e.target.closest('label').classList.toggle('isSelected', e.target.checked);
+  }
+  if(e.target.type==='radio' && e.target.closest('.optionPool')){
+    e.target.closest('.optionPool').querySelectorAll('label').forEach(function(l){
+      l.classList.toggle('isSelected', l.querySelector('input').checked);
+    });
+  }
+});
+
+/* 開關可點 */
+document.addEventListener('click', function(e){
+  if(e.target.classList && e.target.classList.contains('switchOnOff')){
+    e.target.classList.toggle('on');
+  }
+});
+
+/* 語系欄「其他 N 語系」展開／收合 */
+document.addEventListener('click', function(e){
+  var m = e.target && e.target.closest ? e.target.closest('.moreLang') : null;
+  if(!m) return;
+  var stack = m.closest('.langStack');
+  var open  = stack.classList.toggle('open');
+  var n     = stack.querySelectorAll('.langRow.more').length;
+  m.innerHTML = open ? '收合語系 &gt;' : ('其他 ' + n + ' 語系 &gt;');
+  measureCols();
+});
+
+// 進站時若帶 ?mode=now 則以現況開啟
+if(location.search.indexOf('mode=now') > -1){ MODE = 'now'; VIEW = 'now'; }
+
+/* 深連結：?view=now|intro|a|b（直接開到 ③ 的指定檢視）、?pcol=two|one、?tier=range|detail */
+function qParam(k){
+  var m = location.search.match(new RegExp('[?&]' + k + '=([^&]*)'));
+  return m ? m[1] : null;
+}
+(function initFromQuery(){
+  var p = qParam('pcol'), t = qParam('tier'), v = qParam('view');
+  if(p === 'two' || p === 'one') PCOL = p;
+  if(t === 'range' || t === 'detail') TIER = t;
+  if(['now','intro','a','b'].indexOf(v) > -1){ VIEW = v; MODE = (v === 'now') ? 'now' : 'new'; }
+})();
+
+applyMode();
+if(qParam('view')) showScreen('s3');
+
+// 由前台頁回來時直接跳到指定畫面
+if(location.hash){
+  var target = location.hash.slice(1);
+  if(['s1','s3'].indexOf(target) > -1) showScreen(target);
+}
+</script>
+</body>
+</html>

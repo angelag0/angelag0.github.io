@@ -1,0 +1,24 @@
+:root{
+  --font-display:"Red Hat Display","Microsoft JhengHei","微軟正黑體",Helvetica,Arial,sans-serif;
+  --font-body:"Red Hat Display","Microsoft JhengHei","微軟正黑體",Helvetica,Arial,sans-serif;
+  --font-mono:"Roboto Mono",ui-monospace,monospace;
+
+  --fs-root-mobile:18px;
+  --fs-root-desktop:15px;
+
+  --fs-h2:1.86em;
+  --fs-h3:1.6em;
+  --fs-h4:1.2em;
+  --fs-h5:1.1em;
+  --fs-h6:1em;
+  --fs-body:1em;
+  --fs-small:.92em;
+  --fs-tiny:.86em;
+
+  --lh-heading:1.2;
+  --lh-subheading:1.3;
+  --lh-body:1.5;
+
+  --fw-regular:400;
+  --fw-medium:500;
+}
