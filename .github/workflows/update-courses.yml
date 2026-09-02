@@ -1,0 +1,39 @@
+name: 更新課程資料
+
+on:
+  schedule:
+    # 官方資料每月 20 日晚上更新，這裡設在隔天凌晨（台灣時間每月 21 日 03:00）
+    - cron: '0 19 20 * *'
+  workflow_dispatch:        # 讓課程小幫手頁面的「⚡ 立即更新」可以呼叫
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-courses
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 抓取臺北市課程
+        run: node class/tools/fetch-courses.js
+
+      - name: 有變動才提交
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- class/courses.json; then
+            echo "課程資料沒有變動，不提交。"
+          else
+            git add class/courses.json
+            git commit -m "自動更新課程資料（$(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M')）"
+            git push
+          fi

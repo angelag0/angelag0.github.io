@@ -18,9 +18,12 @@ body{margin:0;background:var(--paper);color:var(--ink);
 button{font-family:inherit}
 
 header{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:2px solid var(--line);
-  padding:10px 14px 8px;}
-header h1{margin:0;font-size:1.25rem;font-weight:800;letter-spacing:.06em}
-header h1 small{display:block;font-size:.68rem;font-weight:500;color:var(--muted);letter-spacing:.12em}
+  padding:10px 14px 8px;display:flex;align-items:center;gap:10px;}
+header h1{margin:0;font-size:1.25rem;font-weight:800;letter-spacing:.06em;flex:1;min-width:0}
+header h1 small{display:block;font-size:.68rem;font-weight:500;color:var(--muted);letter-spacing:.08em}
+#btnUpdate{flex:none;display:flex;align-items:center;min-height:44px;padding:0 12px;border-radius:12px;
+  border:2px solid var(--line);background:var(--card);color:var(--blue);
+  font-size:.82rem;font-weight:700;text-decoration:none;white-space:nowrap;}
 
 #toolbar{position:sticky;top:64px;z-index:19;background:var(--paper);padding:10px 14px 8px;border-bottom:1px solid var(--line)}
 .tool-row{display:flex;gap:8px}
@@ -97,11 +100,16 @@ main{padding:4px 14px 20px}
   pointer-events:none;transition:opacity .25s;max-width:88%;text-align:center;}
 #toast.show{opacity:.96}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
 </style>
 </head>
 <body>
 
-<header><h1>課程小幫手<small>產業人才投資方案・臺北市 52 堂課</small></h1></header>
+<header>
+  <h1>課程小幫手<small id="subTitle">載入中…</small></h1>
+  <a id="btnUpdate" href="https://github.com/angelag0/angelag0.github.io/actions/workflows/update-courses.yml"
+     target="_blank" rel="noopener" title="到 GitHub 重新抓取最新課程">⚡ 更新</a>
+</header>
 
 <div id="toolbar">
   <div class="tool-row">
@@ -138,15 +146,15 @@ main{padding:4px 14px 20px}
 
 <script>
 /* ============ 課程資料（52 堂；su=報名開始日, se=報名截止日, 皆中午12點） ============ */
-const COURSES = [{"id":"173528","name":"寵物照護技能職能訓練班第01期","unit":"臺北市寵物服務員職業工會","start":"2026-08-15","end":"2026-09-19","days":[6],"hours":"36","su":"2026-07-16","se":"2026-08-12"},{"id":"173535","name":"寵物營養安全與照護實務班第02期","unit":"臺北市寵物服務員職業工會","start":"2026-10-17","end":"2026-11-28","days":[6],"hours":"36","su":"2026-09-17","se":"2026-10-14"},{"id":"173416","name":"居家水電修繕技術實戰班","unit":"臺北市衛浴器材服務職業工會","start":"2026-08-16","end":"2026-09-20","days":[7],"hours":"42","su":"2026-07-17","se":"2026-08-13"},{"id":"173405","name":"居家水電安裝與修繕技術班","unit":"台北市職業總工會","start":"2026-12-13","end":"2027-01-31","days":[7],"hours":"42","su":"2026-11-13","se":"2026-12-10"},{"id":"174405","name":"Dialux evo照明設計班","unit":"財團法人自強工業科學基金會","start":"2026-09-11","end":"2026-11-27","days":[5],"hours":"30","su":"2026-08-12","se":"2026-09-08"},{"id":"173065","name":"居家修繕應用實務班","unit":"台北市營建土木職業工會","start":"2026-12-02","end":"2026-12-23","days":[1,3,5],"hours":"30","su":"2026-11-02","se":"2026-11-29"},{"id":"172954","name":"園藝栽培技術班","unit":"台北市園藝花卉業職業工會","start":"2026-09-04","end":"2026-10-30","days":[5],"hours":"42","su":"2026-08-05","se":"2026-09-01"},{"id":"172956","name":"園藝作物盆栽班","unit":"台北市園藝花卉業職業工會","start":"2026-10-06","end":"2026-11-17","days":[2],"hours":"42","su":"2026-09-06","se":"2026-10-03"},{"id":"172958","name":"園藝栽培應用班","unit":"台北市園藝花卉業職業工會","start":"2026-11-16","end":"2026-12-30","days":[1,3],"hours":"42","su":"2026-10-17","se":"2026-11-13"},{"id":"172967","name":"文創花藝設計班","unit":"台北市園藝花卉業職業工會","start":"2026-09-11","end":"2026-10-30","days":[5],"hours":"18","su":"2026-08-12","se":"2026-09-08"},{"id":"173025","name":"短片美學創作及品牌塑造實務班","unit":"台北市電影戲劇業職業工會","start":"2026-10-17","end":"2026-11-28","days":[6],"hours":"30","su":"2026-09-17","se":"2026-10-14"},{"id":"173572","name":"台灣意象文創商品設計實務班第01期","unit":"社團法人台灣藝術創作學會","start":"2026-11-03","end":"2026-12-11","days":[2,5],"hours":"36","su":"2026-10-04","se":"2026-10-31"},{"id":"173512","name":"中南部及東部山林步道導遊培訓班","unit":"社團法人新北市觀光導遊協會","start":"2026-12-06","end":"2027-01-24","days":[7],"hours":"42","su":"2026-11-06","se":"2026-12-03"},{"id":"173510","name":"台灣地質礦產旅遊資源導覽培訓班","unit":"社團法人新北市觀光導遊協會","start":"2026-10-20","end":"2026-12-01","days":[2],"hours":"45","su":"2026-09-20","se":"2026-10-17"},{"id":"173472","name":"台北故宮導覽班","unit":"社團法人中華民國第二專長協會","start":"2026-08-06","end":"2026-09-19","days":[4,6],"hours":"42","su":"2026-07-19","se":"2026-08-03"},{"id":"173564","name":"在地人文藝術導覽應用實務班第01期","unit":"社團法人台灣藝術創作學會","start":"2026-08-04","end":"2026-09-04","days":[2,5],"hours":"30","su":"2026-07-15","se":"2026-08-01"},{"id":"172950","name":"花藝設計應用班","unit":"台北市園藝花卉業職業工會","start":"2026-11-10","end":"2026-12-31","days":[2,4],"hours":"48","su":"2026-10-11","se":"2026-11-07"},{"id":"173482","name":"芳香精油調製班","unit":"社團法人中華第二專長發展協會","start":"2026-11-07","end":"2027-01-23","days":[6],"hours":"54","su":"2026-10-08","se":"2026-11-04"},{"id":"173856","name":"芳香精油調製進階班","unit":"社團法人臺灣文化創意產業發展協會","start":"2026-11-01","end":"2026-12-13","days":[7],"hours":"42","su":"2026-09-30","se":"2026-10-29"},{"id":"173380","name":"環保精油手工皂實作班","unit":"臺北市美容美髮用品從業人員職業工會","start":"2026-11-01","end":"2027-01-10","days":[7],"hours":"54","su":"2026-10-02","se":"2026-10-29"},{"id":"173328","name":"芳香精油調製班","unit":"大臺北產業總工會","start":"2026-10-05","end":"2026-11-23","days":[1],"hours":"42","su":"2026-09-05","se":"2026-10-02"},{"id":"173144","name":"商業花藝專業打造班","unit":"社團法人中華民國第二專長職能發展協會","start":"2026-10-05","end":"2026-11-23","days":[1],"hours":"42","su":"2026-09-05","se":"2026-10-02"},{"id":"172952","name":"花藝盆栽創作應用班","unit":"台北市園藝花卉業職業工會","start":"2026-09-10","end":"2026-11-03","days":[2,4],"hours":"47","su":"2026-08-11","se":"2026-09-07"},{"id":"172961","name":"時尚花藝商品設計班","unit":"台北市園藝花卉業職業工會","start":"2026-09-09","end":"2026-11-09","days":[1,3],"hours":"47","su":"2026-08-10","se":"2026-09-06"},{"id":"173412","name":"天然手工皂設計與衛浴空間潔淨配方調製班","unit":"臺北市衛浴器材服務職業工會","start":"2026-08-26","end":"2026-10-07","days":[3],"hours":"42","su":"2026-07-27","se":"2026-08-23"},{"id":"173517","name":"芳香精油調製班","unit":"社團法人臺北市第二專長發展協會","start":"2026-08-23","end":"2026-10-04","days":[7],"hours":"42","su":"2026-07-24","se":"2026-08-20"},{"id":"173383","name":"當代花藝創新實務班","unit":"大臺北職業總工會","start":"2026-08-10","end":"2026-09-21","days":[1],"hours":"42","su":"2026-07-27","se":"2026-08-07"},{"id":"173421","name":"皮革工藝製作與歐式立體浮雕技巧班","unit":"全國產職業總工會","start":"2026-09-11","end":"2026-12-25","days":[5],"hours":"84","su":"2026-08-12","se":"2026-09-08"},{"id":"172923","name":"皮革皮雕製作實務班第08期","unit":"台北市商品包膜人員職業工會","start":"2026-09-05","end":"2026-12-26","days":[6],"hours":"90","su":"2026-08-06","se":"2026-09-02"},{"id":"173171","name":"羊毛氈小物設計創作班","unit":"臺北市才藝教學服務人員職業工會","start":"2026-08-31","end":"2026-12-28","days":[1],"hours":"45","su":"2026-08-01","se":"2026-08-28"},{"id":"173514","name":"藍染工藝商品實作班","unit":"財團法人水源地文教基金會","start":"2026-08-16","end":"2026-10-04","days":[7],"hours":"42","su":"2026-07-17","se":"2026-08-13"},{"id":"173521","name":"護膚及淨膚保養品調製實務班","unit":"財團法人水源地文教基金會","start":"2026-10-17","end":"2026-12-12","days":[6],"hours":"42","su":"2026-09-16","se":"2026-10-14"},{"id":"173011","name":"傳統整復推拿基礎生理與解剖及基礎經絡理論訓練班第01期","unit":"社團法人中華民國民俗調理教育發展協會","start":"2026-12-20","end":"2027-01-31","days":[7],"hours":"54","su":"2026-11-20","se":"2026-12-17"},{"id":"173016","name":"經絡調理保健技能實務班","unit":"社團法人中華民國腳底按摩協會","start":"2026-11-07","end":"2026-11-28","days":[6],"hours":"24","su":"2026-10-07","se":"2026-11-04"},{"id":"173773","name":"經絡保健運動班第01期","unit":"中華民國經絡鬆筋整體健康協會","start":"2026-10-24","end":"2026-12-19","days":[6],"hours":"54","su":"2026-09-24","se":"2026-10-21"},{"id":"173706","name":"傳統整復推拿實務D班第02期","unit":"新北市骨節整復職業工會","start":"2026-10-04","end":"2026-12-13","days":[7],"hours":"96","su":"2026-09-04","se":"2026-10-01"},{"id":"173014","name":"芳香精油調配保健應用技能實務班第02期","unit":"中華整體美學交流協會","start":"2026-09-09","end":"2026-11-25","days":[3],"hours":"72","su":"2026-08-10","se":"2026-09-06"},{"id":"172933","name":"民俗調理業傳統整復推拿技術員(基礎生理與解剖學教育暨基礎經絡理論)班","unit":"台北市接骨服務職業工會","start":"2026-09-06","end":"2026-12-06","days":[7],"hours":"54","su":"2026-08-07","se":"2026-09-03"},{"id":"173359","name":"芳香調理課程班第03期","unit":"社團法人亞太流行時尚產業發展協會","start":"2026-09-03","end":"2026-12-10","days":[4],"hours":"90","su":"2026-08-04","se":"2026-08-31"},{"id":"173030","name":"芳香調理（頭部/頸部/肩部紓壓）實務應用班","unit":"社團法人中華亞太國際美學教育認證協會","start":"2026-08-22","end":"2026-11-14","days":[6],"hours":"54","su":"2026-07-20","se":"2026-08-19"},{"id":"173691","name":"傳統整復推拿實務A班第02期","unit":"新北市骨節整復職業工會","start":"2026-08-09","end":"2026-10-31","days":[6,7],"hours":"112","su":"2026-07-26","se":"2026-08-06"},{"id":"173400","name":"芳香調理課程班第04期","unit":"社團法人亞太流行時尚產業發展協會","start":"2026-08-14","end":"2026-12-04","days":[5],"hours":"90","su":"2026-07-15","se":"2026-08-11"},{"id":"173154","name":"房屋買賣法律與稅務活用班第01期","unit":"社團法人台灣不動產經紀房訊交流協會","start":"2026-09-19","end":"2026-11-07","days":[6],"hours":"30","su":"2026-08-20","se":"2026-09-16"},{"id":"173279","name":"樂齡健康活動指導員實務班第03期","unit":"社團法人中華民國勞動力發展協會","start":"2026-08-23","end":"2026-10-11","days":[7],"hours":"47","su":"2026-07-27","se":"2026-08-20"},{"id":"173293","name":"套房設計裝修與租賃管理訓練班第07期","unit":"社團法人中華活力職能發展協會","start":"2026-08-20","end":"2026-09-17","days":[4],"hours":"35","su":"2026-07-21","se":"2026-08-17"},{"id":"173425","name":"專業攝影實務應用班","unit":"社團法人台灣視覺傳達設計協會","start":"2026-11-05","end":"2027-01-28","days":[4],"hours":"69","su":"2026-10-06","se":"2026-11-02"},{"id":"173389","name":"攝影實務應用班","unit":"社團法人台灣視覺創意設計協會","start":"2026-10-03","end":"2026-12-12","days":[6],"hours":"63","su":"2026-09-03","se":"2026-09-30"},{"id":"173302","name":"AI室內設計應用訓練班第02期","unit":"社團法人中華活力職能發展協會","start":"2026-09-09","end":"2026-10-07","days":[3],"hours":"35","su":"2026-08-10","se":"2026-09-06"},{"id":"173403","name":"生成式AI影像創作與運用班第02期","unit":"社團法人中華國際新住民領導人總會","start":"2026-09-01","end":"2026-10-13","days":[2],"hours":"42","su":"2026-08-02","se":"2026-08-29"},{"id":"173394","name":"攝影職能培訓班","unit":"社團法人台灣視覺創意設計協會","start":"2026-08-18","end":"2026-10-27","days":[2],"hours":"63","su":"2026-07-19","se":"2026-08-15"},{"id":"173289","name":"手機影像製作與剪輯AI輔助應用班第02期","unit":"社團法人中華影視造型文化創意協會","start":"2026-08-16","end":"2026-11-15","days":[7],"hours":"66","su":"2026-07-19","se":"2026-08-13"},{"id":"172999","name":"AI視覺手機攝錄影實務班第02期","unit":"社團法人中華文創形象管理協會","start":"2026-08-16","end":"2026-11-15","days":[7],"hours":"66","su":"2026-07-19","se":"2026-08-13"}];
-const byId={}; COURSES.forEach(c=>byId[c.id]=c);
-const IDS = COURSES.map(c=>c.id);
+/* ============ 課程資料：開頁時由 courses.json 載入（每月自動更新） ============ */
+let COURSES=[], IDS=[], META={};
+const byId={};
 const linkOf = id => "https://ojt.wda.gov.tw/ClassSearch/Detail?PlanType=1&OCID=" + id;
 const DAY_CH = ["","一","二","三","四","五","六","日"];
 const SORT_LABEL={asc:"排序：開課早的在前",desc:"排序：開課晚的在前",day:"排序：照星期（一→日）"};
 
 /* ============ 儲存 ============ */
-const KEY="courseHelper_v1";
+const KEY="courseHelper_live_v1";   /* 與舊的兩頁分開存，互不干擾 */
 const store={
   async load(){
     if (window.storage){ try{ const r=await window.storage.get(KEY); if(r&&r.value) return JSON.parse(r.value);}catch(e){} }
@@ -261,9 +269,8 @@ function cardHTML(id, mode){
 function render(){
   document.querySelectorAll("#tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.tab===S.ui.tab));
   const badge=document.getElementById("likedBadge");
-  const likedVisible=S.liked.filter(id=>!S.hidden.includes(id));
+  const likedVisible=S.liked.filter(id=>byId[id]&&!S.hidden.includes(id));
   badge.hidden=likedVisible.length===0; badge.textContent=likedVisible.length;
-  document.getElementById("toolbar").style.display=(S.ui.tab==="all")?"":"none";
   const el=document.getElementById("list");
   if (S.ui.tab==="all") el.innerHTML=renderAll();
   if (S.ui.tab==="liked") el.innerHTML=renderLiked();
@@ -278,8 +285,8 @@ function renderAll(){
          sortIds(show).map(id=>cardHTML(id,"all")).join("");
 }
 function renderLiked(){
-  const liked=S.liked.filter(id=>!S.hidden.includes(id));
-  const hiddenLiked=S.liked.length-liked.length;
+  const liked=S.liked.filter(id=>byId[id]&&!S.hidden.includes(id)&&passFilter(byId[id]));
+  const hiddenLiked=S.liked.filter(id=>byId[id]&&S.hidden.includes(id)).length;
   const tail = hiddenLiked>0
     ? '<div class="section-title">另有 '+hiddenLiked+' 堂收藏的課目前被隱藏，取消隱藏後會回到這裡</div>' : "";
   if (!liked.length)
@@ -306,8 +313,11 @@ function renderLiked(){
 function renderHidden(){
   if (!S.hidden.length)
     return '<div class="empty"><div class="big">🗂</div>沒有隱藏的課程。<br>在課程卡片按「🚫 隱藏」，沒興趣的課就會收到這裡，<br>隨時可以取消隱藏。</div>';
-  return '<div class="section-title">已隱藏 '+S.hidden.length+' 堂課</div>'+
-         S.hidden.map(id=>cardHTML(id,"hidden")).join("");
+  const hid=sortIds(S.hidden.filter(id=>byId[id]&&passFilter(byId[id])));
+  if (!hid.length)
+    return '<div class="empty"><div class="big">🗂</div>目前的篩選條件下沒有隱藏的課程。<br>（已經開訓或報名截止的課不會再顯示）</div>';
+  return '<div class="section-title">已隱藏 '+hid.length+' 堂課</div>'+
+         hid.map(id=>cardHTML(id,"hidden")).join("");
 }
 
 /* ============ 動作 ============ */
@@ -390,18 +400,61 @@ document.querySelectorAll("#tabbar button").forEach(b=>{
   b.onclick=()=>{ S.ui.tab=b.dataset.tab; persist(); render(); window.scrollTo(0,0); };
 });
 
+/* ============ 讀取課程資料 ============ */
+const DATA_URL="courses.json";
+function todayISO(){
+  const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+/* 已經開訓的、報名已截止的都不顯示。
+   每次開頁面都用當天日期重算，所以資料擺著也不會過期 */
+function adoptData(data){
+  META=data||{};
+  const t=todayISO();
+  COURSES=(META.courses||[]).filter(c=>
+    c.start && c.start>=t && Array.isArray(c.days) && c.days.length && !(c.se && c.se<t));
+  Object.keys(byId).forEach(k=>delete byId[k]);
+  COURSES.forEach(c=>byId[c.id]=c);
+  IDS=COURSES.map(c=>c.id);
+  let stamp="";
+  if(META.fetchedAt){
+    const d=new Date(META.fetchedAt);
+    stamp="・資料更新 "+String(d.getFullYear()).slice(2)+
+      String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
+  }
+  document.getElementById("subTitle").textContent=
+    (META.city||"臺北市")+" "+COURSES.length+" 堂課"+stamp;
+  /* 資料換過之後，原本選的月份可能已經不存在了 */
+  const months=new Set(COURSES.map(c=>c.start.slice(0,7)));
+  S.ui.selMonths=(S.ui.selMonths||[]).filter(m=>months.has(m));
+}
+async function loadData(){
+  try{
+    const res=await fetch(DATA_URL+"?t="+Date.now(),{cache:"no-store"});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    adoptData(await res.json());
+    return true;
+  }catch(err){
+    document.getElementById("subTitle").textContent="課程資料載入失敗";
+    document.getElementById("list").innerHTML=
+      '<div class="empty"><div class="big">😵</div>課程資料載入失敗。<br>檢查一下網路，然後重新整理頁面。</div>';
+    return false;
+  }
+}
+
 /* ============ 啟動 ============ */
 (async function init(){
   const saved=await store.load();
   if(saved){
-    S.liked=(saved.liked||[]).filter(x=>IDS.includes(x));
-    S.hidden=(saved.hidden||[]).filter(x=>IDS.includes(x));
+    /* 不在這裡剔除找不到的課程代碼：資料是動態的，剔除會把收藏誤刪 */
+    S.liked=saved.liked||[];
+    S.hidden=saved.hidden||[];
     S.ui=Object.assign(S.ui,saved.ui||{});
     if(!S.ui.sortMode) S.ui.sortMode=(saved.ui&&saved.ui.sortAsc===false)?"desc":"asc";
     if(!["all","liked","hidden"].includes(S.ui.tab)) S.ui.tab="all";
   }
   document.getElementById("btnSort").textContent=SORT_LABEL[S.ui.sortMode]||SORT_LABEL.asc;
-  buildFilterUI(); markFilterBtn(); render();
+  if(await loadData()){ buildFilterUI(); markFilterBtn(); render(); }
   /* 跨日自動更新「x天後可報名」 */
   setInterval(()=>{ if(S.ui.tab==="all"||S.ui.tab==="liked") render(); }, 3600000);
 })();
