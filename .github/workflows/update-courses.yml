@@ -24,9 +24,6 @@ jobs:
           node-version: '20'
 
       - name: 抓取臺北市課程
-        env:
-          # 有設中繼站就走中繼站（在職訓練網封鎖 GitHub 機房的 IP）
-          OJT_PROXY: ${{ secrets.OJT_PROXY }}
         run: node class/tools/fetch-courses.js
 
       - name: 有變動才提交
