@@ -287,7 +287,11 @@ function renderAll(){
   if (!show.length)
     return '<div class="empty"><div class="big">🔍</div>目前的篩選條件下沒有課程。<br>可以按「清除全部篩選」看全部課程。</div>';
   const filtering=(S.ui.dayMode!=="all"&&S.ui.selDays.length)||S.ui.selMonths.length;
-  return (filtering?'<div class="section-title">符合條件的課程（'+show.length+' 堂）</div>':"")+
+  const waiting=COURSES.filter(c=>!c.days.length).length;
+  const note=waiting
+    ? '<div class="notice">🕒 有 '+waiting+' 堂新課的上課星期還沒補上。跑一次 <b>tools\\更新課程.bat</b> 就會補齊（政府網站擋國外主機，這一段只能在台灣的電腦抓）。</div>'
+    : "";
+  return note+(filtering?'<div class="section-title">符合條件的課程（'+show.length+' 堂）</div>':"")+
          sortIds(show).map(id=>cardHTML(id,"all")).join("");
 }
 function renderLiked(){
