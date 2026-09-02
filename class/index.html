@@ -24,6 +24,9 @@ header h1 small{display:block;font-size:.68rem;font-weight:500;color:var(--muted
 #btnUpdate{flex:none;display:flex;align-items:center;min-height:44px;padding:0 12px;border-radius:12px;
   border:2px solid var(--line);background:var(--card);color:var(--blue);
   font-size:.82rem;font-weight:700;text-decoration:none;white-space:nowrap;}
+#btnUpdate:disabled{opacity:.55;color:var(--muted)}
+.alt-update{margin:12px 2px 0;font-size:.76rem;line-height:1.6;color:var(--muted)}
+.alt-update a{color:var(--blue)}
 
 #toolbar{position:sticky;top:64px;z-index:19;background:var(--paper);padding:10px 14px 8px;border-bottom:1px solid var(--line)}
 .tool-row{display:flex;gap:8px}
@@ -108,8 +111,7 @@ main{padding:4px 14px 20px}
 
 <header>
   <h1>課程小幫手<small id="subTitle">載入中…</small></h1>
-  <a id="btnUpdate" href="https://github.com/angelag0/angelag0.github.io/actions/workflows/update-courses.yml"
-     target="_blank" rel="noopener" title="到 GitHub 重新抓取最新課程">⚡ 更新</a>
+  <button id="btnUpdate" title="重新抓取最新課程">⚡ 更新</button>
 </header>
 
 <div id="toolbar">
@@ -132,6 +134,9 @@ main{padding:4px 14px 20px}
       <div class="monthchips" id="monthChips"></div>
     </section>
     <button id="btnClearFilter">清除全部篩選</button>
+    <p class="alt-update">「⚡ 更新」沒反應嗎？這台裝置還沒安裝更新程式（手機不能安裝）。
+      可以改用 <a href="https://github.com/angelag0/angelag0.github.io/actions/workflows/update-courses.yml"
+      target="_blank" rel="noopener">GitHub 更新</a>，但新課的上課星期要在電腦上才補得齊。</p>
   </div>
 </div>
 
@@ -452,6 +457,39 @@ async function loadData(){
     return false;
   }
 }
+
+/* ============ 更新按鈕 ============
+   網頁不能直接執行電腦裡的程式，這裡走 Windows 的自訂網址協定：
+   先在電腦上跑過 tools\安裝網頁更新按鈕.bat 註冊 courseupdate://，
+   按鈕才叫得動本機的更新程式。沒註冊的裝置（手機、別人的電腦）點了不會有事。 */
+const btnUpdate=document.getElementById("btnUpdate");
+btnUpdate.onclick=()=>{
+  btnUpdate.disabled=true; btnUpdate.textContent="更新中…";
+  location.href="courseupdate://run";
+  toast("已呼叫這台電腦的更新程式，請看跳出來的黑色視窗");
+  watchData();
+};
+/* 等資料真的換了（本機跑完 → 上傳 → 網站重新發布，大約 1～3 分鐘） */
+async function watchData(){
+  const before=fingerprint(META);
+  for(let i=0;i<20;i++){
+    await new Promise(r=>setTimeout(r,15000));
+    try{
+      const res=await fetch(DATA_URL+"?t="+Date.now(),{cache:"no-store"});
+      if(!res.ok) continue;
+      const d=await res.json();
+      if(fingerprint(d)!==before){
+        adoptData(d); buildFilterUI(); markFilterBtn(); render();
+        toast("課程資料已更新 ✅");
+        btnUpdate.disabled=false; btnUpdate.textContent="⚡ 更新";
+        return;
+      }
+    }catch(err){ /* 網路瞬斷就下一輪再試 */ }
+  }
+  toast("等不到新資料。若沒看到黑色視窗，代表這台裝置還沒安裝更新程式");
+  btnUpdate.disabled=false; btnUpdate.textContent="⚡ 更新";
+}
+function fingerprint(d){ return (d&&d.courses||[]).map(c=>c.id+"|"+c.su+"|"+c.days).join(","); }
 
 /* ============ 啟動 ============ */
 (async function init(){
