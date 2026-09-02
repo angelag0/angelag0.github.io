@@ -179,6 +179,14 @@ async function main() {
   // 只有連清單都拿不到才算失敗；詳細頁抓不到會標 pending，不讓整份資料變空
   if (!courses.length) throw new Error('一筆課程都沒有，保留舊資料不覆蓋');
 
+  // 課程內容跟上次完全一樣就不要動檔案，免得每跑一次都多一筆沒意義的提交
+  let prev = null;
+  try { prev = JSON.stringify(JSON.parse(fs.readFileSync(OUT, 'utf8')).courses); } catch (err) { /* 沒有舊檔 */ }
+  if (prev === JSON.stringify(courses)) {
+    console.log(`課程內容與上次相同（${courses.length} 筆），檔案不動。`);
+    return;
+  }
+
   const payload = {
     city: CITY,
     count: courses.length,
