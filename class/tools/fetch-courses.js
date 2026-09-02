@@ -21,7 +21,12 @@ const fs = require('fs');
 const path = require('path');
 
 const DATASET_API = 'https://data.gov.tw/api/v2/rest/dataset/59296';
-const DETAIL_URL = id => `https://ojt.wda.gov.tw/ClassSearch/Detail?PlanType=1&OCID=${id}`;
+// 設了 OJT_PROXY（Cloudflare 中繼站）就走中繼站，否則直連。
+// GitHub Actions 直連會被回 504，見檔頭說明。
+const PROXY = (process.env.OJT_PROXY || '').replace(/\/+$/, '');
+const DETAIL_URL = id => PROXY
+  ? `${PROXY}/?ocid=${id}`
+  : `https://ojt.wda.gov.tw/ClassSearch/Detail?PlanType=1&OCID=${id}`;
 const CITY = '臺北市';
 const OUT = path.join(__dirname, '..', 'courses.json');
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36';
@@ -120,7 +125,7 @@ async function main() {
     console.log(`      已有 ${Object.keys(cache).length} 筆舊資料可沿用`);
   } catch (err) { /* 第一次跑還沒有檔案，正常 */ }
 
-  console.log('[3/3] 補齊報名日與上課星期…');
+  console.log(`[3/3] 補齊報名日與上課星期…${PROXY ? '（經由中繼站）' : ''}`);
   const todayISO = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   const courses = [];
   let cached = 0, fetched = 0, pending = 0, closed = 0;
