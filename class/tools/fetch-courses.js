@@ -9,6 +9,11 @@
  *
  * 輸出 class/courses.json，欄位刻意與原本寫死在頁面裡的一致，不多存用不到的資料。
  * 用法：node fetch-courses.js
+ *
+ * ⚠ 在職訓練網會擋掉國外機房的請求（GitHub Actions 抓詳細頁一律回 504），
+ *   所以這支程式把已經抓過的報名日與星期當成快取沿用（課程公告後這兩項不會變），
+ *   只對「沒看過的新課程」去抓詳細頁。抓不到就標成 pending，頁面照樣列出，
+ *   等在台灣的電腦跑一次（tools\更新課程.bat）就會補齊。
  */
 
 const https = require('https');
@@ -22,7 +27,7 @@ const OUT = path.join(__dirname, '..', 'courses.json');
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36';
 const GAP_MS = 400;      // 每筆之間的間隔，避免對政府網站造成負擔
 const MAX_RETRY = 2;
-const FAIL_LIMIT = 0.3;  // 失敗超過三成就視為來源異常，不覆蓋舊檔
+const MISS_LIMIT = 5;    // 詳細頁連續失敗幾筆就放棄（IP 被擋時避免空轉）
 
 function get(url, retry = MAX_RETRY) {
   return new Promise((resolve, reject) => {
@@ -107,59 +112,87 @@ async function main() {
     .sort((a, b) => String(a['開訓日期']).localeCompare(String(b['開訓日期'])));
   console.log(`      全部 ${all.length} 筆 → ${CITY}未開訓 ${picked.length} 筆`);
 
-  console.log('[3/3] 逐筆讀取課程詳細頁（補報名日與上課星期）…');
+  // 已經抓過的報名日與星期直接沿用，不再打擾政府網站
+  const cache = {};
+  try {
+    const old = JSON.parse(fs.readFileSync(OUT, 'utf8'));
+    (old.courses || []).forEach(c => { if (c.su && c.days && c.days.length) cache[c.id] = c; });
+    console.log(`      已有 ${Object.keys(cache).length} 筆舊資料可沿用`);
+  } catch (err) { /* 第一次跑還沒有檔案，正常 */ }
+
+  console.log('[3/3] 補齊報名日與上課星期…');
   const todayISO = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   const courses = [];
-  let failed = 0;
-  let closed = 0;
+  let cached = 0, fetched = 0, pending = 0, closed = 0;
+  let miss = 0, giveUp = false;   // 連續抓不到就放棄，不要在雲端空轉幾十分鐘
+
   for (let i = 0; i < picked.length; i++) {
     const c = picked[i];
     const id = String(c['課程代碼']);
-    let detail = { su: null, se: null, days: [] };
-    try {
-      detail = parseDetail(await get(DETAIL_URL(id)));
-      if (!detail.su || !detail.days.length) throw new Error('關鍵欄位解析不到');
-    } catch (err) {
-      failed++;
-      console.log(`      ⚠ ${id} ${c['課程名稱']}：${err.message}`);
-    }
-    // 報名已經截止的不收；解析不到報名日的則保留，寧可多顯示也不要漏掉
-    if (detail.se && detail.se < todayISO) {
-      closed++;
+    let detail = null;
+
+    if (cache[id]) {
+      detail = { su: cache[id].su, se: cache[id].se, days: cache[id].days };
+      cached++;
+    } else if (giveUp) {
+      detail = { su: null, se: null, days: [] };
+      pending++;
     } else {
-      courses.push({
-        id,
-        name: String(c['課程名稱'] || '').trim(),
-        unit: String(c['訓練單位名稱'] || '').trim(),
-        start: ymdToISO(String(c['開訓日期'])),
-        end: ymdToISO(String(c['結訓日期'])),
-        days: detail.days,
-        hours: String(c['訓練時數'] || ''),
-        su: detail.su,
-        se: detail.se
-      });
+      try {
+        // 詳細頁不重試：連不上通常是整段 IP 被擋，重試只是白等
+        detail = parseDetail(await get(DETAIL_URL(id), 0));
+        if (!detail.su || !detail.days.length) throw new Error('關鍵欄位解析不到');
+        fetched++;
+        miss = 0;
+      } catch (err) {
+        detail = { su: null, se: null, days: [] };
+        pending++;
+        console.log(`      ⚠ 待補 ${id} ${c['課程名稱']}：${err.message}`);
+        if (++miss >= MISS_LIMIT) {
+          giveUp = true;
+          console.log(`      連續 ${MISS_LIMIT} 筆抓不到，停止嘗試詳細頁（多半是這台機器的 IP 被擋）`);
+        }
+      }
+      await sleep(GAP_MS);
     }
+
+    // 報名已截止的照樣收進檔案（當作快取，省得下次又去抓），由頁面依當天日期隱藏
+    if (detail.se && detail.se < todayISO) closed++;
+
+    const row = {
+      id,
+      name: String(c['課程名稱'] || '').trim(),
+      unit: String(c['訓練單位名稱'] || '').trim(),
+      start: ymdToISO(String(c['開訓日期'])),
+      end: ymdToISO(String(c['結訓日期'])),
+      days: detail.days,
+      hours: String(c['訓練時數'] || ''),
+      su: detail.su,
+      se: detail.se
+    };
+    if (!detail.su) row.pending = true;   // 頁面會標示「上課時間待補」
+    courses.push(row);
     process.stdout.write(`      ${i + 1}/${picked.length}\r`);
-    if (i < picked.length - 1) await sleep(GAP_MS);
   }
   console.log('');
 
-  if (picked.length && failed / picked.length > FAIL_LIMIT) {
-    throw new Error(`失敗 ${failed}/${picked.length} 筆，超過容許值；保留舊資料不覆蓋（來源網站可能改版）`);
-  }
+  // 只有連清單都拿不到才算失敗；詳細頁抓不到會標 pending，不讓整份資料變空
+  if (!courses.length) throw new Error('一筆課程都沒有，保留舊資料不覆蓋');
 
   const payload = {
     city: CITY,
     count: courses.length,
+    pending,
     closed,
-    failed,
     fetchedAt: new Date().toISOString(),
     sourceModified: meta.modifiedDate,
     courses
   };
   fs.writeFileSync(OUT, JSON.stringify(payload, null, 0) + '\n', 'utf8');
   console.log(`完成：${courses.length} 筆寫入 ${OUT}`);
-  console.log(`      （排除報名已截止 ${closed} 筆${failed ? `、解析失敗 ${failed} 筆` : ''}）`);
+  console.log(`      沿用舊資料 ${cached} 筆、新抓 ${fetched} 筆`);
+  console.log(`      其中 ${closed} 筆報名已截止（留著當快取，頁面上不會顯示）→ 實際看得到 ${courses.length - closed} 筆`);
+  if (pending) console.log(`      ⚠ 有 ${pending} 筆的上課時間待補，請在台灣的電腦執行 tools\\更新課程.bat`);
 }
 
 main().catch(err => {

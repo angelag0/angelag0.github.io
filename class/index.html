@@ -63,6 +63,7 @@ main{padding:4px 14px 20px}
 .c-range{margin-left:6px;font-weight:800;font-size:.98rem}
 .c-unit{margin-top:6px;font-size:.8rem;color:var(--muted)}
 .c-meta{margin-top:3px;font-size:.86rem;color:var(--muted)}
+.c-pending{color:#8A6D1F;background:#FFF6DE;border-radius:8px;padding:2px 8px;font-size:.85rem;font-weight:700}
 .su-open{color:var(--ok);font-weight:800}
 .su-closed{color:var(--warn);font-weight:700}
 .c-actions{display:flex;gap:8px;margin-top:10px}
@@ -183,6 +184,7 @@ function localDate(iso){ const [y,m,d]=iso.split("-").map(Number); return new Da
 
 /* 報名狀態：以手機當下日期換算（報名皆為中午12點開放/截止） */
 function signupText(c){
+  if(!c.su) return '<span class="c-pending">報名時間請點課程確認</span>';
   const now=new Date();
   const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   const diff=Math.round((localDate(c.su)-today)/86400000);
@@ -207,7 +209,9 @@ function passFilter(c){
 function sortIds(ids){
   return ids.slice().sort((a,b)=>{
     const A=byId[a],B=byId[b];
-    if (S.ui.sortMode==="day" && A.days[0]!==B.days[0]) return A.days[0]-B.days[0];
+    /* 還沒補上星期的課排最後 */
+    const da=A.days[0]||9, db=B.days[0]||9;
+    if (S.ui.sortMode==="day" && da!==db) return da-db;
     if (A.start!==B.start) return S.ui.sortMode==="desc" ? (A.start>B.start?-1:1) : (A.start<B.start?-1:1);
     return IDS.indexOf(a)-IDS.indexOf(b);
   });
@@ -246,7 +250,9 @@ function conflictGroups(ids){
 function cardHTML(id, mode){
   const c=byId[id];
   const liked=S.liked.includes(id);
-  const st=c.days.map(d=>'<span class="stamp">'+DAY_CH[d]+'</span>').join("");
+  const st=c.days.length
+    ? '每週 '+c.days.map(d=>'<span class="stamp">'+DAY_CH[d]+'</span>').join("")
+    : '<span class="c-pending">上課星期待補</span>';
   let actions;
   if (mode==="hidden"){
     actions='<button class="btn-unhide" onclick="unhide(\''+id+'\')">↩ 取消隱藏</button>'+
@@ -259,7 +265,7 @@ function cardHTML(id, mode){
   }
   return '<article class="card'+(liked&&mode!=="hidden"?' liked':'')+'">'+
     '<h3 class="c-title"><a href="'+linkOf(id)+'" target="_blank" rel="noopener">'+esc(c.name)+' <span class="c-id">（'+id+'）</span></a></h3>'+
-    '<div class="c-days">每週 '+st+'<span class="c-range">'+rocDate(c.start)+'－'+rocDate(c.end)+'</span></div>'+
+    '<div class="c-days">'+st+'<span class="c-range">'+rocDate(c.start)+'－'+rocDate(c.end)+'</span></div>'+
     '<div class="c-unit">'+esc(c.unit)+'</div>'+
     '<div class="c-meta">'+esc(c.hours)+' 小時｜'+signupText(c)+'</div>'+
     '<div class="c-actions">'+actions+'</div></article>';
@@ -411,8 +417,9 @@ function todayISO(){
 function adoptData(data){
   META=data||{};
   const t=todayISO();
+  /* days 是空的代表「上課時間還沒補上」，照樣列出，卡片上會標示 */
   COURSES=(META.courses||[]).filter(c=>
-    c.start && c.start>=t && Array.isArray(c.days) && c.days.length && !(c.se && c.se<t));
+    c.start && c.start>=t && Array.isArray(c.days) && !(c.se && c.se<t));
   Object.keys(byId).forEach(k=>delete byId[k]);
   COURSES.forEach(c=>byId[c.id]=c);
   IDS=COURSES.map(c=>c.id);
