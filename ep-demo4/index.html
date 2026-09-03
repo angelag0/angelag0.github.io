@@ -294,9 +294,9 @@ td.pd .pdSub{display:block;color:#626771;font-size:.92em}
   <span class="lab">原型導覽</span>
   <button class="navItem on" data-go="s1">①型錄內容設定</button>
   <button class="navItem" data-go="s3">②產品型錄列表</button>
-  <a class="navItem" href="cp-online.html">③ＥＰ－線上販售</a>
-  <a class="navItem" href="cp-offline.html">④ＥＰ－線下販售</a>
-  <a class="navItem" href="cp-both.html">⑤ＥＰ－兩個都開</a>
+  <a class="navItem" href="cp-online-p1.html">③ＥＰ－線上販售</a>
+  <a class="navItem" href="cp-offline-p1.html">④ＥＰ－線下販售</a>
+  <a class="navItem" href="cp-both-p1.html">⑤ＥＰ－兩個都開</a>
   <a class="navItem" href="guide.html">⑥建站引導</a>
   <span class="sep"></span>
   <span class="sw" id="swMode"><button data-mode="now">現況</button><button data-mode="new" class="on">調整後</button></span>
@@ -878,10 +878,15 @@ function applyMode(){
     mo.selectedIndex = 0;
     syncSupplyUnit();
   }
-  // 前台頁連結帶著目前模式
+  // 前台頁連結帶著目前模式：現況要連到收著現況的那個檔，其餘一律進方案一（建議）
   document.querySelectorAll('#protoNav a.navItem').forEach(function(a){
     var base = a.getAttribute('href').split('?')[0];
-    a.setAttribute('href', base + (MODE==='now' ? '?mode=now' : ''));
+    if(base.indexOf('cp-') === 0){
+      base = base.replace('-p1', '');   // 先還原成基底檔名，切換模式時才不會愈接愈長
+      a.setAttribute('href', MODE==='now' ? base + '?mode=now' : base.replace('.html','-p1.html'));
+    }else{
+      a.setAttribute('href', base + (MODE==='now' ? '?mode=now' : ''));
+    }
   });
   renderTabs1(); applyView();
 }
