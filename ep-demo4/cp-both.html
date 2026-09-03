@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>企業網產品頁－有開販售</title>
+<title>企業網產品頁－兩個都開</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/styleC.css">
 <style>
-/* 原型導覽（獨立於前台樣式，五顆等寬等高） */
+/* 原型導覽（獨立於前台樣式，六顆等寬等高） */
 #protoNav{background:#0f1211;display:flex;align-items:center;gap:6px;padding:10px 16px;flex-wrap:wrap;
   position:sticky;top:0;z-index:9999;box-shadow:rgba(0,0,0,.35) 0 3px 10px -3px;
   font-family:"Red Hat Display","微軟正黑體",Helvetica,Arial,sans-serif}
 #protoNav .lab{color:#fff;font-size:12px;opacity:.55;letter-spacing:.12em;margin-right:6px}
 #protoNav .navItem{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
-  width:140px;height:34px;padding:0 8px;margin:0;
+  width:132px;height:34px;padding:0 6px;margin:0;
   font-family:inherit;font-size:13px;line-height:1;font-weight:400;
   background:transparent;color:#cfd8d8;border:1px solid #3a4443;border-radius:4px;
   text-decoration:none;cursor:pointer;transition:.15s}
@@ -85,12 +85,13 @@ body.newMode .thisProduct .pdDeatils .dataTb table tr{border-bottom:none}
 body.newMode .thisProduct .pdDeatils .zone .dataTb>table>tbody>tr>th,
 body.newMode .thisProduct .pdDeatils .zone .specZone>tbody>tr>td:nth-child(odd){
   -ms-flex:0 0 11.5em;flex:0 0 11.5em;width:11.5em;color:#676e6f;
-  text-align:right;padding:.5em .8em .35em 0;line-height:1.5;vertical-align:top;
+  text-align:right;padding:.5em .8em .35em 0;line-height:1.5;vertical-align:middle;
   /* 標籤較長時折成長度相近的兩行，右對齊才不會一長一短 */
   text-wrap:balance}
 body.newMode .thisProduct .pdDeatils .zone .dataTb>table>tbody>tr>td,
 body.newMode .thisProduct .pdDeatils .zone .specZone>tbody>tr>td:nth-child(even){
-  -ms-flex:1 1 auto;flex:1 1 auto;min-width:0;padding:.5em 3px .35em;line-height:1.5}
+  -ms-flex:1 1 auto;flex:1 1 auto;min-width:0;padding:.5em 0 .35em;line-height:1.5;
+  vertical-align:middle}
 /* 標籤與內容的每一行都要落在同一條基線上（兩者行高、上下內距一致，段落不另加邊界） */
 body.newMode .thisProduct .pdDeatils .zone .specZone .morePayment{margin:0;line-height:1.5}
 body.newMode .thisProduct .pdDeatils .zone .specZone>tbody>tr>td:nth-child(even)>p{margin:0;line-height:1.5}
@@ -107,6 +108,12 @@ body.newMode .thisProduct .pdDeatils .zone .dataTb>table>tbody>tr>th::after{disp
 body.newMode .thisProduct .pdDeatils .zone .priceList th,
 body.newMode .thisProduct .pdDeatils .zone .priceList td{
   width:auto;min-width:0;text-align:left;vertical-align:middle}
+/* 卡片內的每一項內容都要從同一條直線起算：階梯價表首欄與數量框各自帶了
+   自己的左內距／左外距（7.5px 與 3px），不歸零就會比上下行往右凸出去。
+   ＊前台原樣式那條內距自己標了 !important，只能同樣標記才壓得過 */
+body.newMode .thisProduct .pdDeatils .zone .priceList tr>th:first-child,
+body.newMode .thisProduct .pdDeatils .zone .priceList tr>td:first-child{padding-left:0 !important}
+body.newMode .thisProduct .pdDeatils .zone td .quantityInput{margin-left:0}
 body.newMode .thisProduct .pdDeatils .zone .quantityInput{margin-top:0}
 body.newMode .thisProduct .pdDeatils .zone .totalPrice{padding-top:0}
 
@@ -146,6 +153,42 @@ body.newMode .thisProduct .pdDeatils .pdName{padding-right:56px}
   background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='M3.5 6.5l8.5 6 8.5-6'/%3E%3C/svg%3E")}
 .thisProduct .actions .buttons li.cart>a::before{background-position:center center;
   background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%233c4649' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4h2.2l2.4 10.4h9.6L19 7H6.2'/%3E%3Ccircle cx='9' cy='19' r='1.5'/%3E%3Ccircle cx='16.5' cy='19' r='1.5'/%3E%3C/svg%3E")}
+
+/* ══════════════════ 手機版 ══════════════════
+   前台在未達 1000px 時，下方六個區塊不是頁籤而是手風琴（每塊自己的標題可開合），
+   所以「只顯示選中那塊」的規則只能在桌機生效。 */
+@media screen and (min-width:1000px){
+  .tabGroup .tabContent.paneOff{display:none}
+}
+
+/* 未達 702px：卡片內的欄位改上下堆疊（欄名自己一行、內容緊接在下），動作鈕一顆一行。
+   規則全掛在 body.newMode 底下，現況介面完全不受影響。 */
+@media screen and (max-width:701px){
+  body.newMode .thisProduct .zone{padding:.9em 1em 1.1em;margin-top:1em}
+  body.newMode .thisProduct .pdDeatils .zone .dataTb>table>tbody>tr,
+  body.newMode .thisProduct .pdDeatils .zone .specZone>tbody>tr{display:block;padding-bottom:.4em}
+  body.newMode .thisProduct .pdDeatils .zone .dataTb>table>tbody>tr>th,
+  body.newMode .thisProduct .pdDeatils .zone .specZone>tbody>tr>td:nth-child(odd){
+    display:block;width:auto;min-width:0;-ms-flex:none;flex:none;
+    text-align:left;padding:.5em 0 .1em;font-size:.9em}
+  body.newMode .thisProduct .pdDeatils .zone .dataTb>table>tbody>tr>td,
+  body.newMode .thisProduct .pdDeatils .zone .specZone>tbody>tr>td:nth-child(even){
+    display:block;width:auto;min-width:0;-ms-flex:none;flex:none;padding:0}
+  /* 階梯價表收在自己的框裡橫向捲動，不把卡片撐破 */
+  body.newMode .thisProduct .zone .priceList{min-width:22em}
+  /* 動作鈕：一顆一行、加高到好按的尺寸 */
+  body.newMode .thisProduct .zone .actions .buttons{display:block}
+  body.newMode .thisProduct .zone .actions .buttons li{margin:6px 0}
+  body.newMode .thisProduct .zone .actions .buttons li>a{height:44px;line-height:44px}
+  /* 下方區塊：付款條件那種連續長字串要能斷行，不撐破表格 */
+  body.newMode .tabContent .listTb table{table-layout:auto}
+  body.newMode .tabContent .listTb th,
+  body.newMode .tabContent .listTb td{word-break:break-word}
+}
+/* ══ 規格區收合（前台原生行為）══
+   前台的「Choose your specifications」在桌機被原樣式藏起來，手機才出現，
+   點一下把整區收合。收合狀態＝標題掛 closeIt（箭頭轉向由原樣式負責）。 */
+.toggleCtrl.closeIt + .toggleArea{display:none}
 </style>
 </head>
 <body>
@@ -154,11 +197,12 @@ body.newMode .thisProduct .pdDeatils .pdName{padding-right:56px}
   <span class="lab">原型導覽</span>
   <a class="navItem" href="index.html#s1">①型錄內容設定</a>
   <a class="navItem" href="index.html#s3">②產品型錄列表</a>
-  <a class="navItem on" href="cp-open.html">③企業網－有開販售</a>
-  <a class="navItem" href="cp-closed.html">④企業網－未開販售</a>
-  <a class="navItem" href="guide.html">⑤建站引導</a>
+  <a class="navItem" href="cp-online.html">③ＥＰ－線上販售</a>
+  <a class="navItem" href="cp-offline.html">④ＥＰ－線下販售</a>
+  <a class="navItem on" href="cp-both.html">⑤ＥＰ－兩個都開</a>
+  <a class="navItem" href="guide.html">⑥建站引導</a>
   <span class="sep"></span>
-  <span class="sw"><a href="?mode=now" id="mNow">現況</a><a href="?mode=new" id="mNew">調整後</a></span>
+  <span class="sw"><a href="?mode=now" id="mNow">現況</a><a href="cp-both-p1.html">方案一</a><a href="?mode=new" id="mNew">方案二</a></span>
 </div>
 
 <div class="main">
@@ -362,7 +406,7 @@ body.newMode .thisProduct .pdDeatils .pdName{padding-right:56px}
 
     <div class="tabContainer">
 
-      <div class="tabContent thisPdDetails" data-pane="t1" style="display:none">
+      <div class="tabContent thisPdDetails paneOff" data-pane="t1">
         <h3 class="tabHead">Product Details</h3>
         <div class="tabBody">
           <div class="toggleSlide">
@@ -388,7 +432,7 @@ body.newMode .thisProduct .pdDeatils .pdName{padding-right:56px}
         </div>
       </div>
 
-      <div class="tabContent" data-pane="t2" style="display:none">
+      <div class="tabContent paneOff" data-pane="t2">
         <h3 class="tabHead">Shipping &amp; Packaging</h3>
         <div class="tabBody">
           <h4>Calculate your shipping cost by country/region and quantity.</h4>
@@ -400,7 +444,7 @@ body.newMode .thisProduct .pdDeatils .pdName{padding-right:56px}
         </div>
       </div>
 
-      <div class="tabContent show" data-pane="t3" style="display:block">
+      <div class="tabContent show" data-pane="t3">
         <h3 class="tabHead active">Payment Terms</h3>
         <div class="tabBody">
           <!-- 調整後：與主資訊區同步拆為線上／線下兩段 -->
@@ -436,7 +480,7 @@ body.newMode .thisProduct .pdDeatils .pdName{padding-right:56px}
         </div>
       </div>
 
-      <div class="tabContent" data-pane="t4" style="display:none">
+      <div class="tabContent paneOff" data-pane="t4">
         <h3 class="tabHead">Return Policy</h3>
         <div class="tabBody">
           <article>
@@ -445,7 +489,7 @@ body.newMode .thisProduct .pdDeatils .pdName{padding-right:56px}
         </div>
       </div>
 
-      <div class="tabContent" data-pane="t5" style="display:none">
+      <div class="tabContent paneOff" data-pane="t5">
         <h3 class="tabHead">Safety Info (EU GPSR)</h3>
         <div class="tabBody">
           <div class="listTb">
@@ -456,7 +500,7 @@ body.newMode .thisProduct .pdDeatils .pdName{padding-right:56px}
         </div>
       </div>
 
-      <div class="tabContent isNew" data-pane="t6" style="display:none">
+      <div class="tabContent isNew paneOff" data-pane="t6">
         <h3 class="tabHead">Attachment</h3>
         <div class="tabBody">
           <div class="attachment">
@@ -496,10 +540,10 @@ body.newMode .thisProduct .pdDeatils .pdName{padding-right:56px}
     a.setAttribute('href', base + (mode==='now' ? '?mode=now' : '') + hash);
   });
 
-  // 頁籤內容（.tabContent）的顯示由下面的頁籤邏輯決定，這裡不動它
+  // 模式互斥優先於頁籤：只屬於另一個模式的區塊一律關掉（含下方的 .tabContent，
+  // 否則手機版的手風琴會把它一起攤出來）
   function show(sel, on){
     Array.prototype.forEach.call(document.querySelectorAll(sel), function(el){
-      if(el.classList.contains('tabContent')) return;
       el.style.display = on ? '' : 'none';
     });
   }
@@ -507,24 +551,54 @@ body.newMode .thisProduct .pdDeatils .pdName{padding-right:56px}
   show('.isNew', mode==='new');
   show('.isOld', mode!=='new');
 
-  // 本原型只開放這些頁籤可點；現況模式沒有 Attachment 頁籤，附件在 Product Details 內
+  // 下方區塊：桌機是一排頁籤，手機是前台原生的手風琴（點標題開合）。
+  // 顯示與否一律走 class，不能寫死 inline style——寫死會把手機版的其他區塊一起藏掉。
   var CLICKABLE = (mode==='new') ? ['t3','t6'] : ['t3','t1'];
-
   var tabs = document.querySelectorAll('.tabItems li');
+  var panes = document.querySelectorAll('.tabContent');
+
+  function openTab(id){
+    Array.prototype.forEach.call(tabs, function(x){
+      x.className = x.className.replace(/\s*active/,'');
+      if(x.getAttribute('data-tab')===id) x.className += ' active';
+    });
+    Array.prototype.forEach.call(panes, function(p){
+      var on = (p.getAttribute('data-pane')===id);
+      if(on) p.className = p.className.replace(/\s*paneOff/,'');
+      else if(!/paneOff/.test(p.className)) p.className += ' paneOff';
+      var h = p.querySelector('.tabHead');
+      if(h) h.className = on ? 'tabHead active' : 'tabHead';
+    });
+  }
+
+  // 本原型只開放這些頁籤可點；現況模式沒有 Attachment 頁籤，附件在 Product Details 內
   Array.prototype.forEach.call(tabs, function(li){
     var id = li.getAttribute('data-tab');
     if(CLICKABLE.indexOf(id) < 0){ li.className += ' noClick'; return; }
-    li.addEventListener('click', function(){
-      Array.prototype.forEach.call(tabs, function(x){ x.className = x.className.replace(/\s*active/,''); });
-      li.className += ' active';
-      Array.prototype.forEach.call(document.querySelectorAll('.tabContent'), function(p){
-        var on = (p.getAttribute('data-pane')===id);
-        p.style.display = on ? 'block' : 'none';
-        var h = p.querySelector('.tabHead');
-        if(h) h.className = on ? 'tabHead active' : 'tabHead';
-      });
+    li.addEventListener('click', function(){ openTab(id); });
+  });
+
+  // 手機：每個區塊自己開合，可同時展開多個（與前台一致）；桌機交給上面的頁籤處理
+  Array.prototype.forEach.call(panes, function(p){
+    var h = p.querySelector('.tabHead');
+    if(!h) return;
+    h.addEventListener('click', function(){
+      if(window.matchMedia('(min-width:1000px)').matches) return;
+      h.className = /active/.test(h.className) ? 'tabHead' : 'tabHead active';
     });
   });
+
+  openTab('t3');
+
+  // 收合區塊：點標題列開合（規格區在桌機看不到這個標題列，手機才出現）
+  Array.prototype.forEach.call(document.querySelectorAll('.toggleCtrl'), function(c){
+    c.addEventListener('click', function(){
+      c.className = /closeIt/.test(c.className)
+        ? c.className.replace(/\s*closeIt/,'')
+        : c.className + ' closeIt';
+    });
+  });
+
 })();
 </script>
 </body>

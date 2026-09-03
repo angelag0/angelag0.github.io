@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>企業網產品頁－兩個都開（方案一）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styleC.css">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   方案一：設計語彙全部沿用 styleC.css，本檔只做版面編排。
+   與方案二（cp-both.html）的差別＝標籤列統一、產品名與愛心同排、
+   兩張通路卡片各有標題列、線下欄位改為純文字清單。
+   ══════════════════════════════════════════════════════════════ */
+
+/* 原型導覽（獨立於前台樣式，六顆等寬等高） */
+#protoNav{background:#0f1211;display:flex;align-items:center;gap:6px;padding:10px 16px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:9999;box-shadow:rgba(0,0,0,.35) 0 3px 10px -3px;
+  font-family:"Red Hat Display","微軟正黑體",Helvetica,Arial,sans-serif}
+#protoNav .lab{color:#fff;font-size:12px;opacity:.55;letter-spacing:.12em;margin-right:6px}
+#protoNav .navItem{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
+  width:132px;height:34px;padding:0 6px;margin:0;
+  font-family:inherit;font-size:13px;line-height:1;font-weight:400;
+  background:transparent;color:#cfd8d8;border:1px solid #3a4443;border-radius:4px;
+  text-decoration:none;cursor:pointer;transition:.15s}
+#protoNav .navItem:hover{border-color:#7d979e;color:#fff}
+#protoNav .navItem.on{background:#fff;color:#0f1211;border-color:#fff;font-weight:700}
+#protoNav .sep{flex:1 1 auto}
+#protoNav .sw{display:flex;border:1px solid #3a4443;border-radius:4px;overflow:hidden}
+#protoNav .sw a{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
+  height:34px;padding:0 18px;border:none;border-radius:0;
+  font-family:inherit;font-size:13px;line-height:1;color:#cfd8d8;text-decoration:none;transition:.15s}
+#protoNav .sw a:hover{color:#fff}
+#protoNav .sw a.on{background:#f82;color:#fff}
+body{padding-bottom:60px}
+
+/* ── 前台原圖檔在本機取不到，以下 icon 依原按鈕語意向量重繪（同 cp-both.html）
+      ＊background-position 必須寫在各自規則內，否則會被 styleC.css 的 sprite 座標蓋掉 ── */
+.attachment li>a::before{
+  background:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2347606a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48'/%3E%3C/svg%3E") no-repeat center center;
+  background-size:18px auto;border-radius:0}
+.freeShippingLabel::before{
+  background:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' fill='none' stroke='%231e7aa0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 8h13v12H3z'/%3E%3Cpath d='M16 12h5.5l3.5 4v4h-9z'/%3E%3Ccircle cx='9' cy='22.5' r='2.5'/%3E%3Ccircle cx='21' cy='22.5' r='2.5'/%3E%3Cpath d='M11.5 20h7'/%3E%3C/svg%3E") no-repeat center center;
+  background-size:26px auto}
+.labelNew{background-image:none;background-color:#6EB700;color:#fff;
+  height:auto;line-height:1.15;padding:5px 18px 5px 10px;
+  clip-path:polygon(0 0,calc(100% - 9px) 0,100% 50%,calc(100% - 9px) 100%,0 100%)}
+.thisProduct .actions .buttons li>a::before{background-size:20px auto}
+.thisProduct .actions .buttons li.rfq>a::before{background-position:center center;
+  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 3h9l5 5v13H5z'/%3E%3Cpath d='M14 3v5h5'/%3E%3Cpath d='M9 12h6M9 16h4'/%3E%3C/svg%3E")}
+.thisProduct .actions .buttons li.buy>a::before{background-position:center center;
+  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8h12l-1.2 12H7.2z'/%3E%3Cpath d='M9 8V6a3 3 0 0 1 6 0v2'/%3E%3C/svg%3E")}
+.thisProduct .actions .buttons li.contSu>a::before{background-position:center center;
+  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='M3.5 6.5l8.5 6 8.5-6'/%3E%3C/svg%3E")}
+.thisProduct .actions .buttons li.cart>a::before{background-position:center center;
+  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%233c4649' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4h2.2l2.4 10.4h9.6L19 7H6.2'/%3E%3Ccircle cx='9' cy='19' r='1.5'/%3E%3Ccircle cx='16.5' cy='19' r='1.5'/%3E%3C/svg%3E")}
+
+/* ══ 一、產品識別區 ══ */
+/* 三個標籤併成同一排，形狀、高度、字級一致，只用顏色區分（顏色皆取自既有樣式） */
+.thisProduct .pdDeatils .labels{padding:3px 0 12px}
+.thisProduct .pdDeatils .labels span,
+.thisProduct .pdDeatils .labels .labelFeatured,
+.thisProduct .pdDeatils .labels .labelExpiredays,
+.thisProduct .pdDeatils .labels .freeShippingLabel{display:inline-block;vertical-align:middle;
+  position:static;height:32px;line-height:32px;padding:0 1em;border:none;border-radius:16px;
+  font-size:14px;font-weight:normal;color:#fff;margin:4px 8px 4px 0}
+.thisProduct .pdDeatils .labels .labelFeatured{background:#bd259a}
+.thisProduct .pdDeatils .labels .labelExpiredays{background:#dc2071}
+.thisProduct .pdDeatils .labels .freeShippingLabel{background:#1e7aa0}
+.thisProduct .pdDeatils .labels .freeShippingLabel::before{display:none;content:none}
+
+/* 產品名與愛心鈕同一行 */
+.thisProduct .pdDeatils .pdNameRow{display:-webkit-box;display:-ms-flexbox;display:flex;
+  -webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;gap:12px}
+.thisProduct .pdDeatils .pdNameRow .pdName{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto;
+  font-size:23px;line-height:1.25;margin-bottom:0}
+
+.favBtn{-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;
+  width:44px;height:44px;padding:0;margin:-4px 0 0;
+  border:1px solid #dce3e4;border-radius:50%;background:#fff;cursor:pointer;
+  display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;
+  -ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;
+  justify-content:center;-webkit-transition:.15s;transition:.15s}
+.favBtn svg{width:23px;height:23px;fill:none;stroke:#7a8588;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.favBtn:hover{background:#fff;color:inherit;
+  -webkit-box-shadow:#1e7aa0 0 0 0 2px;box-shadow:#1e7aa0 0 0 0 2px}
+.favBtn:hover svg{stroke:#1e7aa0}
+.favBtn.on svg{fill:#e0393e;stroke:#e0393e}
+.favBtn.on{border-color:#e0393e}
+.favBtn.on:hover{-webkit-box-shadow:#e0393e 0 0 0 2px;box-shadow:#e0393e 0 0 0 2px}
+.favBtn.on:hover svg{fill:#e0393e;stroke:#e0393e}
+
+/* 基本資料兩列收成一行；下方即是卡片，不再加任何分隔線
+   （前台原樣式會在這裡畫一條 border-top＋留 20px 內距，卡片版面用不到，一併清掉） */
+.thisProduct .pdDeatils .toggleSlide{border:none;margin-top:0;padding-top:0;padding-bottom:0}
+.thisProduct .pdDeatils .baseTb{margin-top:10px;padding-bottom:0}
+.thisProduct .pdDeatils .baseTb table:not(.priceList)>tbody{display:block}
+.thisProduct .pdDeatils .baseTb table:not(.priceList)>tbody>tr{display:inline-block;margin-right:2.2em;
+  border-bottom:none}
+
+/* ══ 二、兩張通路卡片（邊框、圓角、底色全部取自既有的 .dataTb／.listTb） ══ */
+.thisProduct .zone{border:1px solid #b0c0c2;border-radius:8px;background:#fff;margin-top:16px;overflow:hidden}
+.thisProduct .zone .zoneBody{padding:14px 16px 16px}
+
+/* 卡片標題列＝原本表格內的欄位標籤升格而來（搬位置，未加字） */
+.thisProduct .zone .zoneHead{display:flex;align-items:center;gap:9px;
+  background:#eaf2f4;border-bottom:1px solid #b0c0c2;padding:9px 16px 8px}
+.thisProduct .zone .zoneHead h3{margin:0;font-size:16px;font-weight:bold;color:#364245;line-height:1.3}
+.thisProduct .zone .zoneHead .hIcon{flex:0 0 auto;width:24px;height:24px;display:block}
+.thisProduct .zone .zoneHead .hIcon svg{width:24px;height:24px;display:block;fill:none;stroke:#1e7aa0;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* 卡片本身即是分區，表格橫線一律拿掉 */
+.thisProduct .zone .dataTb{width:100%;margin:0;padding:0}
+.thisProduct .zone .dataTb table tr{border-bottom:none}
+.thisProduct .zone .toggleSlide{border:none;margin-top:0;padding-top:0}
+
+/* 標籤欄與內容欄：固定標籤寬度、上緣切齊、行高一致（沿用 .dataTb th 的灰字與冒號）。
+   寬度以最長的標籤 Accepted payment method 為準，價格表與規格表同寬、一律不折行。
+   ＊選擇器必須帶 .pdDeatils .toggleSlide 這兩層：前台原樣式在桌機會把規格表的標籤欄
+     壓成固定 20%，權重比只寫 .zone 高，不補這兩層就會被蓋掉、兩張表也對不齊。 */
+.thisProduct .pdDeatils .toggleSlide .zone .dataTb>table>tbody>tr>th,
+.thisProduct .pdDeatils .toggleSlide .zone .specZone>tbody>tr>td:nth-child(odd){
+  -ms-flex:0 0 13.5em;flex:0 0 13.5em;width:13.5em;min-width:13.5em;white-space:nowrap;
+  color:#676e6f;text-align:right;padding:.45em .8em .3em 0;line-height:1.5;vertical-align:middle}
+.thisProduct .pdDeatils .toggleSlide .zone .dataTb>table>tbody>tr>td,
+.thisProduct .pdDeatils .toggleSlide .zone .specZone>tbody>tr>td:nth-child(even){
+  -ms-flex:1 1 auto;flex:1 1 auto;min-width:0;padding:.45em 0 .3em;line-height:1.5;
+  vertical-align:middle}
+/* 規格表：原樣式是 98% 寬置中，左緣會比上方的價格表右移約 6px，這裡拉回滿版 */
+.thisProduct .pdDeatils .toggleSlide .zone .specZone{width:100%;margin:0}
+.thisProduct .zone .specZone .morePayment{margin:0;line-height:1.5}
+.thisProduct .zone .dataTb>table>tbody>tr>th::after{display:none}
+
+/* 折扣價：實付單價，字級提到比其他欄位明顯（顏色、字重不動） */
+.thisProduct .pdDeatils .zone .discountPrice{font-size:1.35em;line-height:1.25}
+
+/* 階梯價表：沿用 .priceList（表頭 #eaf2f4）；三欄靠左均分、窄視窗自行水平捲動 */
+.thisProduct .zone .hrScrollArea{max-width:100%;overflow-x:auto}
+.thisProduct .zone .priceList{width:100%;min-width:20em}
+.thisProduct .pdDeatils .zone .priceList th,
+.thisProduct .pdDeatils .zone .priceList td{width:auto;min-width:0;text-align:left;vertical-align:middle}
+/* 卡片內的每一項內容都要從同一條直線起算：階梯價表首欄與數量框各自帶了
+   自己的左內距／左外距（7.5px 與 3px），不歸零就會比上下行往右凸出去。
+   ＊前台原樣式那條內距自己標了 !important，只能同樣標記才壓得過 */
+.thisProduct .pdDeatils .zone .priceList tr>th:first-child,
+.thisProduct .pdDeatils .zone .priceList tr>td:first-child{padding-left:0 !important}
+.thisProduct .pdDeatils .zone td .quantityInput{margin-left:0}
+.thisProduct .pdDeatils .zone .dataTb{margin-bottom:.2em}
+
+/* 規格下拉（廠商自訂選項示意）與數量列 */
+.thisProduct .pdDeatils .zone .specZone select{margin:0;min-width:15em;max-width:100%}
+.thisProduct .pdDeatils .zone .quantityInput{margin-top:0;margin-right:12px}
+/* 可售數量與數量框同一排 */
+.thisProduct .pdDeatils .zone .specZone .quantityInput+p{display:inline-block;margin:0;color:#676e6f}
+.thisProduct .pdDeatils .zone .totalPrice{padding-top:0;display:inline-block}
+
+/* 付款方式 icon 對齊內容欄（標籤欄留空，因卡片標題已載明用途） */
+.thisProduct .zone .specZone .payIconRow>td:nth-child(even){padding-top:.6em}
+
+/* 動作按鈕：維持原膠囊樣式；一區兩顆時等寬 */
+.thisProduct .zone .actions{margin:1.1em auto 0;width:100%}
+.thisProduct .zone .actions .buttons li{-ms-flex:1 1 45%;flex:1 1 45%}
+/* Add To Cart 為次要動作，白底外框（與 Buy Now 同尺寸長條） */
+.thisProduct .zone .actions .buttons li.cart>a{background:#fff;color:#3c4649;
+  -webkit-box-shadow:inset 0 0 0 1px #979ea3;box-shadow:inset 0 0 0 1px #979ea3}
+.thisProduct .zone .actions .buttons li.cart>a::before{background-color:rgba(0,0,0,.08)}
+
+
+/* ══ 三、下方頁籤：兩張表共用同一組欄寬，上下對齊成一份清單 ══ */
+.tabBody .listTb table{table-layout:fixed;width:100%}
+.tabBody .listTb th,.tabBody .listTb td{vertical-align:middle;text-align:left}
+.tabBody .listTb col.k{width:34%}
+.tabBody .listTb.payMethodTb td img{display:block;max-height:28px;width:auto}
+/* 線下段的左欄是標籤欄不是表頭：灰底拿掉，第一列也不套表頭的粗分隔線 */
+.tabBody .listTb.offlineTb th{background:none;font-weight:normal;color:#676e6f}
+.tabBody .listTb.offlineTb tr:first-child{border-bottom-color:#dce3e4}
+.tabContent .tabBody>h4{margin:22px 0 4px;font-size:17px}
+.tabContent .tabBody>h4:first-child{margin-top:6px}
+/* 本原型不開放點選的頁籤 */
+.tabItems li.noClick,.tabItems li.noClick a{cursor:default}
+.tabItems li.noClick:hover,.tabItems li.noClick a:hover{color:#dce3e4}
+
+/* 視窗變窄時卡片與其中的表格要跟著縮：欄寬由表格自己固定分配，
+   階梯價表才會乖乖待在框內橫捲，而不是把整張卡片撐開（平板寬度最容易踩到） */
+.thisProduct .pdDeatils{min-width:0}
+.thisProduct .zone{min-width:0}
+.thisProduct .zone .dataTb>table{table-layout:fixed;width:100%}
+
+/* ══════════════════ 手機版 ══════════════════
+   前台在未達 1000px 時，下方六個區塊不是頁籤而是手風琴（每塊標題自己可開合），
+   所以「只顯示選中那塊」的規則只能在桌機生效。 */
+@media screen and (min-width:1000px){
+  .tabGroup .tabContent.paneOff{display:none}
+}
+
+/* 未達 702px：一切改單欄堆疊，欄名小一號灰字自己一行、數值緊接在下；
+   動作鈕一顆一行加高。卡片標題列留著，它是手機上唯一的分區線索。 */
+@media screen and (max-width:701px){
+  .thisProduct .pdDeatils .labels{padding:2px 0 10px}
+  .thisProduct .pdDeatils .labels span,
+  .thisProduct .pdDeatils .labels .labelFeatured,
+  .thisProduct .pdDeatils .labels .labelExpiredays,
+  .thisProduct .pdDeatils .labels .freeShippingLabel{height:28px;line-height:28px;font-size:13px;
+    padding:0 .85em;margin:3px 6px 3px 0}
+  .thisProduct .pdDeatils .pdNameRow .pdName{font-size:20px}
+  .thisProduct .pdDeatils .baseTb table:not(.priceList)>tbody>tr{margin-right:1.4em}
+
+  .thisProduct .zone{margin-top:12px}
+  .thisProduct .zone .zoneHead{padding:8px 12px 7px;gap:7px}
+  .thisProduct .zone .zoneHead h3{font-size:15px}
+  .thisProduct .zone .zoneHead .hIcon,
+  .thisProduct .zone .zoneHead .hIcon svg{width:20px;height:20px}
+  .thisProduct .zone .zoneBody{padding:10px 12px 14px}
+
+  /* 價格表整張改走一般排版，表格佈局才不會被階梯價表的最小寬度撐開 */
+  .thisProduct .pdDeatils .toggleSlide .zone .dataTb>table,
+  .thisProduct .pdDeatils .toggleSlide .zone .dataTb>table>tbody{display:block;width:100%}
+  .thisProduct .pdDeatils .toggleSlide .zone .dataTb>table>tbody>tr,
+  .thisProduct .pdDeatils .toggleSlide .zone .specZone>tbody>tr{display:block;padding-bottom:.45em}
+  .thisProduct .pdDeatils .toggleSlide .zone .dataTb>table>tbody>tr>th,
+  .thisProduct .pdDeatils .toggleSlide .zone .specZone>tbody>tr>td:nth-child(odd){
+    display:block;width:auto;min-width:0;-ms-flex:none;flex:none;white-space:normal;
+    text-align:left;padding:.5em 0 .1em;font-size:.85em}
+  .thisProduct .pdDeatils .toggleSlide .zone .dataTb>table>tbody>tr>td,
+  .thisProduct .pdDeatils .toggleSlide .zone .specZone>tbody>tr>td:nth-child(even){
+    display:block;width:auto;min-width:0;-ms-flex:none;flex:none;padding:0}
+  /* 付款 icon 那列在手機沒有標籤欄要留白，空欄直接收掉，icon 貼齊左緣 */
+  .thisProduct .zone .specZone .payIconRow>td:nth-child(odd){display:none}
+
+  /* 階梯價表收在自己的框裡橫向捲動，不把卡片撐破 */
+  .thisProduct .zone .hrScrollArea{max-width:100%;overflow-x:auto}
+  .thisProduct .zone .priceList{min-width:22em}
+
+  .thisProduct .zone .actions{margin:1em auto 0}
+  .thisProduct .zone .actions .buttons{display:block}
+  .thisProduct .zone .actions .buttons li{margin:6px 0}
+  .thisProduct .zone .actions .buttons li>a{height:44px;line-height:44px}
+
+  /* 下方區塊：左右兩欄在手機太窄，線下那張改成欄名一行、內容一行 */
+  .tabBody .listTb table{table-layout:auto}
+  .tabBody .listTb col.k{width:auto}
+  .tabBody .listTb th,.tabBody .listTb td{word-break:break-word}
+  .tabBody .listTb.offlineTb table,
+  .tabBody .listTb.offlineTb tbody,
+  .tabBody .listTb.offlineTb tr{display:block}
+  .tabBody .listTb.offlineTb th,
+  .tabBody .listTb.offlineTb td{display:block;width:auto;padding-left:0;padding-right:0}
+  .tabBody .listTb.offlineTb th{padding-bottom:0;font-size:.85em}
+}
+/* ══ 卡片收合 ══
+   方案一不用前台那個「Choose your specifications」總開關（一次收兩張看不出收了誰），
+   改成每張卡片的標題列自己就是開關，整列可點，右側箭頭沿用前台收合鈕的畫法。 */
+.thisProduct .zone .zoneHead{cursor:pointer}
+.thisProduct .zone .zoneHead h3{-webkit-box-flex:1;-ms-flex:1 1 auto;flex:1 1 auto}
+.thisProduct .zone .zoneToggle{-ms-flex:0 0 auto;flex:0 0 auto;position:relative;width:20px;height:20px}
+.thisProduct .zone .zoneToggle::after{content:"";position:absolute;left:3px;top:2px;
+  width:8px;height:8px;border:3px solid #364245;border-left:none;border-top:none;
+  -webkit-transform:rotate(45deg);transform:rotate(45deg);-webkit-transition:.3s;transition:.3s}
+.thisProduct .zone.closeIt .zoneToggle::after{-webkit-transform:rotate(225deg);transform:rotate(225deg);top:6px}
+.thisProduct .zone.closeIt .zoneBody{display:none}
+.thisProduct .zone.closeIt .zoneHead{border-bottom:none}
+</style>
+</head>
+<body>
+
+<div id="protoNav">
+  <span class="lab">原型導覽</span>
+  <a class="navItem" href="index.html#s1">①型錄內容設定</a>
+  <a class="navItem" href="index.html#s3">②產品型錄列表</a>
+  <a class="navItem" href="cp-online-p1.html">③ＥＰ－線上販售</a>
+  <a class="navItem" href="cp-offline-p1.html">④ＥＰ－線下販售</a>
+  <a class="navItem on" href="cp-both-p1.html">⑤ＥＰ－兩個都開</a>
+  <a class="navItem" href="guide.html">⑥建站引導</a>
+  <span class="sep"></span>
+  <span class="sw"><a href="cp-both.html?mode=now">現況</a><a class="on" href="cp-both-p1.html">方案一</a><a href="cp-both.html">方案二</a></span>
+</div>
+
+<div class="main">
+
+  <section class="pageHeader"><h2>Products</h2></section>
+
+  <section class="thisProduct">
+
+    <section class="pdDisplay">
+      <div class="pdPhotoShow">
+        <div class="image">
+          <picture class="pdImg"><img src="assets/T-01919828.webp" alt=""></picture>
+        </div>
+      </div>
+      <span class="labelNew">New</span>
+    </section>
+
+    <section class="pdDeatils">
+
+      <!-- Featured 併入標籤列 -->
+      <div class="labels">
+        <span class="labelFeatured">Featured</span>
+        <span class="labelExpiredays">7 Days Left</span>
+        <span class="freeShippingLabel">Free Shipping</span>
+      </div>
+
+      <!-- 產品名與愛心鈕同一行 -->
+      <div class="pdNameRow">
+        <div class="pdName">Taiwan Premium Bicycle</div>
+        <button type="button" class="favBtn" title="Add to favorites" aria-label="Add to favorites">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3l-1.2-1.1C6.3 15.2 3.4 12.6 3.4 9.4 3.4 6.8 5.4 4.8 8 4.8c1.5 0 2.9.7 3.8 1.8h.4c.9-1.1 2.3-1.8 3.8-1.8 2.6 0 4.6 2 4.6 4.6 0 3.2-2.9 5.8-7.4 9.8L12 20.3z"/></svg>
+        </button>
+      </div>
+
+      <!-- 基本資料：查證用冷資訊，收成一行 -->
+      <div class="dataTb noBorder baseTb">
+        <table>
+          <tbody>
+            <tr><th>Model No.</th> <td>test bike 123</td></tr>
+            <tr><th>Made in</th> <td>Taiwan</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="toggleSlide">
+        <div class="toggleArea">
+
+          <!-- ══════ 線上販售 ══════ -->
+          <div class="zone zoneOn">
+            <div class="zoneHead">
+              <span class="hIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2.2l2.4 10.4h9.6L19 7H6.2"/><circle cx="9" cy="19" r="1.6"/><circle cx="16.5" cy="19" r="1.6"/></svg></span>
+              <h3>Payment Details for Online Orders</h3>
+            <span class="zoneToggle" aria-hidden="true"></span>
+            </div>
+            <div class="zoneBody">
+
+              <div class="dataTb noBorder">
+                <table>
+                  <tbody>
+                    <tr><th>Unit Price</th>
+                      <td><span class="oldPrice"><span class="currency">USD</span> 100.00-200.00 / Pieces</span></td></tr>
+                    <tr><th>Discount Price</th>
+                      <td><span class="discountPrice">USD 98.00-196.00</span> / Pieces</td></tr>
+                    <tr><th>Price</th>
+                      <td>
+                        <div class="hrScrollArea">
+                          <table class="priceList">
+                            <tr><th>Quantity</th> <th>Price</th> <th>Processing time</th></tr>
+                            <tr><td>1-2</td> <td>USD 98.00</td> <td>0 Days</td></tr>
+                            <tr><td>3-4</td> <td>USD 196.00</td> <td>1 Days</td></tr>
+                          </table>
+                        </div>
+                      </td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <table class="formLayout specZone">
+                <!-- 廠商自訂選項示意 -->
+                <tr>
+                  <td>Size</td>
+                  <td><select><option>Please Select</option></select></td>
+                </tr>
+                <tr>
+                  <td>Quantity</td>
+                  <td>
+                    <div class="quantityInput"><span class="decrease"></span> <input type="number" id="qty" min="1" max="4" value="1"> <span class="increase"></span></div>
+                    <p>4 Pieces available</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Total Price</td>
+                  <td><span class="totalPrice" id="totalTxt">USD 98.00 X 1 = USD 98.00</span></td>
+                </tr>
+                <tr class="payIconRow">
+                  <td></td>
+                  <td>
+                    <ul class="paymentIcons">
+                      <li><img src="assets/paypal.png" alt="paypal"></li>
+                      <li><img src="assets/card.png" alt="card"></li>
+                      <li><img src="assets/googlepay.png" alt="googlepay"></li>
+                      <li><img src="assets/applepay.png" alt="applepay"></li>
+                      <li><img src="assets/alipay.png" alt="alipay"></li>
+                    </ul>
+                  </td>
+                </tr>
+              </table>
+
+              <div class="actions">
+                <ul class="buttons">
+                  <li class="cart"><a href="javascript:void(0)" title="Add To Cart">Add To Cart</a></li>
+                  <li class="buy"><a href="javascript:void(0)" title="Buy Now">Buy Now</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- ══════ 線下採購 ══════ -->
+          <div class="zone zoneOff">
+            <div class="zoneHead">
+              <span class="hIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h9l5 5v13H5z"/><path d="M14 3v5h5"/><path d="M9 12h6M9 16h4"/></svg></span>
+              <h3>Payment Details for Offline Orders</h3>
+            <span class="zoneToggle" aria-hidden="true"></span>
+            </div>
+            <div class="zoneBody">
+
+              <table class="formLayout specZone">
+                <tr class="textRow"><td>Price (Offline)</td> <td>USD 10.00 - 50.00　(Reference)</td></tr>
+                <tr class="textRow"><td>Supply Ability</td> <td>5,000 Piece per Month</td></tr>
+                <tr class="textRow"><td>Delivery Lead Time</td> <td>Negotiable</td></tr>
+                <tr class="textRow"><td>Min. Order</td> <td>1 Boxes</td></tr>
+                <tr class="textRow payment"><td>Accepted payment method</td>
+                  <td><p class="morePayment">We support&nbsp; <em>DA,L/C,TT,PayPal,AliPay</em> for offline orders.</p></td></tr>
+              </table>
+
+              <div class="actions">
+                <ul class="buttons">
+                  <li class="rfq"><a href="javascript:void(0)" title="Request for Quotation">Request for Quotation</a></li>
+                  <li class="contSu"><a href="javascript:void(0)" title="Contact Supplier">Contact Supplier</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </section>
+
+  <div id="tabGroup" class="tabGroup">
+    <div class="tabItems">
+      <ul>
+        <li data-tab="t1"><a href="javascript:;">Product Details</a></li>
+        <li data-tab="t2"><a href="javascript:;">Shipping &amp; Packaging</a></li>
+        <li class="active" data-tab="t3"><a href="javascript:;">Payment Terms</a></li>
+        <li data-tab="t4"><a href="javascript:;">Return Policy</a></li>
+        <li data-tab="t5"><a href="javascript:;">Safety Info (EU GPSR)</a></li>
+        <li data-tab="t6"><a href="javascript:;">Attachment</a></li>
+      </ul>
+    </div>
+
+    <div class="tabContainer">
+
+      <div class="tabContent thisPdDetails paneOff" data-pane="t1">
+        <h3 class="tabHead">Product Details</h3>
+        <div class="tabBody">
+          <div class="toggleSlide">
+            <h4 class="toggleCtrl">Key Features</h4>
+            <div class="toggleArea">
+              <article class="keyFeatures">
+                <p>Professional grade Taiwanese folding bicycle with enhanced stability and safety certification.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabContent paneOff" data-pane="t2">
+        <h3 class="tabHead">Shipping &amp; Packaging</h3>
+        <div class="tabBody">
+          <h4>Calculate your shipping cost by country/region and quantity.</h4>
+          <div class="listTb">
+            <table>
+              <tr><th>Shipping Company</th> <th>Shipping Cost</th> <th>Estimated Delivery Time</th></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabContent show" data-pane="t3">
+        <h3 class="tabHead active">Payment Terms</h3>
+        <div class="tabBody">
+          <h4>Payment Details for Online Orders</h4>
+          <div class="listTb payMethodTb">
+            <table>
+              <colgroup><col class="k"><col></colgroup>
+              <tr><th>Accepted payment method</th> <th>Currency</th></tr>
+              <tr><td><img src="assets/paypal.png" alt="paypal"></td> <td>EUR,GBP,HKD,JPY,TWD,USD</td></tr>
+              <tr><td><img src="assets/card.png" alt="card"></td> <td>TWD</td></tr>
+              <tr><td><img src="assets/googlepay.png" alt="googlepay"></td> <td>TWD</td></tr>
+              <tr><td><img src="assets/applepay.png" alt="applepay"></td> <td>TWD</td></tr>
+              <tr><td><img src="assets/alipay.png" alt="alipay"></td> <td>TWD</td></tr>
+            </table>
+          </div>
+          <h4>Payment Details for Offline Orders</h4>
+          <div class="listTb offlineTb">
+            <table>
+              <colgroup><col class="k"><col></colgroup>
+              <tr><th>Price (Offline)</th> <td>USD 10.00 - 50.00　(Reference)</td></tr>
+              <tr><th>Supply Ability</th> <td>5,000 Piece per Month</td></tr>
+              <tr><th>Delivery Lead Time</th> <td>Negotiable</td></tr>
+              <tr><th>Min. Order</th> <td>1 Boxes</td></tr>
+              <tr><th>Accepted payment method</th> <td>We support&nbsp; <em>DA,L/C,TT,PayPal,AliPay</em> for offline orders.</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabContent paneOff" data-pane="t4">
+        <h3 class="tabHead">Return Policy</h3>
+        <div class="tabBody">
+          <article>
+            <p>We will accept applications for returns within 7 days of the date of receipt.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="tabContent paneOff" data-pane="t5">
+        <h3 class="tabHead">Safety Info (EU GPSR)</h3>
+        <div class="tabBody">
+          <div class="listTb">
+            <table>
+              <colgroup><col class="k"><col></colgroup>
+              <tr><th>Manufacturer</th> <td>TAIWAN EXTERNAL TRADE DEVELOPMENT COUNCIL</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabContent paneOff" data-pane="t6">
+        <h3 class="tabHead">Attachment</h3>
+        <div class="tabBody">
+          <div class="attachment">
+            <ul>
+              <li><a href="javascript:;">.jpeg (0.10 MB)</a></li>
+              <li><a href="javascript:;">1.webp (0.02 MB)</a></li>
+              <li><a href="javascript:;">元件1.html (0.02 MB)</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+(function(){
+
+  // 加入最愛（愛心）：點擊切換已收藏／未收藏
+  var fav = document.querySelector('.favBtn');
+  if(fav) fav.addEventListener('click', function(){ fav.classList.toggle('on'); });
+
+  // 數量增減 → 總價（文案格式維持原樣：USD 98.00 X n = USD n）
+  var qty = document.getElementById('qty');
+  var total = document.getElementById('totalTxt');
+  function calc(){
+    var n = parseInt(qty.value || '1', 10);
+    if(isNaN(n) || n < 1) n = 1;
+    if(n > 4) n = 4;
+    qty.value = n;
+    total.innerHTML = 'USD 98.00 X ' + n + ' = USD ' + (98 * n).toFixed(2);
+  }
+  if(qty){
+    qty.addEventListener('input', calc);
+    var dec = document.querySelector('.quantityInput .decrease');
+    var inc = document.querySelector('.quantityInput .increase');
+    if(dec) dec.addEventListener('click', function(){ qty.value = parseInt(qty.value||'1',10) - 1; calc(); });
+    if(inc) inc.addEventListener('click', function(){ qty.value = parseInt(qty.value||'1',10) + 1; calc(); });
+  }
+
+  // 下方區塊：桌機是一排頁籤，手機是前台原生的手風琴（點標題開合）。
+  // 顯示與否一律走 class，不能寫死 inline style——寫死會把手機版的其他區塊一起藏掉。
+  var CLICKABLE = ['t3','t6','t1'];
+  var tabs = document.querySelectorAll('.tabItems li');
+  var panes = document.querySelectorAll('.tabContent');
+
+  function openTab(id){
+    Array.prototype.forEach.call(tabs, function(x){
+      x.className = x.className.replace(/\s*active/,'');
+      if(x.getAttribute('data-tab')===id) x.className += ' active';
+    });
+    Array.prototype.forEach.call(panes, function(p){
+      var on = (p.getAttribute('data-pane')===id);
+      if(on) p.className = p.className.replace(/\s*paneOff/,'');
+      else if(!/paneOff/.test(p.className)) p.className += ' paneOff';
+      var h = p.querySelector('.tabHead');
+      if(h) h.className = on ? 'tabHead active' : 'tabHead';
+    });
+  }
+
+  Array.prototype.forEach.call(tabs, function(li){
+    var id = li.getAttribute('data-tab');
+    if(CLICKABLE.indexOf(id) < 0){ li.className += ' noClick'; return; }
+    li.addEventListener('click', function(){ openTab(id); });
+  });
+
+  // 手機：每個區塊自己開合，可同時展開多個（與前台一致）；桌機交給上面的頁籤處理
+  Array.prototype.forEach.call(panes, function(p){
+    var h = p.querySelector('.tabHead');
+    if(!h) return;
+    h.addEventListener('click', function(){
+      if(window.matchMedia('(min-width:1000px)').matches) return;
+      h.className = /active/.test(h.className) ? 'tabHead' : 'tabHead active';
+    });
+  });
+
+  openTab('t3');
+
+  // 卡片收合：點標題列開合自己那一張（取代前台的「Choose your specifications」總開關）
+  Array.prototype.forEach.call(document.querySelectorAll('.zone > .zoneHead'), function(h){
+    h.addEventListener('click', function(){
+      var z = h.parentNode;
+      z.className = /closeIt/.test(z.className)
+        ? z.className.replace(/\s*closeIt/,'')
+        : z.className + ' closeIt';
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
