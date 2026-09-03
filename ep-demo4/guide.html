@@ -15,12 +15,21 @@
   font-family:"Red Hat Display","微軟正黑體",Helvetica,Arial,sans-serif}
 #protoNav .lab{color:#fff;font-size:12px;opacity:.55;letter-spacing:.12em;margin-right:6px}
 #protoNav .navItem{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;
-  width:100px;height:34px;padding:0 4px;margin:0;
+  /* 寬度隨字數自適應（不再等寬）：七顆＋切換器才排得進較窄的筆電，且一定不折行 */
+  height:34px;padding:0 9px;margin:0;white-space:nowrap;
   font-family:inherit;font-size:13px;line-height:1;font-weight:400;
   background:transparent;color:#cfd8d8;border:1px solid #3a4443;border-radius:4px;
   text-decoration:none;cursor:pointer;transition:.15s}
 #protoNav .navItem:hover{border-color:#7d979e;color:#fff}
 #protoNav .navItem.on{background:#fff;color:#0f1211;border-color:#fff;font-weight:700}
+
+/* 視窗較窄的筆電：導覽自動縮一號，七顆＋切換器仍排在同一排 */
+@media screen and (max-width:1200px){
+  #protoNav{gap:5px;padding:10px 12px}
+  #protoNav .lab{margin-right:4px;letter-spacing:.06em}
+  #protoNav .navItem{font-size:12px;padding:0 7px}
+  #protoNav .sw a{padding:0 8px;font-size:12px}
+}
 </style>
 </head>
 <body>
