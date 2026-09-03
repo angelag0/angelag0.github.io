@@ -57,6 +57,18 @@ body{padding-bottom:60px}
 .thisProduct .actions .buttons li.cart>a::before{background-position:center center;
   background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%233c4649' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4h2.2l2.4 10.4h9.6L19 7H6.2'/%3E%3Ccircle cx='9' cy='19' r='1.5'/%3E%3Ccircle cx='16.5' cy='19' r='1.5'/%3E%3C/svg%3E")}
 
+/* ══ 本頁只開線上販售，主要動作是 Buy Now；詢價與聯絡供應商屬次要動作，
+   改走與 Add To Cart 同一種白底外框（圖示也要跟著換成深色描邊，白底才看得見） ══ */
+.thisProduct .zone .actions .buttons li.rfq>a,
+.thisProduct .zone .actions .buttons li.contSu>a{background:#fff;color:#3c4649;
+  -webkit-box-shadow:inset 0 0 0 1px #979ea3;box-shadow:inset 0 0 0 1px #979ea3}
+.thisProduct .zone .actions .buttons li.rfq>a::before,
+.thisProduct .zone .actions .buttons li.contSu>a::before{background-color:rgba(0,0,0,.08)}
+.thisProduct .zone .actions .buttons li.rfq>a::before{
+  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%233c4649' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 3h9l5 5v13H5z'/%3E%3Cpath d='M14 3v5h5'/%3E%3Cpath d='M9 12h6M9 16h4'/%3E%3C/svg%3E")}
+.thisProduct .zone .actions .buttons li.contSu>a::before{
+  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%233c4649' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='M3.5 6.5l8.5 6 8.5-6'/%3E%3C/svg%3E")}
+
 /* ══ 一、產品識別區 ══ */
 /* 三個標籤併成同一排，形狀、高度、字級一致，只用顏色區分（顏色皆取自既有樣式） */
 .thisProduct .pdDeatils .labels{padding:3px 0 12px}
@@ -95,7 +107,9 @@ body{padding-bottom:60px}
 
 /* 基本資料兩列收成一行；下方即是卡片，不再加任何分隔線
    （前台原樣式會在這裡畫一條 border-top＋留 20px 內距，卡片版面用不到，一併清掉） */
-.thisProduct .pdDeatils .toggleSlide{border:none;margin-top:0;padding-top:0;padding-bottom:0}
+/* 那條 border-top 與上方內距是卡片版面用不到的，清掉；
+   底部內距留著，卡片與下方頁籤區之間才有一段白（與方案二一致） */
+.thisProduct .pdDeatils .toggleSlide{border:none;margin-top:0;padding-top:0}
 .thisProduct .pdDeatils .baseTb{margin-top:10px;padding-bottom:0}
 .thisProduct .pdDeatils .baseTb table:not(.priceList)>tbody{display:block}
 .thisProduct .pdDeatils .baseTb table:not(.priceList)>tbody>tr{display:inline-block;margin-right:2.2em;
@@ -124,7 +138,7 @@ body{padding-bottom:60px}
      壓成固定 20%，權重比只寫 .zone 高，不補這兩層就會被蓋掉、兩張表也對不齊。 */
 .thisProduct .pdDeatils .toggleSlide .zone .dataTb>table>tbody>tr>th,
 .thisProduct .pdDeatils .toggleSlide .zone .specZone>tbody>tr>td:nth-child(odd){
-  -ms-flex:0 0 13.5em;flex:0 0 13.5em;width:13.5em;min-width:13.5em;white-space:nowrap;
+  -ms-flex:0 0 12.3em;flex:0 0 12.3em;width:12.3em;min-width:12.3em;white-space:nowrap;
   color:#676e6f;text-align:right;padding:.45em .8em .3em 0;line-height:1.5;vertical-align:middle}
 .thisProduct .pdDeatils .toggleSlide .zone .dataTb>table>tbody>tr>td,
 .thisProduct .pdDeatils .toggleSlide .zone .specZone>tbody>tr>td:nth-child(even){
@@ -379,7 +393,6 @@ body{padding-bottom:60px}
                       <li><img src="assets/card.png" alt="card"></li>
                       <li><img src="assets/googlepay.png" alt="googlepay"></li>
                       <li><img src="assets/applepay.png" alt="applepay"></li>
-                      <li><img src="assets/alipay.png" alt="alipay"></li>
                     </ul>
                   </td>
                 </tr>
@@ -456,7 +469,6 @@ body{padding-bottom:60px}
               <tr><td><img src="assets/card.png" alt="card"></td> <td>TWD</td></tr>
               <tr><td><img src="assets/googlepay.png" alt="googlepay"></td> <td>TWD</td></tr>
               <tr><td><img src="assets/applepay.png" alt="applepay"></td> <td>TWD</td></tr>
-              <tr><td><img src="assets/alipay.png" alt="alipay"></td> <td>TWD</td></tr>
             </table>
           </div>
           <h4>Payment Details for Offline Orders</h4>

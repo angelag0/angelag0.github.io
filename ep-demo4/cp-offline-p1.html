@@ -85,7 +85,9 @@ body{padding-bottom:60px}
 .favBtn.on:hover svg{fill:#e0393e;stroke:#e0393e}
 
 /* 基本資料兩列收成一行；卡片本身就是分區，原本的橫線與內距一律拿掉 */
-.thisProduct .pdDeatils .toggleSlide{border:none;margin-top:0;padding-top:0;padding-bottom:0}
+/* 那條 border-top 與上方內距是卡片版面用不到的，清掉；
+   底部內距留著，卡片與下方頁籤區之間才有一段白（與方案二一致） */
+.thisProduct .pdDeatils .toggleSlide{border:none;margin-top:0;padding-top:0}
 .thisProduct .pdDeatils .dataTb table tr{border-bottom:none}
 .thisProduct .pdDeatils .baseTb{margin-top:10px;padding-bottom:0}
 .thisProduct .pdDeatils .baseTb table:not(.priceList)>tbody{display:block}
@@ -112,7 +114,7 @@ body{padding-bottom:60px}
 /* 規格表：原樣式是 98% 寬置中，左緣會比上方的價格表右移約 6px，這裡拉回滿版 */
 .thisProduct .pdDeatils .toggleSlide .zone .specZone{width:100%;margin:0}
 .thisProduct .pdDeatils .toggleSlide .zone .specZone>tbody>tr>td:nth-child(odd){
-  -ms-flex:0 0 13.5em;flex:0 0 13.5em;width:13.5em;min-width:13.5em;white-space:nowrap;
+  -ms-flex:0 0 12.3em;flex:0 0 12.3em;width:12.3em;min-width:12.3em;white-space:nowrap;
   color:#676e6f;text-align:right;padding:.45em .8em .3em 0;line-height:1.5;vertical-align:middle}
 .thisProduct .pdDeatils .toggleSlide .zone .specZone>tbody>tr>td:nth-child(even){
   -ms-flex:1 1 auto;flex:1 1 auto;min-width:0;padding:.45em 0 .3em;line-height:1.5;
