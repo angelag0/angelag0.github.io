@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>志工服務管理平臺雛形</title>
+<style>
+
+:root{
+  --bg:#faf8f6;
+  --ink:#1d1d1b;
+  --muted:#6f645c;
+  --brick:#a33a22;
+  --pink:#f0838b;
+  --pink-soft:#fbd9dc;
+  --pink-bg:#f9dfe2;
+  --zebra:#fdf0f1;
+  --dot-pink:#ef858c;
+  --dot-yellow:#fdd469;
+  --green:#1f6b55;
+  --blue-bg:#d5e3f1;
+  --blue-ink:#23527c;
+  --green-bg:#d2efe5;
+  --red-ink:#b03a3a;
+  --line:#e4ded8;
+  --line-dark:#2d2d2d;
+  --card:#ffffff;
+  --grey:#ececec;
+  --disabled:#c9c9c9;
+  --footer:#4f3d37;
+  --radius:28px;
+  --shadow:0 6px 24px rgba(80,60,50,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:100%}
+body{
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  font-size:1.125rem;line-height:1.7;color:var(--ink);
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(120% 60% at 12% 0%, rgba(239,133,140,.07), rgba(250,248,246,0) 60%),
+    radial-gradient(90% 50% at 92% 18%, rgba(160,130,120,.06), rgba(250,248,246,0) 62%),
+    radial-gradient(120% 70% at 50% 100%, rgba(200,170,160,.07), rgba(250,248,246,0) 65%);
+  background-attachment:fixed;
+  -webkit-text-size-adjust:100%;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,select,textarea{font:inherit;color:inherit}
+ul{list-style:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.hide{display:none !important}
+
+
+.site-head{background:#fff;border-bottom:1px solid var(--line)}
+.head-in{display:flex;align-items:center;gap:18px;padding:16px 0}
+.brand{display:flex;align-items:center;gap:18px}
+.brand-mark{border:1px solid #cdc2b9;border-radius:10px;padding:7px 10px;font-size:.66rem;line-height:1.3;
+  letter-spacing:.14em;color:#6a564c;text-align:center;white-space:nowrap}
+.brand-div{width:1px;height:40px;background:#ddd5cd}
+.site-name{font-size:1.5rem;font-weight:800;letter-spacing:.08em}
+.head-links{margin-left:auto;display:flex;align-items:center;gap:26px;font-size:1rem}
+.head-links a{font-weight:600}
+.head-links a:hover{color:var(--brick)}
+.aa-btn{width:46px;height:46px;border-radius:999px;background:var(--pink);color:#fff;font-weight:800;font-size:1rem;
+  display:flex;align-items:center;justify-content:center}
+.me-box{display:flex;align-items:center;gap:14px;padding-left:22px;margin-left:4px;border-left:1px solid var(--line);font-size:.95rem}
+.me-box b{font-weight:800}
+.me-box a{color:var(--brick);font-weight:700}
+.burger{display:none;width:48px;height:48px;border-radius:12px;align-items:center;justify-content:center}
+.burger span{display:block;width:26px;height:2.5px;background:var(--ink);margin:4px 0;border-radius:2px}
+
+
+.mainnav{background:#fff;border-bottom:1px solid var(--line)}
+.mainnav ul{display:flex;justify-content:space-between;gap:8px}
+.mainnav a{display:block;padding:14px 4px;font-weight:700;color:#55504b;border-bottom:3px solid transparent;white-space:nowrap}
+.mainnav a:hover{color:var(--brick)}
+.mainnav a.on{color:var(--brick);border-bottom-color:var(--brick)}
+.drawer{display:none;background:#fff;border-bottom:1px solid var(--line)}
+.drawer.open{display:block}
+.drawer a{display:block;padding:14px 24px;font-weight:700;border-bottom:1px solid var(--line)}
+.drawer a.on{color:var(--brick)}
+
+
+.crumb{display:flex;align-items:center;gap:10px;padding:26px 0 6px;font-size:.95rem;color:var(--muted)}
+.crumb .now{color:var(--brick);font-weight:700}
+.page-title{font-size:2rem;font-weight:800;color:var(--brick);margin-top:10px}
+.page-sub{color:var(--muted);margin-top:4px}
+main{padding-bottom:64px}
+
+
+.card{position:relative;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:32px}
+.card::before,.card::after{content:"";position:absolute;top:22px;width:9px;height:9px;border-radius:999px}
+.card::before{left:26px;background:var(--dot-pink)}
+.card::after{left:42px;background:var(--dot-yellow)}
+.card > .card-h{margin-top:12px}
+.card-h{font-size:1.25rem;font-weight:800;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.card-h .more{font-size:.95rem;color:var(--brick);font-weight:700}
+.grid{display:grid;gap:24px;margin-top:24px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g21{grid-template-columns:5fr 7fr}
+.g12{grid-template-columns:7fr 5fr}
+
+
+.stat .lbl{font-weight:800;margin-top:12px}
+.stat .big{font-family:Georgia,"Noto Serif TC",serif;font-weight:700;color:var(--brick);font-size:3rem;line-height:1.2;margin-top:6px}
+.stat .big small{font-family:inherit;font-size:1rem;font-weight:800;color:var(--ink);margin-left:8px}
+.stat .big.state{font-size:2rem;color:var(--green);font-family:"Noto Sans TC","PingFang TC",sans-serif}
+.stat .foot{color:var(--muted);font-size:.95rem;margin-top:6px}
+.stat .foot b{color:var(--green);font-weight:800}
+
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:56px;padding:0 34px;border-radius:999px;
+  font-weight:800;font-size:1.05rem;transition:filter .15s}
+.btn:hover{filter:brightness(.96)}
+.btn-primary{background:var(--pink);color:var(--ink)}
+.btn-ghost{background:var(--grey);color:var(--ink)}
+.btn-dark{background:var(--line-dark);color:#fff;border-radius:16px;height:64px;padding:0 30px}
+.btn-dark:hover{filter:brightness(1.25)}
+.btn[disabled]{background:var(--disabled);color:#fff;cursor:not-allowed;filter:none}
+.btn-sm{height:44px;padding:0 20px;font-size:.95rem;border-radius:999px;background:var(--pink-soft);color:var(--red-ink);font-weight:800;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn-sm.grey{background:var(--grey);color:#4a4a4a}
+.btn-sm[disabled]{background:#eee;color:#9b9b9b;cursor:not-allowed}
+.btn-block{width:100%}
+.btn-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px}
+.linkish{color:var(--brick);font-weight:700;text-decoration:underline;cursor:pointer;background:none}
+
+
+.tag{display:inline-flex;align-items:center;padding:4px 16px;border-radius:999px;font-size:.88rem;font-weight:800;white-space:nowrap}
+.t-notice{background:var(--blue-bg);color:var(--blue-ink)}
+.t-act{background:var(--green-bg);color:#17654c}
+.t-warn{background:var(--pink-soft);color:var(--red-ink)}
+.t-plain{background:#fff;border:1px solid #c9c2bb;color:#4c4a47}
+.t-grey{background:#efece9;color:#5a544e}
+.t-green{background:var(--green-bg);color:#17654c}
+.t-dark{background:#3c3733;color:#fff}
+
+
+.tbl{width:100%;border-collapse:collapse;margin-top:18px}
+.tbl th{text-align:left;font-weight:800;padding:12px 12px;border-bottom:2px solid var(--line-dark);white-space:nowrap}
+.tbl td{padding:14px 12px;height:68px;vertical-align:middle;border-bottom:1px solid #f0eae5}
+.tbl tbody tr:nth-child(even){background:var(--zebra)}
+.tbl .num{font-weight:800}
+.tbl .right{text-align:right}
+.tbl .note-row td{height:auto;padding-top:0;color:var(--muted);font-size:.95rem;background:transparent}
+
+
+.alert{background:var(--pink-bg);border-radius:24px;padding:24px 28px;display:flex;gap:16px;align-items:flex-start}
+.alert .ic{flex:0 0 auto;width:30px;height:30px;border-radius:999px;background:var(--pink);color:#fff;font-weight:900;
+  display:flex;align-items:center;justify-content:center;margin-top:2px}
+.alert h4{color:var(--red-ink);font-weight:800;font-size:1.1rem}
+.alert p{margin-top:4px}
+.hint{color:var(--muted);font-size:.98rem;margin-top:14px}
+.hint.strong{color:#5a4a44}
+.inline-note{background:#fbf6f2;border:1px dashed #ddd0c6;border-radius:18px;padding:16px 20px;color:#5c5049;font-size:.98rem;margin-top:16px}
+.ok-box{background:var(--green-bg);border-radius:20px;padding:18px 22px;color:#14624a;font-weight:700;margin-top:16px}
+
+
+.field{margin-top:20px}
+.field > label{display:block;font-weight:800;margin-bottom:8px}
+.req{color:var(--brick);margin-right:4px}
+.inp,select.inp,textarea.inp{width:100%;background:#fff;border:1px solid #ded6cf;border-radius:18px;padding:14px 18px;font-size:1.05rem}
+.inp:focus{outline:2px solid var(--pink);border-color:transparent}
+textarea.inp{min-height:110px;resize:vertical}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.chk{display:inline-flex;align-items:center;gap:8px;margin:0 18px 10px 0;font-size:1rem}
+.err{color:#c0392b;font-weight:700;margin-top:10px}
+
+
+.bar{height:14px;border-radius:999px;background:var(--pink-soft);overflow:hidden;margin-top:14px}
+.bar > i{display:block;height:100%;background:var(--brick);border-radius:999px}
+.card{min-width:0}
+
+.chart{display:flex;align-items:flex-end;gap:10px;height:190px;margin-top:22px;padding-top:10px;overflow-x:auto;max-width:100%}
+.chart .col{flex:1 0 36px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:8px;height:100%}
+.chart .bx{width:100%;max-width:46px;background:var(--pink);border-radius:10px 10px 0 0;min-height:3px}
+.chart .bx.on{background:var(--brick)}
+.chart .cl{font-size:.82rem;color:var(--muted)}
+.chart .cv{font-size:.82rem;font-weight:800}
+
+
+.steps{display:flex;gap:6px;margin-top:16px;flex-wrap:wrap}
+.step{flex:1;min-width:120px;text-align:center;padding:10px 6px;border-radius:14px;background:#f2eeea;color:#8a827b;font-size:.92rem;font-weight:700}
+.step.done{background:var(--green-bg);color:#17654c}
+.step.now{background:var(--pink);color:#fff}
+
+
+.tabs{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.tab{padding:12px 26px;border-radius:999px;background:#fff;border:1px solid var(--line);font-weight:800;color:#5a544e}
+.tab.on{background:var(--brick);border-color:var(--brick);color:#fff}
+
+
+.hero{background:linear-gradient(170deg,#f8dfe1 0%,#f7e3e0 45%,#faf3ee 100%);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(70% 90% at 78% 40%, rgba(255,255,255,.65), rgba(255,255,255,0) 60%)}
+.hero-in{position:relative;z-index:1;padding:74px 24px 86px}
+.hero h1{font-size:3.6rem;line-height:1.25;letter-spacing:.12em;font-weight:900}
+.hero h1 .b{color:var(--brick)}
+.hero h1 .k{color:var(--ink);margin-left:2.2rem}
+.deco{display:flex;align-items:center;gap:12px;margin:18px 0}
+.deco i{width:11px;height:11px;border-radius:999px;display:block}
+.deco .l{flex:0 0 190px;height:1px;background:rgba(120,90,80,.35)}
+.deco.b{justify-content:flex-start;padding-left:120px}
+.login-card .row4{margin-top:18px;color:#4b443f}
+.ann-img{height:230px;border-radius:20px;background:linear-gradient(135deg,#f3dfe3,#e9e2f2 55%,#dfeaf1);display:flex;align-items:center;
+  justify-content:center;color:#9a8b92;font-weight:800;letter-spacing:.1em}
+.ann-title{color:var(--brick);font-weight:800;font-size:1.15rem;margin-top:18px}
+.ann-body{margin-top:10px}
+.ann-date{color:var(--muted);margin-top:14px;font-size:.95rem}
+.arrow{width:48px;height:48px;border-radius:999px;background:#fff;box-shadow:var(--shadow);display:inline-flex;align-items:center;justify-content:center;font-size:1.1rem}
+.login-rules{margin-top:18px}
+.login-rules li{position:relative;padding-left:18px;margin-bottom:6px;font-size:1rem;color:#4b443f}
+.login-rules li::before{content:"・";position:absolute;left:0}
+
+
+.view-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:20px}
+.seg{display:inline-flex;background:#f2eeea;border-radius:999px;padding:4px;gap:4px}
+.seg button{padding:10px 26px;border-radius:999px;font-weight:800;color:#5a544e;font-size:1rem}
+.seg button.on{background:var(--brick);color:#fff}
+
+.calendar{position:relative;margin-top:20px}
+.calendarNav{display:flex;justify-content:center;align-items:center;gap:18px;margin:6px 0 18px}
+.calendarNav .current{font-size:1.15rem;font-weight:800;min-width:150px;text-align:center}
+.calendarNav button{height:44px;padding:0 20px;border-radius:999px;background:#fff;border:1px solid var(--line);font-weight:800;color:#5a544e}
+.calendarNav button:hover{border-color:var(--brick);color:var(--brick)}
+.tableScroll{position:relative;overflow-x:auto}
+.tableScroll table{width:100%;min-width:680px;border-collapse:separate;border-spacing:8px}
+.tableScroll th{font-weight:800;padding:6px 0;color:#5a544e;text-align:center}
+.tableScroll th:first-child{color:var(--brick)}
+.tableScroll td{vertical-align:top;min-height:120px;height:120px;border:1px solid var(--line);border-radius:14px;padding:8px;background:#fff}
+.tableScroll td.blank{border:0;background:transparent}
+.tableScroll td.grey{background:#f4f0e9}
+.tableScroll td.today{border:2px solid var(--brick)}
+.tableScroll td.off{background:#f4f0ec}
+.tableScroll .date{font-size:1.05rem;font-weight:800;color:#5d3c2d;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.tableScroll .date small{font-size:.76rem;color:var(--brick);font-weight:800}
+.tableScroll .period > div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:4px 9px;border-radius:30px;
+  font-size:.86rem;font-weight:700;margin-top:5px}
+.tableScroll .period .available{background:var(--green-bg)}
+.tableScroll .period .available a{color:#17654c;display:block;cursor:pointer}
+.tableScroll .period .available:hover{background:#17654c}
+.tableScroll .period .available:hover a{color:#fff}
+.tableScroll .period .mine{background:var(--pink)}
+.tableScroll .period .mine a{color:#4a3c38;display:block;cursor:pointer}
+.tableScroll .period .booked{color:#a43d3d;background:#f7efec}
+.tableScroll .period .disable{color:#8a827b;background:#f2efec}
+.tableScroll .period .closed{color:var(--brick);text-align:center;font-weight:800;margin-top:10px;white-space:normal}
+.scrollTablePrevBtn,.scrollTableNextBtn{display:none}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:.92rem;color:#5a544e}
+.legend i{display:inline-block;width:16px;height:16px;border-radius:5px;margin-right:6px;vertical-align:-3px;border:1px solid transparent}
+
+.functionPanel{display:flex;justify-content:flex-end;gap:12px;margin-top:18px;flex-wrap:wrap}
+.functionPanelBtn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;
+  background:#fff;border:1px solid var(--line);font-weight:800;font-size:.95rem;color:#5a544e;cursor:pointer}
+.functionPanelBtn:hover{border-color:var(--brick);color:var(--brick)}
+.functionPanelBtn::before{content:"";width:18px;height:18px;border:2px solid currentColor;border-radius:4px;flex:0 0 18px}
+.functionPanelBtn.back::before{border-radius:999px}
+.functionPanelBtn.email::before{border-radius:3px;border-width:2px 2px 8px}
+
+.historySearch .range{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.historySearch .range span{font-weight:800}
+.historySearch .note{color:#990000;font-size:.88rem;margin-top:8px}
+
+.pop{position:fixed;inset:0;background:rgba(40,30,26,.55);z-index:70;display:flex;align-items:center;justify-content:center;padding:20px}
+.pop-box{background:#fff;border-radius:26px;max-width:520px;width:100%;padding:30px 32px;box-shadow:0 20px 60px rgba(60,40,30,.3)}
+.pop-title{font-size:1.3rem;font-weight:800;color:var(--brick)}
+.pop-dl{margin-top:18px}
+.pop-dl > div{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--line)}
+.pop-dl dt{flex:0 0 106px;font-weight:800;color:#5a544e}
+.pop-dl dd{flex:1;font-weight:700}
+
+
+.act-card{display:flex;flex-direction:column;gap:14px}
+.act-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.act-cap{margin-left:auto;background:#efece9;color:#4a443f;border-radius:999px;padding:4px 16px;font-weight:800;font-size:.9rem;white-space:nowrap}
+.act-name{font-size:1.2rem;font-weight:800}
+.act-meta{color:#4f4741;display:flex;align-items:center;gap:8px}
+
+
+.phone{max-width:460px;margin:0 auto}
+.mini{padding:22px 24px;border-radius:24px}
+.mini .lbl{font-size:.95rem;font-weight:800;margin-top:10px}
+.mini .big{font-size:2.1rem}
+.mini .big.state{font-size:1.5rem}
+.scan{position:fixed;inset:0;background:rgba(20,16,14,.92);z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;color:#fff;padding:24px}
+.frame{width:250px;height:250px;border-radius:24px;position:relative;box-shadow:0 0 0 4000px rgba(0,0,0,.25)}
+.frame i{position:absolute;width:44px;height:44px;border:5px solid var(--pink)}
+.frame i:nth-child(1){top:0;left:0;border-right:0;border-bottom:0;border-radius:18px 0 0 0}
+.frame i:nth-child(2){top:0;right:0;border-left:0;border-bottom:0;border-radius:0 18px 0 0}
+.frame i:nth-child(3){bottom:0;left:0;border-right:0;border-top:0;border-radius:0 0 0 18px}
+.frame i:nth-child(4){bottom:0;right:0;border-left:0;border-top:0;border-radius:0 0 18px 0}
+.frame .ray{position:absolute;left:8px;right:8px;height:3px;background:var(--pink);border-radius:4px;animation:ray 1.4s ease-in-out infinite}
+@keyframes ray{0%{top:12px}50%{top:228px}100%{top:12px}}
+.qr-ic{display:inline-block;width:24px;height:24px;border:3px solid currentColor;border-radius:6px;position:relative}
+.qr-ic::before,.qr-ic::after{content:"";position:absolute;background:currentColor}
+.qr-ic::before{width:7px;height:7px;top:2px;left:2px}
+.qr-ic::after{width:7px;height:7px;bottom:2px;right:2px}
+
+
+.site-foot{background:var(--footer);color:#fff;margin-top:40px}
+.foot-in{padding:46px 24px 30px}
+.foot-top{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
+.foot-top .col{flex:1;min-width:260px}
+.foot-links{margin-top:22px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.badges{display:flex;gap:14px;margin-left:auto}
+.badge{border:1px solid rgba(255,255,255,.55);border-radius:10px;padding:10px 14px;font-size:.82rem;text-align:center;line-height:1.3}
+.foot-line{height:1px;background:rgba(255,255,255,.35);margin:26px 0 18px}
+.copy{text-align:center;font-size:.95rem}
+
+
+.tool-btn{position:fixed;right:20px;bottom:20px;z-index:50;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);
+  border-radius:999px;padding:10px 18px;font-weight:800;font-size:.9rem;color:#5a544e}
+.tool-panel{position:fixed;right:20px;bottom:74px;z-index:50;width:290px;background:#fff;border-radius:22px;box-shadow:0 10px 40px rgba(70,50,45,.22);padding:20px}
+.tool-panel h5{font-weight:800;margin-bottom:10px}
+.tool-panel button,.tool-panel a{display:block;width:100%;text-align:left;padding:10px 12px;border-radius:12px;font-size:.95rem;margin-bottom:6px;background:#f6f2ee}
+.tool-panel p{font-size:.86rem;color:var(--muted);margin-top:8px}
+
+
+@media (max-width:768px){
+  .wrap{padding:0 16px}
+  .head-in{padding:12px 0;gap:12px}
+  .site-name{font-size:1.15rem}
+  .brand-mark{font-size:.58rem;letter-spacing:.06em;padding:6px 8px}
+  .head-links{display:none}
+  .burger{display:flex}
+  .mainnav{display:none}
+  .grid{gap:16px}
+  .g4,.g3,.g2,.g21,.g12{grid-template-columns:1fr}
+  .g4.m2,.g2.m2{grid-template-columns:1fr 1fr}
+  .card{padding:22px;border-radius:24px}
+  .page-title{font-size:1.6rem}
+  .hero-in{padding:44px 16px 52px}
+  .hero h1{font-size:2.2rem}
+  .hero h1 .k{margin-left:1.2rem}
+  .deco .l{flex-basis:90px}
+  .deco.b{padding-left:50px}
+  .btn{width:100%}
+  .btn-row .btn{width:100%}
+  .foot-in{padding:32px 16px 24px}
+  .badges{margin-left:0}
+  .stat .big{font-size:2.4rem}
+  
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl thead{display:none}
+  .tbl tr{background:#fff !important;border:1px solid var(--line);border-radius:18px;padding:12px 14px;margin-top:14px}
+  .tbl td{height:auto;border:0;padding:6px 0;display:flex;gap:12px;align-items:center}
+  .tbl td::before{content:attr(data-label);flex:0 0 40%;font-weight:800;color:#5a544e}
+  .tbl .note-row td::before{content:""}
+}
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap head-in">
+    <div class="brand">
+      <a href="#/" class="brand-mark">新竹縣政府文化局<br>CULTURAL AFFAIRS BUREAU</a>
+      <span class="brand-div"></span>
+      <a href="#/" class="site-name">志工服務管理平臺</a>
+    </div>
+    <nav class="head-links" id="headLinks">
+      <a href="#/sitemap">網站導覽</a>
+      <a href="#/">回首頁</a>
+      <a href="https://webpac.hchcc.gov.tw" target="_blank" rel="noopener">新竹縣公共圖書館</a>
+      <button class="aa-btn" data-act="font" title="切換文字大小">Aa</button>
+      <span class="me-box hide" id="meBox"></span>
+    </nav>
+    <button class="burger" data-act="drawer" aria-label="選單"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<nav class="mainnav hide" id="mainNav"><div class="wrap"><ul id="navList"></ul></div></nav>
+<nav class="drawer" id="drawer"></nav>
+
+<main id="view"></main>
+
+<footer class="site-foot">
+  <div class="wrap foot-in">
+    <div class="foot-top">
+      <div class="col">
+        <div>地址：302099 新竹縣竹北市縣政九路146號</div>
+        <div>電話：03-551-0201</div>
+        <div class="foot-links">
+          <span>隱私權及網站安全政策</span><span>｜</span><span>政府網站開放資料宣告</span>
+        </div>
+      </div>
+      <div class="badges">
+        <span class="badge">無障礙標章<br>2.0</span>
+        <span class="badge">GOV<br>政府網站</span>
+      </div>
+    </div>
+    <div class="foot-line"></div>
+    <div class="copy">Copyright© 新竹縣政府文化局版權所有</div>
+  </div>
+</footer>
+
+<button class="tool-btn" data-act="tool">雛形工具</button>
+<div class="tool-panel hide" id="toolPanel">
+  <h5>雛形工具</h5>
+  <button data-act="reset">重設示範資料</button>
+  <a href="admin.html">切換到管理後台</a>
+  <button data-act="who">切換登入身分（目前：—）</button>
+  <p>這是操作雛形，資料皆為虛構。</p>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  'use strict';
+  var S = null;
+  var UI = {
+    logged: false,
+    font: 0,
+    who: 'V001',
+    scenario: 'early'
+  };
+  var UIKEY = 'hcpl-vol-front-ui';
+  var FONTS = ['100%', '112.5%', '125%'];
+  var FONT_NAMES = ['標準', '大', '特大'];
+  var YEAR_ROC = 115;
+  function uiLoad() {
+    try {
+      var raw = window.localStorage.getItem(UIKEY);
+      if (raw) {
+        var o = JSON.parse(raw);
+        if (o) {
+          for (var k in o) {
+            UI[k] = o[k];
+          }
+        }
+      }
+    } catch (e) {}
+  }
+  function uiSave() {
+    try {
+      window.localStorage.setItem(UIKEY, JSON.stringify(UI));
+    } catch (e) {}
+  }
+  function save() {
+    HCV.save(S);
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;'
+      }[c];
+    });
+  }
+  function byId(list, id) {
+    return HCV.byId(list, id);
+  }
+  function me() {
+    return byId(S.volunteers, S.currentVolunteerId);
+  }
+  function myUnitName() {
+    var u = byId(S.units, me().unitId);
+    return u ? u.name : '';
+  }
+  function locName(id) {
+    var l = byId(S.locations, id);
+    return l ? l.name : '';
+  }
+  function tpl(id) {
+    return byId(S.slotTemplates, id);
+  }
+  function suspended() {
+    return me().status === '停權';
+  }
+  function toMin(t) {
+    if (!t) return 0;
+    var p = t.split(':');
+    return Number(p[0]) * 60 + Number(p[1]);
+  }
+  function toHHMM(m) {
+    var h = Math.floor(m / 60),
+      i = m % 60;
+    return (h < 10 ? '0' : '') + h + ':' + (i < 10 ? '0' : '') + i;
+  }
+  function hourText(h) {
+    return HCV.hoursText(h);
+  }
+  function monthOf(d) {
+    return d.substring(0, 7);
+  }
+  function newId(p) {
+    return p + String(Date.now()).slice(-8);
+  }
+  function sum(arr, f) {
+    var n = 0;
+    for (var i = 0; i < arr.length; i++) {
+      n += f(arr[i]);
+    }
+    return n;
+  }
+  function hours() {
+    var h = S.hourSummary[S.currentVolunteerId] || {
+      year: YEAR_ROC,
+      shiftHours: 0,
+      activityHours: 0,
+      trainingHours: 0
+    };
+    var total = h.shiftHours + h.activityHours;
+    var req = S.params.annualRequiredHours;
+    return {
+      shift: h.shiftHours,
+      act: h.activityHours,
+      train: h.trainingHours,
+      total: total,
+      req: req,
+      pct: Math.round(total / req * 100),
+      left: Math.max(0, Math.round((req - total) * 10) / 10)
+    };
+  }
+  function myFutureSlots() {
+    var id = S.currentVolunteerId;
+    return S.slots.filter(function (s) {
+      return s.booked.indexOf(id) >= 0 && HCV.diffDays(S.today, s.date) >= 0;
+    }).sort(function (a, b) {
+      return a.date < b.date ? -1 : 1;
+    });
+  }
+  function todaySlot() {
+    var id = S.currentVolunteerId;
+    for (var i = 0; i < S.slots.length; i++) {
+      var s = S.slots[i];
+      if (s.date === S.today && s.booked.indexOf(id) >= 0) {
+        return s;
+      }
+    }
+    return null;
+  }
+  function myAttendance() {
+    var id = S.currentVolunteerId;
+    return S.attendance.filter(function (a) {
+      return a.volunteerId === id;
+    }).sort(function (a, b) {
+      return a.date < b.date ? 1 : -1;
+    });
+  }
+  function todayAttendance() {
+    var id = S.currentVolunteerId;
+    for (var i = 0; i < S.attendance.length; i++) {
+      var a = S.attendance[i];
+      if (a.volunteerId === id && a.date === S.today) {
+        return a;
+      }
+    }
+    return null;
+  }
+  function myLeaders() {
+    return me().groupIds.map(function (g) {
+      return byId(S.groups, g);
+    }).filter(function (x) {
+      return !!x;
+    });
+  }
+  function sameUnitMates() {
+    var m = me();
+    return S.volunteers.filter(function (v) {
+      return v.unitId === m.unitId && v.status === '在職' && v.id !== m.id;
+    });
+  }
+  var MENU = [['dashboard', '我的儀表板'], ['schedule', '班表報名'], ['checkin', '現場簽到退'], ['attendance', '我的出勤紀錄'], ['leave', '請假／代班'], ['hours', '服務時數'], ['activities', '活動報名'], ['violations', '我的違規記點']];
+  var GUEST_MENU = [['news', '系統公告'], ['apply', '志工申請'], ['sitemap', '網站導覽']];
+  function crumb(name) {
+    return '<div class="wrap"><div class="crumb"><span aria-hidden="true">⌂</span><span>志工</span><span>/</span>' + '<span class="now">' + esc(name) + '</span></div></div>';
+  }
+  function head(name, sub) {
+    return crumb(name) + '<div class="wrap"><h1 class="page-title">' + esc(name) + '</h1>' + (sub ? '<p class="page-sub">' + sub + '</p>' : '') + '</div>';
+  }
+  function tag(text, kind) {
+    return '<span class="tag ' + (kind || 't-grey') + '">' + esc(text) + '</span>';
+  }
+  function pageTools() {
+    return '<div class="wrap"><div class="functionPanel">' + '<button class="functionPanelBtn back" data-act="go-back">回上一頁</button>' + '<button class="functionPanelBtn print" data-act="do-print">列印</button>' + '<button class="functionPanelBtn email" data-act="do-email">Email</button>' + '</div></div>';
+  }
+  function statCard(lbl, big, unit, foot, cls) {
+    return '<div class="card stat"><div class="lbl">' + esc(lbl) + '</div>' + '<div class="big ' + (cls || '') + '">' + esc(big) + (unit ? '<small>' + esc(unit) + '</small>' : '') + '</div>' + (foot ? '<div class="foot">' + foot + '</div>' : '') + '</div>';
+  }
+  function statusTag(st) {
+    var map = {
+      '正常': 't-green',
+      '緩衝內到班': 't-notice',
+      '遲到': 't-warn',
+      '早退': 't-warn',
+      '固定早退': 't-plain',
+      '缺勤': 't-warn',
+      '未報名簽到': 't-warn',
+      '補登': 't-grey',
+      '服務中': 't-act'
+    };
+    return tag(st, map[st] || 't-grey');
+  }
+  function suspendNote(action) {
+    return '<div class="alert" style="margin-top:20px"><div class="ic">!</div><div>' + '<h4>目前為停權狀態</h4><p>停權期間仍可查詢個人班表、出勤與時數紀錄，' + esc(action) + '暫時停用。' + '如需恢復，請洽文化局志工業務承辦人。</p></div></div>';
+  }
+  var PAGES = {};
+  var GUEST_OK = {
+    home: 1,
+    news: 1,
+    'news-item': 1,
+    apply: 1,
+    sitemap: 1
+  };
+  function parseHash() {
+    var h = location.hash.replace(/^#\/?/, '');
+    var q = {},
+      qs = '';
+    var qi = h.indexOf('?');
+    if (qi >= 0) {
+      qs = h.substring(qi + 1);
+      h = h.substring(0, qi);
+    }
+    if (qs) {
+      qs.split('&').forEach(function (kv) {
+        var p = kv.split('=');
+        q[decodeURIComponent(p[0])] = decodeURIComponent(p[1] || '');
+      });
+    }
+    var parts = h.split('/').filter(function (x) {
+      return x !== '';
+    });
+    var key = parts[0] || 'home';
+    if (key === 'news' && parts[1]) {
+      q.id = parts[1];
+      key = 'news-item';
+    }
+    return {
+      key: key,
+      q: q
+    };
+  }
+  function go(hash) {
+    location.hash = hash;
+  }
+  function renderNav(key) {
+    var nav = document.getElementById('mainNav');
+    var list = document.getElementById('navList');
+    var drawer = document.getElementById('drawer');
+    var items = UI.logged ? MENU : GUEST_MENU;
+    list.innerHTML = items.map(function (m) {
+      return '<li><a href="#/' + m[0] + '" class="' + (m[0] === key ? 'on' : '') + '">' + esc(m[1]) + '</a></li>';
+    }).join('');
+    nav.className = 'mainnav' + (UI.logged ? '' : ' hide');
+    var dItems = items.slice();
+    if (UI.logged) {
+      dItems = dItems.concat([['profile', '個人資料'], ['logout', '登出']]);
+    } else {
+      dItems = [['home', '回首頁']].concat(dItems);
+    }
+    drawer.innerHTML = dItems.map(function (m) {
+      if (m[0] === 'logout') {
+        return '<a href="#/" data-act="logout">登出</a>';
+      }
+      return '<a href="#/' + m[0] + '" class="' + (m[0] === key ? 'on' : '') + '">' + esc(m[1]) + '</a>';
+    }).join('');
+    drawer.classList.remove('open');
+    var box = document.getElementById('meBox');
+    if (UI.logged) {
+      box.className = 'me-box';
+      box.innerHTML = '<b>' + esc(me().name) + '</b><a href="#/profile">個人資料</a><a href="#/" data-act="logout">登出</a>';
+    } else {
+      box.className = 'me-box hide';
+      box.innerHTML = '';
+    }
+    var tw = document.querySelector('[data-act="who"]');
+    if (tw) {
+      tw.textContent = '切換登入身分（目前：' + me().name + '）';
+    }
+  }
+  function render() {
+    var r = parseHash();
+    var key = r.key;
+    if (!PAGES[key]) {
+      key = UI.logged ? 'dashboard' : 'home';
+    }
+    if (!UI.logged && !GUEST_OK[key]) {
+      key = 'home';
+      r.q.needLogin = '1';
+    }
+    if (UI.logged && key === 'home') {}
+    renderNav(key);
+    document.getElementById('view').innerHTML = PAGES[key](r.q);
+    window.scrollTo(0, 0);
+  }
+  var ACTS = {};
+  document.addEventListener('click', function (ev) {
+    var t = ev.target;
+    while (t && t !== document.body) {
+      if (t.getAttribute && t.getAttribute('data-act')) {
+        var name = t.getAttribute('data-act');
+        if (ACTS[name]) {
+          ev.preventDefault();
+          ACTS[name](t);
+          return;
+        }
+        break;
+      }
+      t = t.parentNode;
+    }
+  });
+  document.addEventListener('change', function (ev) {
+    var t = ev.target;
+    if (t && t.getAttribute && t.getAttribute('data-change') && ACTS[t.getAttribute('data-change')]) {
+      ACTS[t.getAttribute('data-change')](t);
+    }
+  });
+  ACTS.font = function () {
+    UI.font = (UI.font + 1) % FONTS.length;
+    uiSave();
+    applyFont();
+  };
+  function applyFont() {
+    document.documentElement.style.fontSize = FONTS[UI.font];
+    var b = document.querySelector('.aa-btn');
+    if (b) {
+      b.title = '文字大小：' + FONT_NAMES[UI.font];
+    }
+  }
+  ACTS.drawer = function () {
+    document.getElementById('drawer').classList.toggle('open');
+  };
+  ACTS.tool = function () {
+    document.getElementById('toolPanel').classList.toggle('hide');
+  };
+  ACTS.reset = function () {
+    S = HCV.reset();
+    UI.logged = false;
+    uiSave();
+    location.hash = '#/';
+    location.reload();
+  };
+  ACTS.who = function () {
+    S.currentVolunteerId = S.currentVolunteerId === 'V001' ? 'V010' : 'V001';
+    UI.who = S.currentVolunteerId;
+    save();
+    uiSave();
+    document.getElementById('toolPanel').classList.add('hide');
+    render();
+  };
+  ACTS.logout = function () {
+    UI.logged = false;
+    uiSave();
+    go('#/');
+    render();
+  };
+  ACTS.login = function () {
+    UI.logged = true;
+    uiSave();
+    go('#/dashboard');
+  };
+  ACTS.nav = function (el) {
+    go(el.getAttribute('data-to'));
+  };
+  ACTS['go-back'] = function () {
+    window.history.back();
+  };
+  ACTS['do-print'] = function () {
+    window.print();
+  };
+  ACTS['do-email'] = function () {
+    window.alert('雛形示意：正式系統會把目前查到的紀錄寄到您的信箱（' + (me().email || '尚未填寫電子郵件') + '）。');
+  };
+  var annIdx = 0;
+  PAGES.home = function (q) {
+    var list = visAnns();
+    if (annIdx >= list.length) {
+      annIdx = 0;
+    }
+    var a = list[annIdx] || null;
+    var deco = '<div class="deco"><i style="background:#ef858c"></i><i style="background:#fdd469"></i>' + '<i style="background:#7fc7c0"></i><i style="background:#9ab7e0"></i><span class="l"></span></div>';
+    var decoB = '<div class="deco b"><span class="l"></span><i style="background:#ef858c"></i><i style="background:#fdd469"></i>' + '<i style="background:#7fc7c0"></i><i style="background:#9ab7e0"></i></div>';
+    var annBox = a ? '<div class="ann-img">新竹縣政府文化局</div>' + '<div class="ann-title"><a href="#/news/' + esc(a.id) + '">' + esc(a.title) + '</a></div>' + '<div class="ann-body">' + esc(a.body) + '</div>' + '<div class="ann-date">' + esc(a.date) + '</div>' : '<div class="ann-body">目前沒有公告。</div>';
+    var loginTip = q.needLogin ? '<div class="err">請先登入後再使用該功能。</div>' : '';
+    return '' + '<section class="hero"><div class="wrap hero-in">' + deco + '<h1><span class="b">志工服務</span><br><span class="k">管理平臺</span></h1>' + decoB + '</div></section>' + '<div class="wrap"><div class="grid g2" style="margin-top:40px">' + '<div class="card">' + '<div class="card-h">系統公告' + '<span><button class="arrow" data-act="ann-prev" aria-label="上一則">‹</button> ' + '<button class="arrow" data-act="ann-next" aria-label="下一則">›</button></span></div>' + '<div style="margin-top:18px">' + annBox + '</div>' + '<div class="btn-row"><a class="btn btn-ghost" href="#/news">所有公告</a></div>' + '</div>' + '<div class="card login-card">' + '<div class="card-h">立即登入</div>' + '<div style="color:var(--brick);font-weight:800;margin-top:16px;border-left:4px solid var(--brick);padding-left:12px">志工服務管理平臺登入</div>' + '<div class="field"><label><span class="req">*</span>帳號</label>' + '<input class="inp" type="text" placeholder="請輸入借閱證號或身分證字號"></div>' + '<div class="field"><label><span class="req">*</span>密碼</label>' + '<input class="inp" type="password" placeholder="請輸入密碼"></div>' + '<div class="field"><label><span class="req">*</span>驗證碼</label>' + '<div style="display:flex;gap:12px;align-items:center">' + '<input class="inp" type="text" placeholder="請輸入驗證碼" style="flex:1">' + '<span style="flex:0 0 118px;text-align:center;font-family:Georgia,serif;font-size:1.4rem;letter-spacing:.2em;' + 'background:#f1ece7;border-radius:12px;padding:8px 0">5 1 5 1</span></div>' + '<div style="margin-top:8px"><a class="linkish" href="https://webpac.hchcc.gov.tw" target="_blank" rel="noopener" title="前往新竹縣公共圖書館館藏查詢系統辦理（另開新視窗）">忘記密碼</a></div></div>' + '<ul class="login-rules">' + '<li>帳號請輸入借閱證號或身分證字號</li>' + '<li>密碼請輸入館藏查詢系統的個人密碼，本平臺不另設密碼</li>' + '<li>登入後須具志工資格才能使用；查無資格請洽所屬服務地點承辦人</li>' + '<li>尚未申辦本縣公共圖書館個人借閱證者，請點選下方「網路辦證」</li>' + '</ul>' + loginTip + '<div class="btn-row">' + '<button class="btn btn-primary" data-act="login" style="flex:1">會員登入</button>' + '<a class="btn btn-ghost" href="https://webpac.hchcc.gov.tw" target="_blank" rel="noopener" style="flex:1">網路辦證</a>' + '</div>' + '<div class="hint">尚未擔任志工？歡迎<a class="linkish" href="#/apply">線上填寫志工申請</a>。</div>' + '</div>' + '</div></div>';
+  };
+  function visAnns() {
+    return S.announcements.filter(function (a) {
+      return !a.offline;
+    });
+  }
+  ACTS['ann-prev'] = function () {
+    var n = visAnns().length || 1;
+    annIdx = (annIdx - 1 + n) % n;
+    render();
+  };
+  ACTS['ann-next'] = function () {
+    var n = visAnns().length || 1;
+    annIdx = (annIdx + 1) % n;
+    render();
+  };
+  var newsFilter = '全部';
+  PAGES.news = function () {
+    var kinds = ['全部', '公告', '活動', '提醒'];
+    var rows = visAnns().filter(function (a) {
+      return newsFilter === '全部' || a.tag === newsFilter;
+    });
+    var tabs = kinds.map(function (k) {
+      return '<button class="tab ' + (k === newsFilter ? 'on' : '') + '" data-act="news-filter" data-v="' + esc(k) + '">' + esc(k) + '</button>';
+    }).join('');
+    var body = rows.length ? rows.map(function (a) {
+      return '<div style="display:flex;gap:18px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line);flex-wrap:wrap">' + '<span style="color:var(--muted);flex:0 0 120px">' + esc(a.date) + '</span>' + tag(a.tag, a.tag === '公告' ? 't-notice' : a.tag === '活動' ? 't-act' : 't-warn') + '<a href="#/news/' + esc(a.id) + '" style="font-weight:700;flex:1;min-width:240px">' + esc(a.title) + '</a>' + '<span style="color:var(--muted);font-size:.95rem">' + esc(a.scope === '全體' ? '全體志工' : a.scope + ' 適用') + '</span></div>';
+    }).join('') : '<div class="hint">目前沒有公告。</div>';
+    return head('系統公告', '館方發布的公告、活動與提醒事項') + '<div class="wrap"><div class="tabs">' + tabs + '</div>' + '<div class="card" style="margin-top:20px"><div class="card-h">公告列表</div>' + body + '</div></div>';
+  };
+  ACTS['news-filter'] = function (el) {
+    newsFilter = el.getAttribute('data-v');
+    render();
+  };
+  PAGES['news-item'] = function (q) {
+    var a = byId(S.announcements, q.id);
+    if (!a) {
+      return head('公告', '') + '<div class="wrap"><div class="card">查無此公告。</div></div>';
+    }
+    return head('公告內容', '') + '<div class="wrap"><div class="card">' + '<div style="display:flex;gap:14px;align-items:center;margin-top:12px">' + tag(a.tag, a.tag === '公告' ? 't-notice' : a.tag === '活動' ? 't-act' : 't-warn') + '<span style="color:var(--muted)">發布日期：' + esc(a.date) + '</span>' + '<span style="color:var(--muted)">發布對象：' + esc(a.scope) + '</span></div>' + '<h2 style="font-size:1.5rem;font-weight:800;margin-top:16px;color:var(--brick)">' + esc(a.title) + '</h2>' + '<p style="margin-top:16px">' + esc(a.body) + '</p>' + '<div class="btn-row"><a class="btn btn-ghost" href="#/news">回公告列表</a></div>' + '</div></div>';
+  };
+  var applyState = {
+    done: false,
+    no: '',
+    queryMsg: '',
+    stage: ''
+  };
+  PAGES.apply = function () {
+    var locs = S.locations.map(function (l) {
+      return '<option>' + esc(l.name) + '</option>';
+    }).join('');
+    var groups = S.groups.map(function (g) {
+      return '<label class="chk"><input type="checkbox"> ' + esc(byId(S.units, g.unitId).name + '　' + g.name) + '</label>';
+    }).join('');
+    var week = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'].map(function (d) {
+      return '<label class="chk"><input type="checkbox"> ' + d + '</label>';
+    }).join('');
+    var form = applyState.done ? '<div class="ok-box">申請已送出，申請編號 ' + esc(applyState.no) + '。<br>' + '後續審核進度將以 Email 通知，您也可以在下方以借閱證號查詢。</div>' + '<div class="btn-row"><button class="btn btn-ghost" data-act="apply-again">再填一份</button></div>' : '<div class="field-row">' + '<div class="field"><label><span class="req">*</span>姓名</label><input class="inp" id="apName" type="text" placeholder="請輸入姓名"></div>' + '<div class="field"><label><span class="req">*</span>借閱證號</label><input class="inp" id="apCard" type="text" placeholder="例如 A00030112"></div>' + '</div>' + '<div class="field-row">' + '<div class="field"><label><span class="req">*</span>身分證字號</label><input class="inp" type="text" placeholder="請輸入身分證字號"></div>' + '<div class="field"><label><span class="req">*</span>聯絡電話</label><input class="inp" type="text" placeholder="請輸入聯絡電話"></div>' + '</div>' + '<div class="field"><label><span class="req">*</span>電子郵件</label><input class="inp" type="text" placeholder="通知信會寄到這個信箱"></div>' + '<div class="field"><label><span class="req">*</span>申請服務地點</label><select class="inp">' + locs + '</select></div>' + '<div class="field"><label><span class="req">*</span>申請組別（可複選）</label><div>' + groups + '</div></div>' + '<div class="field"><label>可服務時段</label><div>' + week + '</div></div>' + '<div class="inline-note">尚未申辦本縣公共圖書館個人借閱證者，請先至館藏查詢系統辦理網路辦證，再回本頁填寫申請。</div>' + '<div id="apErr"></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="apply-send">送出申請</button></div>';
+    var stages = ['資料審核中', '待面試', '通過'];
+    var qBox = applyState.stage ? '<div class="steps">' + stages.map(function (s, i) {
+      var cur = stages.indexOf(applyState.stage);
+      return '<div class="step ' + (i < cur ? 'done' : i === cur ? 'now' : '') + '">' + esc(s) + '</div>';
+    }).join('') + '</div>' : '';
+    return head('志工申請', '線上填寫申請表，並可隨時查詢審核進度') + '<div class="wrap"><div class="grid g12">' + '<div class="card"><div class="card-h">志工申請表</div>' + form + '</div>' + '<div>' + '<div class="card"><div class="card-h">申請進度查詢</div>' + '<div class="field"><label>借閱證號</label><input class="inp" id="qCard" type="text" placeholder="例如 A00030112"></div>' + '<div class="btn-row"><button class="btn btn-primary btn-block" data-act="apply-query">查詢進度</button></div>' + (applyState.queryMsg ? '<div class="hint strong" style="margin-top:16px">' + applyState.queryMsg + '</div>' : '') + qBox + '<div class="hint">進度共三個階段：資料審核中 → 待面試 → 通過。每次異動都會以 Email 通知。</div>' + '</div>' + '<div class="card" style="margin-top:24px"><div class="card-h">申請資格</div>' + '<ul class="login-rules" style="margin-top:14px">' + '<li>須持有本縣公共圖書館個人借閱證</li>' + '<li>審核通過後即可用借閱證帳密登入本平臺</li>' + '<li>一人可同時申請多個組別</li>' + '</ul></div>' + '</div>' + '</div></div>';
+  };
+  ACTS['apply-send'] = function () {
+    var n = document.getElementById('apName'),
+      c = document.getElementById('apCard');
+    if (!n.value.trim() || !c.value.trim()) {
+      document.getElementById('apErr').innerHTML = '<div class="err">姓名與借閱證號為必填。</div>';
+      return;
+    }
+    applyState.done = true;
+    applyState.no = 'AP' + String(Date.now()).slice(-6);
+    render();
+  };
+  ACTS['apply-again'] = function () {
+    applyState.done = false;
+    applyState.no = '';
+    render();
+  };
+  ACTS['apply-query'] = function () {
+    var v = (document.getElementById('qCard').value || '').trim();
+    var hit = null;
+    S.volunteers.forEach(function (x) {
+      if (x.cardNo === v && x.status === '審查中') {
+        hit = x;
+      }
+    });
+    if (hit) {
+      applyState.stage = hit.applyStage;
+      applyState.queryMsg = esc(hit.name) + '，您於 ' + esc(hit.applyDate) + ' 提出的申請，目前狀態為「' + esc(hit.applyStage) + '」。';
+    } else {
+      applyState.stage = '';
+      applyState.queryMsg = '查無申請紀錄，請確認借閱證號是否正確。';
+    }
+    render();
+  };
+  PAGES.sitemap = function () {
+    function block(title, items) {
+      return '<div class="card"><div class="card-h">' + esc(title) + '</div><ul style="margin-top:14px">' + items.map(function (i) {
+        return '<li style="padding:8px 0;border-bottom:1px solid var(--line)"><a href="#/' + i[0] + '">' + esc(i[1]) + '</a></li>';
+      }).join('') + '</ul></div>';
+    }
+    return head('網站導覽', '本平臺的頁面結構；使用鍵盤瀏覽時，可依下列順序前往各功能') + '<div class="wrap"><div class="grid g2">' + block('未登入可使用', [['home', '首頁（系統公告與登入）'], ['news', '系統公告'], ['apply', '志工申請與進度查詢'], ['sitemap', '網站導覽']]) + block('登入後可使用', MENU.concat([['profile', '個人資料']])) + '</div>' + '<div class="card" style="margin-top:24px"><div class="card-h">閱讀輔助</div>' + '<ul class="login-rules" style="margin-top:14px">' + '<li>頁首右側「Aa」可切換文字大小，共標準、大、特大三段，切換後全站生效。</li>' + '<li>本平臺以手機、平板與電腦瀏覽皆可操作，現場簽到退以手機操作最為便利。</li>' + '</ul></div></div>';
+  };
+  PAGES.dashboard = function () {
+    var m = me(),
+      h = hours();
+    var pts = HCV.activePoints(S, m.id);
+    var tSlot = todaySlot(),
+      tAtt = todayAttendance(),
+      todayLine;
+    if (tSlot) {
+      var tT = tpl(tSlot.templateId);
+      var tState = !tAtt ? tag('待簽到', 't-warn') : tAtt.checkOut ? tag('已簽退', 't-green') : tag('服務中', 't-act');
+      todayLine = '<div class="hint strong" style="margin-top:14px">今天 ' + esc(HCV.dateLabel(S.today)) + ' 有班：' + esc(tT.name + ' ' + tT.start + '–' + tT.end) + '　' + esc(locName(tSlot.locationId)) + '　' + tState + '</div>';
+    } else {
+      todayLine = '<div class="hint" style="margin-top:14px">今天 ' + esc(HCV.dateLabel(S.today)) + ' 沒有您的排班。</div>';
+    }
+    var remind = pts > 0 ? '<div class="alert"><div class="ic">!</div><div><h4>違規提醒</h4><p>' + esc(S.params.pointReminderText.replace('{N}', pts)) + '</p>' + '<div style="margin-top:10px"><a class="linkish" href="#/violations">查看記點明細</a></div></div></div>' : '';
+    var stateCard = '<div class="card stat"><div class="lbl">志工資格狀態</div>' + '<div class="big state" style="' + (m.status === '在職' ? '' : 'color:#b03a3a') + '">' + esc(m.status) + '</div>' + '<div class="foot">年資 ' + (2026 - m.joinYear) + ' 年</div></div>';
+    var cards = statCard('本年度累計時數', hourText(h.total), '小時', '<b>↑' + h.pct + '%</b>　門檻 ' + h.req + ' 小時') + statCard('距離達標還需', hourText(h.left), '小時', YEAR_ROC + ' 年度') + statCard('本年違規點數', String(pts), '點', YEAR_ROC + ' 年度累計') + stateCard;
+    var anns = visAnns().slice(0, 4).map(function (a) {
+      return '<div style="display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);flex-wrap:wrap">' + '<span style="color:var(--muted);flex:0 0 108px">' + esc(a.date) + '</span>' + tag(a.tag, a.tag === '公告' ? 't-notice' : a.tag === '活動' ? 't-act' : 't-warn') + '<a href="#/news/' + esc(a.id) + '" style="flex:1;min-width:200px;font-weight:700">' + esc(a.title) + '</a></div>';
+    }).join('');
+    var future = myFutureSlots().slice(0, 4);
+    var rows = future.length ? future.map(function (s) {
+      var t = tpl(s.templateId);
+      return '<tr>' + '<td data-label="日期">' + esc(HCV.dateLabel(s.date)) + '</td>' + '<td data-label="時段">' + esc(t.name + ' ' + t.start + '–' + t.end) + '</td>' + '<td data-label="類型">' + tag(s.type, 't-plain') + '</td>' + '<td data-label="服務地點">' + esc(locName(s.locationId)) + '</td>' + '<td data-label="操作" class="right"><button class="btn-sm" data-act="nav" data-to="#/leave?slot=' + esc(s.id) + '">請假</button></td>' + '</tr>';
+    }).join('') : '<tr><td colspan="5">近期尚無排班，可至「班表報名」登記。</td></tr>';
+    return head('我的儀表板', '歡迎回來，' + esc(m.name) + '！這是您本年度的服務概況') + '<div class="wrap">' + '<div class="grid g12" style="align-items:start">' + '<div>' + '<div class="btn-row" style="margin-top:6px">' + '<a class="btn btn-dark" href="#/checkin"><span class="qr-ic"></span>現場簽到退</a></div>' + todayLine + '<div class="hint strong" style="margin-top:14px">所屬大組：' + esc(myUnitName()) + '　｜　組別：' + esc(HCV.groupNames(S, m)) + '　｜　服務地點：' + esc(m.locationIds.map(locName).join('、')) + '</div>' + '</div>' + '<div>' + remind + '</div>' + '</div>' + '<div class="grid g4">' + cards + '</div>' + '<div class="grid g21">' + '<div class="card"><div class="card-h">年度服務時數進度</div>' + '<div class="big" style="font-family:Georgia,\'Noto Serif TC\',serif;font-size:3rem;color:var(--brick);font-weight:700;margin-top:14px">' + hourText(h.total) + '<small style="font-family:inherit;font-size:1rem;color:var(--ink);margin-left:10px">/ ' + h.req + ' 小時（' + h.pct + '%）</small></div>' + '<div class="bar"><i style="width:' + Math.min(100, h.pct) + '%"></i></div>' + '<div class="grid g2" style="margin-top:20px;gap:12px">' + '<div><div style="font-weight:800">排班服務</div><div style="font-weight:800;color:var(--brick);font-size:1.3rem">' + hourText(h.shift) + ' <small style="font-size:.95rem;color:var(--ink)">小時</small></div></div>' + '<div><div style="font-weight:800">活動服務</div><div style="font-weight:800;color:var(--brick);font-size:1.3rem">' + hourText(h.act) + ' <small style="font-size:.95rem;color:var(--ink)">小時</small></div></div>' + '</div>' + '<div class="hint">受訓時數另計：' + hourText(h.train) + ' 小時（教育訓練不併入服務時數）</div>' + '</div>' + '<div class="card"><div class="card-h">館方公告<a class="more" href="#/news">全部公告 →</a></div>' + '<div style="margin-top:10px">' + anns + '</div></div>' + '</div>' + '<div class="grid"><div class="card"><div class="card-h">近期排班<a class="more" href="#/schedule">班表報名 →</a></div>' + '<table class="tbl"><thead><tr><th>日期</th><th>時段</th><th>類型</th><th>服務地點</th><th class="right">操作</th></tr></thead>' + '<tbody>' + rows + '</tbody></table></div></div>' + '</div>';
+  };
+  var schedState = {
+    loc: '',
+    month: '',
+    view: 'list',
+    onlyMine: false,
+    focus: '',
+    pop: ''
+  };
+  function calInfo(ymStr) {
+    var y = Number(ymStr.slice(0, 4)),
+      m = Number(ymStr.slice(5, 7));
+    return {
+      y: y,
+      m: m,
+      last: new Date(y, m, 0).getDate(),
+      first: new Date(y, m - 1, 1).getDay()
+    };
+  }
+  function dstr(y, m, d) {
+    return y + '-' + (m < 10 ? '0' : '') + m + '-' + (d < 10 ? '0' : '') + d;
+  }
+  function schedLocs() {
+    if (schedState.loc) {
+      var one = byId(S.locations, schedState.loc);
+      return one ? [one] : [];
+    }
+    var mine = me().locationIds.map(function (id) {
+      return byId(S.locations, id);
+    }).filter(function (x) {
+      return !!x;
+    });
+    return mine.length ? mine : S.locations.slice();
+  }
+  function schedSlots() {
+    var id = S.currentVolunteerId;
+    var ids = schedLocs().map(function (l) {
+      return l.id;
+    });
+    return S.slots.filter(function (s) {
+      if (s.published === false) {
+        return false;
+      }
+      if (ids.indexOf(s.locationId) < 0) {
+        return false;
+      }
+      if (monthOf(s.date) !== schedState.month) {
+        return false;
+      }
+      if (schedState.onlyMine && s.booked.indexOf(id) < 0) {
+        return false;
+      }
+      return true;
+    }).sort(function (a, b) {
+      if (a.date !== b.date) {
+        return a.date < b.date ? -1 : 1;
+      }
+      return tpl(a.templateId).start < tpl(b.templateId).start ? -1 : 1;
+    });
+  }
+  function slotState(s) {
+    var id = S.currentVolunteerId;
+    var loc = byId(S.locations, s.locationId);
+    return {
+      mine: s.booked.indexOf(id) >= 0,
+      waiting: s.pending.indexOf(id) >= 0,
+      full: s.booked.length >= s.capacity,
+      past: HCV.diffDays(S.today, s.date) < 0,
+      assign: loc.scheduleMode === '管理者指派',
+      canCancel: HCV.diffDays(S.today, s.date) >= S.params.cancelDeadlineDays
+    };
+  }
+  function schedHolidays() {
+    var ids = schedLocs().map(function (l) {
+      return l.id;
+    });
+    return S.holidays.filter(function (x) {
+      return monthOf(x.date) === schedState.month && (x.scope === '全部' || ids.indexOf(x.scope) >= 0);
+    });
+  }
+  function schedCalendar() {
+    var ci = calInfo(schedState.month);
+    var multi = schedLocs().length > 1;
+    var byDate = {};
+    schedSlots().forEach(function (s) {
+      (byDate[s.date] = byDate[s.date] || []).push(s);
+    });
+    var hols = {};
+    schedHolidays().forEach(function (h) {
+      hols[h.date] = h;
+    });
+    var cells = [];
+    var i;
+    for (i = 0; i < ci.first; i++) {
+      cells.push(null);
+    }
+    for (i = 1; i <= ci.last; i++) {
+      cells.push(i);
+    }
+    while (cells.length % 7) {
+      cells.push(null);
+    }
+    var body = '';
+    for (i = 0; i < cells.length; i += 7) {
+      body += '<tr>';
+      cells.slice(i, i + 7).forEach(function (d) {
+        if (!d) {
+          body += '<td class="blank"></td>';
+          return;
+        }
+        var date = dstr(ci.y, ci.m, d);
+        var hol = hols[date];
+        var slots = byDate[date] || [];
+        var per = hol ? '<div class="closed">休館<br>' + esc(hol.name) + '</div>' : slots.map(function (s) {
+          var t = tpl(s.templateId),
+            st = slotState(s);
+          var where = multi ? esc(locName(s.locationId)) + ' ' : '';
+          if (st.mine) {
+            return '<div class="mine"><a data-act="cal-open" data-id="' + esc(s.id) + '">' + where + esc(t.name) + '：我的班</a></div>';
+          }
+          if (st.past) {
+            return '<div class="disable">' + where + esc(t.name) + '：已過期</div>';
+          }
+          if (st.waiting) {
+            return '<div class="disable">' + where + esc(t.name) + '：待核可</div>';
+          }
+          if (st.assign) {
+            return '<div class="disable">' + where + esc(t.name) + '：管理者排定</div>';
+          }
+          if (st.full) {
+            return '<div class="booked">' + where + esc(t.name) + '：已額滿 ' + s.booked.length + '/' + s.capacity + '</div>';
+          }
+          return '<div class="available"><a data-act="cal-open" data-id="' + esc(s.id) + '">' + where + esc(t.name) + '：可報名 ' + s.booked.length + '/' + s.capacity + '</a></div>';
+        }).join('');
+        body += '<td class="' + (hol ? 'off ' : '') + (date === S.today ? 'today' : '') + '">' + '<div class="date"><span>' + d + '</span>' + (date === S.today ? '<small>今天</small>' : '') + '</div>' + '<div class="period">' + per + '</div></td>';
+      });
+      body += '</tr>';
+    }
+    return '<div class="calendar">' + '<div class="calendarNav">' + '<button class="prevMonth" data-act="cal-month" data-n="-1">上個月</button>' + '<div class="current"><span class="year">' + ci.y + '</span> 年 <span class="month">' + ci.m + '</span> 月</div>' + '<button class="nextMonth" data-act="cal-month" data-n="1">下個月</button>' + '</div>' + '<div class="tableScroll">' + '<button type="button" class="scrollTablePrevBtn">往左捲動</button>' + '<button type="button" class="scrollTableNextBtn">往右捲動</button>' + '<table><thead><tr>' + ['日', '一', '二', '三', '四', '五', '六'].map(function (w) {
+      return '<th scope="col"><span>週' + w + '</span></th>';
+    }).join('') + '</tr></thead><tbody>' + body + '</tbody></table>' + '</div>' + '</div>' + '<div class="legend">' + '<span><i style="background:var(--green-bg);border-color:#bfe3d4"></i>可報名</span>' + '<span><i style="background:var(--pink)"></i>我的班</span>' + '<span><i style="background:#f7efec"></i>已額滿</span>' + '<span><i style="background:#f4f0ec"></i>休館日</span>' + '<span><i style="background:#f2efec"></i>已過期或由管理者排定</span>' + '</div>' + '<div class="hint">月曆看整個月哪幾天要到班；點可報名或自己的時段會開啟視窗，在視窗裡報名或取消。版面沿用學生公共服務系統的預約日曆。</div>';
+  }
+  function slotPop() {
+    if (!schedState.pop) {
+      return '';
+    }
+    var s = byId(S.slots, schedState.pop);
+    if (!s) {
+      return '';
+    }
+    var t = tpl(s.templateId),
+      st = slotState(s);
+    var row = function (k, v) {
+      return '<div><dt>' + esc(k) + '</dt><dd>' + v + '</dd></div>';
+    };
+    var act;
+    if (st.assign) {
+      act = '<div class="inline-note">本地點的班表由管理者排定，無法自行報名或取消。</div>';
+    } else if (st.past) {
+      act = '<div class="inline-note">這個時段已經過了。</div>';
+    } else if (st.waiting) {
+      act = '<div class="inline-note">已送出報名，等待服務地點管理者核可。</div>';
+    } else if (st.mine) {
+      act = st.canCancel ? '<div class="btn-row"><button class="btn btn-primary" data-act="slot-cancel" data-id="' + esc(s.id) + '">取消報名</button></div>' : '<div class="inline-note">距離服務日不到 ' + S.params.cancelDeadlineDays + ' 天，不能自行取消，請改用「請假／代班」提出申請。</div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="nav" data-to="#/leave?slot=' + esc(s.id) + '">前往請假</button></div>';
+    } else if (st.full) {
+      act = '<div class="inline-note">這個時段已經額滿。</div>';
+    } else if (suspended()) {
+      act = '<div class="inline-note">志工資格停權中，暫時無法報名。</div>';
+    } else {
+      act = '<div class="btn-row"><button class="btn btn-primary" data-act="slot-join" data-id="' + esc(s.id) + '">確認報名</button></div>';
+    }
+    return '<div class="pop"><div class="pop-box">' + '<div class="pop-title">' + (st.mine ? '我的班' : '班表報名') + '</div>' + '<dl class="pop-dl">' + row('服務日期', esc(HCV.dateLabel(s.date))) + row('時段', esc(t.name + ' ' + t.start + '–' + t.end) + '（計 ' + t.hours + ' 小時）') + row('服務地點', esc(locName(s.locationId))) + row('類型', esc(s.type) + (t.earlyLeave ? '　固定早退時段（簽退標示固定早退、不記點、時數照發）' : '')) + row('已排／名額', s.booked.length + ' / ' + s.capacity) + row('簽到緩衝', t.graceMinutes > 0 ? t.graceMinutes + ' 分鐘（提早到一律以 ' + esc(t.start) + ' 起算）' : '無（提早到一律以 ' + esc(t.start) + ' 起算）') + '</dl>' + act + '<div class="btn-row"><button class="btn btn-ghost btn-block" data-act="pop-close">關閉</button></div>' + '</div></div>';
+  }
+  PAGES.schedule = function () {
+    var m = me();
+    if (!schedState.month) {
+      schedState.month = monthOf(S.today);
+    }
+    var locs = schedLocs();
+    var months = [];
+    S.slots.forEach(function (s) {
+      if (months.indexOf(monthOf(s.date)) < 0) {
+        months.push(monthOf(s.date));
+      }
+    });
+    months.sort();
+    if (months.indexOf(schedState.month) < 0) {
+      months.push(schedState.month);
+      months.sort();
+    }
+    var locOpts = '<option value="" ' + (schedState.loc ? '' : 'selected') + '>我的服務地點（全部）</option>' + S.locations.map(function (l) {
+      return '<option value="' + esc(l.id) + '" ' + (l.id === schedState.loc ? 'selected' : '') + '>' + esc(l.name) + '</option>';
+    }).join('');
+    var monOpts = months.map(function (x) {
+      return '<option value="' + esc(x) + '" ' + (x === schedState.month ? 'selected' : '') + '>' + esc(x.replace('-', '年 ') + ' 月') + '</option>';
+    }).join('');
+    var modeNote = '<div class="inline-note">' + locs.map(function (l) {
+      return '<div><b>' + esc(l.name) + '</b>：' + (l.scheduleMode === '管理者指派' ? '班表由管理者排定，志工僅供檢視，無法自行報名或取消；如需調整請洽服務地點管理者。' : '採自由報名，' + (l.needApproval ? '報名後須經服務地點管理者核可才會正式成立。' : '報名後即刻成立，系統會寄出完成排班通知信。') + '每月報名上限 ' + l.monthlyMaxSlots + ' 個時段，次月班表請於每月 ' + l.monthlyDeadlineDay + ' 日前登記。') + '</div>';
+    }).join('') + '</div>';
+    var hol = schedHolidays();
+    var holBox = hol.length ? '<div class="hint strong">本月休館日：' + hol.map(function (x) {
+      return esc(x.date.substring(5) + '（' + x.name + '）');
+    }).join('、') + '　休館日不開放排班。</div>' : '';
+    var list = schedSlots();
+    var multi = locs.length > 1;
+    var rows = list.length ? list.map(function (s) {
+      var t = tpl(s.templateId);
+      var st = slotState(s);
+      var btn;
+      if (st.assign) {
+        btn = '<span class="tag t-grey">由管理者排定</span>';
+      } else if (st.past) {
+        btn = '<span class="tag t-grey">已過期</span>';
+      } else if (st.waiting) {
+        btn = '<span class="tag t-notice">等待管理者核可</span>';
+      } else if (st.mine) {
+        btn = st.canCancel ? '<button class="btn-sm grey" data-act="slot-cancel" data-id="' + esc(s.id) + '">取消報名</button>' : '<button class="btn-sm" data-act="nav" data-to="#/leave?slot=' + esc(s.id) + '">改走請假</button>';
+      } else if (st.full) {
+        btn = '<button class="btn-sm" disabled>名額已滿</button>';
+      } else if (suspended()) {
+        btn = '<button class="btn-sm" disabled>停權中</button>';
+      } else {
+        btn = '<button class="btn-sm" data-act="slot-join" data-id="' + esc(s.id) + '">我要報名</button>';
+      }
+      var flags = tag(s.type, 't-plain') + (st.mine ? ' ' + tag('我的班', 't-act') : '');
+      if (t.earlyLeave) {
+        flags += ' ' + tag('固定早退時段', 't-warn');
+      }
+      var grace = t.graceMinutes > 0 ? '簽到緩衝 ' + t.graceMinutes + ' 分鐘' : '無簽到緩衝';
+      var extra = t.earlyLeave ? '<tr class="note-row"><td colspan="6">此時段供固定需提早 30 分鐘離開的志工報名，簽退標示「固定早退」，不記點，時數照發 ' + t.hours + ' 小時。</td></tr>' : '';
+      return '<tr' + (s.date === schedState.focus ? ' class="focus"' : '') + '>' + '<td data-label="日期">' + esc(HCV.dateLabel(s.date)) + '</td>' + '<td data-label="時段">' + esc(t.name + ' ' + t.start + '–' + t.end) + '<br><span style="color:var(--muted);font-size:.9rem">' + esc(grace + '　計 ' + t.hours + ' 小時') + '</span></td>' + '<td data-label="服務地點">' + esc(locName(s.locationId)) + '</td>' + '<td data-label="類型">' + flags + '</td>' + '<td data-label="已排／名額" class="num">' + s.booked.length + ' / ' + s.capacity + '</td>' + '<td data-label="操作" class="right">' + btn + '</td>' + '</tr>' + extra;
+    }).join('') : '<tr><td colspan="6">' + (schedState.onlyMine ? '本月您沒有排班。' : '本月尚無開放的班表。') + '</td></tr>';
+    var viewRow = '<div class="view-row">' + '<div class="seg">' + '<button class="' + (schedState.view === 'list' ? 'on' : '') + '" data-act="sched-view" data-v="list">列表</button>' + '<button class="' + (schedState.view === 'cal' ? 'on' : '') + '" data-act="sched-view" data-v="cal">月曆</button>' + '</div>' + '<label class="chk"><input type="checkbox" data-change="sched-mine" ' + (schedState.onlyMine ? 'checked' : '') + '> 只看我的班</label>' + '<span class="hint" style="margin-top:0">列表用來報名與取消，月曆用來看整個月的到班日。</span>' + '</div>';
+    var body = schedState.view === 'cal' ? schedCalendar() : '<table class="tbl"><thead><tr><th>日期</th><th>時段</th><th>服務地點</th><th>類型</th><th>已排／名額</th><th class="right">操作</th></tr></thead>' + '<tbody>' + rows + '</tbody></table>' + '<div class="hint">可自行取消的期限為服務日前 ' + S.params.cancelDeadlineDays + ' 天；逾期請改用「請假／代班」提出申請，由代理人與管理者接手。</div>';
+    var susp = suspended() ? suspendNote('報名與取消班表') : '';
+    return head('班表報名', '查看各服務地點的班表，報名空缺班或取消自己的排班') + '<div class="wrap">' + susp + '<div class="card" style="margin-top:20px">' + '<div class="card-h">查詢條件</div>' + '<div class="grid g2" style="margin-top:10px;gap:18px">' + '<div class="field" style="margin-top:0"><label>服務地點</label><select class="inp" data-change="sched-loc">' + locOpts + '</select></div>' + '<div class="field" style="margin-top:0"><label>月份</label><select class="inp" data-change="sched-month">' + monOpts + '</select></div>' + '</div>' + modeNote + holBox + '</div>' + '<div class="card" style="margin-top:24px"><div class="card-h">' + esc((multi ? '我的服務地點' : locs.length ? locs[0].name : '班表') + '　' + schedState.month.replace('-', '年 ') + ' 月班表') + '</div>' + viewRow + body + '</div>' + '</div>' + slotPop();
+  };
+  ACTS['sched-loc'] = function (el) {
+    schedState.loc = el.value;
+    schedState.focus = '';
+    render();
+  };
+  ACTS['sched-month'] = function (el) {
+    schedState.month = el.value;
+    schedState.focus = '';
+    render();
+  };
+  ACTS['sched-view'] = function (el) {
+    schedState.view = el.getAttribute('data-v');
+    render();
+  };
+  ACTS['sched-mine'] = function (el) {
+    schedState.onlyMine = el.checked;
+    render();
+  };
+  ACTS['cal-month'] = function (el) {
+    var n = Number(el.getAttribute('data-n'));
+    var y = Number(schedState.month.slice(0, 4)),
+      m = Number(schedState.month.slice(5, 7)) + n;
+    while (m < 1) {
+      m += 12;
+      y--;
+    }
+    while (m > 12) {
+      m -= 12;
+      y++;
+    }
+    schedState.month = y + '-' + (m < 10 ? '0' : '') + m;
+    render();
+  };
+  ACTS['cal-open'] = function (el) {
+    schedState.pop = el.getAttribute('data-id');
+    render();
+  };
+  ACTS['pop-close'] = function () {
+    schedState.pop = '';
+    render();
+  };
+  ACTS['slot-join'] = function (el) {
+    var s = byId(S.slots, el.getAttribute('data-id'));
+    var loc = byId(S.locations, s.locationId);
+    if (loc.needApproval) {
+      s.pending.push(S.currentVolunteerId);
+    } else {
+      s.booked.push(S.currentVolunteerId);
+    }
+    schedState.pop = '';
+    save();
+    render();
+  };
+  ACTS['slot-cancel'] = function (el) {
+    var s = byId(S.slots, el.getAttribute('data-id'));
+    var i = s.booked.indexOf(S.currentVolunteerId);
+    if (i >= 0) {
+      s.booked.splice(i, 1);
+    }
+    schedState.pop = '';
+    save();
+    render();
+  };
+  var checkState = {
+    msg: '',
+    err: '',
+    pwOpen: false
+  };
+  var SCEN = {
+    early: '提早到（班表開始前）',
+    grace: '緩衝時間內到班',
+    late: '超過緩衝時間（遲到）'
+  };
+  function scenTimes(t) {
+    var st = toMin(t.start);
+    var g = t.graceMinutes || 0;
+    if (UI.scenario === 'grace' && g === 0) {
+      UI.scenario = 'early';
+    }
+    if (UI.scenario === 'early') {
+      return {
+        at: toHHMM(st - 18)
+      };
+    }
+    if (UI.scenario === 'grace') {
+      return {
+        at: toHHMM(st + Math.max(1, g - 3))
+      };
+    }
+    return {
+      at: toHHMM(st + g + 16)
+    };
+  }
+  function doCheckIn(source) {
+    var slot = todaySlot();
+    var m = me();
+    if (!slot) {
+      var locNow = byId(S.locations, m.locationIds[0]);
+      var todays = S.slots.filter(function (s) {
+        return s.date === S.today && s.locationId === m.locationIds[0];
+      });
+      var allFull = todays.length > 0 && todays.every(function (s) {
+        return s.booked.length >= s.capacity;
+      });
+      if (locNow && locNow.checkinCap && allFull) {
+        checkState.msg = 'cap';
+        return;
+      }
+      S.attendance.push({
+        id: newId('AX'),
+        volunteerId: m.id,
+        slotId: null,
+        date: S.today,
+        locationId: m.locationIds[0],
+        slotName: '臨時到班（未排班）',
+        checkIn: '09:05',
+        checkOut: '',
+        countedFrom: '',
+        countedTo: '',
+        hours: 0,
+        status: '未報名簽到',
+        source: source,
+        decision: '待決定',
+        note: '當日未排班但到場簽到，由管理者決定是否發給時數'
+      });
+      checkState.msg = 'no-slot';
+      save();
+      return;
+    }
+    var t = tpl(slot.templateId);
+    var at = scenTimes(t).at;
+    var st = toMin(t.start),
+      g = t.graceMinutes || 0,
+      atM = toMin(at);
+    var counted, status;
+    if (atM <= st) {
+      counted = t.start;
+      status = '正常';
+    } else if (atM <= st + g) {
+      counted = t.start;
+      status = '緩衝內到班';
+    } else {
+      counted = at;
+      status = '遲到';
+    }
+    S.attendance.push({
+      id: newId('AX'),
+      volunteerId: m.id,
+      slotId: slot.id,
+      date: S.today,
+      locationId: slot.locationId,
+      slotName: t.name + ' ' + t.start + '–' + t.end,
+      checkIn: at,
+      checkOut: '',
+      countedFrom: counted,
+      countedTo: '',
+      hours: 0,
+      status: status,
+      source: source
+    });
+    checkState.msg = 'in';
+    save();
+  }
+  function doCheckOut(source) {
+    var a = todayAttendance();
+    if (!a) {
+      return;
+    }
+    var slot = todaySlot();
+    var t = slot ? tpl(slot.templateId) : null;
+    if (!t) {
+      a.checkOut = '12:00';
+      a.countedTo = '12:00';
+      save();
+      return;
+    }
+    var out = t.earlyLeave ? t.end : toHHMM(toMin(t.end) + 3);
+    a.checkOut = out;
+    a.countedTo = t.end;
+    a.hours = Math.round((toMin(t.end) - toMin(a.countedFrom)) / 60 * 100) / 100;
+    if (t.earlyLeave) {
+      a.status = '固定早退';
+      a.note = '固定早退時段，不記點，時數照發 ' + t.hours + ' 小時';
+    }
+    if (source) {
+      a.source = a.source || source;
+    }
+    checkState.msg = 'out';
+    save();
+  }
+  PAGES.checkin = function () {
+    var m = me(),
+      h = hours();
+    var pts = HCV.activePoints(S, m.id);
+    var slot = todaySlot();
+    var a = todayAttendance();
+    var t = slot ? tpl(slot.templateId) : null;
+    var stat = '<div class="grid g4 m2" style="margin-top:20px">' + '<div class="card stat mini"><div class="lbl">本年時數</div><div class="big">' + hourText(h.total) + '<small>小時</small></div></div>' + '<div class="card stat mini"><div class="lbl">距離達標</div><div class="big">' + hourText(h.left) + '<small>小時</small></div></div>' + '<div class="card stat mini"><div class="lbl">本年違規點數</div><div class="big">' + pts + '<small>點</small></div></div>' + '<div class="card stat mini"><div class="lbl">志工資格狀態</div><div class="big state" style="' + (m.status === '在職' ? '' : 'color:#b03a3a') + '">' + esc(m.status) + '</div></div>' + '</div>';
+    var servedTxt = '';
+    if (a && a.checkIn && !a.checkOut && a.status !== '未報名簽到') {
+      var nowM = new Date().getHours() * 60 + new Date().getMinutes();
+      var used = nowM - toMin(a.checkIn);
+      servedTxt = used > 0 && used < 720 ? '已服務 ' + Math.floor(used / 60) + ' 小時 ' + used % 60 + ' 分' : '服務計時中';
+    }
+    var stTag = !a ? tag('待簽到', 't-warn') : a.checkOut ? tag('已簽退', 't-green') : tag('服務中', 't-act');
+    var slotCard = slot ? '<div class="card" style="margin-top:20px">' + '<div class="card-h">今日班別' + stTag + '</div>' + '<div style="font-size:1.6rem;font-weight:800;color:var(--brick);margin-top:14px">' + esc(t.name) + ' ' + esc(t.start) + ' – ' + esc(t.end) + '</div>' + '<div style="color:var(--muted);margin-top:6px">' + esc(HCV.dateLabel(S.today)) + '・' + esc(locName(slot.locationId)) + '</div>' + (t.graceMinutes > 0 ? '<div class="hint">本時段簽到緩衝 ' + t.graceMinutes + ' 分鐘；提早到一律以班表開始時間 ' + esc(t.start) + ' 起算。</div>' : '<div class="hint">本時段無簽到緩衝；提早到一律以班表開始時間 ' + esc(t.start) + ' 起算。</div>') + (t.earlyLeave ? '<div class="hint strong">固定早退時段：簽退標示「固定早退」，不記點，時數照發 ' + t.hours + ' 小時。</div>' : '') + (servedTxt ? '<div class="hint strong">' + esc(servedTxt) + '（簽到於 ' + esc(a.checkIn) + '）</div>' : '') + '</div>' : '<div class="card" style="margin-top:20px"><div class="card-h">今日班別</div>' + '<div class="hint strong" style="margin-top:12px">今天（' + esc(HCV.dateLabel(S.today)) + '）沒有您的排班。</div>' + '<div class="inline-note">臨時到場支援仍可簽到，系統會記錄並標示為異常，由服務地點管理者決定是否發給時數。</div></div>';
+    var result = '';
+    if (checkState.err === 'expired') {
+      result = '<div class="alert" style="margin-top:20px"><div class="ic">!</div><div><h4>QR Code 已過期</h4>' + '<p>QR Code 已過期，請洽現場管理者重新產生。（現場 QR Code 有效時間為 ' + S.params.qrValidMinutes + ' 分鐘）</p></div></div>';
+    } else if (checkState.msg === 'in' && a) {
+      var why = UI.scenario === 'early' ? '提早到班，以班表開始時間 ' + esc(t.start) + ' 計' : UI.scenario === 'grace' ? '在 ' + t.graceMinutes + ' 分鐘緩衝內到班，以班表時間 ' + esc(t.start) + ' 計' : '已逾 ' + t.graceMinutes + ' 分鐘緩衝，自實際簽到時間 ' + esc(a.checkIn) + ' 起算';
+      result = '<div class="card" style="margin-top:20px;border:2px solid var(--green)">' + '<div class="card-h">簽到完成 ' + statusTag(a.status) + '</div>' + '<div class="grid g2" style="margin-top:14px;gap:12px">' + '<div><div style="font-weight:800">實際簽到時間</div><div style="font-size:1.5rem;font-weight:800">' + esc(a.checkIn) + '</div></div>' + '<div><div style="font-weight:800">計入服務時間</div><div style="font-size:1.5rem;font-weight:800;color:var(--brick)">' + esc(a.countedFrom) + ' 起</div></div>' + '</div>' + '<div class="hint strong">' + why + '</div>' + '<div class="hint">簽到方式：' + esc(a.source) + '　服務地點：' + esc(locName(a.locationId)) + '</div></div>';
+    } else if (checkState.msg === 'out' && a) {
+      result = '<div class="card" style="margin-top:20px;border:2px solid var(--green)">' + '<div class="card-h">簽退完成 ' + statusTag(a.status) + '</div>' + '<div class="grid g2" style="margin-top:14px;gap:12px">' + '<div><div style="font-weight:800">計入起訖</div><div style="font-size:1.4rem;font-weight:800">' + esc(a.countedFrom) + '–' + esc(a.countedTo) + '</div></div>' + '<div><div style="font-weight:800">本班服務時數</div><div style="font-size:1.6rem;font-weight:800;color:var(--brick)">' + hourText(a.hours) + ' 小時</div></div>' + '</div>' + '<div class="hint">實際簽退時間 ' + esc(a.checkOut) + '；時數以班表為基準計算到分鐘，已累計至本年度時數。</div>' + '<div class="btn-row"><a class="btn btn-ghost" href="#/attendance">查看出勤紀錄</a></div></div>';
+    } else if (checkState.msg === 'no-slot') {
+      result = '<div class="card" style="margin-top:20px;border:2px solid var(--pink)">' + '<div class="card-h">已記錄到班 ' + tag('未報名簽到', 't-warn') + '</div>' + '<div class="hint strong">今日未排班，系統已記錄您的到班時間並通知服務地點管理者，由管理者決定是否發給時數。</div></div>';
+    } else if (checkState.msg === 'cap') {
+      result = '<div class="card" style="margin-top:20px;border:2px solid var(--pink)">' + '<div class="card-h">無法簽到 ' + tag('簽到人數已達上限', 't-warn') + '</div>' + '<div class="hint strong">您今日沒有排班，而本服務地點今日各時段的簽到人數都已達上限，無法簽到。如需協助請洽服務地點管理者。</div></div>';
+    }
+    var btns;
+    if (suspended()) {
+      btns = suspendNote('簽到退');
+    } else if (a && a.checkOut) {
+      btns = '<div class="btn-row"><a class="btn btn-ghost btn-block" href="#/attendance">今日已完成簽退，查看出勤紀錄</a></div>';
+    } else if (a && !a.checkOut && a.status !== '未報名簽到') {
+      btns = '<div class="btn-row">' + '<button class="btn btn-primary btn-block" data-act="scan" data-mode="out"><span class="qr-ic"></span>掃碼簽退</button>' + '<button class="btn btn-ghost btn-block" data-act="pw-toggle">改用帳密簽退</button></div>';
+    } else if (a && a.status === '未報名簽到') {
+      btns = '<div class="btn-row"><button class="btn btn-ghost btn-block" data-act="checkin-reset">重新操作一次</button></div>';
+    } else {
+      btns = '<div class="btn-row">' + '<button class="btn btn-primary btn-block" data-act="scan" data-mode="in"><span class="qr-ic"></span>掃碼簽到</button>' + '<button class="btn btn-ghost btn-block" data-act="pw-toggle">改用帳密簽到</button></div>';
+    }
+    var pwBox = checkState.pwOpen ? '<div class="card" style="margin-top:16px"><div class="card-h">改用帳密簽到退</div>' + '<div class="hint strong" style="margin-top:10px">沒帶手機時，可在館內公用電腦以借閱證帳密登入本頁完成簽到退；也可請館員在公用電腦以借閱證條碼代為登記。</div>' + '<div class="field"><label>帳號</label><input class="inp" type="text" value="' + esc(m.cardNo) + '" readonly></div>' + '<div class="field"><label>密碼</label><input class="inp" type="password" value="********" readonly></div>' + '<div class="btn-row"><button class="btn btn-primary btn-block" data-act="pw-go">確認送出</button></div></div>' : '';
+    var gOpts = ['early', 'grace', 'late'].filter(function (k) {
+      return !(k === 'grace' && (!t || !t.graceMinutes));
+    }).map(function (k) {
+      return '<option value="' + k + '" ' + (UI.scenario === k ? 'selected' : '') + '>' + esc(SCEN[k]) + '</option>';
+    }).join('');
+    var sim = a && a.checkIn ? '' : '<div class="card" style="margin-top:16px"><div class="card-h">模擬簽到時間</div>' + '<select class="inp" style="margin-top:12px" data-change="scenario">' + gOpts + '</select>' + '<div class="hint">用於展示不同到班時間的計算結果；正式系統的簽到退時間一律取伺服器當下時間，志工與管理者都不能指定。</div>' + '<div style="margin-top:10px"><button class="linkish" data-act="qr-expired">模擬掃到已過期的 QR Code</button></div></div>';
+    return head('現場簽到退', '到班時掃描現場 QR Code 完成簽到與簽退') + '<div class="wrap"><div class="phone">' + '<div class="inline-note" style="margin-top:0">本頁以手機操作為主要情境：到班後掃描服務地點張貼或由管理者展示的 QR Code 即可完成簽到退。</div>' + stat + slotCard + result + btns + pwBox + sim + '<div class="alert" style="margin-top:20px"><div class="ic">!</div><div>' + '<h4>操作提醒</h4><p>請於服務地點掃描現場 QR Code 完成簽到退。QR Code 有有效時間，過期請洽現場管理者重新產生；忘記簽到或簽退時，請洽服務地點管理者補登。</p>' + '</div></div>' + '</div></div>';
+  };
+  ACTS.scenario = function (el) {
+    UI.scenario = el.value;
+    uiSave();
+  };
+  ACTS['qr-expired'] = function () {
+    checkState.err = 'expired';
+    checkState.msg = '';
+    render();
+  };
+  ACTS['checkin-reset'] = function () {
+    checkState.msg = '';
+    checkState.err = '';
+    render();
+  };
+  ACTS['pw-toggle'] = function () {
+    checkState.pwOpen = !checkState.pwOpen;
+    render();
+  };
+  ACTS['pw-go'] = function () {
+    checkState.err = '';
+    checkState.pwOpen = false;
+    var a = todayAttendance();
+    if (a && !a.checkOut && a.status !== '未報名簽到') {
+      doCheckOut('館內電腦帳密');
+    } else if (!a) {
+      doCheckIn('館內電腦帳密');
+    }
+    render();
+  };
+  ACTS.scan = function (el) {
+    var mode = el.getAttribute('data-mode');
+    checkState.err = '';
+    var ov = document.createElement('div');
+    ov.className = 'scan';
+    ov.innerHTML = '<div style="font-weight:800;font-size:1.1rem">請將鏡頭對準現場 QR Code</div>' + '<div class="frame"><i></i><i></i><i></i><i></i><span class="ray"></span></div>' + '<div style="opacity:.8">辨識中…</div>' + '<button class="btn btn-ghost" data-act="scan-cancel">取消</button>';
+    document.body.appendChild(ov);
+    window.setTimeout(function () {
+      if (!document.body.contains(ov)) {
+        return;
+      }
+      document.body.removeChild(ov);
+      if (mode === 'in') {
+        doCheckIn('現場QR');
+      } else {
+        doCheckOut('現場QR');
+      }
+      render();
+    }, 1400);
+  };
+  ACTS['scan-cancel'] = function () {
+    var ov = document.querySelector('.scan');
+    if (ov) {
+      document.body.removeChild(ov);
+    }
+  };
+  var attState = {
+    from: '',
+    to: '',
+    status: '全部',
+    open: {},
+    formOpen: false,
+    msg: ''
+  };
+  PAGES.attendance = function () {
+    var rows = myAttendance();
+    var sts = ['全部', '只看異常', '正常', '緩衝內到班', '遲到', '早退', '固定早退', '缺勤', '未報名簽到', '補登'];
+    var ABNORMAL = ['遲到', '早退', '缺勤', '未報名簽到'];
+    var shown = rows.filter(function (a) {
+      if (attState.from && a.date < attState.from) {
+        return false;
+      }
+      if (attState.to && a.date > attState.to) {
+        return false;
+      }
+      if (attState.status === '全部') {
+        return true;
+      }
+      if (attState.status === '只看異常') {
+        return ABNORMAL.indexOf(a.status) >= 0;
+      }
+      return a.status === attState.status;
+    });
+    var body = shown.length ? shown.map(function (a) {
+      var counted = (a.countedFrom || '—') + '–' + (a.countedTo || '—');
+      var pending = a.checkIn && !a.checkOut && a.status === '補登';
+      var noteBtn = a.note ? ' <button class="linkish" data-act="att-note" data-id="' + esc(a.id) + '">備註</button>' : '';
+      var tr = '<tr>' + '<td data-label="日期">' + esc(HCV.dateLabel(a.date)) + '</td>' + '<td data-label="地點與時段">' + esc(locName(a.locationId)) + '<br><span style="color:var(--muted);font-size:.92rem">' + esc(a.slotName) + '</span></td>' + '<td data-label="簽到">' + esc(a.checkIn || '—') + '</td>' + '<td data-label="簽退">' + esc(a.checkOut || (pending ? '已申請補登，處理中' : '—')) + '</td>' + '<td data-label="計入起訖">' + esc(counted) + '</td>' + '<td data-label="時數" class="num">' + hourText(a.hours) + '</td>' + '<td data-label="狀態">' + statusTag(a.status) + noteBtn + '</td>' + '<td data-label="簽到方式">' + esc(a.source || '—') + '</td>' + '</tr>';
+      if (a.note && attState.open[a.id]) {
+        tr += '<tr class="note-row"><td colspan="8">備註：' + esc(a.note) + '</td></tr>';
+      }
+      return tr;
+    }).join('') : '<tr><td colspan="8">尚無出勤紀錄。</td></tr>';
+    var stOpts = sts.map(function (x) {
+      return '<option value="' + esc(x) + '" ' + (x === attState.status ? 'selected' : '') + '>' + esc(x) + '</option>';
+    }).join('');
+    var form = attState.formOpen ? '<div class="card" style="margin-top:24px"><div class="card-h">申請補登</div>' + '<div class="hint strong" style="margin-top:10px">忘記簽到或簽退時，填寫下列資料送出，系統會通知服務地點管理者處理；簽到退時間僅文化局總管理者可編修。</div>' + '<div class="field-row">' + '<div class="field"><label><span class="req">*</span>服務日期</label><input class="inp" id="rgDate" type="date" value="' + esc(S.today) + '"></div>' + '<div class="field"><label><span class="req">*</span>時段</label><select class="inp" id="rgSlot">' + S.slotTemplates.map(function (t) {
+      return '<option>' + esc(t.name + ' ' + t.start + '–' + t.end) + '</option>';
+    }).join('') + '</select></div>' + '</div>' + '<div class="field"><label><span class="req">*</span>說明</label><textarea class="inp" id="rgNote" placeholder="例如：當日 12:00 服務結束，因故未完成簽退"></textarea></div>' + '<div id="rgErr"></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="att-send">送出申請</button>' + '<button class="btn btn-ghost" data-act="att-form">取消</button></div></div>' : '';
+    return head('我的出勤紀錄', '查詢每一次到班的簽到退時間、計入時數與狀態') + pageTools() + '<div class="wrap">' + (attState.msg ? '<div class="ok-box">' + esc(attState.msg) + '</div>' : '') + '<div class="card historySearch" style="margin-top:20px"><div class="card-h">查詢條件' + '<button class="btn-sm" data-act="att-form">申請補登</button></div>' + '<div class="grid g2" style="margin-top:10px;gap:18px">' + '<div class="field" style="margin-top:0"><label>服務日期</label>' + '<div class="range"><input class="inp" type="date" id="atFrom" value="' + esc(attState.from) + '" style="flex:1">' + '<span>—</span><input class="inp" type="date" id="atTo" value="' + esc(attState.to) + '" style="flex:1"></div>' + '<div class="note">單次可設定的日期範圍查詢範圍為 1 年</div></div>' + '<div class="field" style="margin-top:0"><label>出勤狀態</label><select class="inp" id="atStatus">' + stOpts + '</select></div>' + '</div>' + '<div class="btn-row"><button class="btn btn-ghost" data-act="att-reset">重設</button>' + '<button class="btn btn-primary" data-act="att-search">查詢</button></div>' + '</div>' + form + '<div class="card" style="margin-top:24px"><div class="card-h">出勤紀錄</div>' + '<table class="tbl"><thead><tr><th>日期</th><th>地點與時段</th><th>簽到</th><th>簽退</th><th>計入起訖</th><th>時數</th><th>狀態</th><th>簽到方式</th></tr></thead>' + '<tbody>' + body + '</tbody></table>' + '<div class="hint">時數以班表為基準計算到分鐘：提早到一律以班表開始時間起算；在簽到緩衝內到班仍以班表時間計。紀錄有誤時請洽服務地點管理者，志工無法自行修改。</div>' + '</div>' + '</div>';
+  };
+  ACTS['att-search'] = function () {
+    var f = document.getElementById('atFrom'),
+      t = document.getElementById('atTo'),
+      s = document.getElementById('atStatus');
+    attState.from = f ? f.value : '';
+    attState.to = t ? t.value : '';
+    attState.status = s ? s.value : '全部';
+    attState.msg = '';
+    render();
+  };
+  ACTS['att-reset'] = function () {
+    attState.from = '';
+    attState.to = '';
+    attState.status = '全部';
+    attState.msg = '';
+    render();
+  };
+  ACTS['att-note'] = function (el) {
+    var id = el.getAttribute('data-id');
+    attState.open[id] = !attState.open[id];
+    render();
+  };
+  ACTS['att-form'] = function () {
+    attState.formOpen = !attState.formOpen;
+    attState.msg = '';
+    render();
+  };
+  ACTS['att-send'] = function () {
+    var d = document.getElementById('rgDate').value || S.today;
+    var sl = document.getElementById('rgSlot').value;
+    var nt = document.getElementById('rgNote').value.trim();
+    if (!nt) {
+      document.getElementById('rgErr').innerHTML = '<div class="err">請填寫說明。</div>';
+      return;
+    }
+    S.attendance.push({
+      id: newId('AX'),
+      volunteerId: S.currentVolunteerId,
+      slotId: null,
+      date: d,
+      locationId: me().locationIds[0],
+      slotName: sl,
+      checkIn: '',
+      checkOut: '',
+      countedFrom: '',
+      countedTo: '',
+      hours: 0,
+      status: '補登',
+      source: '管理者補登',
+      note: '志工申請補登：' + nt + '（已通知服務地點管理者，處理中）'
+    });
+    save();
+    attState.formOpen = false;
+    attState.msg = '補登申請已送出，將通知服務地點管理者處理。';
+    render();
+  };
+  var leaveState = {
+    tab: 'apply',
+    slot: '',
+    reason: '',
+    proxy: '',
+    proxyQ: '',
+    long: false,
+    from: '',
+    to: '',
+    msg: '',
+    err: '',
+    helpOpen: false,
+    subOpen: false
+  };
+  function leaveSteps(lv) {
+    var names = ['已送出', '代理人同意', '管理者審核'];
+    if (lv.isLong) {
+      names.push('文化局簽核');
+    }
+    names.push('完成');
+    var cur;
+    if (lv.status === '待代理人回覆') {
+      cur = 1;
+    } else if (lv.status === '待管理者審核') {
+      cur = 2;
+    } else if (lv.status === '待文化局簽核') {
+      cur = 3;
+    } else {
+      cur = names.length - 1;
+    }
+    var done = lv.status === '已核准';
+    return '<div class="steps">' + names.map(function (n, i) {
+      var cls = i < cur ? 'done' : i === cur ? done ? 'done' : 'now' : '';
+      return '<div class="step ' + cls + '">' + esc(n) + '</div>';
+    }).join('') + '</div>';
+  }
+  PAGES.leave = function (q) {
+    var m = me();
+    if (q.slot && byId(S.slots, q.slot)) {
+      leaveState.slot = q.slot;
+      leaveState.tab = 'apply';
+    }
+    var tabs = [['apply', '我要請假'], ['mine', '我的申請紀錄'], ['sub', '代班']].map(function (t) {
+      return '<button class="tab ' + (leaveState.tab === t[0] ? 'on' : '') + '" data-act="leave-tab" data-v="' + t[0] + '">' + esc(t[1]) + '</button>';
+    }).join('');
+    var body = '';
+    if (leaveState.tab === 'apply') {
+      body = leaveApply();
+    } else if (leaveState.tab === 'mine') {
+      body = leaveMine();
+    } else {
+      body = leaveSub();
+    }
+    return head('請假／代班', '為已排定的班別請假並安排代理人，或協助他人代班') + '<div class="wrap">' + (suspended() ? suspendNote('請假與代班的送出') : '') + '<div class="tabs">' + tabs + '</div>' + body + '</div>';
+  };
+  function leaveApply() {
+    var m = me();
+    var slots = myFutureSlots();
+    if (!leaveState.slot && slots.length) {
+      leaveState.slot = slots[0].id;
+    }
+    var slotOpts = slots.length ? slots.map(function (s) {
+      var t = tpl(s.templateId);
+      return '<option value="' + esc(s.id) + '" ' + (s.id === leaveState.slot ? 'selected' : '') + '>' + esc(HCV.dateLabel(s.date) + '　' + t.name + ' ' + t.start + '–' + t.end + '　' + locName(s.locationId)) + '</option>';
+    }).join('') : '<option value="">目前沒有可請假的班別</option>';
+    var mates = sameUnitMates().filter(function (v) {
+      return !leaveState.proxyQ || v.name.indexOf(leaveState.proxyQ) >= 0 || HCV.groupNames(S, v).indexOf(leaveState.proxyQ) >= 0;
+    });
+    var proxyOpts = '<option value="">請選擇代理人</option>' + mates.map(function (v) {
+      return '<option value="' + esc(v.id) + '" ' + (v.id === leaveState.proxy ? 'selected' : '') + '>' + esc(v.name + '（' + HCV.groupNames(S, v) + '）') + '</option>';
+    }).join('');
+    var slot = byId(S.slots, leaveState.slot);
+    var lateWarn = '';
+    if (slot) {
+      var d = HCV.diffDays(S.today, slot.date);
+      if (d < S.params.leaveAdvanceDays) {
+        lateWarn = '<div class="inline-note">距離服務日僅 ' + d + ' 天，未達提前 ' + S.params.leaveAdvanceDays + ' 天的規定，' + '仍可送出，但會標記為「臨時請假」供管理者判斷。</div>';
+      }
+    }
+    var longBox = leaveState.long ? '<div class="field-row">' + '<div class="field"><label>起始日</label><input class="inp" type="date" data-change="leave-from" value="' + esc(leaveState.from) + '"></div>' + '<div class="field"><label>結束日</label><input class="inp" type="date" data-change="leave-to" value="' + esc(leaveState.to) + '"></div>' + '</div>' + (isLongLeave() ? '<div class="inline-note">連續請假達 ' + S.params.longLeaveMonths + ' 個月以上，須經服務地點管理者與文化局兩關簽核。</div>' : '') : '';
+    var leaders = myLeaders().map(function (g) {
+      return '<li>' + esc(g.name) + '　組長 ' + esc(g.leader) + '　' + esc(g.leaderPhone) + '</li>';
+    }).join('');
+    var help = leaveState.helpOpen ? '<div class="inline-note"><b>找不到代理人時，請聯繫所屬組別的組長協助安排：</b>' + '<ul class="login-rules" style="margin-top:8px">' + leaders + '</ul>' + '代理人為必填，未指定代理人無法送出請假單。也可以改到「代班」頁公開徵求，由系統通知同大組、當天沒有排班的志工。</div>' : '';
+    return '<div class="card" style="margin-top:20px"><div class="card-h">新增請假單</div>' + (leaveState.msg ? '<div class="ok-box">' + esc(leaveState.msg) + '</div>' : '') + '<div class="field"><label><span class="req">*</span>請假類型</label><select class="inp" data-change="leave-type">' + ['事假', '病假', '公假', '長假（三個月以上）'].map(function (x) {
+      return '<option value="' + x + '" ' + (x === (leaveState.type || '事假') ? 'selected' : '') + '>' + x + '</option>';
+    }).join('') + '</select></div>' + '<div class="field"><label><span class="req">*</span>請假班別</label><select class="inp" data-change="leave-slot">' + slotOpts + '</select></div>' + lateWarn + '<div class="field"><label><span class="req">*</span>請假事由</label>' + '<textarea class="inp" data-change="leave-reason" placeholder="請說明請假原因">' + esc(leaveState.reason) + '</textarea></div>' + '<div class="field"><label><span class="req">*</span>代理人（限同大組：' + esc(myUnitName()) + '）</label>' + '<input class="inp" type="text" placeholder="輸入姓名或組別搜尋後按 Enter" data-change="leave-proxyq" value="' + esc(leaveState.proxyQ) + '" style="margin-bottom:10px">' + '<select class="inp" data-change="leave-proxy">' + proxyOpts + '</select>' + '<div style="margin-top:10px"><button class="linkish" data-act="leave-help">找不到代理人？</button></div></div>' + help + longBox + (leaveState.err ? '<div class="err">' + esc(leaveState.err) + '</div>' : '') + '<div class="btn-row"><button class="btn btn-primary" data-act="leave-send" ' + (suspended() ? 'disabled' : '') + '>送出請假單</button></div>' + '<div class="hint">送出後先通知代理人；代理人同意後才會送到服務地點管理者審核。代理人不同意時，整張請假單退回並通知您。</div>' + '</div>';
+  }
+  function isLongLeave() {
+    if (!leaveState.long || !leaveState.from || !leaveState.to) {
+      return false;
+    }
+    return HCV.diffDays(leaveState.from, leaveState.to) >= S.params.longLeaveMonths * 30;
+  }
+  function leaveMine() {
+    var id = S.currentVolunteerId;
+    var mine = S.leaves.filter(function (l) {
+      return l.volunteerId === id;
+    }).sort(function (a, b) {
+      return a.createdAt < b.createdAt ? 1 : -1;
+    });
+    if (!mine.length) {
+      return '<div class="card" style="margin-top:20px"><div class="card-h">我的申請紀錄</div><div class="hint">尚無請假紀錄。</div></div>';
+    }
+    return mine.map(function (l) {
+      var slotTxt = l.slotIds.length ? l.slotIds.map(function (sid) {
+        var s = byId(S.slots, sid);
+        if (!s) {
+          return sid;
+        }
+        var t = tpl(s.templateId);
+        return HCV.dateLabel(s.date) + '　' + t.name + ' ' + t.start + '–' + t.end + '　' + locName(s.locationId);
+      }).join('、') : l.from + ' 至 ' + l.to;
+      var proxy = byId(S.volunteers, l.proxyId);
+      var sim = l.status === '待代理人回覆' ? '<div style="margin-top:12px"><button class="linkish" data-act="leave-proxy-ok" data-id="' + esc(l.id) + '">模擬代理人同意</button></div>' : '';
+      return '<div class="card" style="margin-top:20px"><div class="card-h">' + esc(slotTxt) + tag(l.status, l.status === '已核准' ? 't-green' : l.status.indexOf('待') === 0 ? 't-notice' : 't-warn') + '</div>' + '<div style="margin-top:12px">事由：' + esc(l.reason) + '</div>' + '<div class="hint strong">代理人：' + esc(proxy ? proxy.name : '—') + (l.isLong ? '　｜　長假（須兩關簽核）' : '') + (l.late ? '　｜　臨時請假' : '') + '　｜　申請時間：' + esc(l.createdAt) + '</div>' + leaveSteps(l) + sim + '</div>';
+    }).join('');
+  }
+  function leaveSub() {
+    var id = S.currentVolunteerId,
+      m = me();
+    function slotText(sb) {
+      if (sb.slotLabel) {
+        return sb.slotLabel;
+      }
+      var s = byId(S.slots, sb.slotId);
+      if (!s) {
+        return '—';
+      }
+      var t = tpl(s.templateId);
+      return HCV.dateLabel(s.date) + '　' + t.name + ' ' + t.start + '–' + t.end + '　' + locName(s.locationId);
+    }
+    var invited = S.substitutions.filter(function (x) {
+      return x.toVolunteerId === id && x.status === '待對方回覆';
+    });
+    var open = S.substitutions.filter(function (x) {
+      if (x.status !== '徵求中' || x.fromVolunteerId === id) {
+        return false;
+      }
+      var from = byId(S.volunteers, x.fromVolunteerId);
+      return from && from.unitId === m.unitId;
+    });
+    var mine = S.substitutions.filter(function (x) {
+      return x.fromVolunteerId === id;
+    });
+    var invitedBox = invited.length ? invited.map(function (x) {
+      var from = byId(S.volunteers, x.fromVolunteerId);
+      return '<div class="card" style="margin-top:20px"><div class="card-h">' + esc(from ? from.name : '') + ' 邀請您代班' + tag('待您回覆', 't-notice') + '</div>' + '<div style="margin-top:10px">' + esc(slotText(x)) + '</div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="sub-accept" data-id="' + esc(x.id) + '" ' + (suspended() ? 'disabled' : '') + '>我同意代班</button>' + '<button class="btn btn-ghost" data-act="sub-decline" data-id="' + esc(x.id) + '">婉拒</button></div>' + '<div class="hint">同意後班表會自動更新，並寄信通知您、原排班志工與管理者。</div></div>';
+    }).join('') : '<div class="card" style="margin-top:20px"><div class="card-h">別人邀請我的代班</div><div class="hint">目前沒有人邀請您代班。</div></div>';
+    var openBox = '<div class="card" style="margin-top:20px"><div class="card-h">公開徵求中的班（' + esc(myUnitName()) + '）</div>' + (open.length ? open.map(function (x) {
+      var from = byId(S.volunteers, x.fromVolunteerId);
+      return '<div style="display:flex;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);flex-wrap:wrap">' + '<span style="flex:1;min-width:260px">' + esc(slotText(x)) + '<br><span style="color:var(--muted);font-size:.92rem">原排班：' + esc(from ? from.name : '') + '　已通知 ' + x.notifiedIds.length + ' 人（同一對象同一時段最多通知 ' + S.params.vacancyNotifyMax + ' 次）</span></span>' + '<button class="btn-sm" data-act="sub-take" data-id="' + esc(x.id) + '" ' + (suspended() ? 'disabled' : '') + '>我來代班</button></div>';
+    }).join('') : '<div class="hint">目前沒有公開徵求中的班。</div>') + '</div>';
+    var mineBox = '<div class="card" style="margin-top:20px"><div class="card-h">我發起的代班' + '<button class="btn-sm" data-act="sub-open">我要找人代班</button></div>' + (mine.length ? mine.map(function (x) {
+      var to = byId(S.volunteers, x.toVolunteerId);
+      var cancel = x.status === '徵求中' || x.status === '待對方回覆' ? '<button class="btn-sm grey" data-act="sub-cancel" data-id="' + esc(x.id) + '">取消</button>' : '';
+      return '<div style="display:flex;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);flex-wrap:wrap">' + '<span style="flex:1;min-width:260px">' + esc(slotText(x)) + '<br><span style="color:var(--muted);font-size:.92rem">' + esc(x.mode) + (to ? '・對象：' + to.name : '') + '</span></span>' + tag(x.status, x.status === '已成立' ? 't-green' : 't-notice') + cancel + '</div>';
+    }).join('') : '<div class="hint">您目前沒有發起中的代班。</div>') + (leaveState.subOpen ? subForm() : '') + '<div class="hint">找不到人時，系統會通知當天沒有排班的同大組志工；同一位志工、同一個時段最多通知 ' + S.params.vacancyNotifyMax + ' 次。管理者也可以直接手動指定、調整或取消代班。</div></div>';
+    return invitedBox + openBox + mineBox;
+  }
+  function subForm() {
+    var slots = myFutureSlots();
+    var slotOpts = slots.map(function (s) {
+      var t = tpl(s.templateId);
+      return '<option value="' + esc(s.id) + '">' + esc(HCV.dateLabel(s.date) + '　' + t.name + ' ' + t.start + '–' + t.end + '　' + locName(s.locationId)) + '</option>';
+    }).join('');
+    var mates = sameUnitMates().map(function (v) {
+      return '<option value="' + esc(v.id) + '">' + esc(v.name + '（' + HCV.groupNames(S, v) + '）') + '</option>';
+    }).join('');
+    return '<div style="margin-top:18px;border-top:1px dashed #ddd0c6;padding-top:18px">' + '<div class="field" style="margin-top:0"><label>要找人代的班</label><select class="inp" id="sbSlot">' + (slotOpts || '<option value="">目前沒有可代班的班別</option>') + '</select></div>' + '<div class="field"><label>徵求方式</label><select class="inp" id="sbMode">' + '<option value="公開徵求">公開徵求（通知同大組當天沒排班的志工）</option>' + '<option value="指定人選">指定人選</option></select></div>' + '<div class="field"><label>指定對象（選擇「指定人選」時適用）</label><select class="inp" id="sbTo">' + mates + '</select></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="sub-send">送出</button>' + '<button class="btn btn-ghost" data-act="sub-open">取消</button></div></div>';
+  }
+  ACTS['leave-tab'] = function (el) {
+    leaveState.tab = el.getAttribute('data-v');
+    leaveState.msg = '';
+    leaveState.err = '';
+    render();
+  };
+  ACTS['leave-slot'] = function (el) {
+    leaveState.slot = el.value;
+    render();
+  };
+  ACTS['leave-reason'] = function (el) {
+    leaveState.reason = el.value;
+  };
+  ACTS['leave-proxy'] = function (el) {
+    leaveState.proxy = el.value;
+  };
+  ACTS['leave-proxyq'] = function (el) {
+    leaveState.proxyQ = el.value;
+    render();
+  };
+  ACTS['leave-long'] = function (el) {
+    leaveState.long = el.checked;
+    render();
+  };
+  ACTS['leave-type'] = function (el) {
+    leaveState.type = el.value;
+    leaveState.long = el.value.indexOf('長假') === 0;
+    render();
+  };
+  ACTS['leave-from'] = function (el) {
+    leaveState.from = el.value;
+    render();
+  };
+  ACTS['leave-to'] = function (el) {
+    leaveState.to = el.value;
+    render();
+  };
+  ACTS['leave-help'] = function () {
+    leaveState.helpOpen = !leaveState.helpOpen;
+    render();
+  };
+  ACTS['leave-send'] = function () {
+    var ta = document.querySelector('[data-change="leave-reason"]');
+    if (ta) {
+      leaveState.reason = ta.value;
+    }
+    var sel = document.querySelector('[data-change="leave-proxy"]');
+    if (sel) {
+      leaveState.proxy = sel.value;
+    }
+    if (!leaveState.slot && !leaveState.long) {
+      leaveState.err = '請選擇要請假的班別。';
+      render();
+      return;
+    }
+    if (!leaveState.reason.trim()) {
+      leaveState.err = '請假事由為必填。';
+      render();
+      return;
+    }
+    if (!leaveState.proxy) {
+      leaveState.err = '代理人為必填，未指定代理人無法送出；找不到人時請聯繫所屬組別組長，或改到「代班」頁公開徵求。';
+      render();
+      return;
+    }
+    var slot = byId(S.slots, leaveState.slot);
+    var lng = isLongLeave();
+    S.leaves.push({
+      id: newId('LV'),
+      volunteerId: S.currentVolunteerId,
+      slotIds: lng || !slot ? [] : [slot.id],
+      from: lng ? leaveState.from : slot ? slot.date : S.today,
+      to: lng ? leaveState.to : slot ? slot.date : S.today,
+      leaveType: (leaveState.type || '事假').replace('（三個月以上）', ''),
+      reason: leaveState.reason.trim(),
+      proxyId: leaveState.proxy,
+      status: '待代理人回覆',
+      createdAt: HCV.nowStamp(),
+      isLong: lng,
+      late: slot ? HCV.diffDays(S.today, slot.date) < S.params.leaveAdvanceDays : false
+    });
+    save();
+    leaveState.err = '';
+    leaveState.reason = '';
+    leaveState.proxy = '';
+    leaveState.tab = 'mine';
+    render();
+  };
+  ACTS['leave-proxy-ok'] = function (el) {
+    var l = byId(S.leaves, el.getAttribute('data-id'));
+    if (l) {
+      l.status = '待管理者審核';
+      l.proxyRepliedAt = HCV.nowStamp();
+      save();
+    }
+    render();
+  };
+  ACTS['sub-open'] = function () {
+    leaveState.subOpen = !leaveState.subOpen;
+    render();
+  };
+  ACTS['sub-send'] = function () {
+    var sl = document.getElementById('sbSlot').value;
+    if (!sl) {
+      return;
+    }
+    var mode = document.getElementById('sbMode').value;
+    var to = document.getElementById('sbTo').value;
+    S.substitutions.push({
+      id: newId('SB'),
+      fromVolunteerId: S.currentVolunteerId,
+      slotId: sl,
+      mode: mode,
+      toVolunteerId: mode === '指定人選' ? to : null,
+      status: mode === '指定人選' ? '待對方回覆' : '徵求中',
+      notifiedIds: [],
+      notifyCount: 0,
+      createdAt: HCV.nowStamp()
+    });
+    save();
+    leaveState.subOpen = false;
+    render();
+  };
+  ACTS['sub-accept'] = function (el) {
+    var x = byId(S.substitutions, el.getAttribute('data-id'));
+    if (x) {
+      x.status = '已成立';
+      x.toVolunteerId = S.currentVolunteerId;
+      var s = byId(S.slots, x.slotId);
+      if (s) {
+        var i = s.booked.indexOf(x.fromVolunteerId);
+        if (i >= 0) {
+          s.booked.splice(i, 1);
+        }
+        if (s.booked.indexOf(S.currentVolunteerId) < 0) {
+          s.booked.push(S.currentVolunteerId);
+        }
+      }
+      save();
+    }
+    render();
+  };
+  ACTS['sub-decline'] = function (el) {
+    var x = byId(S.substitutions, el.getAttribute('data-id'));
+    if (x) {
+      x.status = '徵求中';
+      x.mode = '公開徵求';
+      x.toVolunteerId = null;
+      save();
+    }
+    render();
+  };
+  ACTS['sub-take'] = function (el) {
+    ACTS['sub-accept'](el);
+  };
+  ACTS['sub-cancel'] = function (el) {
+    var x = byId(S.substitutions, el.getAttribute('data-id'));
+    if (x) {
+      x.status = '已取消';
+      save();
+    }
+    render();
+  };
+  function monthlyHours() {
+    var h = hours();
+    var id = S.currentVolunteerId;
+    var curM = Number(monthOf(S.today).split('-')[1]);
+    var cur = 0;
+    S.attendance.forEach(function (a) {
+      if (a.volunteerId === id && monthOf(a.date) === monthOf(S.today)) {
+        cur += a.hours || 0;
+      }
+    });
+    cur = Math.round(cur * 10) / 10;
+    var rest = Math.max(0, h.total - cur);
+    var w = [1, 1, 1, 1.1, 1.1, 1, 0.9, 1, 1, 1, 1, 1];
+    var wsum = 0;
+    for (var i = 0; i < curM - 1; i++) {
+      wsum += w[i];
+    }
+    var out = [];
+    for (var mth = 1; mth <= 12; mth++) {
+      if (mth < curM) {
+        out.push(Math.round(rest * (w[mth - 1] / (wsum || 1)) * 2) / 2);
+      } else if (mth === curM) {
+        out.push(cur);
+      } else {
+        out.push(0);
+      }
+    }
+    return out;
+  }
+  PAGES.hours = function () {
+    var h = hours();
+    var mons = monthlyHours();
+    var max = Math.max.apply(null, mons.concat([1]));
+    var curM = Number(monthOf(S.today).split('-')[1]);
+    var chart = '<div class="chart">' + mons.map(function (v, i) {
+      var pct = Math.round(v / max * 100);
+      return '<div class="col"><span class="cv">' + (v ? hourText(v) : '') + '</span>' + '<span class="bx ' + (i + 1 === curM ? 'on' : '') + '" style="height:' + pct + '%"></span>' + '<span class="cl">' + (i + 1) + '月</span></div>';
+    }).join('') + '</div>';
+    var det = myAttendance().filter(function (a) {
+      return a.hours > 0;
+    }).map(function (a) {
+      return '<tr>' + '<td data-label="日期">' + esc(HCV.dateLabel(a.date)) + '</td>' + '<td data-label="地點與時段">' + esc(locName(a.locationId) + '　' + a.slotName) + '</td>' + '<td data-label="計入起訖">' + esc((a.countedFrom || '—') + '–' + (a.countedTo || '—')) + '</td>' + '<td data-label="時數" class="num">' + hourText(a.hours) + '</td>' + '<td data-label="狀態">' + statusTag(a.status) + '</td></tr>';
+    }).join('') || '<tr><td colspan="5">本年度尚無已計入的服務時數。</td></tr>';
+    return head('服務時數', '查詢本年度累計時數與達標情形') + pageTools() + '<div class="wrap">' + '<div class="grid g4">' + statCard('本年度累計時數', hourText(h.total), '小時', '門檻 ' + h.req + ' 小時') + statCard('達成率', h.pct + '%', '', YEAR_ROC + ' 年度') + statCard('排班服務', hourText(h.shift), '小時', '班表出勤累計') + statCard('活動服務', hourText(h.act), '小時', '計時數活動累計') + '</div>' + '<div class="grid g12">' + '<div class="card"><div class="card-h">年度進度</div>' + '<div style="font-family:Georgia,\'Noto Serif TC\',serif;font-size:3rem;color:var(--brick);font-weight:700;margin-top:14px">' + hourText(h.total) + '<small style="font-family:inherit;font-size:1rem;color:var(--ink);margin-left:10px">/ ' + h.req + ' 小時（' + h.pct + '%）</small></div>' + '<div class="bar"><i style="width:' + Math.min(100, h.pct) + '%"></i></div>' + '<div class="hint strong">距離達標還需 ' + hourText(h.left) + ' 小時。</div>' + chart + '<div class="hint">各月服務時數（含排班服務與計時數活動）。</div>' + '</div>' + '<div class="card"><div class="card-h">受訓時數（另計）</div>' + '<div class="big" style="font-family:Georgia,\'Noto Serif TC\',serif;font-size:3rem;color:var(--brick);font-weight:700;margin-top:14px">' + hourText(h.train) + '<small style="font-family:inherit;font-size:1rem;color:var(--ink);margin-left:8px">小時</small></div>' + '<div class="hint strong">教育訓練的受訓時數不併入服務時數，另外統計。</div>' + '<div class="inline-note">年度服務時數由文化局統一彙整造冊。</div>' + '</div>' + '</div>' + '<div class="grid"><div class="card"><div class="card-h">年度彙整</div>' + '<table class="tbl"><thead><tr><th>年度</th><th>排班服務</th><th>活動服務</th><th>總時數</th><th>年度門檻</th><th>是否達標</th></tr></thead><tbody>' + '<tr><td data-label="年度">' + YEAR_ROC + ' 年度</td>' + '<td data-label="排班服務" class="num">' + hourText(h.shift) + '</td>' + '<td data-label="活動服務" class="num">' + hourText(h.act) + '</td>' + '<td data-label="總時數" class="num">' + hourText(h.total) + '</td>' + '<td data-label="年度門檻" class="num">' + h.req + '</td>' + '<td data-label="是否達標">' + (h.total >= h.req ? tag('已達標', 't-green') : tag('尚未達標', 't-warn')) + '</td></tr>' + '</tbody></table></div></div>' + '<div class="grid"><div class="card"><div class="card-h">服務明細</div>' + '<table class="tbl"><thead><tr><th>日期</th><th>地點與時段</th><th>計入起訖</th><th>時數</th><th>狀態</th></tr></thead>' + '<tbody>' + det + '</tbody></table>' + '<div class="hint">時數以分鐘累計，畫面顯示以小時呈現，與文化局報表格式一致。</div></div></div>' + '</div>';
+  };
+  var actFilter = '全部';
+  PAGES.activities = function () {
+    var m = me();
+    var joinedCount = S.activities.filter(function (a) {
+      return a.enrolled.indexOf(m.id) >= 0;
+    }).length;
+    var kinds = ['全部', '教育訓練', '計時數活動', '我報名的'];
+    var tabs = kinds.map(function (k) {
+      var label = k === '我報名的' ? '我報名的（' + joinedCount + '）' : k;
+      return '<button class="tab ' + (k === actFilter ? 'on' : '') + '" data-act="act-filter" data-v="' + esc(k) + '">' + esc(label) + '</button>';
+    }).join('');
+    var list = S.activities.filter(function (a) {
+      if (actFilter === '我報名的') {
+        if (a.enrolled.indexOf(m.id) < 0) {
+          return false;
+        }
+      } else if (actFilter !== '全部' && a.kind !== actFilter) {
+        return false;
+      }
+      if (a.targetGroupIds.length) {
+        var ok = false;
+        a.targetGroupIds.forEach(function (g) {
+          if (m.groupIds.indexOf(g) >= 0) {
+            ok = true;
+          }
+        });
+        if (!ok) {
+          return false;
+        }
+      }
+      return true;
+    });
+    var cards = list.length ? list.map(function (a) {
+      var joined = a.enrolled.indexOf(m.id) >= 0;
+      var full = a.enrolled.length >= a.capacity;
+      var btn;
+      if (joined) {
+        btn = '<button class="btn btn-primary btn-block" data-act="act-cancel" data-id="' + esc(a.id) + '">已報名（點擊取消）</button>';
+      } else if (full) {
+        btn = '<button class="btn btn-block" disabled>名額已滿</button>';
+      } else if (suspended()) {
+        btn = '<button class="btn btn-block" disabled>停權中無法報名</button>';
+      } else {
+        btn = '<button class="btn btn-primary btn-block" data-act="act-join" data-id="' + esc(a.id) + '">我要報名</button>';
+      }
+      var kindTag = tag(a.kind, a.kind === '教育訓練' ? 't-warn' : 't-act');
+      var countTag = tag(a.kind === '教育訓練' ? '受訓時數另計' : '計入服務時數', a.kind === '教育訓練' ? 't-grey' : 't-green');
+      var target = a.targetGroupIds.length ? '<div class="hint strong">限 ' + esc(a.targetGroupIds.map(function (g) {
+        var x = byId(S.groups, g);
+        return x ? x.name : g;
+      }).join('、')) + ' 報名</div>' : '';
+      return '<div class="card act-card">' + '<div class="act-top">' + kindTag + countTag + '<span class="act-cap">' + a.enrolled.length + '/' + a.capacity + ' 名</span></div>' + '<div class="act-name">' + esc(a.title) + '</div>' + '<div class="act-meta">🗓 ' + esc(a.date) + '　' + esc(a.time) + '（' + esc(hourText(a.hours)) + ' 小時）</div>' + '<div class="act-meta">📍 ' + esc(locName(a.locationId)) + '</div>' + target + btn + '</div>';
+    }).join('') : '<div class="card"><div class="hint">' + (actFilter === '我報名的' ? '您目前沒有報名任何活動。' : '目前沒有符合條件的活動。') + '</div></div>';
+    return head('活動報名', '報名教育訓練與計時數活動') + '<div class="wrap">' + (suspended() ? suspendNote('活動報名') : '') + '<div class="tabs">' + tabs + '</div>' + '<div class="grid g2">' + cards + '</div>' + '<div class="card" style="margin-top:24px"><div class="card-h">關於活動時數</div>' + '<ul class="login-rules" style="margin-top:14px">' + '<li>計時數活動（會議、導覽、支援等）的出勤時數計入服務時數。</li>' + '<li>教育訓練的受訓時數另外統計，不併入服務時數。</li>' + '<li>活動當天以該活動專屬的 QR Code 簽到；報名與取消都會寄送通知信。</li>' + '</ul></div>' + '</div>';
+  };
+  ACTS['act-filter'] = function (el) {
+    actFilter = el.getAttribute('data-v');
+    render();
+  };
+  ACTS['act-join'] = function (el) {
+    var a = byId(S.activities, el.getAttribute('data-id'));
+    if (a && a.enrolled.indexOf(S.currentVolunteerId) < 0) {
+      a.enrolled.push(S.currentVolunteerId);
+      save();
+    }
+    render();
+  };
+  ACTS['act-cancel'] = function (el) {
+    var a = byId(S.activities, el.getAttribute('data-id'));
+    if (a) {
+      var i = a.enrolled.indexOf(S.currentVolunteerId);
+      if (i >= 0) {
+        a.enrolled.splice(i, 1);
+        save();
+      }
+    }
+    render();
+  };
+  PAGES.violations = function () {
+    var m = me();
+    var pts = HCV.activePoints(S, m.id);
+    var rows = S.violations.filter(function (v) {
+      return v.volunteerId === m.id;
+    }).sort(function (a, b) {
+      return a.date < b.date ? 1 : -1;
+    });
+    var body = rows.length ? rows.map(function (v) {
+      var t = byId(S.violationTypes, v.typeId);
+      return '<tr>' + '<td data-label="發生日期">' + esc(HCV.dateLabel(v.date)) + '</td>' + '<td data-label="違規項目">' + esc(t ? t.name : '—') + '</td>' + '<td data-label="點數" class="num">' + v.points + '</td>' + '<td data-label="來源">' + esc(v.source) + '</td>' + '<td data-label="狀態">' + (v.status === '有效' ? tag('有效', 't-warn') : tag('已撤銷', 't-grey')) + '</td>' + '<td data-label="備註">' + esc(v.note || '—') + '</td></tr>';
+    }).join('') : '<tr><td colspan="6">您目前沒有違規記點紀錄。</td></tr>';
+    var suspBox = m.status === '停權' ? '<div class="alert" style="margin-top:20px"><div class="ic">!</div><div><h4>目前為停權狀態</h4>' + '<p>' + esc(m.suspendNote || '') + '</p><p style="margin-top:6px">停權期間可查詢個人紀錄，恢復資格請洽文化局志工業務承辦人。</p></div></div>' : '';
+    return head('我的違規記點', '查詢個人記點明細與來源') + pageTools() + '<div class="wrap">' + suspBox + '<div class="grid g2">' + statCard('目前累計點數', String(pts), '點', '已撤銷的記點不列入累計') + '<div class="alert"><div class="ic">!</div><div><h4>提醒</h4><p>' + esc(S.params.pointReminderText.replace('{N}', pts)) + '</p></div></div>' + '</div>' + '<div class="grid"><div class="card"><div class="card-h">記點明細</div>' + '<table class="tbl"><thead><tr><th>發生日期</th><th>違規項目</th><th>點數</th><th>來源</th><th>狀態</th><th>備註</th></tr></thead>' + '<tbody>' + body + '</tbody></table>' + '<div class="hint">對紀錄有疑問請洽服務地點管理者。</div></div></div>' + '</div>';
+  };
+  var profMsg = '';
+  PAGES.profile = function () {
+    var m = me();
+    return head('個人資料', '姓名與證號由圖書館系統帶入；可自行維護聯絡方式') + '<div class="wrap"><div class="grid g2">' + '<div class="card"><div class="card-h">基本資料</div>' + '<div class="field"><label>姓名</label><input class="inp" type="text" value="' + esc(m.name) + '" readonly></div>' + '<div class="field"><label>志工編號</label><input class="inp" type="text" value="' + esc(m.no || '—') + '" readonly></div>' + '<div class="field"><label>所屬大組</label><input class="inp" type="text" value="' + esc(myUnitName()) + '" readonly></div>' + '<div class="field"><label>組別</label><input class="inp" type="text" value="' + esc(HCV.groupNames(S, m)) + '" readonly></div>' + '<div class="field"><label>服務地點</label><input class="inp" type="text" value="' + esc(m.locationIds.map(locName).join('、')) + '" readonly></div>' + '<div class="field"><label>志工資格狀態</label><input class="inp" type="text" value="' + esc(m.status) + '" readonly></div>' + '</div>' + '<div class="card"><div class="card-h">聯絡方式</div>' + (profMsg ? '<div class="ok-box">' + esc(profMsg) + '</div>' : '') + '<div class="field"><label>聯絡電話</label><input class="inp" id="pfPhone" type="text" value="' + esc(m.phone) + '"></div>' + '<div class="field"><label>電子郵件</label><input class="inp" id="pfMail" type="text" value="' + esc(m.email) + '" placeholder="未留 Email 將收不到系統通知"></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="prof-save">儲存</button></div>' + '<div class="inline-note">系統通知一律以 Email 發送，請確認信箱正確，以免漏接排班、請假與代班的通知。</div>' + '<div class="hint">姓名、身分證字號與借閱證號為圖書館系統的主檔資料，請至館藏查詢系統辦理變更。</div>' + '</div>' + '</div></div>';
+  };
+  ACTS['prof-save'] = function () {
+    var m = me();
+    m.phone = document.getElementById('pfPhone').value.trim();
+    m.email = document.getElementById('pfMail').value.trim();
+    save();
+    profMsg = '聯絡方式已更新。';
+    render();
+    profMsg = '';
+  };
+  uiLoad();
+  S = HCV.load();
+  if (UI.who && byId(S.volunteers, UI.who)) {
+    S.currentVolunteerId = UI.who;
+  }
+  applyFont();
+  window.addEventListener('hashchange', render);
+  render();
+})();
+</script>
+</body>
+</html>
