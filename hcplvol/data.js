@@ -86,55 +86,64 @@
       unitId: 'U1',
       name: '導覽組',
       leader: '許文龍',
-      leaderPhone: '0912-000-101'
+      leaderPhone: '0912-000-101',
+      annualRequiredHours: 144
     }, {
       id: 'G2',
       unitId: 'U1',
       name: '典藏組',
       leader: '蔡美玲',
-      leaderPhone: '0912-000-102'
+      leaderPhone: '0912-000-102',
+      annualRequiredHours: 144
     }, {
       id: 'G3',
       unitId: 'U1',
       name: '閱覽組',
       leader: '鄭國華',
-      leaderPhone: '0912-000-103'
+      leaderPhone: '0912-000-103',
+      annualRequiredHours: 144
     }, {
       id: 'G4',
       unitId: 'U1',
       name: '故事志工',
       leader: '劉曉君',
-      leaderPhone: '0912-000-104'
+      leaderPhone: '0912-000-104',
+      annualRequiredHours: 144
     }, {
       id: 'G5',
       unitId: 'U2',
       name: '演藝廳',
       leader: '謝宗翰',
-      leaderPhone: '0912-000-105'
+      leaderPhone: '0912-000-105',
+      annualRequiredHours: 120
     }, {
       id: 'G6',
       unitId: 'U2',
       name: '縣史館',
       leader: '何秀蘭',
-      leaderPhone: '0912-000-106'
+      leaderPhone: '0912-000-106',
+      annualRequiredHours: 144
     }, {
       id: 'G7',
       unitId: 'U2',
       name: '美術館',
       leader: '羅文欽',
-      leaderPhone: '0912-000-107'
+      leaderPhone: '0912-000-107',
+      annualRequiredHours: 120
     }, {
       id: 'G8',
       unitId: 'U2',
       name: '總服務台',
       leader: '高玉芳',
-      leaderPhone: '0912-000-108'
+      leaderPhone: '0912-000-108',
+      annualRequiredHours: 144
     }, {
       id: 'G9',
       unitId: 'U2',
       name: '兒少館',
       leader: '潘俊傑',
-      leaderPhone: '0912-000-109'
+      leaderPhone: '0912-000-109',
+      annualRequiredHours: 96
     }],
     volunteers: [{
       id: 'V001',
@@ -903,8 +912,8 @@
       id: 'N01',
       date: '2026-10-12',
       tag: '公告',
-      title: '115 年度志工服務時數門檻維持 144 小時',
-      body: '本年度服務時數門檻維持 144 小時，統計期間為 115 年 1 月 1 日至 12 月 31 日。受訓時數另行統計，不併入服務時數。',
+      title: '115 年度各組別服務時數門檻已公告',
+      body: '本年度服務時數門檻依組別設定（一般組別為 144 小時），統計期間為 115 年 1 月 1 日至 12 月 31 日；您適用的門檻請至「服務時數」查看。受訓時數另行統計，不併入服務時數。',
       scope: '全體',
       pinned: true
     }, {
@@ -920,7 +929,7 @@
       date: '2026-10-01',
       tag: '提醒',
       title: '到班請記得簽到與簽退；忘記時請洽服務地點管理者補登',
-      body: '簽到退可使用手機掃描現場 QR Code，或於館內電腦刷借閱證。忘記簽到或簽退，請於三日內向服務地點管理者提出補登。',
+      body: '簽到退可使用手機掃描現場張貼的場次 QR Code，或在館內簽到站刷志工證（借閱證）條碼。忘記簽到或簽退，請於三日內向服務地點管理者提出補登。',
       scope: '全體',
       pinned: false
     }, {
@@ -1002,8 +1011,8 @@
       scope: 'L4'
     }],
     params: {
-      annualRequiredHours: 144,
-      longLeaveMonths: 3,
+      annualHoursDefault: 144,
+      longLeaveMonths: 1,
       leaveAdvanceDays: 3,
       cancelDeadlineDays: 3,
       substituteSameUnitOnly: true,
@@ -1013,8 +1022,7 @@
       earlyLeaveHoursRule: '依實際簽退時間計算',
       noCheckoutRule: '標記異常、待管理者補登',
       autoPointFromAttendance: true,
-      pointReminderText: '您目前累計 {N} 點違規記點，請準時出勤，避免影響志工資格。',
-      qrValidMinutes: 30
+      pointReminderText: '您目前累計 {N} 點違規記點，請準時出勤，避免影響志工資格。'
     },
     admins: [{
       id: 'AD1',
@@ -1057,14 +1065,14 @@
       by: '陳怡安'
     }, {
       id: 'RP03',
-      name: '115 年第三季　志工服務時數季報',
-      period: '115-Q3',
+      name: '114 年度　志工服務時數年度報表（文化局格式）',
+      period: '114',
       format: 'PDF',
-      createdAt: '2026-10-03 09:30',
+      createdAt: '2026-01-08 10:00',
       by: '陳怡安'
     }]
   };
-  var KEY = 'hcpl-volunteer-demo-v2';
+  var KEY = 'hcpl-volunteer-demo-v3';
   function clone(o) {
     return JSON.parse(JSON.stringify(o));
   }
@@ -1136,6 +1144,21 @@
       }).reduce(function (n, r) {
         return n + r.points;
       }, 0);
+    },
+    requiredHours: function (state, v) {
+      var d = state.params && state.params.annualHoursDefault || 144;
+      if (!v || !v.groupIds || !v.groupIds.length) {
+        return d;
+      }
+      var best = 0;
+      v.groupIds.forEach(function (gid) {
+        var g = HCV.byId(state.groups, gid);
+        var h = g && g.annualRequiredHours != null ? Number(g.annualRequiredHours) : d;
+        if (h > best) {
+          best = h;
+        }
+      });
+      return best || d;
     },
     hoursText: function (h) {
       return (Math.round(h * 100) / 100).toString();

@@ -525,6 +525,9 @@ function yearHours(id) {
   var s = S.hourSummary[id];
   return s ? s.shiftHours + s.activityHours : 0;
 }
+function needOf(v) {
+  return HCV.requiredHours(S, typeof v === 'string' ? vol(v) : v);
+}
 function statActive() {
   return scopeVols().filter(function (v) {
     return v.status === '在職';
@@ -1301,7 +1304,7 @@ function openVolDrawer(id) {
     return g.unitId === v.unitId;
   }).map(function (g) {
     return '<label class="btn btn--sm"><input type="checkbox" class="vg" value="' + g.id + '"' + (v.groupIds.indexOf(g.id) >= 0 ? ' checked' : '') + '> ' + esc(g.name) + '</label>';
-  }).join('') + '</div>' + '<div class="sect">出勤與時數摘要</div>' + '<dl class="dl"><dt>排班服務</dt><dd>' + h2(sum.shiftHours) + ' 小時</dd>' + '<dt>活動服務</dt><dd>' + h2(sum.activityHours) + ' 小時</dd>' + '<dt>本年合計</dt><dd><b style="color:var(--brick)">' + h2(yearHours(id)) + ' 小時</b>　門檻 ' + S.params.annualRequiredHours + ' 小時</dd>' + '<dt>受訓時數</dt><dd>' + h2(sum.trainingHours) + ' 小時（另計，不併入服務時數）</dd>' + '<dt>近期紀錄</dt><dd>' + (myAtt.length ? myAtt.slice(0, 4).map(function (a) {
+  }).join('') + '</div>' + '<div class="sect">出勤與時數摘要</div>' + '<dl class="dl"><dt>排班服務</dt><dd>' + h2(sum.shiftHours) + ' 小時</dd>' + '<dt>活動服務</dt><dd>' + h2(sum.activityHours) + ' 小時</dd>' + '<dt>本年合計</dt><dd><b style="color:var(--brick)">' + h2(yearHours(id)) + ' 小時</b>　門檻 ' + needOf(v) + ' 小時（依組別）</dd>' + '<dt>受訓時數</dt><dd>' + h2(sum.trainingHours) + ' 小時（另計，不併入服務時數）</dd>' + '<dt>近期紀錄</dt><dd>' + (myAtt.length ? myAtt.slice(0, 4).map(function (a) {
     return esc(a.date + '　' + a.slotName) + '　' + statusPill(a.status);
   }).join('<br>') : '—') + '</dd></dl>' + '<div class="sect">違規摘要</div>' + '<dl class="dl"><dt>有效點數</dt><dd><b>' + activePts(id) + '</b> 點</dd>' + '<dt>明細</dt><dd>' + (vios.length ? vios.map(function (r) {
     var ty = HCV.byId(S.violationTypes, r.typeId);
@@ -1427,6 +1430,9 @@ ACTIONS.volGroups = function () {
     }, {
       t: '聯絡電話'
     }, {
+      t: '年度時數門檻（小時）',
+      num: true
+    }, {
       t: '人數',
       num: true
     }, {
@@ -1435,12 +1441,12 @@ ACTIONS.volGroups = function () {
       var n = S.volunteers.filter(function (v) {
         return v.groupIds.indexOf(g.id) >= 0 && v.status !== '離職';
       }).length;
-      return [esc(g.name), '<input type="text" class="gl" data-id="' + g.id + '" value="' + esc(g.leader) + '" style="width:90px">', '<input type="text" class="gp" data-id="' + g.id + '" value="' + esc(g.leaderPhone) + '" style="width:130px">', n, '<button class="btn btn--sm btn--danger" data-act="groupDel" data-id="' + g.id + '">刪除</button>'];
+      return [esc(g.name), '<input type="text" class="gl" data-id="' + g.id + '" value="' + esc(g.leader) + '" style="width:90px">', '<input type="text" class="gp" data-id="' + g.id + '" value="' + esc(g.leaderPhone) + '" style="width:130px">', '<input type="number" class="gh" data-id="' + g.id + '" value="' + (g.annualRequiredHours != null ? g.annualRequiredHours : S.params.annualHoursDefault) + '" min="0" step="0.5" style="width:90px">', n, '<button class="btn btn--sm btn--danger" data-act="groupDel" data-id="' + g.id + '">刪除</button>'];
     }), '');
-  }).join('') + '<div class="sect">新增組別</div>' + '<div class="filters">' + '<div class="fld"><label>所屬大組</label><select id="ngUnit">' + S.units.map(function (u) {
+  }).join('') + '<p class="hint" style="margin-top:10px">年度服務時數門檻依組別設定（文化局總管理者一次建好）；只影響志工端與報表的「是否達標」顯示，沒有任何強制效果。' + '同時屬於多個組別的志工，以較高的門檻計算達成率。</p>' + '<div class="sect">新增組別</div>' + '<div class="filters">' + '<div class="fld"><label>所屬大組</label><select id="ngUnit">' + S.units.map(function (u) {
     return '<option value="' + u.id + '">' + esc(u.name) + '</option>';
-  }).join('') + '</select></div>' + '<div class="fld"><label>組別名稱</label><input type="text" id="ngName"></div>' + '<div class="fld"><label>組長</label><input type="text" id="ngLeader"></div>' + '<div class="fld"><label>聯絡電話</label><input type="text" id="ngPhone"></div>' + '</div><button class="btn" data-act="groupAdd">新增組別</button>';
-  openDrawer('組別管理', body, '<button class="btn btn--pri" data-act="groupSave">儲存組長資料</button>');
+  }).join('') + '</select></div>' + '<div class="fld"><label>組別名稱</label><input type="text" id="ngName"></div>' + '<div class="fld"><label>組長</label><input type="text" id="ngLeader"></div>' + '<div class="fld"><label>聯絡電話</label><input type="text" id="ngPhone"></div>' + '<div class="fld"><label>年度時數門檻（小時）</label><input type="number" id="ngHours" value="' + S.params.annualHoursDefault + '" min="0" step="0.5"></div>' + '</div><button class="btn" data-act="groupAdd">新增組別</button>';
+  openDrawer('組別管理', body, '<button class="btn btn--pri" data-act="groupSave">儲存組別設定</button>');
 };
 ACTIONS.groupSave = function () {
   document.querySelectorAll('.gl').forEach(function (e) {
@@ -1455,11 +1461,17 @@ ACTIONS.groupSave = function () {
       g.leaderPhone = e.value.trim();
     }
   });
-  log('維護組別', '更新組長與聯絡電話');
+  document.querySelectorAll('.gh').forEach(function (e) {
+    var g = grp(e.getAttribute('data-id'));
+    if (g && e.value !== '') {
+      g.annualRequiredHours = Number(e.value);
+    }
+  });
+  log('維護組別', '更新組長、聯絡電話與年度時數門檻');
   save();
   closeDrawer();
   render();
-  toast('已儲存組長資料');
+  toast('已儲存組別設定');
 };
 ACTIONS.groupAdd = function () {
   var name = val('#ngName');
@@ -1472,7 +1484,8 @@ ACTIONS.groupAdd = function () {
     unitId: val('#ngUnit'),
     name: name,
     leader: val('#ngLeader'),
-    leaderPhone: val('#ngPhone')
+    leaderPhone: val('#ngPhone'),
+    annualRequiredHours: Number(val('#ngHours')) || S.params.annualHoursDefault
   });
   log('新增組別', name);
   save();
@@ -2856,26 +2869,6 @@ function qrBlock(seed, dead) {
   }
   return '<div class="qr"' + (dead ? ' data-dead' : '') + '>' + cells + '</div>';
 }
-var QR_ISSUED = Date.now();
-function qrLeft() {
-  var passed = (Date.now() - QR_ISSUED) / 60000;
-  return Math.max(0, S.params.qrValidMinutes - passed);
-}
-function qrLeftText() {
-  var m = qrLeft();
-  return Math.floor(m) + ' 分 ' + pad(Math.floor((m - Math.floor(m)) * 60)) + ' 秒';
-}
-setInterval(function () {
-  var e = document.getElementById('qrTick');
-  if (!e) {
-    return;
-  }
-  if (F.qrDead || qrLeft() <= 0) {
-    render();
-    return;
-  }
-  e.textContent = qrLeftText();
-}, 1000);
 function ckSlots() {
   var d = F.ckDate || HCV.TODAY;
   return scopeSlots().filter(function (s) {
@@ -2937,8 +2930,7 @@ PAGES.checkin = function () {
   }
   var L = loc(s.locationId);
   var t = tpl(s.templateId);
-  var dead = F.qrDead || qrLeft() <= 0;
-  var left = '<div class="card"><div class="card__h"><h2>場次 QR Code</h2>' + '<div class="sp"><button class="btn btn--sm" data-act="qrNew">重新產生</button>' + '<button class="btn btn--sm" data-act="demo" data-msg="已送出列印，可張貼於服務台">列印張貼用</button>' + (dead ? '' : '<button class="btn btn--sm" data-act="qrDead">預覽過期提示</button>') + '</div></div>' + '<p class="note">' + esc(HCV.dateLabel(s.date) + '　' + t.name + ' ' + t.start + '–' + t.end + '　' + L.name) + '</p>' + '<div style="text-align:center;margin:14px 0">' + qrBlock(s.id + String(QR_ISSUED), dead) + '</div>' + (dead ? '<div class="warn">這張 QR Code 已超過有效時間，請按「重新產生」後再供志工掃描。</div>' : '<p style="text-align:center">有效時間剩餘 <b id="qrTick" style="color:var(--brick)">' + qrLeftText() + '</b>' + '　<span class="note">（有效 ' + S.params.qrValidMinutes + ' 分鐘）</span></p>') + '<p class="note">可於館內公用電腦全螢幕顯示，或列印張貼於服務台；QR Code 內容只有場次代碼，不含個人資料。</p></div>' + '<div class="card"><div class="card__h"><h2>借閱證條碼簽到</h2></div>' + '<p class="note">館內電腦接條碼掃描機，掃描志工借閱證即可；也可以直接輸入證號。</p>' + '<div class="filters" style="margin-top:10px">' + '<div class="fld fld--wide"><label>借閱證號</label><input type="text" id="ckCard" placeholder="例如 A00011202"></div>' + '<div class="fld"><label>現在時間</label><input type="time" id="ckTime" value="' + esc(ckDefaultTime(s)) + '"></div>' + '<button class="btn btn--pri" data-act="ckScan" data-id="' + s.id + '">送出</button></div>' + '<div id="ckResult">' + (F.ckMsg || '') + '</div>' + '<div class="sect">代為登記（志工沒帶手機也沒帶證）</div>' + '<div class="filters"><div class="fld fld--wide"><select id="ckProxy">' + s.booked.map(function (vid) {
+  var left = '<div class="card"><div class="card__h"><h2>場次 QR Code</h2>' + '<div class="sp"><button class="btn btn--sm" data-act="demo" data-msg="已送出列印，可張貼於服務台或現場">列印張貼用</button>' + '<button class="btn btn--sm" data-act="demo" data-msg="已送出列印：本日全部場次的 QR Code 各一張">列印本日全部場次</button></div></div>' + '<p class="note">' + esc(HCV.dateLabel(s.date) + '　' + t.name + ' ' + t.start + '–' + t.end + '　' + L.name) + '</p>' + '<div style="text-align:center;margin:14px 0">' + qrBlock(s.id, false) + '</div>' + '<p style="text-align:center"><b>本場次專用，固定不變</b>　<span class="note">一個場次一張，沒有有效時間</span></p>' + '<p class="note">可事先列印張貼於服務台或現場，或於館內公用電腦顯示；志工用手機掃描即可簽到退。QR Code 內容只有場次代碼，不含個人資料。</p></div>' + '<div class="card"><div class="card__h"><h2>館內簽到站</h2>' + '<div class="sp"><a class="btn btn--sm btn--pri" href="index.html#/station?loc=' + esc(s.locationId) + '" target="_blank" rel="noopener">開啟館內簽到站（另開視窗）</a></div></div>' + '<p class="note">給不方便用手機的志工：在館內電腦開啟簽到站後，志工自己刷志工證（借閱證）條碼就能簽到退。' + '簽到站只顯示簽到結果，不顯示個人資料、名單與任何管理功能，這台電腦不必停留在管理後台。</p></div>' + '<div class="card"><div class="card__h"><h2>館員代刷條碼</h2></div>' + '<p class="note">現場人員在管理後台代志工刷借閱證條碼，或直接輸入證號；一般情況請志工自行到館內簽到站刷證即可。</p>' + '<div class="filters" style="margin-top:10px">' + '<div class="fld fld--wide"><label>借閱證號</label><input type="text" id="ckCard" placeholder="例如 A00011202"></div>' + '<div class="fld"><label>現在時間</label><input type="time" id="ckTime" value="' + esc(ckDefaultTime(s)) + '"></div>' + '<button class="btn btn--pri" data-act="ckScan" data-id="' + s.id + '">送出</button></div>' + '<div id="ckResult">' + (F.ckMsg || '') + '</div>' + '<div class="sect">代為登記（志工沒帶手機也沒帶證）</div>' + '<div class="filters"><div class="fld fld--wide"><select id="ckProxy">' + s.booked.map(function (vid) {
     return '<option value="' + vid + '">' + esc(vname(vid)) + '</option>';
   }).join('') + (s.booked.length ? '' : '<option value="">這一場沒有排班志工</option>') + '</select></div><button class="btn" data-act="ckProxy" data-id="' + s.id + '">由館員代為登記</button></div></div>';
   var rows = s.booked.map(function (vid) {
@@ -2981,16 +2973,6 @@ function ckDefaultTime(s) {
   }
   return addMin(t.start, 5);
 }
-ACTIONS.qrNew = function () {
-  QR_ISSUED = Date.now();
-  F.qrDead = false;
-  render();
-  toast('已重新產生 QR Code，有效 ' + S.params.qrValidMinutes + ' 分鐘');
-};
-ACTIONS.qrDead = function () {
-  F.qrDead = true;
-  render();
-};
 ACTIONS.ckScan = function (el) {
   var s = slotOf(el.getAttribute('data-id'));
   var cardNo = val('#ckCard').toUpperCase();
@@ -3418,10 +3400,6 @@ var REPORT_KINDS = [{
   t: '文化局月報表',
   span: 'month'
 }, {
-  v: '文化局季報',
-  t: '文化局季報表',
-  span: 'quarter'
-}, {
   v: '文化局年報',
   t: '文化局年度報表',
   span: 'year'
@@ -3654,14 +3632,13 @@ function repChart(title, items, suffix) {
   }).join('') + '</div>';
 }
 function repBuild(k, range) {
-  var vols = repVols(),
-    need = S.params.annualRequiredHours;
+  var vols = repVols();
   var notes = [],
     rows = [],
     cols = [],
     chart = [],
     unmapped = 0;
-  if (k.v === '文化局月報' || k.v === '文化局季報') {
+  if (k.v === '文化局月報') {
     var colTotal = {};
     vols.forEach(function (v) {
       var sh = repShift(v.id, range.from, range.to),
@@ -3813,6 +3790,7 @@ function repBuild(k, range) {
         trainingHours: 0
       };
       var served = sum3.shiftHours + sum3.activityHours;
+      var need = needOf(v);
       var pct = need ? Math.round(served / need * 100) : 0;
       var home2 = v.locationIds.filter(inScope)[0];
       if (home2) {
@@ -3845,7 +3823,7 @@ function repBuild(k, range) {
         v: locTotal2[l.id] || 0
       };
     });
-    notes.push('年度服務時數名冊供文化局統一造冊、核發服務時數證明，志工端不另行申請。');
+    notes.push('年度服務時數名冊供文化局統一造冊、核發服務時數證明，志工端不另行申請。檢核欄的門檻依各志工所屬組別的設定計算。');
   }
   notes.push('時數以 0.5 小時為單位呈現，沒有時數的欄位印「-」；受訓時數獨立一欄，不併入服勤總時數。');
   if (unmapped > 0) {
@@ -3893,7 +3871,7 @@ PAGES.reports = function () {
     v: '',
     t: '全部時段'
   }].concat(uniqTplNames()), F.repSlot) + selectFld('請假／代班情形', 'repLeave', ['全部', '含請假', '含代班'], F.repLeave || '全部') + '</div>' + '<div class="btnrow"><button class="btn btn--pri" data-act="repGen">產生報表</button>' + '<span class="note" style="align-self:center">匯出後會保存為歷史報表，日後可重複下載同一份。</span></div>';
-  var exportBtns = '<button class="btn" data-act="repExport" data-fmt="Excel">匯出 Excel</button>' + '<button class="btn" data-act="repExport" data-fmt="CSV">匯出 CSV</button>' + '<button class="btn" data-act="repExport" data-fmt="PDF">匯出 PDF</button>';
+  var exportBtns = '<button class="btn" data-act="repExport" data-fmt="Excel">匯出 Excel</button>' + '<button class="btn" data-act="repExport" data-fmt="PDF">匯出 PDF</button>';
   var html = card('報表條件', head);
   html += card(repTitle(k, range), built.table + repChart('時數分布', built.chart) + built.notes.map(function (n) {
     return '<p class="hint" style="margin-top:10px">' + n + '</p>';
@@ -4032,13 +4010,12 @@ function locStats(l) {
     year: 0,
     reached: 0
   };
-  var need = S.params.annualRequiredHours;
   vols.forEach(function (v) {
     if (v.status === '在職') {
       st.active++;
       var h = yearHours(v.id);
       st.year += h;
-      if (h >= need) {
+      if (h >= needOf(v)) {
         st.reached++;
       }
     }
@@ -4073,7 +4050,6 @@ function locStats(l) {
   return st;
 }
 PAGES.hqdash = function () {
-  var need = S.params.annualRequiredHours;
   var actives = S.volunteers.filter(function (v) {
     return v.status === '在職';
   });
@@ -4085,7 +4061,7 @@ PAGES.hqdash = function () {
     var s = S.hourSummary[v.id];
     totalYear += h;
     totalTrain += s ? s.trainingHours : 0;
-    if (h >= need) {
+    if (h >= needOf(v)) {
       reached++;
     }
   });
@@ -4095,7 +4071,7 @@ PAGES.hqdash = function () {
   var rate = actives.length ? Math.round(reached / actives.length * 100) : 0;
   var html = '<div class="grid g4" style="margin-bottom:18px">' + statCard('在職志工總數', actives.length + ' <small>人</small>', '分布於 ' + S.locations.length + ' 個服務地點', jump('hqvols', {
     status: '在職'
-  })) + statCard('本年累計服務時數', h2(totalYear) + ' <small>小時</small>', '受訓時數另計 ' + h2(totalTrain) + ' 小時', jump('hqreports', {})) + statCard('年度時數達成率', rate + ' <small>%</small>', '達 ' + need + ' 小時者 ' + reached + ' 人', jump('hqvols', {
+  })) + statCard('本年累計服務時數', h2(totalYear) + ' <small>小時</small>', '受訓時數另計 ' + h2(totalTrain) + ' 小時', jump('hqreports', {})) + statCard('年度時數達成率', rate + ' <small>%</small>', '達到所屬組別門檻者 ' + reached + ' 人', jump('hqvols', {
     status: '在職',
     sortKey: 'hours'
   })) + statCard('停權中志工', susp + ' <small>人</small>', susp ? '由文化局逐案認定' : '目前沒有停權中的志工', jump('hqvols', {
@@ -4151,19 +4127,21 @@ PAGES.hqdash = function () {
     };
   }), '%'));
   var p = S.params;
-  html += card('系統參數快覽', '<dl class="dl" style="grid-template-columns:180px 1fr">' + '<dt>年度服務時數門檻</dt><dd>' + p.annualRequiredHours + ' 小時</dd>' + '<dt>長假認定</dt><dd>連續請假 ' + p.longLeaveMonths + ' 個月以上，需文化局簽核</dd>' + '<dt>請假提前天數</dt><dd>' + p.leaveAdvanceDays + ' 天（未達天數仍可送出，標記為臨時請假）</dd>' + '<dt>簽到緩衝</dt><dd>' + S.slotTemplates.map(function (t) {
+  html += card('系統參數快覽', '<dl class="dl" style="grid-template-columns:180px 1fr">' + '<dt>年度服務時數門檻</dt><dd>依組別設定（' + S.groups.map(function (g) {
+    return g.name + ' ' + (g.annualRequiredHours != null ? g.annualRequiredHours : p.annualHoursDefault);
+  }).join('、') + ' 小時），於志工管理的「組別管理」維護</dd>' + '<dt>長假認定</dt><dd>連續請假 ' + p.longLeaveMonths + ' 個月以上，需文化局簽核</dd>' + '<dt>請假提前天數</dt><dd>' + p.leaveAdvanceDays + ' 天（未達天數仍可送出，標記為臨時請假）</dd>' + '<dt>簽到緩衝</dt><dd>' + S.slotTemplates.map(function (t) {
     return t.name + ' ' + t.graceMinutes + ' 分';
   }).join('、') + '</dd>' + '<dt>代班範圍</dt><dd>' + (p.substituteSameUnitOnly ? '限同大組' : '不限大組') + '　徵求通知上限 ' + p.vacancyNotifyMax + ' 次</dd>' + '<dt>時數計算單位</dt><dd>' + esc(p.hoursUnit) + '</dd>' + '<dt>違規記點</dt><dd>只做紀錄與提醒，系統不自動停權；停權由文化局總管理者逐案手動設定</dd>' + '</dl>', '<button class="btn" ' + jump('settings', {}) + '>前往設定</button>');
   return html;
 };
 PAGES.hqvols = function () {
-  var need = S.params.annualRequiredHours;
   var list = volListFiltered();
   var rows = list.map(function (v) {
     var h = yearHours(v.id);
     var sum = S.hourSummary[v.id] || {
       trainingHours: 0
     };
+    var need = needOf(v);
     var pct = need ? Math.round(h / need * 100) : 0;
     return [esc(v.no || '—'), '<b>' + esc(v.name) + '</b>', esc(unit(v.unitId).name), groupTags(v), esc(v.locationIds.map(lname).join('、')), statusPill(v.status), esc(h2(h)), '<span class="bar mini"><i style="width:' + Math.min(100, pct) + '%"' + (h >= need ? ' data-ok' : '') + '></i></span>' + '<span class="note">' + pct + ' %</span>', esc(h2(sum.trainingHours || 0)), activePts(v.id) ? '<b style="color:var(--red)">' + activePts(v.id) + '</b>' : '0', '<button class="btn btn--sm" data-act="volDetail" data-id="' + v.id + '">明細</button>'];
   });
@@ -4194,7 +4172,7 @@ PAGES.hqvols = function () {
     sort: 'pts'
   }, {
     t: ''
-  }], rows, '沒有符合條件的志工') + '<p class="hint" style="margin-top:12px">達成率以年度服務時數門檻 ' + need + ' 小時計算；' + '受訓時數另外統計，不併入服務時數。同時服務於多個地點的志工在這裡只列一次。</p>';
+  }], rows, '沒有符合條件的志工') + '<p class="hint" style="margin-top:12px">達成率以各志工所屬組別的年度時數門檻計算（跨組者取較高者；門檻在志工管理的「組別管理」維護）；' + '受訓時數另外統計，不併入服務時數。同時服務於多個地點的志工在這裡只列一次。</p>';
   return card('志工總覽（全部服務地點）', body, '<button class="btn" data-act="hqVolExport">匯出清單</button>' + '<button class="btn btn--pri" data-act="hqRosterExport">匯出年度時數名冊</button>');
 };
 ACTIONS.hqVolExport = function () {
@@ -4261,7 +4239,7 @@ PAGES.hqreports = function () {
     F.hqYear = String(y);
   }
   var head = '<div class="filters">' + selectFld('彙整年度', 'hqYear', yOpts, F.hqYear) + '</div>' + tabs(['時數彙整', '出勤統計', '違規統計'], 'tab');
-  var exportBtns = '<button class="btn" data-act="hqExport" data-fmt="Excel">匯出 Excel</button>' + '<button class="btn" data-act="hqExport" data-fmt="CSV">匯出 CSV</button>' + '<button class="btn" data-act="hqExport" data-fmt="PDF">匯出 PDF</button>';
+  var exportBtns = '<button class="btn" data-act="hqExport" data-fmt="Excel">匯出 Excel</button>' + '<button class="btn" data-act="hqExport" data-fmt="PDF">匯出 PDF</button>';
   var html = card('彙整條件', head + '<p class="hint">彙整範圍為全部服務地點，與各地點自行查閱的報表用同一套算法；' + '匯出後同樣保存為歷史報表。</p>', exportBtns);
   if (F.tab === '時數彙整') {
     var monthSum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -4343,7 +4321,6 @@ PAGES.hqreports = function () {
         v: colTotal[c] || 0
       };
     })) + '<p class="hint" style="margin-top:10px">各服務地點依其對應的值勤欄位歸戶；受訓時數獨立一欄，不併入服勤總時數。' + (unmappedTotal > 0 ? '有服務地點尚未指定對應的值勤欄位，該地點時數未列入上表。' : '') + '</p>');
-    var need = S.params.annualRequiredHours;
     var rows3 = S.locations.map(function (l) {
       var st = locStats(l);
       var avg = st.active ? st.year / st.active : 0;
@@ -4364,7 +4341,7 @@ PAGES.hqreports = function () {
       t: '年度達成率'
     }, {
       t: '停權中'
-    }], rows3, '') + '<p class="hint" style="margin-top:10px">達成率為該地點在職志工中，本年服務時數達 ' + need + ' 小時者的比率。</p>');
+    }], rows3, '') + '<p class="hint" style="margin-top:10px">達成率為該地點在職志工中，本年服務時數達到所屬組別年度門檻者的比率。</p>');
   } else if (F.tab === '出勤統計') {
     var kinds = ['正常', '緩衝內到班', '遲到', '早退', '固定早退', '缺勤', '未報名簽到', '補登'];
     var rows4 = S.locations.map(function (l) {
@@ -4612,14 +4589,13 @@ function paramNumber(id, label, current, hint, step) {
 }
 function setParams() {
   var p = S.params;
-  return '<div class="sect">時數與資格</div>' + '<div class="grid g3">' + paramNumber('pmHours', '年度服務時數門檻（小時）', p.annualRequiredHours, '志工端與報表的達標依據') + paramSelect('pmUnit', '時數計算單位', ['分鐘', '0.5 小時（無條件捨去）'], p.hoursUnit, '時數以班表為基準計算') + paramNumber('pmQr', 'QR Code 有效時間（分鐘）', p.qrValidMinutes, '過期要重新產生') + '</div>' + '<div class="sect">請假與排班</div>' + '<div class="grid g3">' + paramNumber('pmLong', '長假認定（月）', p.longLeaveMonths, '達這個月數要再經文化局簽核') + paramNumber('pmAdvance', '請假提前天數（天）', p.leaveAdvanceDays, '未達天數仍可送出，標記為臨時請假') + paramNumber('pmCancel', '排班可自行取消的期限（天）', p.cancelDeadlineDays, '志工端超過期限要改走請假') + paramSelect('pmSameUnit', '代班範圍', ['限同大組', '不限大組'], p.substituteSameUnitOnly ? '限同大組' : '不限大組') + paramNumber('pmVacancy', '空缺班徵求通知上限（次）', p.vacancyNotifyMax, '同一對象同一時段最多通知幾次') + '</div>' + '<div class="sect">出勤認定</div>' + '<div class="grid g2">' + paramSelect('pmLate', '遲到（超過緩衝時間）怎麼計時數', ['依實際簽到時間起算', '以 0.5 小時為單位扣減', '不扣時數只標記'], p.lateHoursRule) + paramSelect('pmEarly', '早退怎麼計時數', ['依實際簽退時間計算', '以 0.5 小時為單位扣減', '不扣時數只標記'], p.earlyLeaveHoursRule) + paramSelect('pmNoOut', '有簽到沒簽退怎麼處理', ['標記異常、待管理者補登', '以班表結束時間計', '時數不計'], p.noCheckoutRule) + paramSelect('pmAuto', '出勤異常自動轉違規記點', ['開啟', '關閉'], p.autoPointFromAttendance ? '開啟' : '關閉', '關閉時只標記異常，由管理者自行開立記點') + '</div>' + '<p class="hint" style="margin-top:10px">固定早退時段（3.5 小時）的簽退不受早退規則影響：標示為固定早退、不記點，時數照發 3.5 小時。' + '簽到緩衝為時段層級的設定，預設上午場 10 分鐘、下午與晚上場 0 分鐘，於「時段範本」維護，各場次還可再個別調整。</p>' + '<div class="sect">志工端提醒文字</div>' + '<div class="fld fld--wide"><label>違規記點提醒（{N} 會換成該名志工目前的累計點數）</label>' + '<textarea id="pmRemind">' + esc(p.pointReminderText) + '</textarea>' + '<span class="note">目前顯示效果：' + esc(p.pointReminderText.replace('{N}', '3')) + '</span></div>' + '<div class="hint hint--box" style="margin-top:12px">違規記點只做紀錄與提醒，系統不會自動停權；' + '停權與解除停權一律由文化局總管理者逐案手動設定並填寫原因。</div>' + '<div class="btnrow" style="margin-top:14px">' + '<button class="btn btn--pri" data-act="paramSave">儲存系統參數</button></div>' + '<p class="hint" style="margin-top:10px">參數儲存後立即生效並留存異動紀錄。' + '調整緩衝分鐘數或時數門檻只影響之後發生的出勤與計算，已經算好的歷史時數不會回頭重算。</p>';
+  return '<div class="sect">時數與資格</div>' + '<div class="grid g3">' + paramNumber('pmHoursDefault', '新增組別時的年度時數門檻預設值（小時）', p.annualHoursDefault, '各組別實際的門檻在志工管理的「組別管理」逐組設定') + paramSelect('pmUnit', '時數計算單位', ['分鐘', '0.5 小時（無條件捨去）'], p.hoursUnit, '時數以班表為基準計算') + '</div>' + '<p class="hint" style="margin-top:6px">年度服務時數門檻依組別設定，只影響達標顯示；場次 QR Code 以場次為單位、固定不變，沒有有效時間的設定。</p>' + '<div class="sect">請假與排班</div>' + '<div class="grid g3">' + paramNumber('pmLong', '長假認定（月）', p.longLeaveMonths, '達這個月數要再經文化局簽核') + paramNumber('pmAdvance', '請假提前天數（天）', p.leaveAdvanceDays, '未達天數仍可送出，標記為臨時請假') + paramNumber('pmCancel', '排班可自行取消的期限（天）', p.cancelDeadlineDays, '志工端超過期限要改走請假') + paramSelect('pmSameUnit', '代班範圍', ['限同大組', '不限大組'], p.substituteSameUnitOnly ? '限同大組' : '不限大組') + paramNumber('pmVacancy', '空缺班徵求通知上限（次）', p.vacancyNotifyMax, '同一對象同一時段最多通知幾次') + '</div>' + '<div class="sect">出勤認定</div>' + '<div class="grid g2">' + paramSelect('pmLate', '遲到（超過緩衝時間）怎麼計時數', ['依實際簽到時間起算', '以 0.5 小時為單位扣減', '不扣時數只標記'], p.lateHoursRule) + paramSelect('pmEarly', '早退怎麼計時數', ['依實際簽退時間計算', '以 0.5 小時為單位扣減', '不扣時數只標記'], p.earlyLeaveHoursRule) + paramSelect('pmNoOut', '有簽到沒簽退怎麼處理', ['標記異常、待管理者補登', '以班表結束時間計', '時數不計'], p.noCheckoutRule) + paramSelect('pmAuto', '出勤異常自動轉違規記點', ['開啟', '關閉'], p.autoPointFromAttendance ? '開啟' : '關閉', '關閉時只標記異常，由管理者自行開立記點') + '</div>' + '<p class="hint" style="margin-top:10px">固定早退時段（3.5 小時）的簽退不受早退規則影響：標示為固定早退、不記點，時數照發 3.5 小時。' + '簽到緩衝為時段層級的設定，預設上午場 10 分鐘、下午與晚上場 0 分鐘，於「時段範本」維護，各場次還可再個別調整。</p>' + '<div class="sect">志工端提醒文字</div>' + '<div class="fld fld--wide"><label>違規記點提醒（{N} 會換成該名志工目前的累計點數）</label>' + '<textarea id="pmRemind">' + esc(p.pointReminderText) + '</textarea>' + '<span class="note">目前顯示效果：' + esc(p.pointReminderText.replace('{N}', '3')) + '</span></div>' + '<div class="hint hint--box" style="margin-top:12px">違規記點只做紀錄與提醒，系統不會自動停權；' + '停權與解除停權一律由文化局總管理者逐案手動設定並填寫原因。</div>' + '<div class="btnrow" style="margin-top:14px">' + '<button class="btn btn--pri" data-act="paramSave">儲存系統參數</button></div>' + '<p class="hint" style="margin-top:10px">參數儲存後立即生效並留存異動紀錄。' + '調整緩衝分鐘數或時數門檻只影響之後發生的出勤與計算，已經算好的歷史時數不會回頭重算。</p>';
 }
 ACTIONS.paramSave = function () {
   var p = S.params,
-    before = p.annualRequiredHours + ' 小時／' + p.hoursUnit;
-  p.annualRequiredHours = Number(val('#pmHours')) || p.annualRequiredHours;
+    before = '長假 ' + p.longLeaveMonths + ' 個月／' + p.hoursUnit;
+  p.annualHoursDefault = Number(val('#pmHoursDefault')) || p.annualHoursDefault;
   p.hoursUnit = val('#pmUnit');
-  p.qrValidMinutes = Number(val('#pmQr')) || p.qrValidMinutes;
   p.longLeaveMonths = Number(val('#pmLong')) || p.longLeaveMonths;
   p.leaveAdvanceDays = Number(val('#pmAdvance'));
   p.cancelDeadlineDays = Number(val('#pmCancel'));
@@ -4630,7 +4606,7 @@ ACTIONS.paramSave = function () {
   p.noCheckoutRule = val('#pmNoOut');
   p.autoPointFromAttendance = val('#pmAuto') === '開啟';
   p.pointReminderText = val('#pmRemind') || p.pointReminderText;
-  log('修改系統參數', before + ' → ' + p.annualRequiredHours + ' 小時／' + p.hoursUnit);
+  log('修改系統參數', before + ' → 長假 ' + p.longLeaveMonths + ' 個月／' + p.hoursUnit);
   save();
   render();
   toast('已儲存系統參數，立即生效');
