@@ -1514,7 +1514,7 @@ textarea.inp{min-height:110px;resize:vertical}
   }
   function stationCheck(cardNo) {
     var v = S.volunteers.filter(function (x) {
-      return String(x.cardNo).toUpperCase() === cardNo;
+      return String(x.cardNo).toUpperCase() === cardNo || String(x.no || '').toUpperCase() === cardNo;
     })[0];
     if (!v) {
       return {
@@ -1697,7 +1697,7 @@ textarea.inp{min-height:110px;resize:vertical}
     var gOpts = ['early', 'grace', 'late'].map(function (k) {
       return '<option value="' + k + '" ' + (UI.scenario === k ? 'selected' : '') + '>' + esc(SCEN[k]) + '</option>';
     }).join('');
-    return head('館內簽到站', '刷志工證（借閱證）條碼即可簽到退') + '<div class="wrap"><div class="station">' + '<div class="card">' + '<div class="card-h">' + esc(L.name) + '　' + esc(HCV.dateLabel(S.today)) + '<button class="linkish" data-act="station-close" style="margin-left:auto;font-size:.95rem">關閉簽到站</button></div>' + '<div class="field"><label style="font-size:1.25rem">請刷志工證（借閱證）條碼，或輸入證號後按 Enter</label>' + '<input class="inp st-input" id="stInput" type="text" autocomplete="off" placeholder="請刷條碼" aria-label="志工證或借閱證條碼"></div>' + '<div class="btn-row"><button class="btn btn-primary btn-block" data-act="station-go">送出</button></div>' + resultHtml + '<div class="hint">本站只顯示這一次簽到退的結果，不顯示個人資料；第一次刷是簽到、同一場次再刷一次是簽退。沒有排班的志工刷證會記錄為「未報名簽到」，由管理者決定是否發給時數。</div>' + '</div>' + '<div class="card" style="margin-top:20px"><div class="card-h">今日場次</div>' + '<table class="tbl st-slots" style="margin-top:12px"><thead><tr><th>時段</th><th>已到／應到</th><th>場次 QR Code（手機掃描用）</th></tr></thead><tbody>' + slotRows + '</tbody></table>' + '<div class="hint">每個場次一張固定的 QR Code，可事先列印張貼；志工用手機掃描同樣可以簽到退。</div>' + '</div>' + '<div class="inline-note"><b>雛形工具</b>　示範證號：' + stationDemo.map(function (d) {
+    return head('館內簽到站', '刷志工證（借閱證）條碼即可簽到退') + '<div class="wrap"><div class="station">' + '<div class="card">' + '<div class="card-h">' + esc(L.name) + '　' + esc(HCV.dateLabel(S.today)) + '<button class="linkish" data-act="station-close" style="margin-left:auto;font-size:.95rem">關閉簽到站</button></div>' + '<div class="field"><label style="font-size:1.25rem">請刷志工證條碼（借閱證號或志工編號都可以），或輸入證號後按 Enter</label>' + '<input class="inp st-input" id="stInput" type="text" autocomplete="off" placeholder="請刷條碼" aria-label="志工證或借閱證條碼"></div>' + '<div class="btn-row"><button class="btn btn-primary btn-block" data-act="station-go">送出</button></div>' + resultHtml + '<div class="hint">本站只顯示這一次簽到退的結果，不顯示個人資料；第一次刷是簽到、同一場次再刷一次是簽退。沒有排班的志工刷證會記錄為「未報名簽到」，由管理者決定是否發給時數。</div>' + '</div>' + '<div class="card" style="margin-top:20px"><div class="card-h">今日場次</div>' + '<table class="tbl st-slots" style="margin-top:12px"><thead><tr><th>時段</th><th>已到／應到</th><th>場次 QR Code（手機掃描用）</th></tr></thead><tbody>' + slotRows + '</tbody></table>' + '<div class="hint">每個場次一張固定的 QR Code，可事先列印張貼；志工用手機掃描同樣可以簽到退。</div>' + '</div>' + '<div class="inline-note"><b>雛形工具</b>　示範證號：' + stationDemo.map(function (d) {
       return '<button class="linkish" data-act="station-demo" data-no="' + esc(d[0]) + '" style="margin:0 12px 0 0">' + esc(d[1]) + '</button>';
     }).join('') + '<div style="margin-top:10px">模擬到班時間　<select class="inp" style="width:auto;display:inline-block;padding:8px 14px" data-change="scenario">' + gOpts + '</select>' + '<span class="hint" style="display:inline;margin-left:10px">正式系統一律取伺服器當下時間。</span></div></div>' + '</div></div>';
   };

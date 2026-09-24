@@ -20,6 +20,7 @@
   h1{font-size:28px;line-height:1.35;margin:0 0 10px;}
   .meta{color:var(--g);font-size:15px;}
   .meta b{color:var(--k);}
+  .meta a.slides{display:inline-block;margin-top:8px;padding:7px 16px;border-radius:999px;background:var(--deep);color:#fff;text-decoration:none;font-weight:700;font-size:15px;}
   h2{font-size:24px;margin:52px 0 14px;padding:10px 0 10px 14px;border-left:8px solid var(--green);background:var(--tint);line-height:1.4;scroll-margin-top:74px;}
   h2 .when{display:block;font-size:14px;font-weight:400;color:var(--g);letter-spacing:.02em;}
   h3{font-size:19px;margin:30px 0 8px;}
@@ -33,29 +34,22 @@
   td{padding:9px 12px;border:1px solid var(--line);vertical-align:top;}
   td .path{color:var(--k);}
   td .path b{color:var(--deep);}
-  tr.pg td{background:var(--tint);font-weight:700;}
   .tag{display:inline-block;font-size:13px;line-height:1.4;padding:1px 8px;border:1px solid var(--g);color:var(--g);margin-right:6px;white-space:nowrap;}
   .pill{display:inline-block;font-size:14px;line-height:1.5;padding:2px 12px;border-radius:999px;background:var(--green);color:#083b30;font-weight:700;white-space:nowrap;}
-  .pill.soft{background:var(--tint);color:var(--deep);}
   ul.chg{margin:6px 0 0;padding-left:24px;}
   ul.chg li{margin:4px 0;}
   .links{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 4px;}
   .links a{display:inline-block;padding:9px 18px;border-radius:999px;background:var(--deep);color:#fff;text-decoration:none;font-weight:700;font-size:16px;white-space:nowrap;}
   .links a.ghost{background:#fff;color:var(--k);border:1px solid var(--g);font-weight:400;}
-  figure{margin:16px 0 0;}
-  figure img{display:block;width:100%;height:auto;border:1px solid var(--line);}
-  figcaption{font-size:14px;color:var(--g);margin-top:6px;}
-  .figs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
   .note{background:var(--warn);border-left:4px solid var(--y);padding:10px 14px;margin:12px 0;font-size:16px;}
 
-  input[type=text],input[type=email],textarea{
+  input[type=text],textarea{
     font:inherit;color:inherit;border:1px solid var(--g);background:#fffef8;padding:6px 10px;border-radius:4px;max-width:100%;}
   input[type=text].inline{width:16em;padding:2px 8px;}
-  textarea{width:100%;min-height:64px;resize:vertical;}
+  textarea{width:100%;min-height:72px;resize:vertical;}
   input:focus,textarea:focus{outline:3px solid rgba(79,186,161,.45);outline-offset:1px;}
-  .opts{display:flex;flex-wrap:wrap;gap:8px 18px;margin:6px 0;}
-  .opts label{display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
-  .opts input{width:18px;height:18px;margin:0;accent-color:var(--deep);}
+  label.ck{display:flex;gap:10px;align-items:flex-start;margin:10px 0;cursor:pointer;font-weight:700;}
+  label.ck input{width:20px;height:20px;margin-top:4px;flex:0 0 auto;accent-color:var(--deep);}
 
   details.fold{border:1px solid var(--line);margin:10px 0 0;}
   details.fold > summary{cursor:pointer;padding:10px 16px;background:#faf9f6;font-weight:700;font-size:16px;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:baseline;}
@@ -75,12 +69,12 @@
 
   .sendrow{margin:26px 0 0;padding:18px;background:var(--tint);display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;}
   .sendrow .btn{padding:12px 32px;font-size:17px;}
-  .sendrow .hint{font-size:15px;color:var(--g);}
+  .sendrow .who{display:flex;gap:8px;align-items:center;font-size:16px;}
   .btn{font:inherit;font-weight:700;border:0;border-radius:999px;padding:10px 26px;cursor:pointer;background:var(--green);color:#083b30;}
   .btn.ghost{background:#fff;border:1px solid var(--g);color:var(--k);font-weight:400;}
   .btn:hover{filter:brightness(.96);}
-  #sendbox,#minutesbox{display:none;margin-top:18px;border:2px solid var(--green);padding:16px 18px;}
-  #sendbox textarea,#minutesbox textarea{min-height:220px;font-size:15px;}
+  .sendbox{display:none;margin-top:18px;border:2px solid var(--green);padding:16px 18px;}
+  .sendbox textarea{min-height:200px;font-size:15px;}
   .copied{color:var(--deep);font-weight:700;margin-left:10px;display:none;}
   footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:var(--g);font-size:14px;}
 
@@ -88,88 +82,97 @@
     .page{padding:24px 16px 100px;}
     h1{font-size:23px;} h2{font-size:20px;}
     input[type=text].inline{width:100%;}
-    .figs{grid-template-columns:1fr;}
     .nav .in{padding:6px 8px;gap:2px;}
     .nav a{font-size:14px;padding:6px 10px;}
     .nav .full{display:none;} .nav .short{display:inline;}
     h2{scroll-margin-top:62px;}
     details.fold > summary{flex-wrap:wrap;}
     table{font-size:15px;}
+    .sendrow .who{width:100%;}
   }
   @media print{
     body{background:#fff;font-size:11pt;}
     .page{max-width:none;padding:0;}
-    #sendbox,#minutesbox,.nav,.sendrow,.btn{display:none!important;}
+    .sendbox,.nav,.sendrow,.btn{display:none!important;}
     details.fold > .inner{display:block;}
-    figure,table{break-inside:avoid;}
+    table{break-inside:avoid;}
   }
 </style>
 </head>
 <body>
 <nav class="nav"><div class="in">
-  <a href="#s1" data-go="s1"><span class="full">1　今天決定的事</span><span class="short">決定</span></a>
+  <a href="#s1" data-go="s1"><span class="full">1　9/24 決定的事</span><span class="short">決定</span></a>
   <a href="#s2" data-go="s2"><span class="full">2　9/29 前回覆</span><span class="short">9/29</span></a>
   <a href="#s3" data-go="s3"><span class="full">3　10/16 前提供</span><span class="short">10/16</span></a>
-  <a href="#s4" data-go="s4"><span class="full">4　簡報與畫面</span><span class="short">簡報</span></a>
   <span class="sp"></span>
 </div></nav>
 <div class="page">
 
 <header>
   <h1>新竹縣公共圖書館系統建置<br>9 月 24 日線上會議　會後資料</h1>
-  <div class="meta"><b>2026 年 9 月 24 日（四）下午 3:00 線上會議</b>　出席：文化局（科長、昱慧、志工業務承辦）、凌網（企劃 Simmy、專案經理如慧、翠蘭）<br>凌網科技　2026 年 9 月 24 日</div>
+  <div class="meta"><b>2026 年 9 月 24 日（四）下午 3:00 線上會議</b>　出席：文化局（科長、昱慧、志工業務承辦）、凌網（企劃 Simmy、專案經理如慧、翠蘭）<br>凌網科技　2026 年 9 月 24 日<br><a class="slides" href="slides.html" target="_blank">開啟會議簡報（16 頁）</a></div>
 </header>
 
-<h2 id="s1"><span class="when">9 月 24 日會議</span>一、今天決定的事</h2>
+<h2 id="s1"><span class="when">9 月 24 日會議</span>一、9 月 24 日會議決定的事</h2>
 <div id="minutes">
-
-<div class="wrap"><table>
-  <thead><tr><th style="width:30%">項目</th><th>決定</th><th style="width:26%">接下來</th></tr></thead>
+<div class="wrap"><table id="decisions">
+  <thead><tr><th style="width:26%">項目</th><th>決定</th><th style="width:26%">館方接下來要做的</th></tr></thead>
   <tbody>
-    <tr><td>志工服務管理平臺雛形（流程與用字）</td><td>大架構沒有問題；館方各科室試用後彙整意見</td><td>10 月 16 日前回覆（第三部分）</td></tr>
-    <tr><td>志工服務管理平臺內頁設計</td><td><span class="pill">確認，可製作網頁</span></td><td>凌網開始製作網頁</td></tr>
+    <tr><td>志工服務管理平臺雛形（流程與用字）</td><td>大架構沒有問題；會議上談定的細節凌網已改進雛形（見下方）</td><td>各科室試用後彙整意見，10 月 16 日前回覆</td></tr>
+    <tr><td>志工服務管理平臺內頁設計</td><td><span class="pill">確認，可製作網頁</span>　凌網開始製作</td><td>—</td></tr>
     <tr><td>一般志工不提供服務證明書</td><td><span class="pill">維持 6 月的決定</span>　年度時數由系統匯出供文化局造冊</td><td>—</td></tr>
-    <tr><td>活動報名系統後台畫面</td><td><span class="pill">確認</span></td><td>其他單位意見 9 月 29 日前回覆（第二部分）</td></tr>
-    <tr><td>兒童版「分齡推薦好書」</td><td><span class="pill">依學制</span>　低年級、中年級、高年級、國中、高中</td><td>網頁畫面維持現狀</td></tr>
-    <tr><td>閱讀小博士點數有效期限</td><td><span class="pill">每年 12 月 31 日到期</span>　與館方的閱讀集點卡同步；12 月取得的點數同樣在當年年底到期</td><td>寫入規格</td></tr>
-    <tr><td>客服電話與客服信箱</td><td>客服電話用總圖電話、客服信箱用科室信箱</td><td>9 月 29 日前提供實際值（第二部分）</td></tr>
-    <tr><td>退費規定九項</td><td>轉會計單位確認</td><td>9 月 29 日前回覆（第二部分）</td></tr>
+    <tr><td>活動報名系統後台畫面</td><td><span class="pill">確認</span></td><td>其他單位的意見 9 月 29 日前回覆</td></tr>
+    <tr><td>活動報名系統上線時間</td><td>館方希望 10 月就能使用。新系統要安裝在新主機（預計 11 月到位），安裝並測試完成後整體切換，試營運前無法先上線；正式時程由凌網專案經理另行說明</td><td>—</td></tr>
+    <tr><td>兒童版「分齡推薦好書」</td><td><span class="pill">依學制</span>　低年級、中年級、高年級、國中、高中；網頁畫面維持現狀</td><td>—</td></tr>
+    <tr><td>閱讀小博士點數有效期限</td><td><span class="pill">每年 12 月 31 日到期</span>　與館方的閱讀集點卡同步；12 月取得的點數同樣在當年年底到期</td><td>—</td></tr>
+    <tr><td>客服電話與客服信箱</td><td>客服電話用總圖電話、客服信箱用科室信箱</td><td>9 月 29 日前提供實際號碼與信箱</td></tr>
+    <tr><td>退費規定九項</td><td>轉會計單位確認，沒改的照凌網建議值</td><td>9 月 29 日前回覆</td></tr>
+    <tr><td>閱讀小博士實施辦法、志工服務規章</td><td>需先簽准</td><td>10 月 16 日前提供辦法全文，先簽准的先寄</td></tr>
   </tbody>
 </table></div>
 
-<h3>志工服務管理平臺：會議上談定的細節</h3>
-<p class="lead">下列各點雛形已經改好，可以直接點開看（連結在第三部分）。</p>
-<ul class="chg">
-  <li><b>簽到方式</b>：除了手機掃 QR Code，不方便用手機的志工可以在館內電腦的「簽到站」刷志工證（借閱證）條碼簽到退。簽到站只顯示簽到結果，不會停在管理者的畫面。</li>
-  <li><b>場次 QR Code</b>：一個場次一張（上午班、下午班各一張）、固定不變、可以事先印出張貼，不設有效時間。</li>
-  <li><b>手機登入</b>：用手機登入後直接進到「現場簽到退」頁。</li>
-  <li><b>時數計算</b>：算到分鐘。上午場有 10 分鐘簽到緩衝，超過就算遲到，時數從實際簽到時間起算。</li>
-  <li><b>長假</b>：請假一個月以上，由服務地點管理者與文化局兩關簽核。</li>
-  <li><b>年度服務時數門檻</b>：依組別設定（一般組別 144 小時），只用來顯示是否達標、沒有強制；由文化局總管理者一次建好。</li>
-  <li><b>報表</b>：只做月報與年報，不做季報；匯出 Excel 與 PDF。</li>
-  <li><b>權限</b>：簽到退時間只有文化局總管理者能修改；違規記點各館承辦人可以調整；系統參數只有文化局能改。地點管理者能不能補登出勤，館方確認後回覆（第三部分）。</li>
-</ul>
-
-<h3>活動報名系統</h3>
-<ul class="chg">
-  <li>後台畫面確認：備取可一次勾選多筆遞補、現場簽到刷借閱證或輸入身分證字號、紙本簽到表列印後由館員登錄、還沒繳費的人可以簽到但畫面會提醒館員。</li>
-  <li><b>上線時間</b>：館方希望 10 月就能使用。凌網說明新系統要安裝在新主機（預計 11 月到位），安裝並測試完成後整體切換，試營運前無法先上線；正式時程由專案經理另行說明。</li>
-</ul>
-
-<h3>其他</h3>
-<ul class="chg">
-  <li>隱私權政策與退費機制已有全文草稿，在第二部分可以預覽。</li>
-  <li>學生公共服務管理系統 7 月已確認，本次沒有調整。</li>
-</ul>
+<details class="fold" id="detailsFold">
+  <summary><span>會議上談定的細節</span><span class="count">志工服務管理平臺八項、活動報名與其他三項</span></summary>
+  <div class="inner">
+    <h4>志工服務管理平臺（雛形已照這些改好）</h4>
+    <ul class="chg">
+      <li><b>簽到方式</b>：除了手機掃 QR Code，不方便用手機的志工可以在館內電腦的「簽到站」刷志工證條碼簽到退；借閱證號或志工編號都認得。簽到站只顯示簽到結果，不會停在管理者的畫面。</li>
+      <li><b>場次 QR Code</b>：一個場次一張（上午班、下午班各一張）、固定不變、可以事先印出張貼，不設有效時間。</li>
+      <li><b>手機登入</b>：用手機登入後直接進到「現場簽到退」頁。</li>
+      <li><b>時數計算</b>：算到分鐘。上午場有 10 分鐘簽到緩衝，超過就算遲到，時數從實際簽到時間起算。</li>
+      <li><b>長假</b>：請假一個月以上，由服務地點管理者與文化局兩關簽核。</li>
+      <li><b>年度服務時數門檻</b>：依組別設定（一般組別 144 小時），只用來顯示是否達標、沒有強制；由文化局總管理者一次建好。</li>
+      <li><b>報表</b>：只做月報與年報，不做季報；匯出 Excel 與 PDF。</li>
+      <li><b>權限</b>：簽到退時間只有文化局總管理者能修改；違規記點各館承辦人可以調整；系統參數只有文化局能改。出勤補登照科長會上的建議：各館承辦人可以補登，補登後的時間由文化局確認。</li>
+    </ul>
+    <h4>活動報名系統</h4>
+    <ul class="chg">
+      <li>後台畫面確認：備取可一次勾選多筆遞補、現場簽到刷借閱證或輸入身分證字號、紙本簽到表列印後由館員登錄、還沒繳費的人可以簽到但畫面會提醒館員。</li>
+    </ul>
+    <h4>其他</h4>
+    <ul class="chg">
+      <li>隱私權政策與退費機制已有全文草稿，會後資料網頁上可以預覽。</li>
+      <li>學生公共服務管理系統 7 月已確認，本次沒有調整。</li>
+    </ul>
+  </div>
+</details>
 </div>
-<p><button type="button" class="btn ghost" id="copyMinutes">複製會議紀錄文字</button><span class="copied" id="copiedMinutes">已複製</span></p>
-<div id="minutesbox"><p><b>會議紀錄純文字如下</b>，已複製到剪貼簿，可直接貼到信件或公文。</p><textarea id="minutesOut" readonly></textarea></div>
+<p style="margin-top:14px;"><button type="button" class="btn ghost" id="copyMinutes">複製會議紀錄文字</button><span class="copied" id="copiedMinutes">已複製</span></p>
+<div class="sendbox" id="minutesbox"><p><b>會議紀錄純文字如下</b>（含談定的細節與網址），已複製到剪貼簿，可直接貼到信件、公文或 LINE 轉給科長與相關科室。</p><textarea id="minutesOut" readonly></textarea></div>
 
 <h2 id="s2"><span class="when">9 月 24 日開會後</span>二、請於 9 月 29 日（二）前回覆</h2>
 
 <h3>1　活動報名系統後台：其他單位的意見</h3>
-<p class="lead">後台雛形 <span data-link="actAdmin"></span>（左下角可切換系統管理員、總館館員、分館館員、現場館員四種身分）。沒有意見也請告訴我們一聲，我們就照現在的畫面開始製作。</p>
-<textarea data-doc="活動報名系統後台意見" placeholder="各單位對活動報名後台的意見，沒有請填「沒有意見」"></textarea>
+<p class="lead">後台雛形 <span data-link="actAdmin"></span>（左下角可切換系統管理員、總館館員、分館館員、現場館員四種身分；點亂了重新整理就回到初始資料）。</p>
+<div class="wrap"><table>
+  <thead><tr><th style="width:34%">館方 8 月 14 日的需求</th><th>點哪裡</th></tr></thead>
+  <tbody>
+    <tr><td>備取可以<b>一次勾選多筆遞補</b>；遞補後要不要等讀者回覆，是系統設定裡的一個開關</td><td class="path">活動管理 →「親子採果體驗」→ 報名名單 →<b>「備取」</b>頁籤 → 勾幾筆 →「批次遞補轉正」</td></tr>
+    <tr><td>現場繳費的活動，<b>還沒繳費的人不會被擋在簽到之外</b>，畫面提醒館員，收款後按一下就完成登錄</td><td class="path">同一個活動 →<b>「現場簽到」</b>→ 輸入 R0004 按 Enter</td></tr>
+    <tr><td>鄉鎮圖書館的承辦建立付費活動時，<b>線上收款整區關閉、只能選現場繳費</b>，款項不會與總館的金流混在一起</td><td class="path">左下角切成<b>「李館員（分館館員）」</b>→ 活動管理 →「城市生態講座」按「編輯」→ 上方步驟點<b>「2 報名設定」</b>→ 點「付費」</td></tr>
+  </tbody>
+</table></div>
+<textarea data-doc="活動報名系統後台意見" placeholder="各單位對活動報名後台的意見；沒有意見也請寫「沒有意見」，我們就照現在的畫面開始製作"></textarea>
 
 <h3>2　客服電話與客服信箱</h3>
 <p class="lead">金流業者規定網站上要顯示，會放在頁尾、報名表單底部與條款第六條。</p>
@@ -180,10 +183,10 @@
   </tbody>
 </table></div>
 
-<h3>3　退費規定九項</h3>
-<p class="lead">中間是我們的建議值；館方已有現行收退費規定的，直接填館方的；照建議值的不用改。</p>
+<h3>3　退費規定九項（請會計單位確認）</h3>
+<p class="lead">中間是凌網的建議值；館方已有現行收退費規定的，直接填在右欄；照建議值的不用改。</p>
 <div class="wrap"><table id="refund">
-  <thead><tr><th style="width:36%">項目</th><th style="width:32%">我們的建議</th><th>館方決定</th></tr></thead>
+  <thead><tr><th style="width:36%">項目</th><th style="width:32%">凌網的建議</th><th>館方決定</th></tr></thead>
   <tbody>
     <tr><td>報名個人資料保存多久</td><td>活動結束後 5 年</td><td><input type="text" data-fill="個人資料保存期限" data-default="活動結束後 5 年" style="width:100%"></td></tr>
     <tr><td>付費活動的繳費期限</td><td>3 日，逾期自動取消、名額釋出</td><td><input type="text" data-fill="付費活動的繳費期限" data-default="3 日" style="width:100%"></td></tr>
@@ -196,6 +199,7 @@
     <tr><td>退費怎麼申請</td><td>線上取消報名即視為申請</td><td><input type="text" data-fill="退費申請方式" data-default="線上取消報名即視為申請" style="width:100%"></td></tr>
   </tbody>
 </table></div>
+<label class="ck"><input type="checkbox" id="acct">會計單位已確認這九項（沒改的照建議值）</label>
 
 <h3>4　「隱私權政策與退費機制」條款全文</h3>
 <details class="fold">
@@ -282,8 +286,17 @@
   </div>
 </details>
 
-<h3>5　其他意見</h3>
-<textarea id="other" placeholder="對畫面、條款或任何題目的其他意見"></textarea>
+<div class="sendrow">
+  <span class="who">填寫人 <input type="text" class="inline" data-fill="填寫人" placeholder="姓名與單位" style="width:12em"></span>
+  <button type="button" class="btn" data-send="A">寄出 9 月 29 日這一批</button>
+  <span class="lead" style="margin:0">只會帶上面第二部分填的內容；預覽的文字就是寄出的文字。</span>
+</div>
+<div class="sendbox" id="boxA">
+  <p><b>要寄出的內容如下。</b>按「開啟電子郵件」會帶出一封寫好的信（收件人 simmy.lee@hyweb.com.tw），按傳送即可；電腦沒有設定郵件程式的話，按「複製回覆內容」再貼到您平常用的信箱或 LINE 傳給我們。</p>
+  <p class="note longtip" style="display:none">內容較長，郵件程式可能帶不完整。<b>請改按「複製回覆內容」</b>，再貼到信箱或 LINE 傳給我們。</p>
+  <textarea class="out" readonly></textarea>
+  <p style="margin-top:10px;"><a class="btn mailto" href="#">開啟電子郵件</a> <button type="button" class="btn ghost copy">複製回覆內容</button><span class="copied">已複製</span></p>
+</div>
 
 <h2 id="s3"><span class="when">9 月 24 日開會後</span>三、請於 10 月 16 日（五）前提供</h2>
 <p class="lead">有先收齊的可以先寄，不必等全部到齊。</p>
@@ -292,82 +305,49 @@
 <div class="links">
   <a href="https://angelag0.github.io/hcplvol/" target="_blank" rel="noopener">志工用的前台</a>
   <a href="https://angelag0.github.io/hcplvol/admin.html" target="_blank" rel="noopener">管理人員用的後台</a>
-  <a class="ghost" href="https://angelag0.github.io/hcplvol/#/station?loc=L1" target="_blank" rel="noopener">館內簽到站（館內電腦用）</a>
 </div>
-<p class="lead">後台右上角可切換文化局總管理者、服務地點管理者、報表檢視三種身分；前台送出的請假，切到後台就看得到。資料都是虛構的，可以隨意點；非最終網頁畫面，僅供功能面操作流程確認。</p>
+<p class="lead">後台右上角可切換「陳怡安｜總管理者」「林雅雯｜地點管理者（總圖書館）」「蕭宏仁｜報表檢視」等身分；前台送出的請假，切到後台就看得到。資料都是虛構的，可以隨意點；非最終網頁畫面，僅供功能面操作流程確認。</p>
 <div class="wrap"><table>
-  <thead><tr><th style="width:30%">會議上談定、這一版改好的</th><th>點哪裡看得到</th></tr></thead>
+  <thead><tr><th style="width:30%">館方 9 月 24 日會議上提的</th><th>點哪裡看得到</th></tr></thead>
   <tbody>
-    <tr><td>館內簽到站：刷志工證（借閱證）條碼簽到退，不露出管理功能</td><td class="path">後台<b>「現場簽到工具」</b>→<b>「開啟館內簽到站（另開視窗）」</b>→ 刷證（頁面下方有示範證號可以直接點）；第一次刷是簽到、再刷一次是簽退</td></tr>
-    <tr><td>場次 QR Code 固定、可事先列印</td><td class="path">後台<b>「現場簽到工具」</b>左欄<b>「場次 QR Code」</b>→<b>「列印張貼用」</b></td></tr>
     <tr><td>手機登入後直接進簽到退頁</td><td class="path">用手機開前台 → 登入 → 直接進<b>「現場簽到退」</b></td></tr>
-    <tr><td>年度服務時數門檻依組別</td><td class="path">後台<b>「志工管理」</b>→<b>「組別管理」</b>→ 年度時數門檻欄；前台<b>「服務時數」</b>看達標</td></tr>
-    <tr><td>長假一個月以上兩關簽核</td><td class="path">前台<b>「請假／代班」</b>→ 請假類型<b>「長假（1 個月以上）」</b>；後台<b>「請假／代班審核」</b>→<b>「待文化局簽核」</b></td></tr>
-    <tr><td>報表只有月報、年報，匯出 Excel 與 PDF</td><td class="path">後台<b>「時數報表與匯出」</b></td></tr>
-    <tr><td>權限對照表</td><td class="path">後台<b>「帳號與權限管理」</b>下方的權限對照表；右上角切成<b>「林雅雯｜地點管理者（總圖書館）」</b>比較看得到的差別</td></tr>
+    <tr><td>長假一個月以上兩關簽核</td><td class="path">前台<b>「請假／代班」</b>→ 請假類型選<b>「長假（1 個月以上）」</b>；後台<b>「請假／代班審核」</b>→<b>「待文化局簽核」</b>頁籤看周玉梅那一筆</td></tr>
+    <tr><td>館內簽到站：志工自己刷志工證條碼簽到退，不露出管理功能</td><td class="path">後台<b>「現場簽到工具」</b>→<b>「開啟館內簽到站（另開視窗）」</b>→ 點頁面下方的示範證號 →<b>「送出」</b>；同一個人再送一次就是簽退</td></tr>
+    <tr><td>權限：誰能做什麼</td><td class="path">後台<b>「帳號與權限管理」</b>下方的<b>「角色權限對照」</b>；再把右上角切成<b>「林雅雯｜地點管理者（總圖書館）」</b>看差別</td></tr>
   </tbody>
 </table></div>
-<textarea data-doc="志工服務管理平臺意見" placeholder="各科室試用後的意見：要增加的小功能、要改的用字、權限對照表要調整的地方"></textarea>
+<details class="fold">
+  <summary><span>另外三項也改好了</span><span class="count">場次 QR Code、年度時數門檻、月報年報</span></summary>
+  <div class="inner"><ul class="chg">
+    <li>場次 QR Code 固定、可事先列印：後台「現場簽到工具」左欄「場次 QR Code」→「列印張貼用」。</li>
+    <li>年度服務時數門檻依組別：後台「志工管理」→「組別管理」→ 年度時數門檻欄；前台「服務時數」看達標。</li>
+    <li>報表只有月報、年報，匯出 Excel 與 PDF：後台「時數報表與匯出」。</li>
+  </ul></div>
+</details>
+<textarea data-doc="志工服務管理平臺意見" placeholder="各科室試用後的意見：要增加的小功能、要改的用字、角色權限對照要調整的地方（例如出勤補登現在是各館承辦人可以補登、時間由文化局確認）" style="margin-top:12px"></textarea>
 
-<h4>順便請確認兩件事</h4>
-<p>服務地點（分館）管理者可不可以補登出勤？補登後的時間仍由文化局總管理者確認。</p>
-<div class="opts" data-q="地點管理者補登出勤">
-  <label><input type="radio" name="q1" value="可以">可以</label>
-  <label><input type="radio" name="q1" value="不可以，只能提出申請由文化局補登">不可以，只能提出申請由文化局補登</label>
-</div>
-<p>志工證上的條碼，是不是就是借閱證號？簽到站與館員代刷用它比對志工。</p>
-<div class="opts" data-q="志工證條碼是否即借閱證號">
-  <label><input type="radio" name="q2" value="是">是</label>
-  <label><input type="radio" name="q2" value="不是">不是</label>
-</div>
-<input type="text" data-doc="志工證條碼說明" placeholder="不是的話，志工證號與借閱證號怎麼對應" style="width:100%">
-
-<h3>2　閱讀小博士實施辦法</h3>
-<p class="lead">前台「實施辦法」頁面的內容，版面已設計完成，等內文。需先簽准。</p>
-<p>預計提供日期：<input type="text" class="inline" data-doc="閱讀小博士實施辦法" placeholder="例如 10/16"></p>
-
-<h3>3　志工服務規章與施行辦法</h3>
-<p class="lead">前台「服務規章」頁面；服務時數認列、請假與代班、違規處理的依據。需先簽准。</p>
-<p>預計提供日期：<input type="text" class="inline" data-doc="志工服務規章" placeholder="例如 10/16"></p>
+<h3>2　閱讀小博士實施辦法、志工服務規章與施行辦法</h3>
+<p class="lead">兩份辦法都要先簽准。簽准後請把全文（Word 或 PDF）寄到 simmy.lee@hyweb.com.tw 或傳 LINE 給我們，先簽准的先寄。閱讀小博士實施辦法會放在前台「實施辦法」頁；志工服務規章會放在志工平臺前台「服務規章」頁，也是服務時數認列、請假與代班、違規處理的依據。</p>
 <p><span class="tag">已收到</span>學生公共服務的服務規則（6 月 12 日核定版），不需要再提供。<span class="tag">不需要</span>志工服務時數季報範本（9 月 24 日確認不做季報）。</p>
 
-<p style="margin-top:14px;">填寫人：<input type="text" id="who" class="inline" placeholder="姓名與單位"></p>
-
 <div class="sendrow">
-  <button type="button" class="btn" id="send2">產生回覆內容</button>
-  <span class="hint">會把第二、三部分填的內容整理成一封回覆，可以直接寄出，或複製後貼到 LINE 傳給我們。9 月 29 日與 10 月 16 日各按一次即可，沒填的項目不會列出。</span>
+  <span class="who">填寫人 <input type="text" class="inline" data-fill="填寫人" placeholder="姓名與單位" style="width:12em"></span>
+  <button type="button" class="btn" data-send="B">寄出 10 月 16 日這一批</button>
+  <span class="lead" style="margin:0">只會帶上面第三部分填的內容；兩份辦法請另以附件寄出。</span>
+</div>
+<div class="sendbox" id="boxB">
+  <p><b>要寄出的內容如下。</b>按「開啟電子郵件」會帶出一封寫好的信（收件人 simmy.lee@hyweb.com.tw），按傳送即可；電腦沒有設定郵件程式的話，按「複製回覆內容」再貼到您平常用的信箱或 LINE 傳給我們。</p>
+  <p class="note longtip" style="display:none">內容較長，郵件程式可能帶不完整。<b>請改按「複製回覆內容」</b>，再貼到信箱或 LINE 傳給我們。</p>
+  <textarea class="out" readonly></textarea>
+  <p style="margin-top:10px;"><a class="btn mailto" href="#">開啟電子郵件</a> <button type="button" class="btn ghost copy">複製回覆內容</button><span class="copied">已複製</span></p>
 </div>
 
-<div id="sendbox">
-  <p><b>回覆內容已整理如下。</b>按「開啟電子郵件」會帶出一封寫好的信（收件人 simmy.lee@hyweb.com.tw），按傳送即可。如果電腦沒有設定郵件程式、或信件內容不完整，請按「複製回覆內容」，再貼到您平常用的信箱或 LINE 傳給我們。</p>
-  <p id="longtip" class="note" style="display:none">您填的內容較長，用郵件程式寄可能會被截斷。<b>請改按下面的「複製回覆內容」</b>，再貼到您平常用的信箱或 LINE 傳給我們。</p>
-  <textarea id="out" readonly></textarea>
-  <p style="margin-top:10px;">
-    <a class="btn" id="mailto" href="#">開啟電子郵件</a>
-    <button type="button" class="btn ghost" id="copy">複製回覆內容</button><span class="copied" id="copied">已複製</span>
-  </p>
-</div>
-
-<h2 id="s4"><span class="when">留存</span>四、簡報與畫面</h2>
-<div class="links">
-  <a href="slides.html" target="_blank">開啟今天的簡報（16 頁）</a>
-  <a class="ghost" href="https://angelag0.github.io/hcplvol/" target="_blank" rel="noopener">志工前台</a>
-  <a class="ghost" href="https://angelag0.github.io/hcplvol/admin.html" target="_blank" rel="noopener">志工後台</a>
-  <a class="ghost" href="https://angelag0.github.io/hcplact/" target="_blank" rel="noopener">活動報名後台</a>
-</div>
-<h3>志工服務管理平臺內頁設計（9 月 24 日確認）</h3>
-<p class="lead">僅供網頁製作的風格依據，實際顯示文字及介面流程以雛形為準。</p>
-<div class="figs">
-  <figure><a href="img/dashboard.jpg" target="_blank"><img alt="志工服務管理平臺內頁：個人儀表板" src="img/dashboard.jpg" loading="lazy"></a><figcaption>內頁一：個人儀表板</figcaption></figure>
-  <figure><a href="img/cards.jpg" target="_blank"><img alt="志工服務管理平臺內頁：活動卡片與各式元件" src="img/cards.jpg" loading="lazy"></a><figcaption>內頁二：活動卡片與各式元件</figcaption></figure>
-  <figure><a href="img/mobile-checkin.jpg" target="_blank"><img alt="志工服務管理平臺：手機現場簽到退" src="img/mobile-checkin.jpg" loading="lazy"></a><figcaption>內頁三：手機上的現場簽到與簽退</figcaption></figure>
-</div>
-
-<footer>凌網科技　企劃　Simmy（simmy.lee@hyweb.com.tw）　｜　如有任何問題，歡迎隨時在群組提出。</footer>
+<footer>凌網科技　企劃　Simmy（simmy.lee@hyweb.com.tw）　｜　10 月 5 日至 9 日 Simmy 休假，這段期間請在群組找專案經理如慧。</footer>
 </div>
 
 <script>
 var LINKS = { volFront: 'https://angelag0.github.io/hcplvol/', volBack: 'https://angelag0.github.io/hcplvol/admin.html', actAdmin: 'https://angelag0.github.io/hcplact/' };
+var PAGE_URL = 'https://angelag0.github.io/hcpl0924/';
 var MAIL = 'simmy.lee@hyweb.com.tw';
 var STORE = 'hcpl-premeeting-260924-v2';
 
@@ -375,6 +355,7 @@ var STORE = 'hcpl-premeeting-260924-v2';
   function $(s, r){ return (r || document).querySelector(s); }
   function $all(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
   function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function txt(el){ return (el.textContent || '').replace(/\s+/g, ' ').trim(); }
 
   $all('[data-link]').forEach(function(el){
     var u = LINKS[el.getAttribute('data-link')];
@@ -389,21 +370,21 @@ var STORE = 'hcpl-premeeting-260924-v2';
     var k = src.getAttribute('data-fill');
     $all('[data-fill="' + k + '"]').forEach(function(el){ if(el !== src){ el.value = src.value; } });
   }
-  function fillValue(k){ var el = $('[data-fill="' + k + '"]'); return el ? el.value : ''; }
+  function fillValue(k){ var el = $('[data-fill="' + k + '"]'); return el ? el.value.trim() : ''; }
   function fillKeys(){
     var seen = {}, defaults = {}, out = [];
-    $all('[data-fill]').forEach(function(el){
+    $all('#refund [data-fill]').forEach(function(el){
       var k = el.getAttribute('data-fill');
       if(!seen[k]){ seen[k] = true; defaults[k] = el.getAttribute('data-default') || ''; out.push(k); }
     });
     return { keys: out, defaults: defaults };
   }
+  function docVal(k){ var el = $('[data-doc="' + k + '"]'); return el ? el.value.trim() : ''; }
 
   function snapshot(){
-    var s = { f: {}, q: {} };
-    fillKeys().keys.forEach(function(k){ s.f['fill:' + k] = fillValue(k); });
-    $all('[data-doc],#other,#who').forEach(function(el){ s.f[el.getAttribute('data-doc') || el.id] = el.value; });
-    $all('.opts[data-q]').forEach(function(g){ var c = $('input:checked', g); s.q[g.getAttribute('data-q')] = c ? c.value : ''; });
+    var s = { f: {}, acct: !!$('#acct').checked };
+    $all('[data-fill]').forEach(function(el){ s.f['fill:' + el.getAttribute('data-fill')] = el.value; });
+    $all('[data-doc]').forEach(function(el){ s.f[el.getAttribute('data-doc')] = el.value; });
     return s;
   }
   function save(){ try{ localStorage.setItem(STORE, JSON.stringify(snapshot())); }catch(e){} }
@@ -415,12 +396,9 @@ var STORE = 'hcpl-premeeting-260924-v2';
       var v = s.f[k];
       if(typeof v !== 'string'){ return; }
       if(k.indexOf('fill:') === 0){ $all('[data-fill="' + k.slice(5) + '"]').forEach(function(el){ el.value = v; }); }
-      else if(v !== ''){ var el = $('[data-doc="' + k + '"]') || document.getElementById(k); if(el){ el.value = v; } }
+      else if(v !== ''){ var el = $('[data-doc="' + k + '"]'); if(el){ el.value = v; } }
     });
-    Object.keys(s.q || {}).forEach(function(k){
-      var g = $('.opts[data-q="' + k + '"]'); if(!g || !s.q[k]){ return; }
-      $all('input', g).forEach(function(i){ if(i.value === s.q[k]){ i.checked = true; } });
-    });
+    if(s.acct){ $('#acct').checked = true; }
   }
   document.addEventListener('change', save);
   document.addEventListener('input', function(e){
@@ -428,53 +406,34 @@ var STORE = 'hcpl-premeeting-260924-v2';
     save();
   });
 
-  /* compact＝寄信用的精簡版：沒改的建議值、沒填的項目不列 */
-  function buildText(compact){
-    var L = [], secNo = 0;
-    L.push('新竹縣公共圖書館系統建置　9 月 24 日會後資料回覆');
-    L.push('填寫人：' + ($('#who').value || '（未填）'));
-    function sec(title, lines){
-      if(compact && (!lines || !lines.length)){ return; }
-      secNo++; L.push(''); L.push(secNo + '、' + title);
-      if(lines && lines.length){ lines.forEach(function(x){ L.push(x); }); } else { L.push('無'); }
+  /* 兩批各自打包；預覽的文字就是寄出的文字；沒填的不寫成答案，收在最後一行 */
+  function buildA(){
+    var L = ['新竹縣公共圖書館系統建置　9 月 24 日會後回覆（9 月 29 日這一批）', '填寫人：' + (fillValue('填寫人') || '（未填）'), ''];
+    var missing = [];
+    var act = docVal('活動報名系統後台意見');
+    if(act){ L.push('・活動報名系統後台其他單位的意見：' + act); } else { missing.push('活動報名後台的意見'); }
+    var tel = fillValue('客服電話'), mail = fillValue('客服信箱');
+    if(tel){ L.push('・客服電話：' + tel); } else { missing.push('客服電話'); }
+    if(mail){ L.push('・客服信箱：' + mail); } else { missing.push('客服信箱'); }
+    if($('#acct').checked){
+      var fk = fillKeys(), same = 0;
+      L.push('・退費規定九項（會計單位已確認）：');
+      fk.keys.forEach(function(k){
+        var v = fillValue(k), d = fk.defaults[k];
+        if(v && v === d){ same++; } else { L.push('　－' + k + '：' + (v || '（空白）')); }
+      });
+      if(same){ L.push('　－其餘 ' + same + ' 項照建議值'); }
+    } else {
+      L.push('・退費規定九項：會計單位還在確認');
     }
-    function docVal(k){ var el = $('[data-doc="' + k + '"]'); return el ? el.value.trim() : ''; }
-    function qVal(k){ var g = $('.opts[data-q="' + k + '"]'); var c = g ? $('input:checked', g) : null; return c ? c.value : ''; }
-
-    var a = [];
-    var actFb = docVal('活動報名系統後台意見'); if(actFb || !compact){ a.push('・活動報名系統後台的意見：' + (actFb || '（未填）')); }
-    var fk = fillKeys(), same = 0;
-    fk.keys.forEach(function(k){
-      var v = fillValue(k), d = fk.defaults[k];
-      if(compact && d && v === d){ same++; return; }
-      if(compact && !v){ return; }
-      a.push('・' + k + '：' + (v || '（未填）'));
-    });
-    if(compact && same){ a.push('・其餘 ' + same + ' 項退費規定照建議值'); }
-    var other = ($('#other').value || '').trim();
-    if(other){ a.push('・其他意見：' + other); } else if(!compact){ a.push('・其他意見：（未填）'); }
-    sec('9 月 29 日前回覆的事', a);
-
-    var b = [];
-    var volFb = docVal('志工服務管理平臺意見'); if(volFb || !compact){ b.push('・志工服務管理平臺各科室意見：' + (volFb || '（未填）')); }
-    var q1 = qVal('地點管理者補登出勤'); if(q1 || !compact){ b.push('・服務地點管理者可否補登出勤：' + (q1 || '（未選）')); }
-    var q2 = qVal('志工證條碼是否即借閱證號'); var q2x = docVal('志工證條碼說明');
-    if(q2 || q2x || !compact){ b.push('・志工證條碼是否即借閱證號：' + (q2 || '（未選）') + (q2x ? '；' + q2x : '')); }
-    ['閱讀小博士實施辦法', '志工服務規章'].forEach(function(k){ var v = docVal(k); if(v || !compact){ b.push('・' + k + ' 預計提供日期：' + (v || '（未填）')); } });
-    sec('10 月 16 日前提供的事', b);
+    if(missing.length){ L.push(''); L.push('還沒填：' + missing.join('、')); }
     return L.join('\n');
   }
-
-  function doSend(){
-    $('#out').value = buildText(false);
-    var subj = encodeURIComponent('新竹縣圖書館系統建置　會後資料回覆');
-    var href = 'mailto:' + MAIL + '?subject=' + subj + '&body=' + encodeURIComponent(buildText(true));
-    var long = href.length > 1900;
-    if(long){ href = 'mailto:' + MAIL + '?subject=' + subj + '&body=' + encodeURIComponent('（回覆內容較長，請改用網頁上的「複製回覆內容」，把內容貼在這封信裡再傳送。）'); }
-    $('#mailto').setAttribute('href', href);
-    $('#longtip').style.display = long ? 'block' : 'none';
-    $('#sendbox').style.display = 'block';
-    $('#sendbox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  function buildB(){
+    var L = ['新竹縣公共圖書館系統建置　9 月 24 日會後回覆（10 月 16 日這一批）', '填寫人：' + (fillValue('填寫人') || '（未填）'), ''];
+    var vol = docVal('志工服務管理平臺意見');
+    if(vol){ L.push('・志工服務管理平臺各科室試用後的意見：' + vol); } else { L.push(''); L.push('還沒填：志工服務管理平臺的意見'); }
+    return L.join('\n');
   }
   function copyText(ta, flag){
     ta.focus(); ta.select();
@@ -482,13 +441,46 @@ var STORE = 'hcpl-premeeting-260924-v2';
     if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(ta.value).then(done, function(){ document.execCommand('copy'); done(); }); }
     else{ document.execCommand('copy'); done(); }
   }
-  $('#send2').addEventListener('click', doSend);
-  $('#copy').addEventListener('click', function(){ copyText($('#out'), $('#copied')); });
+  $all('[data-send]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var which = btn.getAttribute('data-send');
+      var box = $('#box' + which), text = which === 'A' ? buildA() : buildB();
+      $('.out', box).value = text;
+      var subj = encodeURIComponent('新竹縣圖書館系統建置　會後回覆（' + (which === 'A' ? '9 月 29 日' : '10 月 16 日') + '這一批）');
+      var href = 'mailto:' + MAIL + '?subject=' + subj + '&body=' + encodeURIComponent(text);
+      var long = href.length > 1900;
+      if(long){ href = 'mailto:' + MAIL + '?subject=' + subj + '&body=' + encodeURIComponent('（回覆內容較長，請改用網頁上的「複製回覆內容」，把內容貼在這封信裡再傳送。）'); }
+      $('.mailto', box).setAttribute('href', href);
+      $('.longtip', box).style.display = long ? 'block' : 'none';
+      box.style.display = 'block';
+      box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  $all('.sendbox .copy').forEach(function(b){
+    b.addEventListener('click', function(){ var box = b.closest('.sendbox'); copyText($('.out', box), $('.copied', box)); });
+  });
 
-  /* 會議紀錄純文字：直接從第一部分的畫面文字產生 */
+  /* 會議紀錄純文字：從畫面元素組出來（含收合的細節），最後附網址 */
+  function minutesText(){
+    var L = ['新竹縣公共圖書館系統建置　9 月 24 日線上會議紀錄'];
+    L.push(txt($('header .meta')).replace(/開啟會議簡報（16 頁）/, '').trim());
+    L.push(''); L.push('一、決定的事');
+    $all('#decisions tbody tr').forEach(function(tr){
+      var c = $all('td', tr).map(txt);
+      L.push('・' + c[0] + '：' + c[1] + (c[2] && c[2] !== '—' ? '（館方接下來：' + c[2] + '）' : ''));
+    });
+    $all('#detailsFold .inner h4').forEach(function(h){
+      L.push(''); L.push(txt(h));
+      var ul = h.nextElementSibling;
+      if(ul){ $all('li', ul).forEach(function(li){ L.push('・' + txt(li)); }); }
+    });
+    L.push(''); L.push('會後資料與回覆：' + PAGE_URL);
+    L.push('志工服務管理平臺雛形試用（前台）：' + LINKS.volFront + '　（後台）：' + LINKS.volBack);
+    L.push('會議簡報：' + PAGE_URL + 'slides.html');
+    return L.join('\n');
+  }
   $('#copyMinutes').addEventListener('click', function(){
-    var t = '新竹縣公共圖書館系統建置　9 月 24 日線上會議紀錄\n' + $('header .meta').innerText.replace(/\n/g, '　') + '\n\n' + $('#minutes').innerText.replace(/\n{3,}/g, '\n\n');
-    $('#minutesOut').value = t;
+    $('#minutesOut').value = minutesText();
     $('#minutesbox').style.display = 'block';
     copyText($('#minutesOut'), $('#copiedMinutes'));
   });
