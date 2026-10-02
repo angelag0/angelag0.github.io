@@ -27,32 +27,12 @@
 <body>
 <main>
 <h1>雅瓊改版清單</h1>
-<p class="lead">EP 企業網首頁｜客戶 9/30、10/1 回信要改的。</p>
+<p class="lead">EP 企業網｜首頁客戶 10/2 回覆其餘沒問題，接下來只剩內頁（編號沿用上一版）。</p>
 
-<h2>文案<small>客戶第 5、6 點｜<a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/home.html" target="_blank" rel="noopener">開 home.html</a>｜<a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/home_demo2026.html" target="_blank" rel="noopener">開 home_demo2026</a></small></h2>
+<h2>內頁<small><a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/product_lp.html" target="_blank" rel="noopener">開 product_lp.html</a>｜<a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/product_cp.html" target="_blank" rel="noopener">開 product_cp.html</a></small></h2>
 <table><thead><tr><th></th><th>哪裡</th><th>現在</th><th>改成</th></tr></thead><tbody>
-<tr><td class="chk"><input type="checkbox"></td><td>1. home.html 第 1716 行<br>聯繫與訂閱的訂閱卡</td><td>對此店家有興趣？</td><td>訂閱電子報，掌握經貿網與店家最新消息</td></tr>
-<tr><td class="chk"><input type="checkbox"></td><td>2. home.html 第 2565 行<br>home_demo2026 第 2015 行<br>聯絡表單的附件說明</td><td>大小總計: 0.00MB</td><td>刪掉這一行（下面兩行照舊）</td></tr>
-<tr><td class="chk"><input type="checkbox"></td><td>3. home.html 第 406、465 行<br>home_demo2026 第 660 行<br>公司新聞的按鈕</td><td>More</td><td>查看更多</td></tr>
-</tbody></table>
-
-<h2>會上講好的<small>客戶第 1、2、3、7 點</small></h2>
-<table><thead><tr><th></th><th>哪裡</th><th>改成</th></tr></thead><tbody>
-<tr><td class="chk"><input type="checkbox"></td><td>4. 右上功能列的下拉選單</td><td>改圓弧框；滑過比照主選單用底線</td></tr>
-<tr><td class="chk"><input type="checkbox"></td><td>5. 產品價格</td><td>加千位數分隔符號；一般卡折扣後金額維持紅字；遮罩效果卡 USD 金額改白色、折扣後金額維持黃色；兩產品一列卡金額改黑色、折扣後金額改紅字</td></tr>
-<tr><td class="chk"><input type="checkbox"></td><td>6. 橫幅廣告</td><td>1620×405 改成 1540×385</td></tr>
-<tr><td class="chk"><input type="checkbox"></td><td>7. 關於我們的圖示資訊</td><td>展開後的資訊比照原版，以欄為主</td></tr>
-</tbody></table>
-
-<h2>不用改<small>我們回覆客戶</small></h2>
-<table><thead><tr><th></th><th>哪裡</th><th>客戶說的</th></tr></thead><tbody>
-<tr><td class="chk"><input type="checkbox"></td><td>8. CTA 樣式一</td><td>文字用白色（只是示意，文字顏色、按鈕顏色、遮罩透明度都可以改）</td></tr>
-<tr><td class="chk"><input type="checkbox"></td><td>9. 其他中英文夾雜</td><td>統一語系（只是示意）</td></tr>
-</tbody></table>
-
-<h2>內頁<small><a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/product_cp.html" target="_blank" rel="noopener">開 product_cp.html</a>｜<a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/product_lp.html" target="_blank" rel="noopener">開 product_lp.html</a></small></h2>
-<table><thead><tr><th></th><th>哪裡</th><th>現在</th><th>改成</th></tr></thead><tbody>
-<tr><td class="chk"><input type="checkbox"></td><td>10. 產品內容頁 product_cp.html</td><td>第 11 行還掛舊的橘色樣式 styleA.css，頁首頁尾和按鈕是橘色</td><td>跟產品列表頁 product_lp.html 一樣換成 styleD.css：頁首頁尾換新，原本橘色的顏色和按鈕改成黑底白</td></tr>
+<tr><td class="chk"><input type="checkbox"></td><td>8. 產品列表頁 product_lp.html<br>電腦版兩欄</td><td>主內容（分類介紹、產品列表、換頁、推薦商品）整塊掉到左欄下面，右邊空白；Windows 1000～2048 寬都這樣。下面推薦商品輪播 .slideArea 比主內容寬：_pdQueue.scss 第 700 行 calc(100vw - 364px) 沒扣捲軸（多 1px）、第 743 行 1620 以上 1220px 再加 padding（多 10px）</td><td>_layout.scss 第 268 行 .major 加 min-width: 0（量過 1000～1920 寬，加上後跟左欄同一列、頁面沒有左右捲動）；1620 以上推薦輪播會比主內容右緣多 10px，要不要一起收妳決定</td></tr>
+<tr><td class="chk"><input type="checkbox"></td><td>9. 產品內容頁 product_cp.html</td><td>第 11 行還掛舊的橘色樣式 styleA.css，頁首頁尾和按鈕是橘色</td><td>跟產品列表頁 product_lp.html 一樣換成 styleD.css：頁首頁尾換新，原本橘色的顏色和按鈕改成黑底白</td></tr>
 </tbody></table>
 </main>
 </body>
