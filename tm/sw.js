@@ -1,7 +1,7 @@
 // 離線用的背景程式：把殼（index.html 與圖示）存在手機裡。
 // 存過的：網路夠快（1.5 秒內回來）就用新的；慢或沒網路就先給存好的，新的在背景存起來，下次開就是新的。沒存過的：等網路。
 // 行程資料不經過這裡（那是加密後存在 IndexedDB 的），這裡只管殼本身。
-const VERSION = '5dabc0cfc368';
+const VERSION = 'ddd5324a4798';
 const CACHE = 'tm-shell-' + VERSION;
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 const WAIT = 1500;                                             // 等網路最多等這麼久（毫秒）
