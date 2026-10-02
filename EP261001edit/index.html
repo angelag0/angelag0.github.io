@@ -27,12 +27,18 @@
 <body>
 <main>
 <h1>雅瓊改版清單</h1>
-<p class="lead">EP 企業網｜首頁客戶 10/2 回覆其餘沒問題，接下來只剩內頁（編號沿用上一版）。</p>
+<p class="lead">EP 企業網｜首頁客戶 10/2 已確認沒問題。10/12 那週要交完整版給亭婷（10 月中工程師開始做前台）：首頁新版型、新版產品列表頁與產品內容頁、產品內容頁按鈕的 HTML。改完直接跟亭婷核對。</p>
 
-<h2>內頁<small><a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/product_lp.html" target="_blank" rel="noopener">開 product_lp.html</a>｜<a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/product_cp.html" target="_blank" rel="noopener">開 product_cp.html</a></small></h2>
+<h2>內頁<small>新舊版各一份｜<a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/product_lp.html" target="_blank" rel="noopener">開 product_lp.html</a>｜<a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/product_cp.html" target="_blank" rel="noopener">開 product_cp.html</a></small></h2>
 <table><thead><tr><th></th><th>哪裡</th><th>現在</th><th>改成</th></tr></thead><tbody>
-<tr><td class="chk"><input type="checkbox"></td><td>8. 產品列表頁 product_lp.html<br>電腦版兩欄</td><td>主內容（分類介紹、產品列表、換頁、推薦商品）整塊掉到左欄下面，右邊空白；Windows 1000～2048 寬都這樣。下面推薦商品輪播 .slideArea 比主內容寬：_pdQueue.scss 第 700 行 calc(100vw - 364px) 沒扣捲軸（多 1px）、第 743 行 1620 以上 1220px 再加 padding（多 10px）</td><td>_layout.scss 第 268 行 .major 加 min-width: 0（量過 1000～1920 寬，加上後跟左欄同一列、頁面沒有左右捲動）；1620 以上推薦輪播會比主內容右緣多 10px，要不要一起收妳決定</td></tr>
-<tr><td class="chk"><input type="checkbox"></td><td>9. 產品內容頁 product_cp.html</td><td>第 11 行還掛舊的橘色樣式 styleA.css，頁首頁尾和按鈕是橘色</td><td>跟產品列表頁 product_lp.html 一樣換成 styleD.css：頁首頁尾換新，原本橘色的顏色和按鈕改成黑底白</td></tr>
+<tr><td class="chk"><input type="checkbox"></td><td>8. 產品列表頁 product_lp.html</td><td>原檔已換成新版 styleD.css，沒有舊版</td><td>新舊各一份：舊版＝原本的樣子（styleA.css），新版另存一份，換新版 Header、Footer</td></tr>
+<tr><td class="chk"><input type="checkbox"></td><td>8-1. 新版產品列表頁<br>電腦版兩欄</td><td>主內容（分類介紹、產品列表、換頁、推薦商品）整塊掉到左欄下面，右邊空白；Windows 1000～2048 寬都這樣。下面推薦商品輪播 .slideArea 比主內容寬：_pdQueue.scss 第 700 行 calc(100vw - 364px) 沒扣捲軸（多 1px）、第 743 行 1620 以上 1220px 再加 padding（多 10px）</td><td>_layout.scss 第 268 行 .major 加 min-width: 0（量過 1000～1920 寬，加上後跟左欄同一列、頁面沒有左右捲動）；1620 以上推薦輪播會比主內容右緣多 10px，要不要一起收妳決定</td></tr>
+<tr><td class="chk"><input type="checkbox"></td><td>9. 產品內容頁 product_cp.html</td><td>只有舊版（第 11 行掛 styleA.css，頁首頁尾和按鈕是橘色）</td><td>原檔留著當舊版；複製一份當新版：換新版 Header、Footer，詢價、購買、聯繫供應商那排按鈕改成跟新版首頁一樣的黑白色系</td></tr>
+</tbody></table>
+
+<h2>舊版首頁<small>只加新元件，原本的區塊都不動｜<a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/home_A.html" target="_blank" rel="noopener">開 home_A</a>｜<a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/home_B.html" target="_blank" rel="noopener">開 home_B</a>｜<a href="https://uipages.hyweb.com.tw/taiwantrade-ep-4f681b/pages/home_C.html" target="_blank" rel="noopener">開 home_C</a></small></h2>
+<table><thead><tr><th></th><th>哪裡</th><th>現在</th><th>改成</th></tr></thead><tbody>
+<tr><td class="chk"><input type="checkbox"></td><td>10. home_A 第 2279～2321 行<br>home_B 第 2237 行<br>home_C 第 2240 行<br>頁尾與認證徽章</td><td>原本的頁尾換成 2026 新版頁尾，認證徽章 .ttBadges 也從上方移進頁尾</td><td>換回原本的頁尾，認證徽章放回上方（跟現行網站一樣）</td></tr>
 </tbody></table>
 </main>
 </body>
