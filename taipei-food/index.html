@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 只給本機用（http://localhost:3000/taipei.html）：不在 vite build 的入口裡，不要發布 -->
+    <meta name="robots" content="noindex" />
+    <title>台北市餐飲</title>
+    <!-- 地圖用蘭嶼每日路線圖那一份 Leaflet 1.9.4（scripts/card-map/vendor，會設 window.L）；server.ts 把它掛在 /vendor/leaflet 原檔照給 -->
+    <link rel="stylesheet" href="./vendor/leaflet/leaflet.min.css" />
+    <script src="./vendor/leaflet/leaflet.min.js"></script>
+    <script type="module" crossorigin src="./assets/taipei-DpbmOzga.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/taipei-CgyhVE31.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
