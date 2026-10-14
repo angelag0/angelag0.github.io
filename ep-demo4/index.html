@@ -400,7 +400,7 @@ td.pd .pdSub{display:block;color:#626771;font-size:.92em}
                 <span class="cur"></span>
                 <input type="number" class="mini" id="dltNum" placeholder="14">
                 <select class="autoWidth" id="dltUnit">
-                  <option>Negotiable</option><option selected>day(s)</option>
+                  <option selected>day(s)</option>
                   <option>month(s)</option><option>quarter(s)</option><option>year(s)</option>
                 </select>
               </div>
@@ -452,7 +452,7 @@ td.pd .pdSub{display:block;color:#626771;font-size:.92em}
       <span id="mState" class="ok">未溢出</span>
       <span>顯示欄位 <span class="num" id="mCols">—</span> 欄</span>
       <span class="optSet hide" id="optPriceCol">價格欄位
-        <span class="segs"><button data-pcol="two">分兩欄</button><button data-pcol="one" class="on">整併一欄</button></span>
+        <span class="segs"><button data-pcol="two" class="on">分兩欄</button></span>
       </span>
       <button id="btnLap">切換為自適應寬度</button>
       <button id="btnRuler">隱藏量尺</button>
@@ -602,7 +602,7 @@ var COLS_NEW = [
 
 /* ② 的檢視：now＝現況／b＝調整後。 */
 var VIEW = 'b';
-var PCOL = 'one';     // 價格欄位：two＝分兩欄／one＝整併一欄
+var PCOL = 'two';     // 價格欄位：two＝分兩欄／one＝整併一欄
 var TIER = 'detail';  // 線上價格呈現：區間＋可展開明細
 
 /* 方案Ａ／Ｂ 新欄位的最小寬度＝2026-08-27 以 Chrome 無頭實測本檔所得
@@ -1222,11 +1222,6 @@ function sumMin(v, pcol){
 
 /* 後台欄位連動（依指定規格） */
 document.addEventListener('change', function(e){
-  if(e.target.id==='dltUnit'){
-    var n = document.getElementById('dltNum');
-    n.disabled = (e.target.value==='Negotiable');
-    if(n.disabled) n.value = '';
-  }
   if(e.target.id==='moqUnit'){ syncSupplyUnit(); }
   /* optionPool 勾選外觀 */
   if(e.target.type==='checkbox' && e.target.closest('.optionPool')){
