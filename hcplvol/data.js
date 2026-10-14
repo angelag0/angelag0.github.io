@@ -23,7 +23,8 @@
       monthlyDeadlineDay: 25,
       monthlyMaxSlots: 12,
       manager: '林雅雯',
-      wifi: true
+      ipRanges: ['203.0.113.0/24'],
+      qrLanOnly: false
     }, {
       id: 'L2',
       unitId: 'U2',
@@ -34,7 +35,9 @@
       checkinCap: true,
       monthlyDeadlineDay: 20,
       monthlyMaxSlots: 8,
-      manager: '張家豪'
+      manager: '張家豪',
+      ipRanges: [],
+      qrLanOnly: false
     }, {
       id: 'L3',
       unitId: 'U2',
@@ -45,7 +48,9 @@
       checkinCap: false,
       monthlyDeadlineDay: 25,
       monthlyMaxSlots: 10,
-      manager: '黃淑惠'
+      manager: '黃淑惠',
+      ipRanges: [],
+      qrLanOnly: false
     }, {
       id: 'L4',
       unitId: 'U2',
@@ -56,7 +61,9 @@
       checkinCap: true,
       monthlyDeadlineDay: 25,
       monthlyMaxSlots: 10,
-      manager: '吳佩珊'
+      manager: '吳佩珊',
+      ipRanges: ['198.51.100.16/28'],
+      qrLanOnly: false
     }, {
       id: 'L5',
       unitId: 'U2',
@@ -67,7 +74,9 @@
       checkinCap: true,
       monthlyDeadlineDay: 20,
       monthlyMaxSlots: 10,
-      manager: '李明哲'
+      manager: '李明哲',
+      ipRanges: [],
+      qrLanOnly: false
     }, {
       id: 'L6',
       unitId: 'U2',
@@ -78,7 +87,9 @@
       checkinCap: true,
       monthlyDeadlineDay: 25,
       monthlyMaxSlots: 10,
-      manager: '周怡君'
+      manager: '周怡君',
+      ipRanges: [],
+      qrLanOnly: false
     }],
     reportColumns: ['月例／會議', '服務台', '美術館', '推廣課', '圖書館', '演藝廳', '縣史館'],
     groups: [{
@@ -198,8 +209,8 @@
       no: 'HC-0138',
       name: '李建國',
       unitId: 'U1',
-      groupIds: ['G2'],
-      locationIds: ['L1'],
+      groupIds: ['G2', 'G6'],
+      locationIds: ['L1', 'L3'],
       status: '在職',
       joinYear: 2015,
       phone: '0933-100-005',
@@ -292,6 +303,7 @@
       phone: '0933-100-012',
       email: 'bohan@example.com',
       cardNo: 'A00030112',
+      idLast4: '0112',
       applyDate: '2026-10-08',
       applyStage: '待面試'
     }, {
@@ -306,6 +318,7 @@
       phone: '0933-100-013',
       email: 'jiaying@example.com',
       cardNo: 'A00030213',
+      idLast4: '0213',
       applyDate: '2026-10-11',
       applyStage: '資料審核中'
     }, {
@@ -320,6 +333,21 @@
       phone: '0933-100-014',
       email: '',
       cardNo: 'A00009814'
+    }, {
+      id: 'V015',
+      no: '',
+      name: '郭金水',
+      unitId: 'U1',
+      groupIds: ['G2'],
+      locationIds: ['L1'],
+      status: '審查中',
+      joinYear: 2026,
+      phone: '0933-100-014',
+      email: 'jinshui@example.com',
+      cardNo: 'A00009814',
+      idLast4: '9814',
+      applyDate: '2026-10-12',
+      applyStage: '待面試'
     }],
     slotTemplates: [{
       id: 'T1',
@@ -404,7 +432,8 @@
       capacity: 2,
       type: '自由報名',
       booked: [],
-      pending: []
+      pending: [],
+      openGroupIds: ['G1']
     }, {
       id: 'S107',
       date: '2026-10-17',
@@ -559,9 +588,8 @@
       countedFrom: '09:00',
       countedTo: '',
       hours: 0,
-      status: '補登',
-      source: '管理者補登',
-      note: '忘記簽退，已向管理者申請補登，待文化局總管理者確認時間'
+      status: '正常',
+      source: '現場QR'
     }, {
       id: 'A005',
       volunteerId: 'V006',
@@ -636,6 +664,31 @@
       status: '正常',
       source: '管理者代登',
       note: '志工未帶手機，由館員於公用電腦代為登記'
+    }],
+    makeupRequests: [{
+      id: 'MR01',
+      volunteerId: 'V001',
+      attendanceId: 'A004',
+      date: '2026-09-30',
+      locationId: 'L1',
+      templateId: 'T1',
+      checkIn: '',
+      checkOut: '12:00',
+      reason: '當日 12:00 服務結束，因故未完成簽退',
+      status: '處理中',
+      createdAt: '2026-10-01 08:30'
+    }, {
+      id: 'MR02',
+      volunteerId: 'V002',
+      attendanceId: null,
+      date: '2026-10-12',
+      locationId: 'L1',
+      templateId: 'T1',
+      checkIn: '09:00',
+      checkOut: '12:00',
+      reason: '手機沒電，簽到與簽退都沒有完成，當天有跟組長說',
+      status: '處理中',
+      createdAt: '2026-10-12 13:10'
     }],
     hourSummary: {
       V001: {
@@ -738,6 +791,7 @@
       to: '2027-02-28',
       reason: '術後休養',
       proxyId: 'V011',
+      proxyMode: '指定一位代理人',
       status: '待文化局簽核',
       proxyRepliedAt: '2026-10-05 11:20',
       managerApprovedAt: '2026-10-06 15:00',
@@ -929,7 +983,7 @@
       date: '2026-10-01',
       tag: '提醒',
       title: '到班請記得簽到與簽退；忘記時請洽服務地點管理者補登',
-      body: '簽到退可使用手機掃描現場張貼的場次 QR Code，或在館內簽到站刷志工證（借閱證）條碼。忘記簽到或簽退，請於三日內向服務地點管理者提出補登。',
+      body: '簽到退可使用手機掃描現場張貼的 QR Code（每個時段一張），或在館內簽到站刷志工證（借閱證）條碼。忘記簽到或簽退，請到「我的出勤紀錄」按「申請補登」。',
       scope: '全體',
       pinned: false
     }, {
@@ -1017,6 +1071,9 @@
       cancelDeadlineDays: 3,
       substituteSameUnitOnly: true,
       vacancyNotifyMax: 3,
+      checkinOpenMinutes: 60,
+      checkoutCloseMinutes: 120,
+      repeatScanMinutes: 10,
       hoursUnit: '分鐘',
       lateHoursRule: '依實際簽到時間起算',
       earlyLeaveHoursRule: '依實際簽退時間計算',
@@ -1029,25 +1086,29 @@
       name: '陳怡安',
       role: '總管理者',
       unit: '文化局',
-      locationIds: []
+      locationIds: [],
+      email: 'yian@example.com'
     }, {
       id: 'AD2',
       name: '林雅雯',
       role: '地點管理者',
       unit: '總圖',
-      locationIds: ['L1']
+      locationIds: ['L1'],
+      email: 'yawen@example.com'
     }, {
       id: 'AD3',
       name: '吳佩珊',
       role: '地點管理者',
       unit: '文化局',
-      locationIds: ['L4']
+      locationIds: ['L4'],
+      email: 'peishan@example.com'
     }, {
       id: 'AD4',
       name: '蕭宏仁',
       role: '報表檢視',
       unit: '文化局',
-      locationIds: []
+      locationIds: [],
+      email: ''
     }],
     reports: [{
       id: 'RP01',
@@ -1072,7 +1133,7 @@
       by: '陳怡安'
     }]
   };
-  var KEY = 'hcpl-volunteer-demo-v3';
+  var KEY = 'hcpl-volunteer-demo-v4';
   function clone(o) {
     return JSON.parse(JSON.stringify(o));
   }
@@ -1137,6 +1198,43 @@
         var x = HCV.byId(state.groups, g);
         return x ? x.name : g;
       }).join('、');
+    },
+    unitIdsOf: function (state, v) {
+      var out = [];
+      (v.groupIds || []).forEach(function (gid) {
+        var g = HCV.byId(state.groups, gid);
+        if (g && out.indexOf(g.unitId) < 0) {
+          out.push(g.unitId);
+        }
+      });
+      if (!out.length && v.unitId) {
+        out.push(v.unitId);
+      }
+      return out;
+    },
+    unitNames: function (state, v) {
+      return HCV.unitIdsOf(state, v).map(function (u) {
+        var x = HCV.byId(state.units, u);
+        return x ? x.name : u;
+      }).join('、');
+    },
+    inSubstituteScope: function (state, v, locationId) {
+      if (!state.params.substituteSameUnitOnly) {
+        return true;
+      }
+      var l = HCV.byId(state.locations, locationId);
+      return !l || HCV.unitIdsOf(state, v).indexOf(l.unitId) >= 0;
+    },
+    onLongLeave: function (state, volunteerId, date) {
+      return (state.leaves || []).some(function (lv) {
+        return lv.volunteerId === volunteerId && lv.isLong && lv.status === '已核准' && lv.from <= date && date <= lv.to;
+      });
+    },
+    groupAllowed: function (slot, v) {
+      var g = slot.openGroupIds || [];
+      return !g.length || g.some(function (x) {
+        return v.groupIds.indexOf(x) >= 0;
+      });
     },
     activePoints: function (state, volunteerId) {
       return state.violations.filter(function (r) {
