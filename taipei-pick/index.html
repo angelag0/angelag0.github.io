@@ -221,10 +221,13 @@ textarea.inp{width:100%;min-height:64px}
   var target = function () { return BUDGET - (+st.get('fuel', 0) || 0); };
   function cost(s, r) {
     if (r.amt) return { lo: +r.amt, hi: +r.amt, real: true, unk: 0, n: 0 };
-    var plat = 0, unk = 0, n = 0;
-    Object.keys(r.q).forEach(function (i) { var it = s.items[i], q = r.q[i]; if (!it || !q) return; n += q; if (it.p) plat += it.p * q; else unk += q; });
-    var lo = plat;
-    if (s.how === 'own') lo = plat * 0.85; else if (s.ratio) lo = plat / s.ratio;
+    var plat = 0, lo = 0, unk = 0, n = 0;
+    Object.keys(r.q).forEach(function (i) {
+      var it = s.items[i], q = r.q[i]; if (!it || !q) return; n += q;
+      if (!it.p) { unk += q; return; }
+      plat += it.p * q;
+      lo += (it.sp || (s.how === 'own' ? it.p * 0.85 : s.ratio ? it.p / s.ratio : it.p)) * q;
+    });
     return { lo: lo, hi: plat, real: false, unk: unk, n: n };
   }
   function totals() {
@@ -239,6 +242,7 @@ textarea.inp{width:100%;min-height:64px}
   function advice(s) {
     if (s.how === 'own') return '網路訂（85 折）';
     if (s.how === 'ueDel' || s.how === 'phone') return '打電話訂';
+    if (s.amb) return '先打電話問店內價';
     if (s.ratio && s.ratio > 1.05) return '打電話訂（平台貴）';
     if (s.ratio) return '平台或電話都可';
     if (s.how === 'ue') return '先打電話問店內價';
@@ -423,7 +427,7 @@ textarea.inp{width:100%;min-height:64px}
       (distKm(s) != null ? '<dt>離家</dt><dd>' + kmText(distKm(s)) + '（直線）・' + esc(s.district) + '</dd>' : '') +
       '<dt>今天</dt><dd>' + esc(todayLine(s)) + ' <button class="lk small" data-a="hrs" data-no="' + s.no + '">' + (ui.hrs[s.no] ? '收起' : '整週') + '</button>' + (ui.hrs[s.no] ? '<div class="small">' + s.hours.map(esc).join('<br>') + '</div>' : '') + '</dd>' +
       '<dt>怎麼訂</dt><dd>' + esc(HOW[s.how] || '') + '<br>建議：' + esc(advice(s)) + (hn ? '<br><span class="small muted">' + esc(hn) + '</span>' : '') + '</dd>' +
-      '<dt>價錢</dt><dd>' + esc(s.priceNote) + '<br><span class="small muted">外帶平台主菜中間價 ' + (s.med ? money(s.med) : '—') + '・咕狗每人 ' + (s.gp[0] ? money(s.gp[0]) + (s.gp[1] ? '–' + money(s.gp[1]) : ' 以上') : '—') + '（內用）</span></dd>' +
+      '<dt>價錢</dt><dd' + (s.amb ? ' class="warnl"' : '') + '>' + esc(s.priceNote) + '<br><span class="small muted">外帶平台主菜中間價 ' + (s.med ? money(s.med) : '—') + '・咕狗每人 ' + (s.gp[0] ? money(s.gp[0]) + (s.gp[1] ? '–' + money(s.gp[1]) : ' 以上') : '—') + '（內用）</span></dd>' +
       '<dt>發票</dt><dd>' + (s.inv.length === 1 ? '稅籍登記「' + esc(s.inv[0]) + '」，會開統一發票（收到的發票上是這個名字）' : '同一個門牌登記了 ' + s.inv.length + ' 家：' + esc(s.inv.join('、'))) + '</dd>' +
       (s.mall ? '<dt>注意</dt><dd class="warnl">' + esc(s.mall) + '</dd>' : '') +
       (s.svc ? '<dt>內用規則</dt><dd>' + esc(s.svc) + '<span class="small muted">（外帶收不收要問）</span></dd>' : '') + '</dl>';
@@ -444,7 +448,7 @@ textarea.inp{width:100%;min-height:64px}
     h += '<div class="box"><button class="tog" data-a="ord" data-no="' + s.no + '"><span>點菜' + (picked.length ? '（' + picked.length + ' 道：' + (s.how === 'own' ? '原價 ' + money(c.hi) + '・網路訂 85 折 ' + money(c.lo) : '平台價 ' + money(c.hi) + (c.lo !== c.hi ? '・店內價約 ' + money(c.lo) : '')) + (c.unk ? '・' + c.unk + ' 份價錢不明' : '') + '）' : '') + '</span><span>' + (ui.ord[s.no] ? '收起' : '打開') + '</span></button>';
     if (ui.ord[s.no]) h += s.items.map(function (it, i) {
       var q = r.q[i] || 0;
-      return '<div class="qrow">' + (it.img ? '<img loading="lazy" src="' + esc(it.img) + '" alt="">' : '<span class="ni"></span>') + '<div class="grow"><div>' + esc(it.n) + '</div><div class="small muted">' + (it.p ? money(it.p) : '價錢要問') + '</div></div>' +
+      return '<div class="qrow">' + (it.img ? '<img loading="lazy" src="' + esc(it.img) + '" alt="">' : '<span class="ni"></span>') + '<div class="grow"><div>' + esc(it.n) + '</div><div class="small muted">' + (it.p ? money(it.p) + (it.sp && it.sp !== it.p ? '・店內 ' + money(it.sp) : it.sp ? '・同店內' : '') : '價錢要問') + '</div></div>' +
         '<div class="step"><button data-a="r-qty" data-no="' + s.no + '" data-i="' + i + '" data-d="-1" aria-label="少一份">−</button><span>' + q + '</span><button data-a="r-qty" data-no="' + s.no + '" data-i="' + i + '" data-d="1" aria-label="多一份">＋</button></div></div>';
     }).join('');
     h += '</div>';
