@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>10/21 志工平臺小抄</title>
+<style>
+  :root{--k:#1f1f1d;--g:#5f5d57;--line:#d9d7d0;--soft:#f3f2ee;--pri:#2e7d6b;--pri-bg:#e8f3f0;--ask:#fff7dc;--ask-line:#e6d49a;}
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:#fff;color:var(--k);font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",-apple-system,"Segoe UI",sans-serif;font-size:18px;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);}
+  nav a{display:block;text-align:center;padding:10px 2px;font-size:15px;line-height:1.3;color:var(--pri);text-decoration:none;font-weight:700;border-right:1px solid var(--soft);}
+  nav a:last-child{border-right:0;}
+  nav a small{display:block;font-weight:400;color:var(--g);font-size:12px;}
+  main{max-width:640px;margin:0 auto;padding:0 16px 80px;}
+  section{padding-top:8px;scroll-margin-top:60px;}
+  h1{font-size:20px;margin:14px 0 2px;}
+  .sub{color:var(--g);font-size:15px;margin:0 0 6px;}
+  h2{font-size:21px;margin:26px 0 8px;padding-bottom:4px;border-bottom:2px solid var(--k);}
+  h3{font-size:18px;margin:18px 0 6px;}
+  p{margin:6px 0;}
+  .say,.ask,.tap{border-radius:4px;padding:8px 12px;margin:8px 0;}
+  .say{background:var(--pri-bg);border:1px solid #bfdcd4;font-weight:700;}
+  .ask{background:var(--ask);border:1px solid var(--ask-line);}
+  .tap{background:var(--soft);border:1px solid var(--line);font-size:16px;}
+  .lb{display:block;font-size:13px;color:var(--g);font-weight:400;}
+  ol,ul{margin:6px 0;padding-left:24px;}
+  li{margin:6px 0;}
+  .new{display:inline-block;font-size:13px;border:1px solid var(--pri);color:var(--pri);border-radius:4px;padding:0 6px;margin-right:4px;font-weight:700;}
+  .old{display:inline-block;font-size:13px;border:1px solid var(--line);color:var(--g);border-radius:4px;padding:0 6px;margin-right:4px;}
+  .links a{display:block;margin:6px 0;padding:10px 12px;border:1px solid var(--pri);border-radius:4px;color:var(--pri);text-decoration:none;font-weight:700;text-align:center;}
+  b{font-weight:700;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="#s1">1<small>開場</small></a>
+  <a href="#s2">2<small>打卡問題</small></a>
+  <a href="#s3">3<small>新改的</small></a>
+  <a href="#s4">4<small>等館方</small></a>
+  <a href="#s5">5<small>收尾</small></a>
+</nav>
+<main>
+
+<h1>10/21 志工平臺最後確認</h1>
+<p class="sub">照 1 到 5 往下講。綠底＝照著說，黃底＝要館方回答，灰底＝要點的地方。</p>
+<div class="links">
+  <a href="https://angelag0.github.io/hcplvol/" target="_blank" rel="noopener">開前台（志工用）</a>
+  <a href="https://angelag0.github.io/hcplvol/admin.html" target="_blank" rel="noopener">開後台（管理人員用）</a>
+</div>
+
+<section id="s1">
+<h2>1　開場</h2>
+<p class="say"><span class="lb">說</span>今天請各位把原型要改的地方提出來，會後就定案開工，之後不再調整。</p>
+<p class="say"><span class="lb">說</span>先回上週科長問的打卡時數，再帶 9/24 之後新改的幾個地方。</p>
+</section>
+
+<section id="s2">
+<h2>2　科長的打卡問題</h2>
+<p class="sub">館方 10/14 問：晚到超過彈性時間，可不可以 10:00 簽到、12:00 簽退，當天算 2 小時？</p>
+<p class="say"><span class="lb">說</span>可以。晚到超過彈性時間，系統從實際簽到時間算到班表結束：10 點到、12 點走，就是 2 小時。</p>
+<p class="say"><span class="lb">說</span>彈性時間要 15 分鐘，後台改一個數字就好，每個時段可以不一樣。</p>
+<div class="tap"><span class="lb">點給館方看</span>
+前台 → 現場簽到退 → 「模擬簽到時間」選「超過緩衝時間（遲到）」→ 按「掃碼簽到」：結果寫「自實際簽到時間起算」。</div>
+<div class="tap"><span class="lb">再點</span>
+後台 → 館別與系統參數 → 「出勤認定」那一區：「遲到（超過緩衝時間）怎麼計時數」選「依實際簽到時間起算」；上面的時段範本可以改簽到緩衝分鐘數。</div>
+
+<h3>要館方當場回答的兩題</h3>
+<div class="ask"><span class="lb">問 1</span><b>晚到的人要不要記遲到點數？</b><br>
+系統會標「遲到」。要不要自動記點，後台「出勤異常自動轉違規記點」可以開或關。</div>
+<div class="ask"><span class="lb">問 2</span><b>「9:10 到、12:10 走，補足 3 小時」要不要算？</b><br>
+現在的做法：彈性時間內到，從班表開始時間算（9:10 到、12:00 走就算 3 小時）；時數最多算到班表結束，晚走不多算。<br>
+館方如果要「晚到就晚走補足」，要另外加這個設定，請館方今天決定。</div>
+</section>
+
+<section id="s3">
+<h2>3　9/24 之後新改的（停下來展示）</h2>
+<ol>
+  <li><span class="new">新改</span><b>QR Code 每個地點、每個時段一張</b>，印一次一直用；掃到別的時段的會被擋。
+    <div class="tap">前台 → 現場簽到退 → 「模擬簽到時間」選「掃到別的時段的 QR」→ 掃碼簽到</div></li>
+  <li><span class="new">新改</span><b>忘記打卡：志工申請補登，管理者處理</b>。
+    <div class="tap">前台 → 我的出勤紀錄 → 最下面「申請補登」、「我的補登申請」<br>後台 → 出勤查詢與異常 → 「補登申請」分頁</div></li>
+  <li><span class="new">新改</span><b>長假（1 個月以上）填起訖日，代理方式二選一</b>：指定一位代理人，或轉成空缺班。
+    <div class="tap">前台 → 請假／代班 → 新增請假單</div></li>
+  <li><span class="new">新改</span><b>班表報名：不能報的時段直接寫原因</b>（額滿、限某組別、本月已達上限）。
+    <div class="tap">前台 → 班表報名</div></li>
+  <li><span class="new">新改</span><b>權限對照表</b>：館方 9/24 說要核對的就是這張。
+    <div class="tap">後台 → 帳號與權限管理 → 最下面「角色權限對照」</div></li>
+</ol>
+<h3>9/24 定的，原型都改好了（一句帶過）</h3>
+<ul>
+  <li><span class="old">9/24</span>館內簽到站：刷志工證簽到退，不會停在管理畫面（後台 → 現場簽到工具 → 開啟館內簽到站）</li>
+  <li><span class="old">9/24</span>手機登入直接進現場簽到退</li>
+  <li><span class="old">9/24</span>年度時數門檻依組別（後台 → 志工管理 → 組別管理）</li>
+  <li><span class="old">9/24</span>長假門檻一個月</li>
+  <li><span class="old">9/24</span>報表只有月報、年報，匯出 Excel 與 PDF</li>
+</ul>
+</section>
+
+<section id="s4">
+<h2>4　還在等館方的</h2>
+<div class="ask"><span class="lb">問</span><b>志工服務規章</b>什麼時候可以給？請假期間算不算時數、教育訓練怎麼認列、代班規範都要照它。</div>
+<p class="say"><span class="lb">說</span>規章還沒到也不影響開工：這些規則都做成後台設定，規章來了只要調設定，不用改程式。</p>
+<div class="ask"><span class="lb">問</span>各科室還有沒有<b>今天沒講到的意見</b>？今天之後就照原型開工。</div>
+</section>
+
+<section id="s5">
+<h2>5　收尾</h2>
+<p class="say"><span class="lb">說</span>今天提的改完，我會把改好的原型連結再傳一次；今天沒提到的，就照現在的原型開發。</p>
+<h3>順便回研習課程</h3>
+<p class="say"><span class="lb">說</span>研習課程的課程管理、學員管理、每堂點名、開課後退費，不在這次採購的範圍；要不要另外承接，PM 跟主管討論後再回覆。</p>
+</section>
+
+</main>
+</body>
+</html>
