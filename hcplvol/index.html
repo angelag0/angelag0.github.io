@@ -604,7 +604,6 @@ textarea.inp{min-height:110px;resize:vertical}
       '緩衝內到班': 't-notice',
       '遲到': 't-warn',
       '早退': 't-warn',
-      '固定早退': 't-plain',
       '缺勤': 't-warn',
       '未報名簽到': 't-warn',
       '補登': 't-grey',
@@ -953,16 +952,16 @@ textarea.inp{min-height:110px;resize:vertical}
     }
     var remind = pts > 0 ? '<div class="alert"><div class="ic">!</div><div><h4>違規提醒</h4><p>' + esc(S.params.pointReminderText.replace('{N}', pts)) + '</p>' + '<div style="margin-top:10px"><a class="linkish" href="#/violations">查看記點明細</a></div></div></div>' : '';
     var stateCard = '<div class="card stat"><div class="lbl">志工資格狀態</div>' + '<div class="big state" style="' + (m.status === '在職' ? '' : 'color:#b03a3a') + '">' + esc(m.status) + '</div>' + '<div class="foot">年資 ' + (2026 - m.joinYear) + ' 年</div></div>';
-    var cards = statCard('本年度累計時數', hourText(h.total), '小時', '<b>↑' + h.pct + '%</b>　門檻 ' + h.req + ' 小時') + statCard('距離達標還需', hourText(h.left), '小時', YEAR_ROC + ' 年度') + statCard('本年違規點數', String(pts), '點', YEAR_ROC + ' 年度累計') + stateCard;
+    var cards = statCard('本年度累計時數', hourText(h.total), '小時', '<b>↑' + h.pct + '%</b>　門檻 ' + h.req + ' 小時') + statCard('距離達標還需', hourText(h.left), '小時', YEAR_ROC + ' 年度') + statCard('目前違規點數', String(pts), '點', YEAR_ROC + ' 年度累計') + stateCard;
     var anns = visAnns().slice(0, 4).map(function (a) {
       return '<div style="display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);flex-wrap:wrap">' + '<span style="color:var(--muted);flex:0 0 108px">' + esc(a.date) + '</span>' + tag(a.tag, a.tag === '公告' ? 't-notice' : a.tag === '活動' ? 't-act' : 't-warn') + '<a href="#/news/' + esc(a.id) + '" style="flex:1;min-width:200px;font-weight:700">' + esc(a.title) + '</a></div>';
     }).join('');
     var future = myFutureSlots().slice(0, 4);
     var rows = future.length ? future.map(function (s) {
       var t = tpl(s.templateId);
-      return '<tr>' + '<td data-label="日期">' + esc(HCV.dateLabel(s.date)) + '</td>' + '<td data-label="時段">' + esc(t.name + ' ' + t.start + '–' + t.end) + '</td>' + '<td data-label="類型">' + tag(s.type, 't-plain') + '</td>' + '<td data-label="服務地點">' + esc(locName(s.locationId)) + '</td>' + '<td data-label="操作" class="right"><button class="btn-sm" data-act="nav" data-to="#/leave?slot=' + esc(s.id) + '">請假</button></td>' + '</tr>';
+      return '<tr>' + '<td data-label="日期">' + esc(HCV.dateLabel(s.date)) + '</td>' + '<td data-label="時段">' + esc(t.name + ' ' + t.start + '–' + t.end) + '</td>' + '<td data-label="排班方式">' + tag(s.type, 't-plain') + '</td>' + '<td data-label="服務地點">' + esc(locName(s.locationId)) + '</td>' + '<td data-label="操作" class="right"><button class="btn-sm" data-act="nav" data-to="#/leave?slot=' + esc(s.id) + '">請假</button></td>' + '</tr>';
     }).join('') : '<tr><td colspan="5">近期尚無排班，可至「班表報名」登記。</td></tr>';
-    return head('我的儀表板', '歡迎回來，' + esc(m.name) + '！這是您本年度的服務概況') + '<div class="wrap">' + '<div class="grid g12" style="align-items:start">' + '<div>' + '<div class="btn-row" style="margin-top:6px">' + '<a class="btn btn-dark" href="#/checkin"><span class="qr-ic"></span>現場簽到退</a></div>' + todayLine + '<div class="hint strong" style="margin-top:14px">所屬大組：' + esc(myUnitName()) + '　｜　組別：' + esc(HCV.groupNames(S, m)) + '　｜　服務地點：' + esc(m.locationIds.map(locName).join('、')) + '</div>' + '</div>' + '<div>' + remind + '</div>' + '</div>' + '<div class="grid g4">' + cards + '</div>' + '<div class="grid g21">' + '<div class="card"><div class="card-h">年度服務時數進度</div>' + '<div class="big" style="font-family:Georgia,\'Noto Serif TC\',serif;font-size:3rem;color:var(--brick);font-weight:700;margin-top:14px">' + hourText(h.total) + '<small style="font-family:inherit;font-size:1rem;color:var(--ink);margin-left:10px">/ ' + h.req + ' 小時（' + h.pct + '%）</small></div>' + '<div class="bar"><i style="width:' + Math.min(100, h.pct) + '%"></i></div>' + '<div class="grid g2" style="margin-top:20px;gap:12px">' + '<div><div style="font-weight:800">排班服務</div><div style="font-weight:800;color:var(--brick);font-size:1.3rem">' + hourText(h.shift) + ' <small style="font-size:.95rem;color:var(--ink)">小時</small></div></div>' + '<div><div style="font-weight:800">活動服務</div><div style="font-weight:800;color:var(--brick);font-size:1.3rem">' + hourText(h.act) + ' <small style="font-size:.95rem;color:var(--ink)">小時</small></div></div>' + '</div>' + '<div class="hint">受訓時數另計：' + hourText(h.train) + ' 小時（教育訓練不併入服務時數）</div>' + '</div>' + '<div class="card"><div class="card-h">館方公告<a class="more" href="#/news">全部公告 →</a></div>' + '<div style="margin-top:10px">' + anns + '</div></div>' + '</div>' + '<div class="grid"><div class="card"><div class="card-h">近期排班<a class="more" href="#/schedule">班表報名 →</a></div>' + '<table class="tbl"><thead><tr><th>日期</th><th>時段</th><th>類型</th><th>服務地點</th><th class="right">操作</th></tr></thead>' + '<tbody>' + rows + '</tbody></table></div></div>' + '</div>';
+    return head('我的儀表板', '歡迎回來，' + esc(m.name) + '！這是您本年度的服務概況') + '<div class="wrap">' + '<div class="grid g12" style="align-items:start">' + '<div>' + '<div class="btn-row" style="margin-top:6px">' + '<a class="btn btn-dark" href="#/checkin"><span class="qr-ic"></span>現場簽到退</a></div>' + todayLine + '<div class="hint strong" style="margin-top:14px">所屬大組：' + esc(myUnitName()) + '　｜　組別：' + esc(HCV.groupNames(S, m)) + '　｜　服務地點：' + esc(m.locationIds.map(locName).join('、')) + '</div>' + '</div>' + '<div>' + remind + '</div>' + '</div>' + '<div class="grid g4">' + cards + '</div>' + '<div class="grid g21">' + '<div class="card"><div class="card-h">年度服務時數進度</div>' + '<div class="big" style="font-family:Georgia,\'Noto Serif TC\',serif;font-size:3rem;color:var(--brick);font-weight:700;margin-top:14px">' + hourText(h.total) + '<small style="font-family:inherit;font-size:1rem;color:var(--ink);margin-left:10px">/ ' + h.req + ' 小時（' + h.pct + '%）</small></div>' + '<div class="bar"><i style="width:' + Math.min(100, h.pct) + '%"></i></div>' + '<div class="grid g2" style="margin-top:20px;gap:12px">' + '<div><div style="font-weight:800">排班服務</div><div style="font-weight:800;color:var(--brick);font-size:1.3rem">' + hourText(h.shift) + ' <small style="font-size:.95rem;color:var(--ink)">小時</small></div></div>' + '<div><div style="font-weight:800">活動服務</div><div style="font-weight:800;color:var(--brick);font-size:1.3rem">' + hourText(h.act) + ' <small style="font-size:.95rem;color:var(--ink)">小時</small></div></div>' + '</div>' + '<div class="hint">受訓時數另計：' + hourText(h.train) + ' 小時（教育訓練不併入服務時數）</div>' + '</div>' + '<div class="card"><div class="card-h">館方公告<a class="more" href="#/news">全部公告 →</a></div>' + '<div style="margin-top:10px">' + anns + '</div></div>' + '</div>' + '<div class="grid"><div class="card"><div class="card-h">近期排班<a class="more" href="#/schedule">班表報名 →</a></div>' + '<table class="tbl"><thead><tr><th>日期</th><th>時段</th><th>排班方式</th><th>服務地點</th><th class="right">操作</th></tr></thead>' + '<tbody>' + rows + '</tbody></table></div></div>' + '</div>';
   };
   var schedState = {
     loc: '',
@@ -1058,7 +1057,7 @@ textarea.inp{min-height:110px;resize:vertical}
       waiting: pending.indexOf(id) >= 0,
       full: s.booked.length + pending.length >= s.capacity,
       past: HCV.diffDays(S.today, s.date) < 0,
-      assign: loc.scheduleMode === '管理者指派',
+      assign: s.type === '管理者指派',
       canCancel: HCV.diffDays(S.today, s.date) >= S.params.cancelDeadlineDays,
       longLeave: HCV.onLongLeave(S, id, s.date),
       group: !HCV.groupAllowed(s, m),
@@ -1174,6 +1173,9 @@ textarea.inp{min-height:110px;resize:vertical}
       return '<th scope="col"><span>週' + w + '</span></th>';
     }).join('') + '</tr></thead><tbody>' + body + '</tbody></table>' + '</div>' + '</div>' + '<div class="legend">' + '<span><i style="background:var(--green-bg);border-color:#bfe3d4"></i>可報名</span>' + '<span><i style="background:var(--pink)"></i>我的班</span>' + '<span><i style="background:#f7efec"></i>已額滿</span>' + '<span><i style="background:#f4f0ec"></i>休館日</span>' + '<span><i style="background:#f2efec"></i>已過期、由管理者排定或其他不能報名的原因</span>' + '</div>' + '<div class="hint">月曆看整個月哪幾天要到班；點可報名或自己的時段會開啟視窗，在視窗裡報名或取消。版面沿用學生公共服務系統的預約日曆。</div>';
   }
+  function ruleText(r) {
+    return toHHMM(toMin(r.start) - r.openMinutes) + ' 起可簽到' + (r.graceMinutes > 0 ? '，' + toHHMM(toMin(r.start) + r.graceMinutes) + ' 以前到都算準時' : '') + (r.latestCheckin ? '，' + r.latestCheckin + ' 以後不能簽到' : '') + '；晚到從' + (Number(r.unitMinutes) === 60 ? '下一個整點' : '下一個整點或半點') + '起算時數';
+  }
   function slotPop() {
     if (!schedState.pop) {
       return '';
@@ -1212,10 +1214,10 @@ textarea.inp{min-height:110px;resize:vertical}
         act = '<div class="btn-row"><button class="btn btn-primary" data-act="slot-join" data-id="' + esc(s.id) + '">確認報名</button></div>';
       }
     }
-    return '<div class="pop"><div class="pop-box">' + '<div class="pop-title">' + (st.mine ? '我的班' : '班表報名') + '</div>' + '<dl class="pop-dl">' + row('服務日期', esc(HCV.dateLabel(s.date))) + row('時段', esc(t.name + ' ' + t.start + '–' + t.end) + '（計 ' + t.hours + ' 小時）') + row('服務地點', esc(locName(s.locationId))) + row('類型', esc(s.type) + (t.earlyLeave ? '　固定早退時段（於 ' + esc(t.end) + ' 簽退標示固定早退、不記點、時數依本時段計）' : '') + ((s.openGroupIds || []).length ? '　限 ' + esc(s.openGroupIds.map(function (g) {
+    return '<div class="pop"><div class="pop-box">' + '<div class="pop-title">' + (st.mine ? '我的班' : '班表報名') + '</div>' + '<dl class="pop-dl">' + row('服務日期', esc(HCV.dateLabel(s.date))) + row('時段', esc(t.name + ' ' + t.start + '–' + t.end) + '（計 ' + t.hours + ' 小時）') + row('服務地點', esc(locName(s.locationId))) + row('排班方式', esc(s.type) + ((s.openGroupIds || []).length ? '　限 ' + esc(s.openGroupIds.map(function (g) {
       var x = byId(S.groups, g);
       return x ? x.name : g;
-    }).join('、')) + ' 報名' : '')) + row('已排／名額', s.booked.length + ' / ' + s.capacity) + row('簽到緩衝', t.graceMinutes > 0 ? t.graceMinutes + ' 分鐘（提早到一律以 ' + esc(t.start) + ' 起算）' : '無（提早到一律以 ' + esc(t.start) + ' 起算）') + '</dl>' + act + '<div class="btn-row"><button class="btn btn-ghost btn-block" data-act="pop-close">關閉</button></div>' + '</div></div>';
+    }).join('、')) + ' 報名' : '')) + row('已排／名額', s.booked.length + ' / ' + s.capacity) + row('簽到時間', ruleText(HCV.rule(S, s))) + '</dl>' + act + '<div class="btn-row"><button class="btn btn-ghost btn-block" data-act="pop-close">關閉</button></div>' + '</div></div>';
   }
   PAGES.schedule = function () {
     var m = me();
@@ -1241,7 +1243,7 @@ textarea.inp{min-height:110px;resize:vertical}
       return '<option value="' + esc(x) + '" ' + (x === schedState.month ? 'selected' : '') + '>' + esc(x.replace('-', '年 ') + ' 月') + '</option>';
     }).join('');
     var modeNote = '<div class="inline-note">' + locs.map(function (l) {
-      return '<div><b>' + esc(l.name) + '</b>：' + (l.scheduleMode === '管理者指派' ? '班表由管理者排定，志工僅供檢視，無法自行報名或取消；如需調整請洽服務地點管理者。' : '採自由報名，' + (l.needApproval ? '報名後須經服務地點管理者核可才會正式成立。' : '報名後即刻成立，系統會寄出完成排班通知信。') + '每月報名上限 ' + l.monthlyMaxSlots + ' 個時段，次月班表請於每月 ' + l.monthlyDeadlineDay + ' 日前登記（截止後到月底由管理者排班，次月仍有缺額的時段會再開放）。') + '</div>';
+      return '<div><b>' + esc(l.name) + '</b>：' + '標示「自由報名」的時段可自行報名，' + (l.needApproval ? '報名後須經服務地點管理者核可才會正式成立。' : '報名後即刻成立，系統會寄出完成排班通知信。') + '每位志工每月在這裡最多報名 ' + l.monthlyMaxSlots + ' 個時段，次月班表請於每月 ' + l.monthlyDeadlineDay + ' 日前登記（截止後到月底由管理者排班，次月仍有缺額的時段會再開放）。' + '標示「管理者指派」的時段由管理者排定，無法自行報名或取消；如需調整請洽服務地點管理者。' + '</div>';
     }).join('') + '</div>';
     var hol = schedHolidays();
     var holBox = hol.length ? '<div class="hint strong">本月休館日：' + hol.map(function (x) {
@@ -1266,21 +1268,19 @@ textarea.inp{min-height:110px;resize:vertical}
         btn = why ? '<button class="btn-sm" disabled>' + esc(why) + '</button>' : '<button class="btn-sm" data-act="slot-join" data-id="' + esc(s.id) + '">我要報名</button>';
       }
       var flags = tag(s.type, 't-plain') + (st.mine ? ' ' + tag('我的班', 't-act') : '');
-      if (t.earlyLeave) {
-        flags += ' ' + tag('固定早退時段', 't-warn');
-      }
       if ((s.openGroupIds || []).length) {
         flags += ' ' + tag('限 ' + s.openGroupIds.map(function (g) {
           var x = byId(S.groups, g);
           return x ? x.name : g;
         }).join('、'), 't-notice');
       }
-      var grace = t.graceMinutes > 0 ? '簽到緩衝 ' + t.graceMinutes + ' 分鐘' : '無簽到緩衝';
-      var extra = t.earlyLeave ? '<tr class="note-row"><td colspan="6">此時段供固定需提早 30 分鐘離開的志工報名，於本時段結束時間 ' + esc(t.end) + ' 簽退標示「固定早退」，不記點，時數依本時段計 ' + t.hours + ' 小時；更早離開照一般早退規則。</td></tr>' : '';
-      return '<tr' + (s.date === schedState.focus ? ' class="focus"' : '') + '>' + '<td data-label="日期">' + esc(HCV.dateLabel(s.date)) + '</td>' + '<td data-label="時段">' + esc(t.name + ' ' + t.start + '–' + t.end) + '<br><span style="color:var(--muted);font-size:.9rem">' + esc(grace + '　計 ' + t.hours + ' 小時') + '</span></td>' + '<td data-label="服務地點">' + esc(locName(s.locationId)) + '</td>' + '<td data-label="類型">' + flags + '</td>' + '<td data-label="已排／名額" class="num">' + s.booked.length + ' / ' + s.capacity + '</td>' + '<td data-label="操作" class="right">' + btn + '</td>' + '</tr>' + extra;
+      var rr = HCV.rule(S, s);
+      var grace = rr.graceMinutes > 0 ? '簽到緩衝 ' + rr.graceMinutes + ' 分鐘' : '無簽到緩衝';
+      var extra = '';
+      return '<tr' + (s.date === schedState.focus ? ' class="focus"' : '') + '>' + '<td data-label="日期">' + esc(HCV.dateLabel(s.date)) + '</td>' + '<td data-label="時段">' + esc(t.name + ' ' + t.start + '–' + t.end) + '<br><span style="color:var(--muted);font-size:.9rem">' + esc(grace + '　計 ' + t.hours + ' 小時') + '</span></td>' + '<td data-label="服務地點">' + esc(locName(s.locationId)) + '</td>' + '<td data-label="排班方式">' + flags + '</td>' + '<td data-label="已排／名額" class="num">' + s.booked.length + ' / ' + s.capacity + '</td>' + '<td data-label="操作" class="right">' + btn + '</td>' + '</tr>' + extra;
     }).join('') : '<tr><td colspan="6">' + (schedState.onlyMine ? '本月您沒有排班。' : '本月尚無開放的班表。') + '</td></tr>';
     var viewRow = '<div class="view-row">' + '<div class="seg">' + '<button class="' + (schedState.view === 'list' ? 'on' : '') + '" data-act="sched-view" data-v="list">列表</button>' + '<button class="' + (schedState.view === 'cal' ? 'on' : '') + '" data-act="sched-view" data-v="cal">月曆</button>' + '</div>' + '<label class="chk"><input type="checkbox" data-change="sched-mine" ' + (schedState.onlyMine ? 'checked' : '') + '> 只看我的班</label>' + '<span class="hint" style="margin-top:0">列表用來報名與取消，月曆用來看整個月的到班日。</span>' + '</div>';
-    var body = schedState.view === 'cal' ? schedCalendar() : '<table class="tbl"><thead><tr><th>日期</th><th>時段</th><th>服務地點</th><th>類型</th><th>已排／名額</th><th class="right">操作</th></tr></thead>' + '<tbody>' + rows + '</tbody></table>' + '<div class="hint">可自行取消的期限為服務日前 ' + S.params.cancelDeadlineDays + ' 天；逾期請改用「請假／代班」提出申請，由代理人與管理者接手。</div>';
+    var body = schedState.view === 'cal' ? schedCalendar() : '<table class="tbl"><thead><tr><th>日期</th><th>時段</th><th>服務地點</th><th>排班方式</th><th>已排／名額</th><th class="right">操作</th></tr></thead>' + '<tbody>' + rows + '</tbody></table>' + '<div class="hint">可自行取消的期限為服務日前 ' + S.params.cancelDeadlineDays + ' 天；逾期請改用「請假／代班」提出申請，由代理人與管理者接手。</div>';
     var susp = suspended() ? suspendNote('報名與取消班表') : '';
     return head('班表報名', '查看各服務地點的班表，報名空缺班或取消自己的排班') + '<div class="wrap">' + susp + '<div class="card" style="margin-top:20px">' + '<div class="card-h">查詢條件</div>' + '<div class="grid g2" style="margin-top:10px;gap:18px">' + '<div class="field" style="margin-top:0"><label>服務地點</label><select class="inp" data-change="sched-loc">' + locOpts + '</select></div>' + '<div class="field" style="margin-top:0"><label>月份</label><select class="inp" data-change="sched-month">' + monOpts + '</select></div>' + '</div>' + modeNote + holBox + '</div>' + '<div class="card" style="margin-top:24px"><div class="card-h">' + esc((multi ? '我的服務地點' : locs.length ? locs[0].name : '班表') + '　' + schedState.month.replace('-', '年 ') + ' 月班表') + '</div>' + viewRow + body + '</div>' + '</div>' + slotPop();
   };
@@ -1363,6 +1363,7 @@ textarea.inp{min-height:110px;resize:vertical}
     early: '提早到（班表開始前）',
     grace: '緩衝時間內到班',
     late: '超過緩衝時間（遲到）',
+    toolate: '超過最晚可簽到時間（不能簽到）',
     wrongqr: '掃到別的時段的 QR（不在那個時段的簽到時間內）'
   };
   var OUTSCEN = {
@@ -1375,6 +1376,9 @@ textarea.inp{min-height:110px;resize:vertical}
     if (UI.scenario === 'grace' && g === 0) {
       UI.scenario = 'early';
     }
+    if (UI.scenario === 'toolate' && !t.latestCheckin) {
+      UI.scenario = 'late';
+    }
     if (UI.scenario === 'early' || UI.scenario === 'wrongqr') {
       return {
         at: toHHMM(st - 18)
@@ -1383,6 +1387,11 @@ textarea.inp{min-height:110px;resize:vertical}
     if (UI.scenario === 'grace') {
       return {
         at: toHHMM(st + Math.max(1, g - 3))
+      };
+    }
+    if (UI.scenario === 'toolate') {
+      return {
+        at: toHHMM(toMin(t.latestCheckin) + 5)
       };
     }
     return {
@@ -1399,13 +1408,14 @@ textarea.inp{min-height:110px;resize:vertical}
     var m = me();
     if (source === '現場QR' && UI.scenario === 'wrongqr') {
       var mineT = slot ? tpl(slot.templateId) : null;
-      var other = S.slotTemplates.filter(function (x) {
+      var locW = slot ? slot.locationId : m.locationIds[0];
+      var other = HCV.templatesOf(S, locW).filter(function (x) {
         return !mineT || x.id !== mineT.id;
-      })[0];
+      })[0] || mineT;
       checkState.wrong = {
         name: other.name,
-        from: toHHMM(toMin(other.start) - S.params.checkinOpenMinutes),
-        to: other.end
+        from: toHHMM(toMin(other.start) - other.openMinutes),
+        to: toHHMM(toMin(other.end) + other.closeMinutes)
       };
       checkState.msg = 'wrongqr';
       return;
@@ -1443,22 +1453,19 @@ textarea.inp{min-height:110px;resize:vertical}
       save();
       return;
     }
-    var t = tpl(slot.templateId);
+    var t = HCV.rule(S, slot);
     var at = scenTimes(t).at;
-    var st = toMin(t.start),
-      g = t.graceMinutes || 0,
-      atM = toMin(at);
-    var counted, status;
-    if (atM <= st) {
-      counted = t.start;
-      status = '正常';
-    } else if (atM <= st + g) {
-      counted = t.start;
-      status = '緩衝內到班';
-    } else {
-      counted = at;
-      status = '遲到';
+    var bad = HCV.scanCheck(t, at, true);
+    if (bad) {
+      checkState.msg = 'refused';
+      checkState.refused = {
+        why: bad,
+        at: at,
+        latest: t.latestCheckin
+      };
+      return;
     }
+    var c = HCV.calc(t, at, '');
     S.attendance.push({
       id: newId('AX'),
       volunteerId: m.id,
@@ -1468,10 +1475,10 @@ textarea.inp{min-height:110px;resize:vertical}
       slotName: t.name + ' ' + t.start + '–' + t.end,
       checkIn: at,
       checkOut: '',
-      countedFrom: counted,
+      countedFrom: c.from,
       countedTo: '',
       hours: 0,
-      status: status,
+      status: c.status,
       source: source
     });
     checkState.msg = 'in';
@@ -1483,31 +1490,27 @@ textarea.inp{min-height:110px;resize:vertical}
       return;
     }
     var slot = todaySlot();
-    var t = slot ? tpl(slot.templateId) : null;
-    if (!t) {
+    if (!slot) {
       a.checkOut = '12:00';
       a.countedTo = '12:00';
       save();
       return;
     }
-    var out = early ? toHHMM(toMin(t.end) - 60) : t.earlyLeave ? t.end : toHHMM(toMin(t.end) + 3);
+    var t = HCV.rule(S, slot);
+    var again = !!a.checkOut;
+    var out = early ? toHHMM(toMin(t.end) - 60) : toHHMM(toMin(t.end) + (again ? 8 : 3));
     a.checkOut = out;
-    if (toMin(out) < toMin(t.end)) {
-      a.countedTo = out;
-      a.status = '早退';
-      a.note = t.earlyLeave ? '比固定早退時段的結束時間 ' + t.end + ' 更早離開，照一般早退規則' : '';
-    } else {
-      a.countedTo = t.end;
-      if (t.earlyLeave) {
-        a.status = '固定早退';
-        a.note = '固定早退時段，於本時段結束時間簽退，不記點，時數依本時段計 ' + t.hours + ' 小時';
-      }
+    var c = HCV.calc(t, a.checkIn, out);
+    a.countedFrom = c.from;
+    a.countedTo = c.to;
+    a.hours = c.hours;
+    if (['正常', '緩衝內到班', '遲到', '早退'].indexOf(a.status) >= 0) {
+      a.status = c.status;
     }
-    a.hours = Math.round((toMin(a.countedTo) - toMin(a.countedFrom)) / 60 * 100) / 100;
     if (source) {
       a.source = a.source || source;
     }
-    checkState.msg = 'out';
+    checkState.msg = again ? 'out-again' : 'out';
     save();
   }
   function earlyConfirm(go) {
@@ -1529,8 +1532,8 @@ textarea.inp{min-height:110px;resize:vertical}
     var pts = HCV.activePoints(S, m.id);
     var slot = todaySlot();
     var a = todayAttendance();
-    var t = slot ? tpl(slot.templateId) : null;
-    var stat = '<div class="grid g4 m2" style="margin-top:20px">' + '<div class="card stat mini"><div class="lbl">本年時數</div><div class="big">' + hourText(h.total) + '<small>小時</small></div></div>' + '<div class="card stat mini"><div class="lbl">距離達標</div><div class="big">' + hourText(h.left) + '<small>小時</small></div></div>' + '<div class="card stat mini"><div class="lbl">本年違規點數</div><div class="big">' + pts + '<small>點</small></div></div>' + '<div class="card stat mini"><div class="lbl">志工資格狀態</div><div class="big state" style="' + (m.status === '在職' ? '' : 'color:#b03a3a') + '">' + esc(m.status) + '</div></div>' + '</div>';
+    var t = slot ? HCV.rule(S, slot) : null;
+    var stat = '<div class="grid g4 m2" style="margin-top:20px">' + '<div class="card stat mini"><div class="lbl">本年時數</div><div class="big">' + hourText(h.total) + '<small>小時</small></div></div>' + '<div class="card stat mini"><div class="lbl">距離達標</div><div class="big">' + hourText(h.left) + '<small>小時</small></div></div>' + '<div class="card stat mini"><div class="lbl">目前違規點數</div><div class="big">' + pts + '<small>點</small></div></div>' + '<div class="card stat mini"><div class="lbl">志工資格狀態</div><div class="big state" style="' + (m.status === '在職' ? '' : 'color:#b03a3a') + '">' + esc(m.status) + '</div></div>' + '</div>';
     var servedTxt = '';
     if (a && a.checkIn && !a.checkOut && a.status !== '未報名簽到') {
       var nowM = new Date().getHours() * 60 + new Date().getMinutes();
@@ -1538,23 +1541,28 @@ textarea.inp{min-height:110px;resize:vertical}
       servedTxt = used > 0 && used < 720 ? '已服務 ' + Math.floor(used / 60) + ' 小時 ' + used % 60 + ' 分' : '服務計時中';
     }
     var stTag = !a ? tag('待簽到', 't-warn') : a.checkOut ? tag('已簽退', 't-green') : tag('服務中', 't-act');
-    var slotCard = slot ? '<div class="card" style="margin-top:20px">' + '<div class="card-h">今日班別' + stTag + '</div>' + '<div style="font-size:1.6rem;font-weight:800;color:var(--brick);margin-top:14px">' + esc(t.name) + ' ' + esc(t.start) + ' – ' + esc(t.end) + '</div>' + '<div style="color:var(--muted);margin-top:6px">' + esc(HCV.dateLabel(S.today)) + '・' + esc(locName(slot.locationId)) + '</div>' + (t.graceMinutes > 0 ? '<div class="hint">本時段簽到緩衝 ' + t.graceMinutes + ' 分鐘；提早到一律以班表開始時間 ' + esc(t.start) + ' 起算。</div>' : '<div class="hint">本時段無簽到緩衝；提早到一律以班表開始時間 ' + esc(t.start) + ' 起算。</div>') + (t.earlyLeave ? '<div class="hint strong">固定早退時段：於 ' + esc(t.end) + ' 簽退標示「固定早退」，不記點，時數依本時段計 ' + t.hours + ' 小時；更早離開照一般早退規則。</div>' : '') + (servedTxt ? '<div class="hint strong">' + esc(servedTxt) + '（簽到於 ' + esc(a.checkIn) + '）</div>' : '') + '</div>' : '<div class="card" style="margin-top:20px"><div class="card-h">今日班別</div>' + '<div class="hint strong" style="margin-top:12px">今天（' + esc(HCV.dateLabel(S.today)) + '）沒有您的排班。</div>' + '<div class="inline-note">臨時到場支援仍可簽到，系統會記錄並標示為異常，由服務地點管理者決定是否發給時數。</div></div>';
+    var slotCard = slot ? '<div class="card" style="margin-top:20px">' + '<div class="card-h">今日班別' + stTag + '</div>' + '<div style="font-size:1.6rem;font-weight:800;color:var(--brick);margin-top:14px">' + esc(t.name) + ' ' + esc(t.start) + ' – ' + esc(t.end) + '</div>' + '<div style="color:var(--muted);margin-top:6px">' + esc(HCV.dateLabel(S.today)) + '・' + esc(locName(slot.locationId)) + '</div>' + '<div class="hint">' + esc(ruleText(t)) + '。提早到一律以班表開始時間 ' + esc(t.start) + ' 起算。</div>' + (servedTxt ? '<div class="hint strong">' + esc(servedTxt) + '（簽到於 ' + esc(a.checkIn) + '）</div>' : '') + '</div>' : '<div class="card" style="margin-top:20px"><div class="card-h">今日班別</div>' + '<div class="hint strong" style="margin-top:12px">今天（' + esc(HCV.dateLabel(S.today)) + '）沒有您的排班。</div>' + '<div class="inline-note">臨時到場支援仍可簽到，系統會記錄並標示為異常，由服務地點管理者決定是否發給時數。</div></div>';
     var result = '';
     if (checkState.msg === 'in' && a) {
-      var why = UI.scenario === 'early' ? '提早到班，以班表開始時間 ' + esc(t.start) + ' 計' : UI.scenario === 'grace' ? '在 ' + t.graceMinutes + ' 分鐘緩衝內到班，以班表時間 ' + esc(t.start) + ' 計' : '已逾 ' + t.graceMinutes + ' 分鐘緩衝，自實際簽到時間 ' + esc(a.checkIn) + ' 起算';
+      var why = UI.scenario === 'early' ? '提早到班，以班表開始時間 ' + esc(t.start) + ' 計' : UI.scenario === 'grace' ? '在 ' + t.graceMinutes + ' 分鐘緩衝內到班，以班表時間 ' + esc(t.start) + ' 計' : '已逾 ' + t.graceMinutes + ' 分鐘緩衝，從簽到後第一個' + (Number(t.unitMinutes) === 60 ? '整點' : '整點或半點') + ' ' + esc(a.countedFrom) + ' 起算';
       result = '<div class="card" style="margin-top:20px;border:2px solid var(--green)">' + '<div class="card-h">簽到完成 ' + statusTag(a.status) + '</div>' + '<div class="grid g2" style="margin-top:14px;gap:12px">' + '<div><div style="font-weight:800">實際簽到時間</div><div style="font-size:1.5rem;font-weight:800">' + esc(a.checkIn) + '</div></div>' + '<div><div style="font-weight:800">計入服務時間</div><div style="font-size:1.5rem;font-weight:800;color:var(--brick)">' + esc(a.countedFrom) + ' 起</div></div>' + '</div>' + '<div class="hint strong">' + why + '</div>' + '<div class="hint">簽到方式：' + esc(a.source) + '　服務地點：' + esc(locName(a.locationId)) + '</div></div>';
-    } else if (checkState.msg === 'out' && a) {
-      result = '<div class="card" style="margin-top:20px;border:2px solid var(--green)">' + '<div class="card-h">簽退完成 ' + statusTag(a.status) + '</div>' + '<div class="grid g2" style="margin-top:14px;gap:12px">' + '<div><div style="font-weight:800">計入起訖</div><div style="font-size:1.4rem;font-weight:800">' + esc(a.countedFrom) + '–' + esc(a.countedTo) + '</div></div>' + '<div><div style="font-weight:800">本班服務時數</div><div style="font-size:1.6rem;font-weight:800;color:var(--brick)">' + hourText(a.hours) + ' 小時</div></div>' + '</div>' + '<div class="hint">實際簽退時間 ' + esc(a.checkOut) + '；時數以班表為基準計算到分鐘，已累計至本年度時數。</div>' + '<div class="btn-row"><a class="btn btn-ghost" href="#/attendance">查看出勤紀錄</a></div></div>';
+    } else if ((checkState.msg === 'out' || checkState.msg === 'out-again') && a) {
+      result = '<div class="card" style="margin-top:20px;border:2px solid var(--green)">' + '<div class="card-h">' + (checkState.msg === 'out-again' ? '簽退時間已更新（以最後一次為準）' : '簽退完成') + ' ' + statusTag(a.status) + '</div>' + '<div class="grid g2" style="margin-top:14px;gap:12px">' + '<div><div style="font-weight:800">計入起訖</div><div style="font-size:1.4rem;font-weight:800">' + esc(a.countedFrom) + '–' + esc(a.countedTo) + '</div></div>' + '<div><div style="font-weight:800">本班服務時數</div><div style="font-size:1.6rem;font-weight:800;color:var(--brick)">' + hourText(a.hours) + ' 小時</div></div>' + '</div>' + '<div class="hint">實際簽退時間 ' + esc(a.checkOut) + '；時數以班表為基準、以本時段的計算單位（' + esc(HCV.unitText(t.unitMinutes)) + '）計算，已累計至本年度時數。離開前若又掃了一次，以最後一次為簽退。</div>' + '<div class="btn-row"><a class="btn btn-ghost" href="#/attendance">查看出勤紀錄</a></div></div>';
     } else if (checkState.msg === 'no-slot') {
       result = '<div class="card" style="margin-top:20px;border:2px solid var(--pink)">' + '<div class="card-h">已記錄到班 ' + tag('未報名簽到', 't-warn') + '</div>' + '<div class="hint strong">今日未排班，系統已記錄您的到班時間並通知服務地點管理者，由管理者決定是否發給時數。</div></div>';
     } else if (checkState.msg === 'cap') {
       result = '<div class="card" style="margin-top:20px;border:2px solid var(--pink)">' + '<div class="card-h">無法簽到 ' + tag('簽到人數已達上限', 't-warn') + '</div>' + '<div class="hint strong">您今日沒有排班，而這一場的簽到人數已達上限，無法簽到。如需協助請洽服務地點管理者。</div></div>';
     } else if (checkState.msg === 'wrongqr' && checkState.wrong) {
-      result = '<div class="card" style="margin-top:20px;border:2px solid var(--pink)">' + '<div class="card-h">無法簽到 ' + tag('不在簽到時間內', 't-warn') + '</div>' + '<div class="hint strong">這張是「' + esc(checkState.wrong.name) + '」的 QR Code，目前不在' + esc(checkState.wrong.name) + '的簽到時間（' + esc(checkState.wrong.from) + '–' + esc(checkState.wrong.to) + '）。請掃您這個時段的 QR Code。</div>' + '<div class="hint">每個服務地點每個時段一張 QR Code；班表開始前 ' + S.params.checkinOpenMinutes + ' 分鐘起才可以簽到。</div></div>';
+      result = '<div class="card" style="margin-top:20px;border:2px solid var(--pink)">' + '<div class="card-h">無法簽到 ' + tag('不在簽到時間內', 't-warn') + '</div>' + '<div class="hint strong">這張是「' + esc(checkState.wrong.name) + '」的 QR Code，目前不在' + esc(checkState.wrong.name) + '的簽到時間（' + esc(checkState.wrong.from) + '–' + esc(checkState.wrong.to) + '）。請掃您這個時段的 QR Code。</div>' + '<div class="hint">每個服務地點的每個時段各一張 QR Code，只有在那個時段的簽到、簽退時間內掃得到。</div></div>';
+    } else if (checkState.msg === 'refused' && checkState.refused) {
+      var rf = checkState.refused;
+      result = '<div class="card" style="margin-top:20px;border:2px solid var(--pink)">' + '<div class="card-h">無法簽到 ' + tag(rf.why, 't-warn') + '</div>' + '<div class="hint strong">' + (rf.why === '超過最晚可簽到時間' ? '本時段 ' + esc(rf.latest) + ' 以後不能簽到（您掃描的時間是 ' + esc(rf.at) + '）。如有特殊狀況，請洽服務地點管理者協助補登。' : '現在（' + esc(rf.at) + '）不在本時段可以打卡的時間內。') + '</div></div>';
     }
     var btns;
     if (suspended()) {
       btns = suspendNote('簽到退');
+    } else if (a && a.checkOut && a.status !== '未報名簽到') {
+      btns = '<div class="btn-row"><a class="btn btn-ghost btn-block" href="#/attendance">今日已完成簽退，查看出勤紀錄</a>' + '<button class="btn btn-ghost btn-block" data-act="scan" data-mode="out">再掃一次（以最後一次為簽退）</button></div>';
     } else if (a && a.checkOut) {
       btns = '<div class="btn-row"><a class="btn btn-ghost btn-block" href="#/attendance">今日已完成簽退，查看出勤紀錄</a></div>';
     } else if (a && !a.checkOut && a.status !== '未報名簽到') {
@@ -1565,16 +1573,16 @@ textarea.inp{min-height:110px;resize:vertical}
       btns = '<div class="btn-row">' + '<button class="btn btn-primary btn-block" data-act="scan" data-mode="in"><span class="qr-ic"></span>掃碼簽到</button>' + '<button class="btn btn-ghost btn-block" data-act="pw-toggle">改用帳密簽到</button></div>';
     }
     var pwBox = checkState.pwOpen ? '<div class="card" style="margin-top:16px"><div class="card-h">改用帳密簽到退</div>' + '<div class="hint strong" style="margin-top:10px">沒帶手機時，可到館內簽到站刷志工證（借閱證）條碼，或在館內公用電腦以借閱證帳密登入本頁完成簽到退（限館內網路，系統依館內網路判定是哪個服務地點）；也可請館員代為登記。</div>' + '<div class="field"><label>帳號</label><input class="inp" type="text" value="' + esc(m.cardNo) + '" readonly></div>' + '<div class="field"><label>密碼</label><input class="inp" type="password" value="********" readonly></div>' + '<div class="btn-row"><button class="btn btn-primary btn-block" data-act="pw-go">確認送出</button></div></div>' : '';
-    var gOpts = ['early', 'grace', 'late', 'wrongqr'].filter(function (k) {
-      return !(k === 'grace' && (!t || !t.graceMinutes));
+    var gOpts = ['early', 'grace', 'late', 'toolate', 'wrongqr'].filter(function (k) {
+      return !(k === 'grace' && (!t || !t.graceMinutes)) && !(k === 'toolate' && (!t || !t.latestCheckin));
     }).map(function (k) {
       return '<option value="' + k + '" ' + (UI.scenario === k ? 'selected' : '') + '>' + esc(SCEN[k]) + '</option>';
     }).join('');
     var oOpts = ['normal', 'early'].map(function (k) {
       return '<option value="' + k + '" ' + ((UI.outScenario || 'normal') === k ? 'selected' : '') + '>' + esc(OUTSCEN[k]) + '</option>';
     }).join('');
-    var sim = a && a.checkIn && a.checkOut ? '' : a && a.checkIn ? '<div class="card" style="margin-top:16px"><div class="card-h">模擬簽退時間</div>' + '<select class="inp" style="margin-top:12px" data-change="out-scenario">' + oOpts + '</select>' + '<div class="hint">用於展示提早簽退時的確認視窗與早退的算法；正式系統的簽到退時間一律取伺服器當下時間。</div></div>' : '<div class="card" style="margin-top:16px"><div class="card-h">模擬簽到時間</div>' + '<select class="inp" style="margin-top:12px" data-change="scenario">' + gOpts + '</select>' + '<div class="hint">用於展示不同到班時間的計算結果；正式系統的簽到退時間一律取伺服器當下時間，志工與管理者都不能指定。</div></div>';
-    return head('現場簽到退', '到班時掃描現場張貼的 QR Code 完成簽到與簽退') + '<div class="wrap"><div class="phone">' + '<div class="inline-note" style="margin-top:0">本頁以手機操作為主要情境，用手機登入後會直接進到這一頁：到班後掃描服務地點張貼的 QR Code（每個服務地點每個時段一張，固定不變，印一次每天都能用）即可完成簽到退。</div>' + stat + slotCard + result + btns + pwBox + sim + '<div class="alert" style="margin-top:20px"><div class="ic">!</div><div>' + '<h4>操作提醒</h4><p>請於服務地點掃描您這個時段的 QR Code 完成簽到退（班表開始前 ' + S.params.checkinOpenMinutes + ' 分鐘起可簽到）；不方便用手機的志工，請到館內簽到站刷志工證（借閱證）條碼。忘記簽到或簽退時，請到「我的出勤紀錄」申請補登。</p>' + '</div></div>' + '</div></div>';
+    var sim = a && a.checkIn && a.checkOut ? '' : a && a.checkIn && a.status !== '未報名簽到' ? '<div class="card" style="margin-top:16px"><div class="card-h">模擬簽退時間</div>' + '<select class="inp" style="margin-top:12px" data-change="out-scenario">' + oOpts + '</select>' + '<div class="hint">用於展示提早簽退時的確認視窗與早退的算法；正式系統的簽到退時間一律取伺服器當下時間。</div></div>' : '<div class="card" style="margin-top:16px"><div class="card-h">模擬簽到時間</div>' + '<select class="inp" style="margin-top:12px" data-change="scenario">' + gOpts + '</select>' + '<div class="hint">用於展示不同到班時間的計算結果；正式系統的簽到退時間一律取伺服器當下時間，志工與管理者都不能指定。</div></div>';
+    return head('現場簽到退', '到班時掃描現場張貼的 QR Code 完成簽到與簽退') + '<div class="wrap"><div class="phone">' + '<div class="inline-note" style="margin-top:0">本頁以手機操作為主要情境，用手機登入後會直接進到這一頁：到班後掃描服務地點張貼的 QR Code（每個服務地點每個時段一張，固定不變，印一次每天都能用）即可完成簽到退。</div>' + stat + slotCard + result + btns + pwBox + sim + '<div class="alert" style="margin-top:20px"><div class="ic">!</div><div>' + '<h4>操作提醒</h4><p>請於服務地點掃描您這個時段的 QR Code 完成簽到退' + (t ? '（' + toHHMM(toMin(t.start) - t.openMinutes) + ' 起可簽到）' : '') + '；簽到、簽退掃同一張，第一次掃是簽到、最後一次掃是簽退。不方便用手機的志工，請到館內簽到站刷志工證（借閱證）條碼。忘記簽到或簽退時，請到「我的出勤紀錄」申請補登。</p>' + '</div></div>' + '</div></div>';
   };
   ACTS.scenario = function (el) {
     UI.scenario = el.value;
@@ -1649,8 +1657,7 @@ textarea.inp{min-height:110px;resize:vertical}
   var stationState = {
     loc: '',
     result: null,
-    stamp: 0,
-    recent: {}
+    stamp: 0
   };
   var stationDemo = [['A00010701', '王淑芬（今天上午班）'], ['A00012503', '林美惠（今天下午班）'], ['A00013104', '張秀英（今天沒排班）'], ['A00022110', '徐文雄（停權中）']];
   function stQr(seed) {
@@ -1692,9 +1699,13 @@ textarea.inp{min-height:110px;resize:vertical}
   }
   function stTime(t, out) {
     if (out) {
-      return t.earlyLeave ? t.end : toHHMM(toMin(t.end) + 2);
+      return toHHMM(toMin(t.end) + 2);
     }
     return scenTimes(t).at;
+  }
+  function stationClosed() {
+    S = HCV.load();
+    return !!(S.stationClosed && S.stationClosed[stationState.loc]);
   }
   function stationCheck(cardNo) {
     var v = S.volunteers.filter(function (x) {
@@ -1729,26 +1740,12 @@ textarea.inp{min-height:110px;resize:vertical}
     var rec = S.attendance.filter(function (a) {
       return a.volunteerId === v.id && a.date === S.today && a.locationId === locId;
     })[0];
-    if (rec && rec.checkIn && rec.checkOut) {
-      return {
-        kind: 'info',
-        title: v.name + '　今天已完成簽到與簽退',
-        text: '計入 ' + rec.countedFrom + '–' + rec.countedTo + '，服務時數 ' + hourText(rec.hours) + ' 小時。'
-      };
-    }
     if (rec && rec.checkIn) {
-      if (Date.now() - (stationState.recent[v.id] || 0) < 5000) {
-        return {
-          kind: 'info',
-          title: v.name + '　您已於 ' + rec.checkIn + ' 簽到',
-          text: S.params.repeatScanMinutes + ' 分鐘內重複刷卡不列為簽退；要簽退請在下班時再刷一次。'
-        };
-      }
+      var again = !!rec.checkOut;
       var slot0 = mine.filter(function (s) {
         return s.id === rec.slotId;
       })[0] || mine[0];
-      var t0 = slot0 ? tpl(slot0.templateId) : null;
-      if (!t0) {
+      if (!slot0) {
         rec.checkOut = '12:00';
         rec.countedTo = '12:00';
         save();
@@ -1760,29 +1757,30 @@ textarea.inp{min-height:110px;resize:vertical}
           status: rec.status
         };
       }
-      var out = stTime(t0, true);
+      var t0 = HCV.rule(S, slot0);
+      var out = again ? toHHMM(toMin(t0.end) + 6) : stTime(t0, true);
+      var c0 = HCV.calc(t0, rec.checkIn, out);
       rec.checkOut = out;
-      rec.countedTo = t0.end;
+      rec.countedFrom = c0.from;
+      rec.countedTo = c0.to;
+      rec.hours = c0.hours;
       rec.source = rec.source || '借閱證條碼';
-      rec.hours = Math.round((toMin(t0.end) - toMin(rec.countedFrom)) / 60 * 100) / 100;
-      if (t0.earlyLeave) {
-        rec.status = '固定早退';
-        rec.hours = t0.hours;
-        rec.note = '固定早退時段，於本時段結束時間簽退，不記點，時數依本時段計 ' + t0.hours + ' 小時';
+      if (['正常', '緩衝內到班', '遲到', '早退'].indexOf(rec.status) >= 0) {
+        rec.status = c0.status;
       }
       save();
       return {
         kind: 'ok',
-        title: v.name + '　簽退完成',
+        title: v.name + (again ? '　簽退時間已更新' : '　簽退完成'),
         time: out,
         status: rec.status,
-        text: '計入 ' + rec.countedFrom + '–' + rec.countedTo + '，本班服務時數 ' + hourText(rec.hours) + ' 小時。' + (t0.earlyLeave ? ' 本場為固定早退時段，不記點、時數依本時段計。' : '')
+        text: (again ? '以最後一次刷卡為簽退。' : '') + '計入 ' + rec.countedFrom + '–' + rec.countedTo + '，本班服務時數 ' + hourText(rec.hours) + ' 小時。'
       };
     }
     if (!mine.length) {
       var L = byId(S.locations, locId);
       var cur = slots[0],
-        curT = cur ? tpl(cur.templateId) : null;
+        curT = cur ? HCV.rule(S, cur) : null;
       if (L && L.checkinCap && cur && cur.booked.length + walkinCount(cur) >= cur.capacity) {
         return {
           kind: 'err',
@@ -1809,7 +1807,6 @@ textarea.inp{min-height:110px;resize:vertical}
         walkinSlotId: cur ? cur.id : null,
         note: '當日未排班但到場簽到，由管理者決定是否發給時數'
       });
-      stationState.recent[v.id] = Date.now();
       save();
       return {
         kind: 'warn',
@@ -1820,24 +1817,27 @@ textarea.inp{min-height:110px;resize:vertical}
       };
     }
     var slot = mine[0],
-      t = tpl(slot.templateId);
-    var at = scenTimes(t).at,
-      atM = toMin(at),
-      st = toMin(t.start),
-      g = t.graceMinutes || 0;
-    var counted, status, why;
-    if (atM <= st) {
-      counted = t.start;
-      status = '正常';
+      t = HCV.rule(S, slot);
+    var at = scenTimes(t).at;
+    var bad = HCV.scanCheck(t, at, true);
+    if (bad) {
+      return {
+        kind: 'err',
+        title: v.name + '　無法簽到',
+        time: at,
+        text: bad === '超過最晚可簽到時間' ? '本時段 ' + t.latestCheckin + ' 以後不能簽到。如有特殊狀況，請洽現場管理人員協助補登。' : '現在不在本時段可以打卡的時間內。'
+      };
+    }
+    var c = HCV.calc(t, at, '');
+    var counted = c.from,
+      status = c.status,
+      why;
+    if (status === '正常') {
       why = '提早到班，以班表開始時間 ' + t.start + ' 起算';
-    } else if (atM <= st + g) {
-      counted = t.start;
-      status = '緩衝內到班';
-      why = '在 ' + g + ' 分鐘緩衝內到班，以班表時間 ' + t.start + ' 計';
+    } else if (status === '緩衝內到班') {
+      why = '在 ' + t.graceMinutes + ' 分鐘緩衝內到班，以班表時間 ' + t.start + ' 計';
     } else {
-      counted = at;
-      status = '遲到';
-      why = '已超過緩衝時間，自實際簽到時間 ' + at + ' 起算';
+      why = '已超過緩衝時間，從 ' + counted + ' 起算';
     }
     S.attendance.push({
       id: newId('AX'),
@@ -1854,7 +1854,6 @@ textarea.inp{min-height:110px;resize:vertical}
       status: status,
       source: '借閱證條碼'
     });
-    stationState.recent[v.id] = Date.now();
     save();
     return {
       kind: 'ok',
@@ -1868,11 +1867,9 @@ textarea.inp{min-height:110px;resize:vertical}
     if (q && q.loc && byId(S.locations, q.loc) && !stationState.loc) {
       stationState.loc = q.loc;
     }
-    var locOpts = S.locations.map(function (l) {
-      return '<option value="' + esc(l.id) + '" ' + (l.id === stationState.loc ? 'selected' : '') + '>' + esc(l.name) + '</option>';
-    }).join('');
-    if (!stationState.loc) {
-      return head('館內簽到站', '館內電腦專用：志工刷志工證（借閱證）條碼即可簽到退') + '<div class="wrap"><div class="station"><div class="card">' + '<div class="card-h">開啟簽到站</div>' + '<div class="hint strong" style="margin-top:12px">由服務地點的管理人員在館內電腦開啟。開啟後這台電腦只顯示簽到退畫面，不顯示個人資料、名單與任何管理功能；志工刷志工證（借閱證）條碼即可簽到或簽退。</div>' + '<div class="field"><label>服務地點</label><select class="inp" id="stLoc">' + locOpts + '</select></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="station-open">開啟簽到站</button></div>' + '<div class="hint">要看本場應到名單、人數與未報名簽到的處理，請管理人員到管理後台的「現場簽到工具」。</div>' + '</div></div></div>';
+    var closed = stationState.loc && S.stationClosed && S.stationClosed[stationState.loc];
+    if (!stationState.loc || closed) {
+      return head('館內簽到站', '館內電腦專用：志工刷志工證（借閱證）條碼即可簽到退') + '<div class="wrap"><div class="station"><div class="card">' + '<div class="card-h">' + (closed ? '簽到站已關閉' : '簽到站尚未開啟') + '</div>' + '<div class="hint strong" style="margin-top:12px">' + (closed ? '這台電腦的管理後台已重新登入，簽到站同時關閉。' : '') + '館內簽到站由各館承辦人在管理後台的「現場簽到工具」按「開啟館內簽到站」開啟（請用瀏覽器的無痕視窗），只開得了自己館的；開啟時這台電腦的後台會同時登出，志工碰不到後台。</div>' + '<div class="hint">沒有人能重開時（例如假日），志工請改用手機掃描現場張貼的 QR Code 簽到退。</div>' + '</div></div></div>';
     }
     var L = byId(S.locations, stationState.loc);
     var slots = stSlotsToday(stationState.loc);
@@ -1882,21 +1879,15 @@ textarea.inp{min-height:110px;resize:vertical}
       resultHtml = '<div class="st-result ' + esc(r.kind) + '" role="status" aria-live="polite">' + '<h3>' + esc(r.title) + (r.status ? '　' + statusTag(r.status) : '') + '</h3>' + (r.time ? '<div class="st-time">' + esc(r.time) + '</div>' : '') + '<p style="margin:10px 0 0;font-size:1.1rem">' + esc(r.text) + '</p>' + '<div class="btn-row"><button class="btn btn-ghost" data-act="station-next">下一位</button></div></div>';
     }
     var slotRows = slots.map(function (s) {
-      var t = tpl(s.templateId);
-      return '<tr><td data-label="時段">' + esc(t.name) + ' ' + esc(t.start) + '–' + esc(t.end) + '</td>' + '<td data-label="已到／應到" class="num">' + stCountIn(s) + ' / ' + s.booked.length + '</td>' + '<td data-label="這個時段的 QR Code">' + stQr(s.locationId + '-' + s.templateId) + '</td></tr>';
+      var t = HCV.rule(S, s);
+      return '<tr><td data-label="時段">' + esc(t.name) + ' ' + esc(t.start) + '–' + esc(t.end) + '<br><span style="color:var(--muted);font-size:.9rem">' + esc(toHHMM(toMin(t.start) - t.openMinutes)) + ' 起可簽到' + (t.latestCheckin ? '，' + esc(t.latestCheckin) + ' 以後不能簽到' : '') + '</span></td>' + '<td data-label="已到／應到" class="num">' + stCountIn(s) + ' / ' + s.booked.length + '</td>' + '<td data-label="這個時段的 QR Code">' + stQr(s.locationId + '-' + s.templateId) + '</td></tr>';
     }).join('') || '<tr><td colspan="3">今天這個地點沒有場次；臨時到班仍可刷證，會記錄為未報名簽到。</td></tr>';
-    var gOpts = ['early', 'grace', 'late'].map(function (k) {
+    var gOpts = ['early', 'grace', 'late', 'toolate'].map(function (k) {
       return '<option value="' + k + '" ' + (UI.scenario === k ? 'selected' : '') + '>' + esc(SCEN[k]) + '</option>';
     }).join('');
-    return head('館內簽到站', '刷志工證（借閱證）條碼即可簽到退') + '<div class="wrap"><div class="station">' + '<div class="card">' + '<div class="card-h">' + esc(L.name) + '　' + esc(HCV.dateLabel(S.today)) + '<button class="linkish" data-act="station-close" style="margin-left:auto;font-size:.95rem">關閉簽到站</button></div>' + '<div class="field"><label style="font-size:1.25rem">請刷志工證條碼（借閱證號或志工編號都可以），或輸入證號後按 Enter</label>' + '<input class="inp st-input" id="stInput" type="text" autocomplete="off" placeholder="請刷條碼" aria-label="志工證或借閱證條碼"></div>' + '<div class="btn-row"><button class="btn btn-primary btn-block" data-act="station-go">送出</button></div>' + resultHtml + '<div class="hint">本站只顯示這一次簽到退的結果，不顯示個人資料；第一次刷是簽到，下班時再刷一次是簽退（簽到後 ' + S.params.repeatScanMinutes + ' 分鐘內重複刷卡不算簽退）。沒有排班的志工刷證會記錄為「未報名簽到」，由管理者決定是否發給時數。</div>' + '</div>' + '<div class="card" style="margin-top:20px"><div class="card-h">今日場次</div>' + '<table class="tbl st-slots" style="margin-top:12px"><thead><tr><th>時段</th><th>已到／應到</th><th>這個時段的 QR Code（手機掃描用）</th></tr></thead><tbody>' + slotRows + '</tbody></table>' + '<div class="hint">每個時段一張固定的 QR Code，印一次每天都能用；志工用手機掃描同樣可以簽到退。</div>' + '</div>' + '<div class="inline-note"><b>原型工具</b>　示範證號（同一張連刷兩次可看到重複刷卡的提示，原型以 5 秒代表 ' + S.params.repeatScanMinutes + ' 分鐘）：' + stationDemo.map(function (d) {
+    return head('館內簽到站', '刷志工證（借閱證）條碼即可簽到退') + '<div class="wrap"><div class="station">' + '<div class="card">' + '<div class="card-h">' + esc(L.name) + '　' + esc(HCV.dateLabel(S.today)) + '<button class="linkish" data-act="station-close" style="margin-left:auto;font-size:.95rem">關閉簽到站</button></div>' + '<div class="field"><label style="font-size:1.25rem">請刷志工證條碼（借閱證號或志工編號都可以），或輸入證號後按 Enter</label>' + '<input class="inp st-input" id="stInput" type="text" autocomplete="off" placeholder="請刷條碼" aria-label="志工證或借閱證條碼"></div>' + '<div class="btn-row"><button class="btn btn-primary btn-block" data-act="station-go">送出</button></div>' + resultHtml + '<div class="hint">本站只顯示這一次簽到退的結果，不顯示個人資料；同一個時段第一次刷是簽到、最後一次刷是簽退，簽到後不小心多刷一次也沒關係，離開時再刷一次就以那一次為簽退。沒有排班的志工刷證會記錄為「未報名簽到」，由管理者決定是否發給時數。</div>' + '</div>' + '<div class="card" style="margin-top:20px"><div class="card-h">今日場次</div>' + '<table class="tbl st-slots" style="margin-top:12px"><thead><tr><th>時段</th><th>已到／應到</th><th>這個時段的 QR Code（手機掃描用）</th></tr></thead><tbody>' + slotRows + '</tbody></table>' + '<div class="hint">每個服務地點的每個時段範本各一張 QR Code，固定不變、不必每天換，印一次每天都能用；志工用手機掃描同樣可以簽到退。</div>' + '</div>' + '<div class="inline-note"><b>原型工具</b>　示範證號（同一張再刷一次會更新簽退時間）：' + stationDemo.map(function (d) {
       return '<button class="linkish" data-act="station-demo" data-no="' + esc(d[0]) + '" style="margin:0 12px 0 0">' + esc(d[1]) + '</button>';
     }).join('') + '<div style="margin-top:10px">模擬到班時間　<select class="inp" style="width:auto;display:inline-block;padding:8px 14px" data-change="scenario">' + gOpts + '</select>' + '<span class="hint" style="display:inline;margin-left:10px">正式系統一律取伺服器當下時間。</span></div></div>' + '</div></div>';
-  };
-  ACTS['station-open'] = function () {
-    var sel = document.getElementById('stLoc');
-    stationState.loc = sel ? sel.value : '';
-    stationState.result = null;
-    render();
   };
   ACTS['station-close'] = function () {
     stationState.loc = '';
@@ -1924,6 +1915,11 @@ textarea.inp{min-height:110px;resize:vertical}
       }
       return;
     }
+    if (stationClosed()) {
+      stationState.result = null;
+      render();
+      return;
+    }
     stationState.result = stationCheck(no);
     var stamp = Date.now();
     stationState.stamp = stamp;
@@ -1945,7 +1941,7 @@ textarea.inp{min-height:110px;resize:vertical}
   };
   PAGES.attendance = function () {
     var rows = myAttendance();
-    var sts = ['全部', '只看異常', '正常', '緩衝內到班', '遲到', '早退', '固定早退', '缺勤', '未報名簽到', '補登'];
+    var sts = ['全部', '只看異常', '正常', '緩衝內到班', '遲到', '早退', '缺勤', '未報名簽到', '補登'];
     var ABNORMAL = ['遲到', '早退', '缺勤', '未報名簽到'];
     var shown = rows.filter(function (a) {
       if (attState.from && a.date < attState.from) {
@@ -1981,12 +1977,21 @@ textarea.inp{min-height:110px;resize:vertical}
       return '<option value="' + esc(x) + '" ' + (x === attState.status ? 'selected' : '') + '>' + esc(x) + '</option>';
     }).join('');
     var myLocs = me().locationIds;
-    var form = attState.formOpen ? '<div class="card" style="margin-top:24px"><div class="card-h">申請補登</div>' + '<div class="hint strong" style="margin-top:10px">忘記簽到或簽退時，填寫下列資料送出，系統會通知服務地點管理者處理；簽到退時間僅文化局總管理者可編修。</div>' + '<div class="field-row">' + '<div class="field"><label><span class="req">*</span>服務日期</label><input class="inp" id="rgDate" type="date" value="' + esc(S.today) + '"></div>' + '<div class="field"><label><span class="req">*</span>服務地點</label><select class="inp" id="rgLoc">' + myLocs.map(function (id) {
+    var form = attState.formOpen ? '<div class="card" style="margin-top:24px"><div class="card-h">申請補登</div>' + '<div class="hint strong" style="margin-top:10px">忘記簽到或簽退時，填寫下列資料送出，系統會通知服務地點管理者處理；簽到退時間僅文化局總管理者可編修。</div>' + '<div class="field-row">' + '<div class="field"><label><span class="req">*</span>服務日期</label><input class="inp" id="rgDate" type="date" value="' + esc(S.today) + '"></div>' + '<div class="field"><label><span class="req">*</span>服務地點</label><select class="inp" id="rgLoc" data-change="rg-loc">' + myLocs.map(function (id) {
       return '<option value="' + esc(id) + '">' + esc(locName(id)) + '</option>';
-    }).join('') + '</select></div>' + '</div>' + '<div class="field-row">' + '<div class="field"><label><span class="req">*</span>時段</label><select class="inp" id="rgSlot">' + S.slotTemplates.map(function (t) {
+    }).join('') + '</select></div>' + '</div>' + '<div class="field-row">' + '<div class="field"><label><span class="req">*</span>時段</label><select class="inp" id="rgSlot">' + rgTplOptions(myLocs[0]) + '</select></div>' + '<div class="field"><label>記得的時間（選填）</label><div class="range">' + '<input class="inp" id="rgIn" type="time" aria-label="簽到時間" style="flex:1"><span>—</span>' + '<input class="inp" id="rgOut" type="time" aria-label="簽退時間" style="flex:1"></div>' + '<div class="note">左邊是簽到、右邊是簽退；只忘了其中一個就只填那一個</div></div>' + '</div>' + '<div class="field"><label><span class="req">*</span>說明</label><textarea class="inp" id="rgNote" placeholder="例如：當日 12:00 服務結束，因故未完成簽退"></textarea></div>' + '<div id="rgErr"></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="att-send">送出申請</button>' + '<button class="btn btn-ghost" data-act="att-form">取消</button></div></div>' : '';
+    return head('我的出勤紀錄', '查詢每一次到班的簽到退時間、計入時數與狀態') + pageTools() + '<div class="wrap">' + (attState.msg ? '<div class="ok-box">' + esc(attState.msg) + '</div>' : '') + '<div class="card historySearch" style="margin-top:20px"><div class="card-h">查詢條件' + '<button class="btn-sm" data-act="att-form">申請補登</button></div>' + '<div class="grid g2" style="margin-top:10px;gap:18px">' + '<div class="field" style="margin-top:0"><label>服務日期</label>' + '<div class="range"><input class="inp" type="date" id="atFrom" value="' + esc(attState.from) + '" style="flex:1">' + '<span>—</span><input class="inp" type="date" id="atTo" value="' + esc(attState.to) + '" style="flex:1"></div>' + '<div class="note">單次可設定的日期範圍查詢範圍為 1 年</div></div>' + '<div class="field" style="margin-top:0"><label>出勤狀態</label><select class="inp" id="atStatus">' + stOpts + '</select></div>' + '</div>' + '<div class="btn-row"><button class="btn btn-ghost" data-act="att-reset">重設</button>' + '<button class="btn btn-primary" data-act="att-search">查詢</button></div>' + '</div>' + form + myMakeups() + '<div class="card" style="margin-top:24px"><div class="card-h">出勤紀錄</div>' + '<table class="tbl"><thead><tr><th>日期</th><th>地點與時段</th><th>簽到</th><th>簽退</th><th>計入起訖</th><th>時數</th><th>狀態</th><th>簽到方式</th></tr></thead>' + '<tbody>' + body + '</tbody></table>' + '<div class="hint">時數以班表為基準：提早到一律以班表開始時間起算；在簽到緩衝內到班仍以班表時間計；超過緩衝從簽到後第一個整點（或半點，依各時段的計算單位）起算；每一筆依該時段的計算單位（半小時或一小時）計算。紀錄有誤時請洽服務地點管理者，志工無法自行修改。</div>' + '</div>' + '</div>';
+  };
+  function rgTplOptions(locId) {
+    return HCV.templatesOf(S, locId).map(function (t) {
       return '<option value="' + esc(t.id) + '">' + esc(t.name + ' ' + t.start + '–' + t.end) + '</option>';
-    }).join('') + '</select></div>' + '<div class="field"><label>記得的時間（選填）</label><div class="range">' + '<input class="inp" id="rgIn" type="time" aria-label="簽到時間" style="flex:1"><span>—</span>' + '<input class="inp" id="rgOut" type="time" aria-label="簽退時間" style="flex:1"></div>' + '<div class="note">左邊是簽到、右邊是簽退；只忘了其中一個就只填那一個</div></div>' + '</div>' + '<div class="field"><label><span class="req">*</span>說明</label><textarea class="inp" id="rgNote" placeholder="例如：當日 12:00 服務結束，因故未完成簽退"></textarea></div>' + '<div id="rgErr"></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="att-send">送出申請</button>' + '<button class="btn btn-ghost" data-act="att-form">取消</button></div></div>' : '';
-    return head('我的出勤紀錄', '查詢每一次到班的簽到退時間、計入時數與狀態') + pageTools() + '<div class="wrap">' + (attState.msg ? '<div class="ok-box">' + esc(attState.msg) + '</div>' : '') + '<div class="card historySearch" style="margin-top:20px"><div class="card-h">查詢條件' + '<button class="btn-sm" data-act="att-form">申請補登</button></div>' + '<div class="grid g2" style="margin-top:10px;gap:18px">' + '<div class="field" style="margin-top:0"><label>服務日期</label>' + '<div class="range"><input class="inp" type="date" id="atFrom" value="' + esc(attState.from) + '" style="flex:1">' + '<span>—</span><input class="inp" type="date" id="atTo" value="' + esc(attState.to) + '" style="flex:1"></div>' + '<div class="note">單次可設定的日期範圍查詢範圍為 1 年</div></div>' + '<div class="field" style="margin-top:0"><label>出勤狀態</label><select class="inp" id="atStatus">' + stOpts + '</select></div>' + '</div>' + '<div class="btn-row"><button class="btn btn-ghost" data-act="att-reset">重設</button>' + '<button class="btn btn-primary" data-act="att-search">查詢</button></div>' + '</div>' + form + myMakeups() + '<div class="card" style="margin-top:24px"><div class="card-h">出勤紀錄</div>' + '<table class="tbl"><thead><tr><th>日期</th><th>地點與時段</th><th>簽到</th><th>簽退</th><th>計入起訖</th><th>時數</th><th>狀態</th><th>簽到方式</th></tr></thead>' + '<tbody>' + body + '</tbody></table>' + '<div class="hint">時數以班表為基準計算到分鐘：提早到一律以班表開始時間起算；在簽到緩衝內到班仍以班表時間計。紀錄有誤時請洽服務地點管理者，志工無法自行修改。</div>' + '</div>' + '</div>';
+    }).join('');
+  }
+  ACTS['rg-loc'] = function (el) {
+    var box = document.getElementById('rgSlot');
+    if (box) {
+      box.innerHTML = rgTplOptions(el.value);
+    }
   };
   ACTS['att-search'] = function () {
     var f = document.getElementById('atFrom'),
@@ -2582,10 +2587,11 @@ textarea.inp{min-height:110px;resize:vertical}
     });
     var body = rows.length ? rows.map(function (v) {
       var t = byId(S.violationTypes, v.typeId);
-      return '<tr>' + '<td data-label="發生日期">' + esc(HCV.dateLabel(v.date)) + '</td>' + '<td data-label="違規項目">' + esc(t ? t.name : '—') + '</td>' + '<td data-label="點數" class="num">' + v.points + '</td>' + '<td data-label="來源">' + esc(v.source) + '</td>' + '<td data-label="狀態">' + (v.status === '有效' ? tag('有效', 't-warn') : tag('已撤銷', 't-grey')) + '</td>' + '<td data-label="備註">' + esc(v.note || '—') + '</td></tr>';
-    }).join('') : '<tr><td colspan="6">您目前沒有違規記點紀錄。</td></tr>';
+      var expired = v.status === '有效' && HCV.pointExpired(S, v);
+      return '<tr>' + '<td data-label="發生日期">' + esc(HCV.dateLabel(v.date)) + '</td>' + '<td data-label="違規項目">' + esc(t ? t.name : '—') + '</td>' + '<td data-label="點數" class="num">' + v.points + '</td>' + '<td data-label="來源">' + esc(v.source) + '</td>' + '<td data-label="狀態">' + (v.status !== '有效' ? tag('已撤銷', 't-grey') : expired ? tag('已失效', 't-grey') : tag('有效', 't-warn')) + '</td>' + '<td data-label="失效日">' + (v.status === '有效' ? esc(HCV.pointExpiry(S, v)) : '—') + '</td>' + '<td data-label="備註">' + esc(v.note || '—') + '</td></tr>';
+    }).join('') : '<tr><td colspan="7">您目前沒有違規記點紀錄。</td></tr>';
     var suspBox = m.status === '停權' ? '<div class="alert" style="margin-top:20px"><div class="ic">!</div><div><h4>目前為停權狀態</h4>' + '<p>' + esc(m.suspendNote || '') + '</p><p style="margin-top:6px">停權期間可查詢個人紀錄，恢復資格請洽文化局志工業務承辦人。</p></div></div>' : '';
-    return head('我的違規記點', '查詢個人記點明細與來源') + pageTools() + '<div class="wrap">' + suspBox + '<div class="grid g2">' + statCard('目前累計點數', String(pts), '點', '已撤銷的記點不列入累計') + '<div class="alert"><div class="ic">!</div><div><h4>提醒</h4><p>' + esc(S.params.pointReminderText.replace('{N}', pts)) + '</p></div></div>' + '</div>' + '<div class="grid"><div class="card"><div class="card-h">記點明細</div>' + '<table class="tbl"><thead><tr><th>發生日期</th><th>違規項目</th><th>點數</th><th>來源</th><th>狀態</th><th>備註</th></tr></thead>' + '<tbody>' + body + '</tbody></table>' + '<div class="hint">對紀錄有疑問請洽服務地點管理者。</div></div></div>' + '</div>';
+    return head('我的違規記點', '查詢個人記點明細與來源') + pageTools() + '<div class="wrap">' + suspBox + '<div class="grid g2">' + statCard('目前累計點數', String(pts), '點', '每一筆從記點當天起算 ' + S.params.violationRetentionMonths + ' 個月後失效；已失效、已撤銷的不列入累計') + '<div class="alert"><div class="ic">!</div><div><h4>提醒</h4><p>' + esc(S.params.pointReminderText.replace('{N}', pts)) + '</p></div></div>' + '</div>' + '<div class="grid"><div class="card"><div class="card-h">記點明細</div>' + '<table class="tbl"><thead><tr><th>發生日期</th><th>違規項目</th><th>點數</th><th>來源</th><th>狀態</th><th>失效日</th><th>備註</th></tr></thead>' + '<tbody>' + body + '</tbody></table>' + '<div class="hint">對紀錄有疑問請洽服務地點管理者。</div></div></div>' + '</div>';
   };
   var profMsg = '';
   PAGES.profile = function () {

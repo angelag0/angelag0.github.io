@@ -22,7 +22,6 @@
       checkinCap: true,
       monthlyDeadlineDay: 25,
       monthlyMaxSlots: 12,
-      manager: '林雅雯',
       ipRanges: ['203.0.113.0/24'],
       qrLanOnly: false
     }, {
@@ -35,7 +34,6 @@
       checkinCap: true,
       monthlyDeadlineDay: 20,
       monthlyMaxSlots: 8,
-      manager: '張家豪',
       ipRanges: [],
       qrLanOnly: false
     }, {
@@ -48,7 +46,6 @@
       checkinCap: false,
       monthlyDeadlineDay: 25,
       monthlyMaxSlots: 10,
-      manager: '黃淑惠',
       ipRanges: [],
       qrLanOnly: false
     }, {
@@ -61,7 +58,6 @@
       checkinCap: true,
       monthlyDeadlineDay: 25,
       monthlyMaxSlots: 10,
-      manager: '吳佩珊',
       ipRanges: ['198.51.100.16/28'],
       qrLanOnly: false
     }, {
@@ -74,7 +70,6 @@
       checkinCap: true,
       monthlyDeadlineDay: 20,
       monthlyMaxSlots: 10,
-      manager: '李明哲',
       ipRanges: [],
       qrLanOnly: false
     }, {
@@ -87,7 +82,6 @@
       checkinCap: true,
       monthlyDeadlineDay: 25,
       monthlyMaxSlots: 10,
-      manager: '周怡君',
       ipRanges: [],
       qrLanOnly: false
     }],
@@ -351,33 +345,160 @@
     }],
     slotTemplates: [{
       id: 'T1',
+      locationId: 'L1',
       name: '上午',
       start: '09:00',
       end: '12:00',
       hours: 3,
-      graceMinutes: 10
+      graceMinutes: 15,
+      unitMinutes: 60,
+      latestCheckin: '10:00',
+      openMinutes: 30,
+      closeMinutes: 30
     }, {
       id: 'T2',
+      locationId: 'L1',
       name: '下午',
       start: '13:00',
       end: '17:00',
       hours: 4,
-      graceMinutes: 0
+      graceMinutes: 0,
+      unitMinutes: 60,
+      latestCheckin: '',
+      openMinutes: 30,
+      closeMinutes: 30
     }, {
       id: 'T3',
-      name: '下午（3.5 小時）',
+      locationId: 'L1',
+      name: '下午早退',
       start: '13:00',
       end: '16:30',
       hours: 3.5,
       graceMinutes: 0,
-      earlyLeave: true
+      unitMinutes: 30,
+      latestCheckin: '',
+      openMinutes: 30,
+      closeMinutes: 30
     }, {
       id: 'T4',
+      locationId: 'L1',
       name: '晚上',
       start: '18:00',
       end: '21:00',
       hours: 3,
-      graceMinutes: 0
+      graceMinutes: 0,
+      unitMinutes: 60,
+      latestCheckin: '',
+      openMinutes: 30,
+      closeMinutes: 30
+    }, {
+      id: 'T21',
+      locationId: 'L2',
+      name: '晚上',
+      start: '18:00',
+      end: '21:00',
+      hours: 3,
+      graceMinutes: 0,
+      unitMinutes: 30,
+      latestCheckin: '',
+      openMinutes: 30,
+      closeMinutes: 30
+    }, {
+      id: 'T31',
+      locationId: 'L3',
+      name: '上午',
+      start: '09:00',
+      end: '12:00',
+      hours: 3,
+      graceMinutes: 10,
+      unitMinutes: 30,
+      latestCheckin: '',
+      openMinutes: 30,
+      closeMinutes: 30
+    }, {
+      id: 'T32',
+      locationId: 'L3',
+      name: '下午',
+      start: '13:00',
+      end: '17:00',
+      hours: 4,
+      graceMinutes: 0,
+      unitMinutes: 30,
+      latestCheckin: '',
+      openMinutes: 30,
+      closeMinutes: 30
+    }, {
+      id: 'T41',
+      locationId: 'L4',
+      name: '上午',
+      start: '09:00',
+      end: '12:00',
+      hours: 3,
+      graceMinutes: 10,
+      unitMinutes: 30,
+      latestCheckin: '',
+      openMinutes: 30,
+      closeMinutes: 30
+    }, {
+      id: 'T42',
+      locationId: 'L4',
+      name: '下午',
+      start: '13:00',
+      end: '17:00',
+      hours: 4,
+      graceMinutes: 0,
+      unitMinutes: 30,
+      latestCheckin: '',
+      openMinutes: 30,
+      closeMinutes: 30
+    }, {
+      id: 'T51',
+      locationId: 'L5',
+      name: '上午',
+      start: '09:00',
+      end: '12:00',
+      hours: 3,
+      graceMinutes: 10,
+      unitMinutes: 30,
+      latestCheckin: '',
+      openMinutes: 30,
+      closeMinutes: 30
+    }, {
+      id: 'T52',
+      locationId: 'L5',
+      name: '下午',
+      start: '13:00',
+      end: '17:00',
+      hours: 4,
+      graceMinutes: 0,
+      unitMinutes: 30,
+      latestCheckin: '',
+      openMinutes: 30,
+      closeMinutes: 30
+    }, {
+      id: 'T61',
+      locationId: 'L6',
+      name: '上午',
+      start: '09:00',
+      end: '12:00',
+      hours: 3,
+      graceMinutes: 10,
+      unitMinutes: 30,
+      latestCheckin: '',
+      openMinutes: 30,
+      closeMinutes: 30
+    }, {
+      id: 'T62',
+      locationId: 'L6',
+      name: '下午',
+      start: '13:00',
+      end: '17:00',
+      hours: 4,
+      graceMinutes: 0,
+      unitMinutes: 30,
+      latestCheckin: '',
+      openMinutes: 30,
+      closeMinutes: 30
     }],
     slots: [{
       id: 'S101',
@@ -385,7 +506,7 @@
       locationId: 'L1',
       templateId: 'T1',
       capacity: 3,
-      type: '固定班',
+      type: '管理者指派',
       booked: ['V001', 'V002'],
       pending: []
     }, {
@@ -403,14 +524,14 @@
       locationId: 'L1',
       templateId: 'T3',
       capacity: 1,
-      type: '固定班',
+      type: '管理者指派',
       booked: ['V006'],
       pending: []
     }, {
       id: 'S104',
       date: '2026-10-14',
       locationId: 'L4',
-      templateId: 'T1',
+      templateId: 'T41',
       capacity: 2,
       type: '自由報名',
       booked: ['V007'],
@@ -440,7 +561,7 @@
       locationId: 'L1',
       templateId: 'T1',
       capacity: 3,
-      type: '固定班',
+      type: '管理者指派',
       booked: ['V001', 'V002', 'V004'],
       pending: []
     }, {
@@ -467,7 +588,7 @@
       locationId: 'L1',
       templateId: 'T1',
       capacity: 3,
-      type: '固定班',
+      type: '管理者指派',
       booked: ['V001', 'V002'],
       pending: []
     }, {
@@ -485,14 +606,14 @@
       locationId: 'L1',
       templateId: 'T1',
       capacity: 3,
-      type: '固定班',
+      type: '管理者指派',
       booked: ['V001', 'V004'],
       pending: []
     }, {
       id: 'S113',
       date: '2026-10-24',
       locationId: 'L3',
-      templateId: 'T2',
+      templateId: 'T32',
       capacity: 2,
       type: '自由報名',
       booked: [],
@@ -501,7 +622,7 @@
       id: 'S114',
       date: '2026-10-25',
       locationId: 'L4',
-      templateId: 'T2',
+      templateId: 'T42',
       capacity: 2,
       type: '自由報名',
       booked: ['V007'],
@@ -512,14 +633,14 @@
       locationId: 'L1',
       templateId: 'T1',
       capacity: 3,
-      type: '固定班',
+      type: '管理者指派',
       booked: ['V001', 'V002'],
       pending: []
     }, {
       id: 'S116',
       date: '2026-10-29',
       locationId: 'L2',
-      templateId: 'T4',
+      templateId: 'T21',
       capacity: 4,
       type: '管理者指派',
       booked: ['V009'],
@@ -571,9 +692,9 @@
       slotName: '上午 09:00–12:00',
       checkIn: '09:26',
       checkOut: '12:01',
-      countedFrom: '09:26',
+      countedFrom: '10:00',
       countedTo: '12:00',
-      hours: 2.57,
+      hours: 2,
       status: '遲到',
       source: '借閱證條碼'
     }, {
@@ -596,15 +717,14 @@
       slotId: null,
       date: '2026-10-10',
       locationId: 'L1',
-      slotName: '下午（3.5 小時）13:00–16:30',
+      slotName: '下午早退 13:00–16:30',
       checkIn: '12:55',
       checkOut: '16:30',
       countedFrom: '13:00',
       countedTo: '16:30',
       hours: 3.5,
-      status: '固定早退',
-      source: '現場QR',
-      note: '固定早退時段，不記點，時數照發 3.5 小時'
+      status: '正常',
+      source: '現場QR'
     }, {
       id: 'A006',
       volunteerId: 'V002',
@@ -645,8 +765,8 @@
       checkIn: '13:00',
       checkOut: '16:20',
       countedFrom: '13:00',
-      countedTo: '16:20',
-      hours: 3.33,
+      countedTo: '16:00',
+      hours: 3,
       status: '早退',
       source: '現場QR'
     }, {
@@ -916,6 +1036,16 @@
       status: '有效',
       note: '',
       by: '系統'
+    }, {
+      id: 'VR06',
+      volunteerId: 'V001',
+      date: '2026-06-20',
+      typeId: 'VT2',
+      points: 1,
+      source: '出勤異常轉入',
+      status: '有效',
+      note: '下午場 16:10 簽退',
+      by: '系統'
     }],
     activities: [{
       id: 'AC01',
@@ -1071,14 +1201,9 @@
       cancelDeadlineDays: 3,
       substituteSameUnitOnly: true,
       vacancyNotifyMax: 3,
-      checkinOpenMinutes: 60,
-      checkoutCloseMinutes: 120,
-      repeatScanMinutes: 10,
-      hoursUnit: '分鐘',
-      lateHoursRule: '依實際簽到時間起算',
-      earlyLeaveHoursRule: '依實際簽退時間計算',
       noCheckoutRule: '標記異常、待管理者補登',
       autoPointFromAttendance: true,
+      violationRetentionMonths: 3,
       pointReminderText: '您目前累計 {N} 點違規記點，請準時出勤，避免影響志工資格。'
     },
     admins: [{
@@ -1109,6 +1234,20 @@
       unit: '文化局',
       locationIds: [],
       email: ''
+    }, {
+      id: 'AD5',
+      name: '張家豪',
+      role: '地點管理者',
+      unit: '文化局',
+      locationIds: ['L2'],
+      email: 'jiahao@example.com'
+    }, {
+      id: 'AD6',
+      name: '黃淑惠',
+      role: '地點管理者',
+      unit: '文化局',
+      locationIds: ['L3', 'L5'],
+      email: 'shuhui@example.com'
     }],
     reports: [{
       id: 'RP01',
@@ -1133,7 +1272,20 @@
       by: '陳怡安'
     }]
   };
-  var KEY = 'hcpl-volunteer-demo-v4';
+  var KEY = 'hcpl-volunteer-demo-v5';
+  function toMin(t) {
+    if (!t) {
+      return 0;
+    }
+    var p = t.split(':');
+    return Number(p[0]) * 60 + Number(p[1]);
+  }
+  function toHM(m) {
+    m = Math.max(0, Math.round(m));
+    var h = Math.floor(m / 60),
+      i = m % 60;
+    return (h < 10 ? '0' : '') + h + ':' + (i < 10 ? '0' : '') + i;
+  }
   function clone(o) {
     return JSON.parse(JSON.stringify(o));
   }
@@ -1236,9 +1388,93 @@
         return v.groupIds.indexOf(x) >= 0;
       });
     },
+    managersOf: function (state, locationId) {
+      return state.admins.filter(function (a) {
+        return a.role === '地點管理者' && !a.disabled && a.locationIds.indexOf(locationId) >= 0;
+      });
+    },
+    templatesOf: function (state, locationId) {
+      return state.slotTemplates.filter(function (t) {
+        return t.locationId === locationId;
+      });
+    },
+    rule: function (state, slot) {
+      var t = HCV.byId(state.slotTemplates, slot.templateId) || {};
+      function pick(k, d) {
+        return slot[k] != null ? slot[k] : t[k] != null ? t[k] : d;
+      }
+      return {
+        name: t.name,
+        start: pick('start', '09:00'),
+        end: pick('end', '12:00'),
+        hours: pick('hours', 0),
+        graceMinutes: pick('graceMinutes', 0),
+        unitMinutes: pick('unitMinutes', 30),
+        latestCheckin: pick('latestCheckin', ''),
+        openMinutes: pick('openMinutes', 30),
+        closeMinutes: pick('closeMinutes', 30)
+      };
+    },
+    unitText: function (u) {
+      return Number(u) === 60 ? '一小時' : '半小時';
+    },
+    scanCheck: function (r, time, isCheckIn) {
+      var t = toMin(time);
+      if (t < toMin(r.start) - r.openMinutes) {
+        return '還沒開放';
+      }
+      if (t > toMin(r.end) + r.closeMinutes) {
+        return '已過簽退截止';
+      }
+      if (isCheckIn && r.latestCheckin && t > toMin(r.latestCheckin)) {
+        return '超過最晚可簽到時間';
+      }
+      return '';
+    },
+    calc: function (r, checkIn, checkOut) {
+      var st = toMin(r.start),
+        en = toMin(r.end),
+        u = Number(r.unitMinutes) || 30;
+      var cin = toMin(checkIn);
+      var late = cin > st + (r.graceMinutes || 0);
+      var from = late ? Math.ceil(cin / u) * u : st;
+      var status = late ? '遲到' : cin > st ? '緩衝內到班' : '正常';
+      if (!checkOut) {
+        return {
+          from: toHM(from),
+          to: '',
+          hours: 0,
+          status: status
+        };
+      }
+      var co = toMin(checkOut);
+      var early = co < en;
+      if (early && !late) {
+        status = '早退';
+      }
+      var to = Math.min(co, en);
+      var counted = Math.max(0, Math.floor((to - from) / u) * u);
+      var hours = !late && !early ? Number(r.hours) : Math.min(counted / 60, Number(r.hours));
+      return {
+        from: toHM(from),
+        to: toHM(from + counted),
+        hours: hours,
+        status: status,
+        early: early
+      };
+    },
+    pointExpiry: function (state, r) {
+      var n = state.params && state.params.violationRetentionMonths || 3;
+      var p = r.date.split('-');
+      var d = new Date(Number(p[0]), Number(p[1]) - 1 + n, Number(p[2]));
+      return d.getFullYear() + '-' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() < 10 ? '0' : '') + d.getDate();
+    },
+    pointExpired: function (state, r) {
+      return HCV.pointExpiry(state, r) <= state.today;
+    },
     activePoints: function (state, volunteerId) {
       return state.violations.filter(function (r) {
-        return r.volunteerId === volunteerId && r.status === '有效';
+        return r.volunteerId === volunteerId && r.status === '有效' && !HCV.pointExpired(state, r);
       }).reduce(function (n, r) {
         return n + r.points;
       }, 0);
