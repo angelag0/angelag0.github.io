@@ -186,6 +186,7 @@ textarea.inp{width:100%;min-height:64px}
     set: function (k, v) { try { localStorage.setItem('tk3-' + k, JSON.stringify(v)); } catch (e) {} },
     wipe: function () { try { Object.keys(localStorage).filter(function (k) { return k.indexOf('tk3-') === 0; }).forEach(function (k) { localStorage.removeItem(k); }); } catch (e) {} }
   };
+  (function () { var sd = window.MY_SEED; if (sd && /(^|[#&])me(&|$)/.test((window.location && window.location.hash) || '') && !st.get('seeded', 0)) { st.set('v', sd.v); st.set('hide', sd.hide); st.set('seeded', 1); } })();
   var byNo = function (no) { for (var i = 0; i < SH.length; i++) if (SH[i].no === +no) return SH[i]; return null; };
   var WD = ['日', '一', '二', '三', '四', '五', '六'];
   var DL = { y: '想吃', m: '隨便', n: '不要' };
