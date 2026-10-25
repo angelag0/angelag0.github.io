@@ -174,7 +174,21 @@ textarea.inp{width:100%;min-height:64px}
 .gt img{width:100%;height:100%;object-fit:cover;display:block}
 .gt .tn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:15px;line-height:1.35;height:2.7em;margin:5px 0 4px}
 .gt .vb{width:100%;min-height:40px}
-.gt .vb.on,.nl .vb.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.gt .vb.on,.nl .vb.on,.dr .vb.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.pkh{max-width:720px;margin:0 auto 8px}
+.toc{display:flex;flex-wrap:wrap;gap:6px;max-width:720px;margin:0 auto 4px}
+.toc .chip{min-height:36px;padding:2px 10px}
+.secn{max-width:720px;margin:0 auto 2px;font-size:14px}
+.dr{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bg2);max-width:720px;margin:0 auto}
+.dr .ph{flex:none;display:block;width:96px;height:72px;padding:0;border:0;border-radius:4px;background:var(--bg2);overflow:hidden;position:relative}
+.dr img{width:100%;height:100%;object-fit:cover;display:block}
+.dr .dn{line-height:1.35}
+.dr .dd{font-size:14px;color:var(--muted);margin-top:2px;line-height:1.4}
+.dr .vb{flex:none;align-self:center;min-width:64px;min-height:44px}
+.dr.on .dn{color:var(--pri);font-weight:700}
+.dr.on .ph{outline:3px solid var(--pri);outline-offset:-3px}
+.rk{display:inline-block;margin-left:6px;padding:0 5px;border:1px solid var(--line);border-radius:3px;font-size:12px;line-height:18px;font-weight:400;color:var(--muted);vertical-align:2px;white-space:nowrap}
+.lb .cap .lbd{font-size:16px;opacity:.85;margin-top:2px}
 .nlh{font-size:16px;margin:20px auto 4px;max-width:720px;padding-bottom:4px;border-bottom:1px solid var(--line)}
 .nl{display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--bg2);max-width:720px;margin:0 auto}
 .nl .vb{flex:none;min-width:88px;min-height:40px}
@@ -189,7 +203,7 @@ textarea.inp{width:100%;min-height:64px}
 <div id="lb"></div>
 <div id="mapov"></div>
 <div id="pick"></div>
-<script src="data.js?v=f12d9c34"></script>
+<script src="data.js?v=9d0b40c3"></script>
 <script src="votes.js?v=c6de785b"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
@@ -332,11 +346,15 @@ textarea.inp{width:100%;min-height:64px}
   var shown = function () { return SH.filter(function (s) { return !hidden(s.no); }); };
   var spText = function (it) { return !it.sp ? '' : it.sp === it.p ? '內用同價' : '內用 ' + money(it.sp); };
   var spCls = function (it) { return !it.sp || !it.p || it.sp === it.p ? '' : it.sp < it.p ? 'inlo' : 'inhi'; };
-  var priceHtml = function (it) { return it.p ? '外帶 ' + money(it.p) + (it.sp ? '<span class="sp' + (spCls(it) ? ' ' + spCls(it) : '') + '">' + spText(it) + '</span>' : '') : '<span class="sp">價錢要問</span>'; };
+  var priceHtml = function (it) { return it.m ? '菜單 ' + money(it.p) + '<span class="sp">Uber Eats 沒有</span>' : it.p ? '外帶 ' + money(it.p) + (it.sp ? '<span class="sp' + (spCls(it) ? ' ' + spCls(it) : '') + '">' + spText(it) + '</span>' : '') : '<span class="sp">價錢要問</span>'; };
   var imgHtml = function (it) { return it.img ? '<img loading="lazy" src="' + esc(it.img) + '" alt="" onerror="imgErr(this)">' + (it.src === 'w' ? '<span class="tag">網友照</span>' : '') : '<span class="none">沒有照片</span>'; };
+  function stripOrder(s) {
+    var rank = function (it) { return it.z ? 3 : !it.img ? 2 : it.src === 'w' ? 1 : 0; };
+    return s.items.map(function (x, i) { return i; }).sort(function (a, b) { return rank(s.items[a]) - rank(s.items[b]) || a - b; });
+  }
   function tilesHtml(s, withPrice, marks) {
-    return s.items.map(function (it, i) {
-      var on = marks && dishOn(s.no, i);
+    return stripOrder(s).map(function (i) {
+      var it = s.items[i], on = marks && dishOn(s.no, i);
       return '<button class="tile' + (on ? ' on' : '') + '" data-a="zoom" data-no="' + s.no + '" data-i="' + i + '"><span class="ph">' + imgHtml(it) + (on ? '<span class="tag sel">已選</span>' : '') +
         '</span><span class="tn">' + esc(it.n) + '</span>' + (withPrice ? '<span class="tp">' + priceHtml(it) + '</span>' : '') + '</button>';
     }).join('');
@@ -347,6 +365,12 @@ textarea.inp{width:100%;min-height:64px}
   var myDish = function () { return st.get('dish', {}); };
   var tooLate = function (it) { return /提前.{1,2}[日天]/.test(it.n); };
   var dishOn = function (no, i) { return (myDish()[no] || []).indexOf(+i) >= 0; };
+  function dispOrder(s) {
+    var ix = s.items.map(function (x, i) { return i; });
+    if (!s.secs) return ix;
+    var key = function (i) { var k = s.items[i].k; return k == null ? 1e4 + i : k; };
+    return ix.sort(function (a, b) { return key(a) - key(b); });
+  }
   function toggleDish(no, i) { var d = myDish(), a = d[no] || [], k = a.indexOf(+i); if (k >= 0) a.splice(k, 1); else a.push(+i); if (a.length) d[no] = a; else delete d[no]; st.set('dish', d); }
   var nDish = function () { var d = myDish(); return Object.keys(d).reduce(function (n, k) { return n + d[k].length; }, 0); };
   function openWords(s) {
@@ -360,7 +384,7 @@ textarea.inp{width:100%;min-height:64px}
       (it.what ? '<p class="intro">' + esc(it.what) + '</p>' : '') +
       '<dl class="kv in">' + (it.topics ? '<dt>網友常提到</dt><dd>' + esc(it.topics) + '</dd>' : '') + (it.sum ? '<dt>Google 整理的評價</dt><dd>' + esc(it.sum) + '</dd>' : '') +
       '<dt>外帶的人說</dt><dd' + (it.said ? '' : ' class="muted"') + '>' + esc(it.said || 'Google 上還沒有人寫外帶的評論') + '</dd></dl>' +
-      '<div class="more"><a class="fb" href="' + esc(s.rurl) + '" target="_blank" rel="noopener">看評論</a>' + (s.ourl ? '<a class="fb" href="' + esc(s.ourl) + '" target="_blank" rel="noopener">看菜單</a>' : '') + '<button class="fb" data-a="map-ov" data-no="' + s.no + '">看地圖</button></div>' +
+      '<div class="more"><a class="fb" href="' + esc(s.rurl) + '" target="_blank" rel="noopener">看評論</a>' + (s.mmenu || s.ourl ? '<a class="fb" href="' + esc(s.mmenu || s.ourl) + '" target="_blank" rel="noopener">看菜單</a>' : '') + '<button class="fb" data-a="map-ov" data-no="' + s.no + '">看地圖</button></div>' +
       '<div class="strip">' + (tilesHtml(s, false, true) || '<span class="muted small">還沒有菜單</span>') + '</div>' +
       '<div class="pkl"><button class="fb pri" data-a="pick-open" data-no="' + s.no + '">選菜' + (mine.length ? '（已選 ' + mine.length + ' 道）' : '') + '</button>' + (mine.length ? '<span class="small grow">' + esc(mine.map(function (i) { return s.items[i].n; }).join('、')) + '</span>' : '') + '</div></section>';
   }
@@ -368,9 +392,9 @@ textarea.inp{width:100%;min-height:64px}
   function renderFront() {
     var n = nDish();
     var h = '<div class="wrap"><div class="tt"><h1>' + esc(dayLabel(lastDay())) + '外帶</h1>' + (isS() ? '<button class="sx" data-a="s-open" aria-label="S 專用">∴</button>' : '') + '</div>' +
-      '<p class="hint">四家的菜都可以勾，幾道都行。每家按「選菜」，想吃的按「想吃」；選好按最下面「用 LINE 傳給我」。我看大家勾的，印度餐廳、義式餐廳各訂一家。</p>';
+      '<p class="hint">明天中午訂莫夏印度餐廳。按「選菜」，想吃的都按「想吃」，幾道都行，份量和價錢我來配。選好按最下面「用 LINE 傳給我」；有不吃的（例如羊肉）也在 LINE 跟我說。</p>';
     PICK.forEach(function (g) {
-      h += '<h2 class="grp">' + esc(g.t) + '<span class="small muted">（' + g.nos.length + ' 家挑一家）</span></h2>' + g.nos.map(byNo).filter(Boolean).map(introCard).join('');
+      h += '<h2 class="grp">' + esc(g.t) + '<span class="small muted">（' + esc(g.note || g.nos.length + ' 家挑一家') + '）</span></h2>' + g.nos.map(byNo).filter(Boolean).map(introCard).join('');
     });
     h += '</div><div class="bar"><div class="in"><span class="grow small muted">' + (n ? '已選 ' + n + ' 道' : '還沒選菜') + '</span><button class="fb" data-a="copy-send">複製</button><a class="fb pri" href="https://line.me/R/share?text=' + encodeURIComponent(buildMsg()) + '">用 LINE 傳給我</a></div></div>';
     return h;
@@ -381,7 +405,13 @@ textarea.inp{width:100%;min-height:64px}
     if (!ui.pick) { box.innerHTML = ''; return; }
     var pb = document.getElementById('pkb'), y = pb ? pb.scrollTop : 0;
     var s = byNo(ui.pick), mine = myDish()[s.no] || [];
-    box.innerHTML = '<div class="pko" role="dialog" aria-label="選菜：' + esc(s.name) + '"><div class="top"><b class="grow">' + esc(s.name) + '<span class="small muted">　已選 ' + mine.length + ' 道</span></b><button class="fb pri" data-a="pick-close">選好了</button></div>' +
+    var head = '<div class="pko" role="dialog" aria-label="選菜：' + esc(s.name) + '"><div class="top"><b class="grow">' + esc(s.name) + '<span class="small muted">　已選 ' + mine.length + ' 道</span></b><button class="fb pri" data-a="pick-close">選好了</button></div>';
+    if (s.secs) {
+      box.innerHTML = head + '<div class="pkb" id="pkb">' + secPick(s, mine) + '</div></div>';
+      var pb3 = document.getElementById('pkb'); if (pb3) pb3.scrollTop = y;
+      return;
+    }
+    box.innerHTML = head +
       '<div class="pkb" id="pkb"><p class="small muted" style="margin:0 0 8px">點照片放大看，按「想吃」打勾，再按一次取消。</p><div class="grid">' +
       s.items.map(function (it, i) {
         if (!it.img) return '';
@@ -394,6 +424,28 @@ textarea.inp{width:100%;min-height:64px}
         return '<div class="nl' + (on ? ' on' : '') + '"><span class="grow">' + esc(it.n) + '</span>' + pickBtn(s, it, i, on) + '</div>';
       }).join('') : '') + '</div></div>';
     var pb2 = document.getElementById('pkb'); if (pb2) pb2.scrollTop = y;
+  }
+  function secPick(s, mine) {
+    var ord = dispOrder(s), inSec = function (k) { return ord.filter(function (i) { return s.items[i].c === k; }); };
+    var groups = s.secs.map(function (sec, k) { return { t: sec.t, note: sec.note, its: inSec(k) }; });
+    var rest = ord.filter(function (i) { return s.items[i].c == null; });
+    if (rest.length) groups.push({ t: '其他', note: '', its: rest });
+    var h = '<p class="small muted pkh">想吃的都按「想吃」，再按一次取消；點照片放大看。說明照店家的菜單寫' + (s.mmenu ? '，<a href="' + esc(s.mmenu) + '" target="_blank" rel="noopener">看店家的菜單</a>' : '') + '。</p>';
+    h += '<div class="toc">' + groups.map(function (g, k) {
+      if (!g.its.length) return '';
+      var n = g.its.filter(function (i) { return mine.indexOf(i) >= 0; }).length;
+      return '<button class="chip" data-a="pick-sec" data-k="' + k + '">' + esc(g.t) + (n ? '・已選 ' + n : '') + '</button>';
+    }).join('') + '</div>';
+    return h + groups.map(function (g, k) {
+      if (!g.its.length) return '';
+      return '<h3 class="nlh" id="ps' + k + '">' + esc(g.t) + '<span class="small muted">　' + g.its.length + ' 道</span></h3>' + (g.note ? '<p class="secn muted">' + esc(g.note) + '</p>' : '') +
+        g.its.map(function (i) { return dishRow(s, i, mine.indexOf(i) >= 0); }).join('');
+    }).join('');
+  }
+  function dishRow(s, i, on) {
+    var it = s.items[i];
+    return '<div class="dr' + (on ? ' on' : '') + '">' + (it.img ? '<button class="ph" data-a="zoom" data-no="' + s.no + '" data-i="' + i + '" aria-label="放大：' + esc(it.n) + '">' + imgHtml(it) + '</button>' : '<span class="ph"><span class="none">沒有照片</span></span>') +
+      '<div class="grow"><div class="dn">' + esc(it.n) + (it.rec ? '<span class="rk">評論常提到</span>' : '') + '</div>' + (it.d ? '<div class="dd">' + esc(it.d) + '</div>' : '') + '</div>' + pickBtn(s, it, i, on) + '</div>';
   }
   function buildMap(elId, focusNo) {
     if (!window.L || !document.getElementById(elId)) return;
@@ -575,6 +627,7 @@ textarea.inp{width:100%;min-height:64px}
       '<a class="fb" href="' + esc(s.gurl) + '" target="_blank" rel="noopener">咕狗地圖</a>' +
       '<a class="fb" href="' + esc(s.rurl) + '" target="_blank" rel="noopener">看評論</a>' +
       (s.ourl ? '<a class="fb" href="' + esc(s.ourl) + '" target="_blank" rel="noopener">看菜單（' + esc(s.plat) + '）</a>' : '') +
+      (s.mmenu ? '<a class="fb" href="' + esc(s.mmenu) + '" target="_blank" rel="noopener">店家菜單</a>' : '') +
       '<a class="fb" href="' + esc(navUrl(s)) + '" target="_blank" rel="noopener">機車導航</a></div>';
     h += '<dl class="kv"><dt>這兩天</dt><dd>' + dayAvail(s) + '</dd>' +
       (distKm(s) != null ? '<dt>離家</dt><dd>' + kmText(distKm(s)) + '（直線）・' + esc(s.district) + '</dd>' : '') +
@@ -606,7 +659,7 @@ textarea.inp{width:100%;min-height:64px}
     h += '<div class="box"><button class="tog" data-a="ord" data-no="' + s.no + '"><span>點菜' + (picked.length ? '（' + picked.length + ' 道：' + (s.how === 'own' ? '原價 ' + money(c.hi) + '・網路訂 85 折 ' + money(c.lo) : '平台價 ' + money(c.hi) + (c.lo !== c.hi ? '・照內用價約 ' + money(c.lo) : '')) + (c.unk ? '・' + c.unk + ' 份價錢不明' : '') + '）' : '') + (nWant ? '・家人想吃 ' + nWant + ' 道' : '') + '</span><span>' + (ui.ord[s.no] ? '收起' : '打開') + '</span></button>';
     if (ui.ord[s.no]) h += idx.map(function (i) {
       var it = s.items[i], q = r.q[i] || 0;
-      return '<div class="qrow">' + (it.img ? '<img loading="lazy" src="' + esc(it.img) + '" alt="">' : '<span class="ni"></span>') + '<div class="grow"><div>' + esc(it.n) + (want[i] ? ' <span class="small vy">' + want[i] + ' 人想吃</span>' : '') + '</div>' + (it.en ? '<div class="small en">' + esc(it.en) + '</div>' : '') + '<div class="small muted">' + (it.p ? '外帶 ' + money(it.p) + (it.sp ? '・' + (spCls(it) ? '<span class="' + spCls(it) + '">' + spText(it) + '</span>' : spText(it)) : '') : '價錢要問') + '</div></div>' +
+      return '<div class="qrow">' + (it.img ? '<img loading="lazy" src="' + esc(it.img) + '" alt="">' : '<span class="ni"></span>') + '<div class="grow"><div>' + esc(it.n) + (want[i] ? ' <span class="small vy">' + want[i] + ' 人想吃</span>' : '') + '</div>' + (it.en ? '<div class="small en">' + esc(it.en) + '</div>' : '') + '<div class="small muted">' + (it.m ? '菜單 ' + money(it.p) + '・Uber Eats 沒有，能不能外帶電話問' : it.p ? '外帶 ' + money(it.p) + (it.sp ? '・' + (spCls(it) ? '<span class="' + spCls(it) + '">' + spText(it) + '</span>' : spText(it)) : '') : '價錢要問') + '</div></div>' +
         '<div class="step"><button data-a="r-qty" data-no="' + s.no + '" data-i="' + i + '" data-d="-1" aria-label="少一份">−</button><span>' + q + '</span><button data-a="r-qty" data-no="' + s.no + '" data-i="' + i + '" data-d="1" aria-label="多一份">＋</button></div></div>';
     }).join('');
     h += '</div>';
@@ -714,12 +767,12 @@ textarea.inp{width:100%;min-height:64px}
   function renderLb() {
     var box = $('#lb');
     if (!ui.lb) { box.innerHTML = ''; return; }
-    var s = byNo(ui.lb.no), i = ui.lb.i, it = s.items[i];
+    var s = byNo(ui.lb.no), i = ui.lb.i, it = s.items[i], ord = dispOrder(s), pos = ord.indexOf(i);
     var big = it.img.replace(/=w\d+-h\d+(-p)?-k-no/, '=w900-h1200$1-k-no');
-    var src = !it.img ? '' : it.src === 'g' ? '照片：咕狗上客人在店裡拍的' : it.src === 'w' ? '照片：網友拍的，不一定是這一道（' + it.from + '）' : '照片：' + (s.plat || '店家點餐頁') + '上的';
-    box.innerHTML = '<div class="lb" role="dialog" aria-label="' + esc(it.n) + '"><div class="top"><span class="grow">' + esc(s.name) + '　' + (i + 1) + '／' + s.items.length + '</span><button data-a="lb-close">關閉</button></div>' +
+    var src = !it.img ? '' : it.src === 'g' ? '照片：咕狗上客人在店裡拍的' : it.src === 'w' ? '照片：網友拍的，不一定是這一道（' + it.from + '）' : it.src === 'm' ? '照片：店家菜單上的（菜單沒寫照片是哪一道，照擺的位置對的）' : '照片：' + (s.plat || '店家點餐頁') + '上的';
+    box.innerHTML = '<div class="lb" role="dialog" aria-label="' + esc(it.n) + '"><div class="top"><span class="grow">' + esc(s.name) + '　' + (pos + 1) + '／' + ord.length + '</span><button data-a="lb-close">關閉</button></div>' +
       '<div class="img">' + (it.img ? '<img src="' + esc(big) + '" alt="" onerror="this.onerror=null;this.src=\'' + esc(it.img) + '\'">' : '<span class="none">沒有照片</span>') + '</div>' +
-      '<div class="cap"><div class="n">' + esc(it.n) + '</div>' + (ui.page === 's' && it.en ? '<div class="en">' + esc(it.en) + '</div>' : '') + (ui.page === 's' ? '<div class="n lbp">' + priceHtml(it) + '</div>' : '') + (src ? '<div class="src">' + esc(src) + '</div>' : '') + '<div class="nav"><button data-a="lb-go" data-d="-1"' + (i === 0 ? ' disabled' : '') + '>上一道</button><button data-a="lb-go" data-d="1"' + (i === s.items.length - 1 ? ' disabled' : '') + '>下一道</button></div>' +
+      '<div class="cap"><div class="n">' + esc(it.n) + '</div>' + (it.d ? '<div class="lbd">' + esc(it.d) + '</div>' : '') + (ui.page === 's' && it.en ? '<div class="en">' + esc(it.en) + '</div>' : '') + (ui.page === 's' ? '<div class="n lbp">' + priceHtml(it) + '</div>' : '') + (src ? '<div class="src">' + esc(src) + '</div>' : '') + '<div class="nav"><button data-a="lb-go" data-d="-1"' + (pos === 0 ? ' disabled' : '') + '>上一道</button><button data-a="lb-go" data-d="1"' + (pos === ord.length - 1 ? ' disabled' : '') + '>下一道</button></div>' +
       (ui.page === 's' ? '' : tooLate(it) ? '<div class="src">要提前訂，明天來不及</div>' : '<button class="lbpk' + (dishOn(s.no, i) ? ' on' : '') + '" data-a="dish" data-no="' + s.no + '" data-i="' + i + '" aria-pressed="' + dishOn(s.no, i) + '">' + (dishOn(s.no, i) ? '已選這道（再按一次取消）' : '想吃這道') + '</button>') + '</div></div>';
   }
   function renderMapOv() {
@@ -763,7 +816,8 @@ textarea.inp{width:100%;min-height:64px}
       }
       case 'close': ui.modal = null; renderModal(); break;
       case 'zoom': ui.lb = { no: no, i: i }; renderLb(); break;
-      case 'lb-go': ui.lb.i = Math.max(0, Math.min(byNo(ui.lb.no).items.length - 1, ui.lb.i + +t.dataset.d)); renderLb(); break;
+      case 'lb-go': { var lo = dispOrder(byNo(ui.lb.no)), lp = Math.max(0, Math.min(lo.length - 1, lo.indexOf(ui.lb.i) + +t.dataset.d)); ui.lb.i = lo[lp]; renderLb(); break; }
+      case 'pick-sec': { var sec = document.getElementById('ps' + t.dataset.k); if (sec && sec.scrollIntoView) sec.scrollIntoView({ block: 'start' }); break; }
       case 'lb-close': ui.lb = null; renderLb(); break;
       case 'map-ov': ui.mapOv = no; renderMapOv(); break;
       case 'mapov-close': ui.mapOv = null; renderMapOv(); break;
