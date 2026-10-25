@@ -158,6 +158,29 @@ textarea.inp{width:100%;min-height:64px}
 .cell.n{color:var(--muted);background:var(--bg2)}
 .cell.ov{border-color:var(--pri);font-weight:700}
 .cell.y.ov{background:var(--pri-bg);color:var(--pri)}
+.grp{font-size:18px;margin:18px 0 0;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.grp .small{font-weight:400;margin-left:4px}
+.meta{margin:-4px 0 6px}
+.intro{margin:0 0 2px}
+.kv.in{grid-template-columns:72px 1fr;margin:4px 0 8px}
+.pkl{display:flex;gap:10px;align-items:center;margin-top:4px}
+.tile.on .ph,.gt.on .ph{outline:3px solid var(--pri);outline-offset:-3px}
+.tag.sel{left:auto;right:4px;top:4px;bottom:auto;background:var(--pri);color:#fff}
+.pko{position:fixed;inset:0;background:#fff;z-index:950;display:flex;flex-direction:column}
+.pko .top{display:flex;align-items:center;gap:10px;padding:8px 16px;border-bottom:1px solid var(--line)}
+.pkb{flex:1;min-height:0;overflow:auto;padding:10px 16px calc(24px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px 12px;max-width:720px;margin:0 auto}
+.gt .ph{display:block;width:100%;aspect-ratio:4/3;padding:0;border:0;border-radius:4px;background:var(--bg2);overflow:hidden;position:relative}
+.gt img{width:100%;height:100%;object-fit:cover;display:block}
+.gt .tn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:15px;line-height:1.35;height:2.7em;margin:5px 0 4px}
+.gt .vb{width:100%;min-height:40px}
+.gt .vb.on,.nl .vb.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.nlh{font-size:16px;margin:20px auto 4px;max-width:720px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.nl{display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--bg2);max-width:720px;margin:0 auto}
+.nl .vb{flex:none;min-width:88px;min-height:40px}
+.nl.on .grow{color:var(--pri);font-weight:700}
+.lb .lbpk{display:block;width:100%;margin-top:10px;min-height:52px;font-size:19px;border:2px solid #fff;border-radius:6px;background:none;color:#fff}
+.lb .lbpk.on{background:#fff;color:#111;font-weight:700}
 </style>
 </head>
 <body>
@@ -165,6 +188,7 @@ textarea.inp{width:100%;min-height:64px}
 <div id="modal"></div>
 <div id="lb"></div>
 <div id="mapov"></div>
+<div id="pick"></div>
 <script src="data.js"></script>
 <script src="votes.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -197,7 +221,7 @@ textarea.inp{width:100%;min-height:64px}
   var PAY = [['cash', '現金'], ['card', '刷卡'], ['tf', '轉帳'], ['mob', '行動支付']];
   var RES = [['noans', '沒人接'], ['asked', '問好了'], ['booked', '訂好了'], ['no', '不行']];
   var RESL = { noans: '沒人接', asked: '問好了', booked: '訂好了', no: '不行' };
-  var ui = { page: st.get('page', 'front') === 's' ? 's' : 'front', modal: null, lb: null, focus: null, sOpen: null, sTab: st.get('stab', 'list'), showImp: false, rules: false, ord: {}, rev: {}, hrs: {}, en: {}, wipe: false, delArm: null, impMsg: '' };
+  var ui = { page: st.get('page', 'front') === 's' ? 's' : 'front', modal: null, lb: null, focus: null, sOpen: null, sTab: st.get('stab', 'list'), showImp: false, rules: false, ord: {}, rev: {}, hrs: {}, en: {}, wipe: false, delArm: null, impMsg: '', pick: null, showDimp: false, dimpMsg: '' };
   window.imgErr = function (img) { var sp = document.createElement('span'); sp.className = 'none'; sp.textContent = '照片讀不到'; img.replaceWith(sp); };
 
   var myV = function () { return st.get('v', {}); };
@@ -256,7 +280,7 @@ textarea.inp{width:100%;min-height:64px}
     return line + (next ? '（現在休息，' + hm(next[0]) + ' 開）' : '（今天不開了）');
   }
 
-  var rec = function (no) { var r = st.get('rec', {})[no] || {}; return { st: r.st || '', a: r.a || {}, pay: r.pay || [], slot: slotOf(r.slot) ? r.slot : '', time: r.time || '', amt: r.amt || '', note: r.note || '', log: r.log || [], q: r.q || {}, ov: r.ov || {} }; };
+  var rec = function (no) { var r = st.get('rec', {})[no] || {}; return { st: r.st || '', a: r.a || {}, pay: r.pay || [], slot: slotOf(r.slot) ? r.slot : '', time: r.time || '', amt: r.amt || '', note: r.note || '', nm: r.nm || '', log: r.log || [], q: r.q || {}, ov: r.ov || {} }; };
   function setRec(no, fn) { var all = st.get('rec', {}), r = rec(no); fn(r); all[no] = r; st.set('rec', all); }
   var target = function () { return BUDGET - (+st.get('fuel', 0) || 0); };
   function cost(s, r) {
@@ -309,63 +333,78 @@ textarea.inp{width:100%;min-height:64px}
   var spText = function (it) { return !it.sp ? '' : it.sp === it.p ? '內用同價' : '內用 ' + money(it.sp); };
   var spCls = function (it) { return !it.sp || !it.p || it.sp === it.p ? '' : it.sp < it.p ? 'inlo' : 'inhi'; };
   var priceHtml = function (it) { return it.p ? '外帶 ' + money(it.p) + (it.sp ? '<span class="sp' + (spCls(it) ? ' ' + spCls(it) : '') + '">' + spText(it) + '</span>' : '') : '<span class="sp">價錢要問</span>'; };
-  function tilesHtml(s, withPrice) {
+  var imgHtml = function (it) { return it.img ? '<img loading="lazy" src="' + esc(it.img) + '" alt="" onerror="imgErr(this)">' + (it.src === 'w' ? '<span class="tag">網友照</span>' : '') : '<span class="none">沒有照片</span>'; };
+  function tilesHtml(s, withPrice, marks) {
     return s.items.map(function (it, i) {
-      return '<button class="tile" data-a="zoom" data-no="' + s.no + '" data-i="' + i + '"><span class="ph">' +
-        (it.img ? '<img loading="lazy" src="' + esc(it.img) + '" alt="" onerror="imgErr(this)">' + (it.src === 'w' ? '<span class="tag">網友照</span>' : '') : '<span class="none">沒有照片</span>') +
+      var on = marks && dishOn(s.no, i);
+      return '<button class="tile' + (on ? ' on' : '') + '" data-a="zoom" data-no="' + s.no + '" data-i="' + i + '"><span class="ph">' + imgHtml(it) + (on ? '<span class="tag sel">已選</span>' : '') +
         '</span><span class="tn">' + esc(it.n) + '</span>' + (withPrice ? '<span class="tp">' + priceHtml(it) + '</span>' : '') + '</button>';
     }).join('');
   }
 
-  function fb(v, label) { var on = st.get('filter', 'all') === v; return '<button class="fb' + (on ? ' on' : '') + '" data-a="filter" data-v="' + v + '">' + label + '</button>'; }
-  function listShops() {
-    var filter = st.get('filter', 'all'), sort = st.get('sort', 'rev'), vs = myV();
-    var a = shown();
-    if (filter === 'mine') a = a.filter(function (s) { return vs[s.no] === 'y'; });
-    a.sort(function (x, y) {
-      if (sort === 'star') return y.rating - x.rating || y.reviews - x.reviews;
-      if (sort === 'price') return (x.gp[0] || 0) - (y.gp[0] || 0) || (x.med || 0) - (y.med || 0) || y.reviews - x.reviews;
-      return y.reviews - x.reviews;
-    });
-    return a;
+  var PICK = window.PICK || [];
+  var pickShops = function () { return PICK.reduce(function (a, g) { return a.concat(g.nos.map(byNo).filter(Boolean)); }, []); };
+  var myDish = function () { return st.get('dish', {}); };
+  var tooLate = function (it) { return /提前.{1,2}[日天]/.test(it.n); };
+  var dishOn = function (no, i) { return (myDish()[no] || []).indexOf(+i) >= 0; };
+  function toggleDish(no, i) { var d = myDish(), a = d[no] || [], k = a.indexOf(+i); if (k >= 0) a.splice(k, 1); else a.push(+i); if (a.length) d[no] = a; else delete d[no]; st.set('dish', d); }
+  var nDish = function () { var d = myDish(); return Object.keys(d).reduce(function (n, k) { return n + d[k].length; }, 0); };
+  function openWords(s) {
+    var k = lastDay(), L = slotOpen(s, SLOTS.filter(function (x) { return x[1] === k && x[2] === '午餐'; })[0][0]) === true, D = slotOpen(s, SLOTS.filter(function (x) { return x[1] === k && x[2] === '晚餐'; })[0][0]) === true;
+    return dayLabel(k) + (L && D ? '中午、晚上都有開' : L ? '只有中午有開' : D ? '只有晚上有開' : '沒開');
   }
-  function cardHtml(s) {
-    var d = myV()[s.no] || '', tiles = tilesHtml(s);
-    return '<section class="card' + (d === 'n' ? ' n' : '') + '" id="c' + s.no + '"><div class="ch"><h2><a href="' + esc(s.gurl) + '" target="_blank" rel="noopener">' + esc(s.name) + '</a></h2><div class="vote">' +
-      ['n', 'm', 'y'].map(function (k) { return '<button class="vb ' + k + (d === k ? ' on' : '') + '" aria-pressed="' + (d === k) + '" data-a="vote" data-no="' + s.no + '" data-d="' + k + '">' + DL[k] + '</button>'; }).join('') +
-      '</div></div><div class="more"><a class="fb" href="' + esc(s.rurl) + '" target="_blank" rel="noopener">看評論</a>' + (s.ourl ? '<a class="fb" href="' + esc(s.ourl) + '" target="_blank" rel="noopener">看菜單</a>' : '') + '<button class="fb" data-a="map-focus" data-no="' + s.no + '">看地圖</button></div>' +
-      '<div class="strip">' + (tiles || '<span class="muted small">還沒有菜單</span>') + '</div></section>';
+  function introCard(s) {
+    var d = distKm(s), mine = myDish()[s.no] || [], it = s.intro || {};
+    return '<section class="card" id="c' + s.no + '"><div class="ch"><h2><a href="' + esc(s.gurl) + '" target="_blank" rel="noopener">' + esc(s.name) + '</a></h2></div>' +
+      '<div class="meta small muted">Google ' + s.rating + ' 星・' + s.reviews.toLocaleString('en-US') + ' 則評論・' + esc(s.district) + (d != null ? '・離家 ' + kmText(d) : '') + '<br>' + esc(openWords(s)) + '</div>' +
+      (it.what ? '<p class="intro">' + esc(it.what) + '</p>' : '') +
+      '<dl class="kv in">' + (it.topics ? '<dt>網友常提到</dt><dd>' + esc(it.topics) + '</dd>' : '') + (it.sum ? '<dt>Google 整理的評價</dt><dd>' + esc(it.sum) + '</dd>' : '') +
+      '<dt>外帶的人說</dt><dd' + (it.said ? '' : ' class="muted"') + '>' + esc(it.said || 'Google 上還沒有人寫外帶的評論') + '</dd></dl>' +
+      '<div class="more"><a class="fb" href="' + esc(s.rurl) + '" target="_blank" rel="noopener">看評論</a>' + (s.ourl ? '<a class="fb" href="' + esc(s.ourl) + '" target="_blank" rel="noopener">看菜單</a>' : '') + '<button class="fb" data-a="map-ov" data-no="' + s.no + '">看地圖</button></div>' +
+      '<div class="strip">' + (tilesHtml(s, false, true) || '<span class="muted small">還沒有菜單</span>') + '</div>' +
+      '<div class="pkl"><button class="fb pri" data-a="pick-open" data-no="' + s.no + '">選菜' + (mine.length ? '（已選 ' + mine.length + ' 道）' : '') + '</button>' + (mine.length ? '<span class="small grow">' + esc(mine.map(function (i) { return s.items[i].n; }).join('、')) + '</span>' : '') + '</div></section>';
   }
+  var isS = function () { return !!st.get('seeded', 0) || (window.location && window.location.protocol) === 'file:'; };
   function renderFront() {
-    var mode = st.get('mode', 'list'), sort = st.get('sort', 'rev'), vs = myV();
-    var vis = shown(), mine = vis.filter(function (s) { return vs[s.no] === 'y'; }).length, seen = vis.filter(function (s) { return vs[s.no]; }).length;
-    var h = '<div class="wrap"><div class="tt"><h1>挑外帶餐廳</h1><span class="seg">' +
-      [['list', '列表'], ['map', '地圖']].map(function (o) { return '<button class="' + (mode === o[0] ? 'on' : '') + '" data-a="mode" data-v="' + o[0] + '">' + o[1] + '</button>'; }).join('') +
-      '</span><button class="sx" data-a="s-open" aria-label="S 專用">∴</button></div>' +
-      '<p class="hint">每家的菜可以左右滑、點照片放大</p>' +
-      '<div class="fbar">' + fb('all', '全部 ' + vis.length) + fb('mine', '我想吃的 ' + mine) +
-      (mode === 'map' ? '' : '<select data-a="sort" aria-label="排序">' + [['rev', '依評論數'], ['star', '依星等'], ['price', '依價錢']].map(function (o) { return '<option value="' + o[0] + '"' + (sort === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select>') + '</div>';
-    if (mode === 'map') h += '<div id="map"></div><p class="small muted">' + (home() ? '數字＝離家多遠（直線）。' : '') + '藍底＝想吃、藍框＝隨便、淡的＝不要。點一下看店名。</p>';
-    else {
-      var list = listShops();
-      if (!list.length) h += '<p class="muted" style="margin-top:16px">還沒有按「想吃」的店。</p>';
-      h += list.map(cardHtml).join('');
-    }
-    h += '</div><div class="bar"><div class="in"><span class="grow small muted">看過 ' + seen + '／' + vis.length + ' 家</span><button class="fb pri" data-a="copy-send">複製傳賴</button></div></div>';
+    var n = nDish();
+    var h = '<div class="wrap"><div class="tt"><h1>' + esc(dayLabel(lastDay())) + '外帶</h1>' + (isS() ? '<button class="sx" data-a="s-open" aria-label="S 專用">∴</button>' : '') + '</div>' +
+      '<p class="hint">四家的菜都可以勾，幾道都行。每家按「選菜」，想吃的按「想吃」；選好按最下面「用 LINE 傳給我」。我看大家勾的，印度餐廳、義式餐廳各訂一家。</p>';
+    PICK.forEach(function (g) {
+      h += '<h2 class="grp">' + esc(g.t) + '<span class="small muted">（' + g.nos.length + ' 家挑一家）</span></h2>' + g.nos.map(byNo).filter(Boolean).map(introCard).join('');
+    });
+    h += '</div><div class="bar"><div class="in"><span class="grow small muted">' + (n ? '已選 ' + n + ' 道' : '還沒選菜') + '</span><button class="fb" data-a="copy-send">複製</button><a class="fb pri" href="https://line.me/R/share?text=' + encodeURIComponent(buildMsg()) + '">用 LINE 傳給我</a></div></div>';
     return h;
   }
-  function initMap() { buildMap('map', ui.focus, st.get('filter', 'all') === 'mine'); }
-  function buildMap(elId, focusNo, mineOnly) {
+  var pickBtn = function (s, it, i, on) { return tooLate(it) ? '<button class="vb" disabled>明天來不及訂</button>' : '<button class="vb' + (on ? ' on' : '') + '" data-a="dish" data-no="' + s.no + '" data-i="' + i + '" aria-pressed="' + on + '">' + (on ? '已選' : '想吃') + '</button>'; };
+  function renderPick() {
+    var box = $('#pick');
+    if (!ui.pick) { box.innerHTML = ''; return; }
+    var pb = document.getElementById('pkb'), y = pb ? pb.scrollTop : 0;
+    var s = byNo(ui.pick), mine = myDish()[s.no] || [];
+    box.innerHTML = '<div class="pko" role="dialog" aria-label="選菜：' + esc(s.name) + '"><div class="top"><b class="grow">' + esc(s.name) + '<span class="small muted">　已選 ' + mine.length + ' 道</span></b><button class="fb pri" data-a="pick-close">選好了</button></div>' +
+      '<div class="pkb" id="pkb"><p class="small muted" style="margin:0 0 8px">點照片放大看，按「想吃」打勾，再按一次取消。</p><div class="grid">' +
+      s.items.map(function (it, i) {
+        if (!it.img) return '';
+        var on = mine.indexOf(i) >= 0;
+        return '<div class="gt' + (on ? ' on' : '') + '"><button class="ph" data-a="zoom" data-no="' + s.no + '" data-i="' + i + '" aria-label="放大：' + esc(it.n) + '">' + imgHtml(it) + '</button><div class="tn">' + esc(it.n) + '</div>' + pickBtn(s, it, i, on) + '</div>';
+      }).join('') + '</div>' +
+      (s.items.some(function (it) { return !it.img; }) ? '<h3 class="nlh">沒有照片的菜</h3>' + s.items.map(function (it, i) {
+        if (it.img) return '';
+        var on = mine.indexOf(i) >= 0;
+        return '<div class="nl' + (on ? ' on' : '') + '"><span class="grow">' + esc(it.n) + '</span>' + pickBtn(s, it, i, on) + '</div>';
+      }).join('') : '') + '</div></div>';
+    var pb2 = document.getElementById('pkb'); if (pb2) pb2.scrollTop = y;
+  }
+  function buildMap(elId, focusNo) {
     if (!window.L || !document.getElementById(elId)) return;
-    var map = L.map(elId), vs = myV(), b = [], hh = home(), focus = null;
+    var map = L.map(elId), vs = ui.page === 's' ? myV() : {}, b = [], hh = home(), focus = null;
     L.tileLayer('https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}', { maxZoom: 19, attribution: '&copy; 內政部國土測繪中心' }).addTo(map);
     if (hh) {
       var house = '<div class="house" title="家"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></div>';
       L.marker(hh, { icon: L.divIcon({ className: '', html: house, iconSize: null }), zIndexOffset: 1000 }).addTo(map).bindPopup('家');
       b.push(hh);
     }
-    shown().forEach(function (s) {
-      if (mineOnly && vs[s.no] !== 'y') return;
+    (ui.page === 's' ? shown() : pickShops()).forEach(function (s) {
       var d = distKm(s), on = focusNo === s.no;
       var icon = L.divIcon({ className: '', html: '<div class="pin ' + (vs[s.no] || '') + (on ? ' focus' : '') + '">' + (d != null ? d.toFixed(1) + 'km' : '') + '</div>', iconSize: null });
       var mk = L.marker([s.lat, s.lng], { icon: icon, zIndexOffset: on ? 900 : 0 }).addTo(map).bindPopup('<b>' + esc(s.name) + '</b>' + (d != null ? '<br>離家 ' + kmText(d) + '（直線）' : '') + '<br><a href="#" data-a="map-go" data-no="' + s.no + '">看這家的菜</a>');
@@ -378,16 +417,29 @@ textarea.inp{width:100%;min-height:64px}
   }
 
   function buildMsg() {
-    var vs = myV(), names = function (d) { return SH.filter(function (s) { return vs[s.no] === d; }).map(function (s) { return s.name; }); };
-    var seen = SH.filter(function (s) { return vs[s.no]; }).length;
-    var lines = ['【外帶挑選】投好了（看了 ' + seen + '／' + SH.length + ' 家）'];
-    lines.push('想吃：' + (names('y').join('、') || '（沒有）'));
-    if (names('m').length) lines.push('隨便：' + names('m').join('、'));
-    if (names('n').length) lines.push('不要：' + names('n').join('、'));
-    if (seen < SH.length) lines.push('還沒投：' + (SH.length - seen) + ' 家');
-    var code = SH.filter(function (s) { return vs[s.no]; }).map(function (s) { return s.no + vs[s.no]; });
-    lines.push('', '（下面這行是給 S 的網頁讀的，不用管它）', '挑選碼：' + dev() + '|' + DATA_AT + '|' + code.join('|'));
+    var d = myDish(), lines = ['【外帶選菜】選好了'];
+    pickShops().forEach(function (s) { var a = d[s.no] || []; lines.push(s.name + '：' + (a.length ? a.map(function (i) { return s.items[i].n; }).join('、') : '（沒選）')); });
+    var code = pickShops().filter(function (s) { return (d[s.no] || []).length; }).map(function (s) { return s.no + ':' + d[s.no].join('.'); });
+    lines.push('', '（下面這行是給我的網頁讀的，不用管它）', '選菜碼：' + dev() + '|' + DATA_AT + '|' + code.join('|'));
     return lines.join('\n');
+  }
+  function importDish(text) {
+    var re = /選菜碼：([0-9a-z]{2,8})\|([^|\s]+)\|([^\s]*)/g, m, got = [], I = st.get('dimp', {}), me = dev();
+    while ((m = re.exec(text))) {
+      if (m[1] === me) { got.push('這支手機自己的（不用貼）'); continue; }
+      var o = {}, n = 0;
+      m[3].split('|').forEach(function (t) { var mm = /^(\d+):([\d.]+)$/.exec(t); if (mm) { o[mm[1]] = mm[2].split('.').map(Number); n += o[mm[1]].length; } });
+      var again = !!I[m[1]];
+      I[m[1]] = { at: Date.now(), d: o };
+      got.push(n + ' 道' + (again ? '（同一支手機重傳，換成新的）' : '') + (m[2] !== DATA_AT ? '（對方的網頁是舊的，請他重新整理再選）' : ''));
+    }
+    st.set('dimp', I);
+    return got;
+  }
+  function dishWant(no, i) {
+    var I = st.get('dimp', {}), n = dishOn(no, i) ? 1 : 0;
+    Object.keys(I).forEach(function (k) { if ((I[k].d[no] || []).indexOf(+i) >= 0) n++; });
+    return n;
   }
   function importText(text) {
     var re = /挑選碼：([0-9a-z]{2,8})\|([^|\s]+)\|([^\s]*)/g, m, got = [], I = st.get('imp', {}), me = dev();
@@ -443,6 +495,12 @@ textarea.inp{width:100%;min-height:64px}
       if (ui.showImp) h += '<div style="padding:4px 0 6px"><textarea class="inp" id="impText" placeholder="把 LINE 收到的整段訊息貼在這裡（一次貼一段或兩段都可以）"></textarea><div class="rowl"><button class="fb pri" data-a="s-imp">讀進來</button><span class="small muted">' + esc(ui.impMsg) + '</span></div></div>';
       h += '</div>';
     }
+    var di = st.get('dimp', {}), dk = Object.keys(di);
+    h += '<div class="box"><h3>家人選的菜</h3><div class="rowl"><span>收到 ' + dk.length + ' 份</span>' +
+      dk.map(function (k) { var n = Object.keys(di[k].d).reduce(function (a, x) { return a + di[k].d[x].length; }, 0); return '<span class="small">' + stamp(di[k].at) + '（' + n + ' 道）<button class="lk small" data-a="dimp-del" data-k="' + k + '">' + (ui.delArm === 'd' + k ? '再按一次刪掉' : '刪') + '</button></span>'; }).join('') +
+      '<button class="fb" data-a="s-dimp-tog">貼上家人傳來的選菜</button></div>';
+    if (ui.showDimp) h += '<div style="padding:4px 0 6px"><textarea class="inp" id="dimpText" placeholder="把 LINE 收到的整段訊息貼在這裡（一次貼好幾段也可以）"></textarea><div class="rowl"><button class="fb pri" data-a="s-dimp">讀進來</button><span class="small muted">' + esc(ui.dimpMsg) + '</span></div></div>';
+    h += '<p class="small muted" style="margin:4px 0 0">讀進來之後，那家的「點菜」每道寫幾個人想吃，想吃的排最前面。</p></div>';
     h += rulesHtml();
     h += '<div class="box"><h3>電話與取餐要用的資料</h3><p class="small muted" style="margin:0 0 6px">只存在這支手機，不會上網。</p>' +
       '<label>統編（R 公司的） <input class="inp" inputmode="numeric" data-a="tax" value="' + esc(st.get('tax', '')) + '" placeholder="8 碼"></label>' +
@@ -474,27 +532,34 @@ textarea.inp{width:100%;min-height:64px}
     if (s.how === 'inline' || s.how === 'ichef' || s.how === 'posky' || s.how === 'own') return '線上點如果要先付款，發票日期是付款那天，要當天才下單；統編與紙本發票寫在備註或打電話講。';
     return '';
   }
+  var NUMW = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+  var qtyEn = function (n) { return NUMW[n] || String(n); };
   function enLines(s) {
     var r = rec(s.no), sl = slotOf(r.slot), tax = (st.get('tax', '') || '').replace(/\D/g, '');
-    var picked = Object.keys(r.q).filter(function (i) { return r.q[i] > 0; }).map(function (i) { var it = s.items[i]; return [r.q[i] + ' × ' + (it.en || it.n), it.n]; });
+    var picked = Object.keys(r.q).filter(function (i) { return r.q[i] > 0; }).map(function (i) { var it = s.items[i], en = it.en || it.n; return [qtyEn(r.q[i]) + ' ' + en, it.n + ' ×' + r.q[i] + (/Dry\/Gravy/i.test(en) ? '（對方會問 Dry 或 Gravy：Dry＝乾炒、Gravy＝有醬汁）' : '')]; });
     return [
-      ['Hello, I would like to order takeout. I will pick it up myself.', '你好，我要外帶，自己去拿。'],
-      ['Pickup on ' + (sl ? dayEn(sl[1]) : '____') + ' at ' + timeEn(r.time) + '.', '取餐：' + (sl ? dayLabel(sl[1]) + sl[2] : '（在電話紀錄的「排在」選哪一餐）') + ' ' + (r.time || '（填取餐時間）')],
-      ['My order is:', '我要點：' + (picked.length ? '' : '（在下面「點菜」按＋選好，這裡會列出英文）')]
-    ].concat(picked).concat([
-      ['Not spicy, please.', '不要辣（對方問 How spicy? 的時候）'],
-      ['I need a receipt with our company tax ID number.', '發票要打公司統編。聽不懂就直接說「統編」'],
+      ['Hi, I\'d like to place a takeout order for pickup, please.', '你好，我要訂外帶，會去店裡拿。']
+    ].concat(sl && holiOf(sl[1]) ? [['Are you open on ' + dayEn(sl[1]) + '? It\'s a public holiday.', dayLabel(sl[1]) + '是補假，那天有開嗎？']] : []).concat([
+      ['We\'ll pick it up on ' + (sl ? dayEn(sl[1]) : '____') + ', at ' + timeEn(r.time) + '.', '取餐：' + (sl ? dayLabel(sl[1]) + sl[2] : '（在電話紀錄的「排在」選哪一餐）') + ' ' + (r.time || '（填取餐時間）')],
+      ['Here\'s my order:', '我要點：' + (picked.length ? '' : '（在下面「點菜」按＋選好，這裡會列出英文）')]
+    ]).concat(picked).concat([
+      ['That\'s all.', '就這些。'],
+      ['Not spicy at all, please.', '完全不要辣（對方問 How spicy? 的時候；說 mild 印度店可能還是會微辣）'],
+      ['Could you read the order back to me, please?', '可以再跟我念一次訂單嗎？（確認沒聽錯）'],
+      ['We need a paper invoice with our company tax ID number, tǒngbiān, on it.', '發票要紙本、打公司統編。聽不懂就直接說「統編」'],
       ['The number is ' + (tax ? tax.split('').join(', ') : '____') + '.', '統編號碼，一個數字一個數字念' + (tax ? '' : '（在最下面「電話與取餐要用的資料」填了會自動帶進來）')],
-      ['A paper receipt, please. Please keep the item list attached.', '要紙本，下面的明細不要撕開。'],
+      ['Please don\'t tear off the item details at the bottom.', '下面的明細不要撕掉。'],
       ['Is there a service charge for takeout?', '外帶要收服務費嗎？'],
-      ['How much is the total?', '總共多少錢？'],
-      ['Can I pay by card, or cash only?', '可以刷卡嗎？還是只收現金？'],
-      ['The name for the order is ____. My phone number is ____.', '訂餐的名字、電話（自己念）'],
-      ['Could you say that again slowly, please?', '可以慢慢再說一次嗎？'],
-      ['Thank you. See you then!', '謝謝，到時見！']
+      ['What\'s the total, please?', '總共多少錢？'],
+      ['We\'ll pay when we pick it up.', '取餐的時候付（發票日期才會是取餐那天）'],
+      ['Can we pay by card, or is it cash only?', '可以刷卡嗎？還是只收現金？'],
+      ['The name for the order is ' + (r.nm || '____') + ', and my phone number is ____.', '訂餐的名字、電話' + (r.nm ? '（電話自己念）' : '（名字在電話紀錄填了會自動帶進來；電話自己念）')],
+      ['A friend will pick it up. They don\'t speak English, so they\'ll show you the order on their phone.','來拿的是朋友，不會講英文，會拿手機給你們看訂單。'],
+      ['Sorry, could you say that again more slowly?', '可以慢慢再說一次嗎？'],
+      ['Thank you! See you then.', '謝謝，到時見！']
     ]);
   }
-  var EN_HEAR = [['How spicy? Mild, medium, or hot?', '要多辣？不辣、中辣、很辣'], ['Anything else?', '還要別的嗎？（回答 That\'s all.）'], ['Cash only.', '只收現金'], ['No service charge.', '不收服務費'], ['Ten percent service charge.', '收一成服務費'], ['It will be ready at ...', '幾點會好'], ['Sorry, it\'s sold out.', '那道賣完了']];
+  var EN_HEAR = [['How spicy would you like it? Mild, medium, or hot?', '要多辣？不辣、中辣、很辣（回答 Mild, please.）'], ['Anything else?', '還要別的嗎？（回答 That\'s all, thank you.）'], ['Can I have your name and phone number?', '請給名字和電話'], ['What time will you pick it up?', '幾點來拿？'], ['It\'ll be ready at …', '幾點會好'], ['Sorry, we\'re out of that.', '那道賣完了'], ['For here or to go?', '內用還是外帶？（回答 To go, please.）'], ['Rice or naan with that?', '要配飯還是烤餅？'], ['Sorry, we\'re closed on Monday.', '星期一沒開'], ['Cash only.', '只收現金'], ['There\'s a ten percent service charge.', '要加一成服務費'], ['No service charge for takeout.', '外帶不收服務費']];
   function enBox(s) {
     if (!s.lang) return '';
     var open = ui.en[s.no];
@@ -530,15 +595,18 @@ textarea.inp{width:100%;min-height:64px}
       '<div class="q"><span class="ql">付款</span>' + PAY.map(function (o) { return '<button class="chip' + (r.pay.indexOf(o[0]) >= 0 ? ' on' : '') + '" data-a="r-pay" data-no="' + s.no + '" data-v="' + o[0] + '">' + o[1] + '</button>'; }).join('') + '</div>' +
       '<div class="q"><span class="ql">排在</span><select class="inp" data-a="r-slot" data-no="' + s.no + '"><option value="">還沒排</option>' + SLOTS.map(function (sl) { var o = slotOpen(s, sl[0]); return '<option value="' + sl[0] + '"' + (r.slot === sl[0] ? ' selected' : '') + '>' + dayLabel(sl[1]) + sl[2] + (o === false ? '（沒開）' : '') + '</option>'; }).join('') + '</select>' +
       '<label class="small">取餐 <input class="inp" type="time" data-a="r-time" data-no="' + s.no + '" value="' + esc(r.time) + '"></label></div>' +
+      '<div class="q"><span class="ql">訂餐名字</span><input class="inp" data-a="r-nm" data-no="' + s.no + '" placeholder="跟店家講的名字" value="' + esc(r.nm) + '"></div>' +
       '<div class="q"><span class="ql">金額</span><input class="inp" type="number" inputmode="numeric" placeholder="店家說的總金額" data-a="r-amt" data-no="' + s.no + '" value="' + esc(r.amt) + '"></div>' +
       '<div class="q"><span class="ql">發票（取餐後）</span>' + [['got', '拿到了'], ['taxok', '統編對'], ['dateok', '日期對']].map(function (o) { return '<button class="chip' + (r.a[o[0]] ? ' on' : '') + '" data-a="r-flag" data-no="' + s.no + '" data-k="' + o[0] + '">' + o[1] + '</button>'; }).join('') + '</div>' +
       '<div class="q" style="display:block"><span class="ql">備註</span><textarea class="inp" data-a="r-note" data-no="' + s.no + '" placeholder="例：要提前 2 小時訂、包材另收 $10">' + esc(r.note) + '</textarea></div>' +
       (r.log.length ? '<div class="log">紀錄：' + r.log.map(function (x) { return stamp(x.t) + ' ' + RESL[x.s]; }).join('；') + '</div>' : '') + '</div>';
     var picked = Object.keys(r.q).filter(function (i) { return r.q[i] > 0; });
-    h += '<div class="box"><button class="tog" data-a="ord" data-no="' + s.no + '"><span>點菜' + (picked.length ? '（' + picked.length + ' 道：' + (s.how === 'own' ? '原價 ' + money(c.hi) + '・網路訂 85 折 ' + money(c.lo) : '平台價 ' + money(c.hi) + (c.lo !== c.hi ? '・照內用價約 ' + money(c.lo) : '')) + (c.unk ? '・' + c.unk + ' 份價錢不明' : '') + '）' : '') + '</span><span>' + (ui.ord[s.no] ? '收起' : '打開') + '</span></button>';
-    if (ui.ord[s.no]) h += s.items.map(function (it, i) {
-      var q = r.q[i] || 0;
-      return '<div class="qrow">' + (it.img ? '<img loading="lazy" src="' + esc(it.img) + '" alt="">' : '<span class="ni"></span>') + '<div class="grow"><div>' + esc(it.n) + '</div>' + (it.en ? '<div class="small en">' + esc(it.en) + '</div>' : '') + '<div class="small muted">' + (it.p ? '外帶 ' + money(it.p) + (it.sp ? '・' + (spCls(it) ? '<span class="' + spCls(it) + '">' + spText(it) + '</span>' : spText(it)) : '') : '價錢要問') + '</div></div>' +
+    var want = s.items.map(function (x, i) { return dishWant(s.no, i); }), nWant = want.filter(Boolean).length;
+    var idx = s.items.map(function (x, i) { return i; }).sort(function (a, b) { return want[b] - want[a] || a - b; });
+    h += '<div class="box"><button class="tog" data-a="ord" data-no="' + s.no + '"><span>點菜' + (picked.length ? '（' + picked.length + ' 道：' + (s.how === 'own' ? '原價 ' + money(c.hi) + '・網路訂 85 折 ' + money(c.lo) : '平台價 ' + money(c.hi) + (c.lo !== c.hi ? '・照內用價約 ' + money(c.lo) : '')) + (c.unk ? '・' + c.unk + ' 份價錢不明' : '') + '）' : '') + (nWant ? '・家人想吃 ' + nWant + ' 道' : '') + '</span><span>' + (ui.ord[s.no] ? '收起' : '打開') + '</span></button>';
+    if (ui.ord[s.no]) h += idx.map(function (i) {
+      var it = s.items[i], q = r.q[i] || 0;
+      return '<div class="qrow">' + (it.img ? '<img loading="lazy" src="' + esc(it.img) + '" alt="">' : '<span class="ni"></span>') + '<div class="grow"><div>' + esc(it.n) + (want[i] ? ' <span class="small vy">' + want[i] + ' 人想吃</span>' : '') + '</div>' + (it.en ? '<div class="small en">' + esc(it.en) + '</div>' : '') + '<div class="small muted">' + (it.p ? '外帶 ' + money(it.p) + (it.sp ? '・' + (spCls(it) ? '<span class="' + spCls(it) + '">' + spText(it) + '</span>' : spText(it)) : '') : '價錢要問') + '</div></div>' +
         '<div class="step"><button data-a="r-qty" data-no="' + s.no + '" data-i="' + i + '" data-d="-1" aria-label="少一份">−</button><span>' + q + '</span><button data-a="r-qty" data-no="' + s.no + '" data-i="' + i + '" data-d="1" aria-label="多一份">＋</button></div></div>';
     }).join('');
     h += '</div>';
@@ -546,19 +614,39 @@ textarea.inp{width:100%;min-height:64px}
     return h + '</div>';
   }
   function pickupMsg(s) {
-    var r = rec(s.no), sl = slotOf(r.slot), tax = st.get('tax', '');
+    var r = rec(s.no), sl = slotOf(r.slot), tax = (st.get('tax', '') || '').replace(/\D/g, '');
     var pay = PAY.filter(function (o) { return r.pay.indexOf(o[0]) >= 0; }).map(function (o) { return o[1]; }).join('或');
-    var items = Object.keys(r.q).filter(function (i) { return r.q[i] > 0; }).map(function (i) { return s.items[i].n + ' ×' + r.q[i]; });
-    return ['【取餐】' + dayLabel(sl[1]) + sl[2] + ' ' + (r.time || '__:__'), s.name + (s.mall ? '（' + s.mall.split('：')[0] + '）' : ''), '導航：' + navUrl(s), '店家電話：' + s.tel, '取餐時報訂餐的名字',
-      '要付：' + (r.amt ? money(r.amt) : '（S 問好金額後補上）') + (pay ? '，可以' + pay : ''),
-      '發票：要紙本、打統編' + (tax ? ' ' + tax : '（號碼 S 另外給）') + '，日期要是今天；正本拿回來，下面的明細不要撕',
-      s.lang ? '店員講英文，取餐時可以說：Hi, I\'m here to pick up a takeout order for ____ (訂餐的名字). A paper receipt with our company tax ID, please: ' + (tax ? tax.split('').join(' ') : '____') + '.' : '',
-      items.length ? '核對：' + items.join('、') : ''].filter(Boolean).join('\n');
+    var qs = Object.keys(r.q).filter(function (i) { return r.q[i] > 0; });
+    var items = qs.map(function (i) { return s.items[i].n + ' ×' + r.q[i]; });
+    var head = ['【取餐】' + dayLabel(sl[1]) + sl[2] + ' ' + (r.time || '__:__'), s.name + (s.mall ? '（' + s.mall.split('：')[0] + '）' : ''), '導航：' + navUrl(s), '店家電話：' + s.tel,
+      '訂餐的名字：' + (r.nm || '（我再補上）'),
+      '要付：' + (r.amt ? money(r.amt) : '（我問好金額再補上）') + (pay ? '，可以' + pay : ''),
+      '發票：要紙本、打統編' + (tax ? ' ' + tax : '（號碼我另外給）') + '，日期要是今天；正本拿回來，下面的明細不要撕',
+      items.length ? '核對：' + items.join('、') : ''].filter(Boolean);
+    if (!s.lang) return head.join('\n');
+    return head.concat(['', '店員講英文，照這樣做就好：',
+      '1. 走到櫃檯，把下一則英文訊息拿給店員看，說 Please。',
+      '2. 店員把餐拿出來，照上面「核對」那行對一下有幾道。',
+      '3. 付錢：金額跟上面「要付」一樣就付；刷卡就把卡交給店員。',
+      '4. 拿到發票，看上面有沒有印統編' + (tax ? ' ' + tax : '') + '、日期是不是今天，說 Thank you 就可以走了。',
+      '聽不懂店員說什麼：說 Sorry，打電話給我，接通後把手機拿給店員。']).join('\n');
+  }
+  function pickupEn(s) {
+    var r = rec(s.no), sl = slotOf(r.slot), tax = (st.get('tax', '') || '').replace(/\D/g, '');
+    var qs = Object.keys(r.q).filter(function (i) { return r.q[i] > 0; });
+    return ['Hi! I\'m here to pick up a takeout order.',
+      'Name on the order: ' + (r.nm || '____'),
+      'Pickup: ' + (sl ? dayEn(sl[1]) : '____') + ', ' + timeEn(r.time),
+      qs.length ? 'Order: ' + qs.map(function (i) { return qtyEn(r.q[i]) + ' ' + (s.items[i].en || s.items[i].n); }).join(', ') : '',
+      'Please print a paper invoice (紙本發票) with our company tax ID (統編): ' + (tax ? tax.split('').join(' ') : '____') + '. Please don\'t tear off the item details.',
+      'Sorry, I don\'t speak English. If there\'s a problem, I\'ll call my friend. Please talk to them on my phone.',
+      'Thank you!'].filter(Boolean).join('\n');
   }
   function pickupBox(s) {
     if (!rec(s.no).slot) return '';
-    var pm = pickupMsg(s);
-    return '<div class="box"><h3>給 R 的取餐訊息</h3><pre class="msg">' + esc(pm) + '</pre><div class="links"><a class="fb pri" href="https://line.me/R/share?text=' + encodeURIComponent(pm) + '">用 LINE 傳給 R</a><button class="fb" data-a="copy-pick" data-no="' + s.no + '">複製</button></div></div>';
+    var pm = pickupMsg(s), pe = s.lang ? pickupEn(s) : '';
+    return '<div class="box"><h3>給 R 的取餐訊息' + (pe ? '（傳兩則）' : '') + '</h3>' + (pe ? '<div class="small muted">第一則：取餐資料與怎麼做</div>' : '') + '<pre class="msg">' + esc(pm) + '</pre><div class="links"><a class="fb pri" href="https://line.me/R/share?text=' + encodeURIComponent(pm) + '">用 LINE 傳給 R</a><button class="fb" data-a="copy-pick" data-no="' + s.no + '">複製</button></div>' +
+      (pe ? '<div class="small muted">第二則：給店員看的英文（R 到了直接拿給店員看）</div><pre class="msg">' + esc(pe) + '</pre><div class="links"><a class="fb pri" href="https://line.me/R/share?text=' + encodeURIComponent(pe) + '">用 LINE 傳給 R</a><button class="fb" data-a="copy-pick" data-no="' + s.no + '" data-k="en">複製</button></div>' : '') + '</div>';
   }
   function refreshBits(no) {
     var sum = $('#sum'), ta = $('#impText'), keepTxt = ta ? ta.value : null;
@@ -608,7 +696,7 @@ textarea.inp{width:100%;min-height:64px}
     return h;
   }
   function renderS() {
-    var h = '<div class="wrap"><div class="tt"><h1>S 專用</h1><button class="fb" data-a="s-close">投票頁</button></div>';
+    var h = '<div class="wrap"><div class="tt"><h1>S 專用</h1><button class="fb" data-a="s-close">家人看的頁</button></div>';
     h += '<div class="fbar" style="margin-top:6px">' + ['list', 'plan'].map(function (v) { return '<button class="fb' + (ui.sTab === v ? ' on' : '') + '" data-a="s-tab" data-v="' + v + '">' + (v === 'list' ? '名單（照大家的票排）' : '剩下的三餐') + '</button>'; }).join('') + '</div>';
     h += ui.sTab === 'plan' ? planHtml() : listHtml();
     h += otherHtml();
@@ -619,7 +707,7 @@ textarea.inp{width:100%;min-height:64px}
     var box = $('#modal');
     if (ui.modal === 'send') {
       var msg = buildMsg();
-      box.innerHTML = '<div class="mask"><div class="sheet" role="dialog" aria-label="傳給 S"><h2>這支手機不讓網頁複製</h2><p class="muted" style="margin:0">長按下面的文字全選、複製，到 LINE 貼給 S；或按「用 LINE 傳」直接選 S 的對話。</p><pre class="msg">' + esc(msg) + '</pre>' +
+      box.innerHTML = '<div class="mask"><div class="sheet" role="dialog" aria-label="傳給我"><h2>這支手機不讓網頁複製</h2><p class="muted" style="margin:0">長按下面的文字全選、複製，到 LINE 貼給我；或按「用 LINE 傳」直接選我的對話。</p><pre class="msg">' + esc(msg) + '</pre>' +
         '<a class="fb pri block" style="min-height:52px;font-size:19px" href="https://line.me/R/share?text=' + encodeURIComponent(msg) + '">用 LINE 傳</a><button class="fb block" style="margin-top:8px" data-a="close">關閉</button></div></div>';
     } else box.innerHTML = '';
   }
@@ -631,20 +719,20 @@ textarea.inp{width:100%;min-height:64px}
     var src = !it.img ? '' : it.src === 'g' ? '照片：咕狗上客人在店裡拍的' : it.src === 'w' ? '照片：網友拍的，不一定是這一道（' + it.from + '）' : '照片：' + (s.plat || '店家點餐頁') + '上的';
     box.innerHTML = '<div class="lb" role="dialog" aria-label="' + esc(it.n) + '"><div class="top"><span class="grow">' + esc(s.name) + '　' + (i + 1) + '／' + s.items.length + '</span><button data-a="lb-close">關閉</button></div>' +
       '<div class="img">' + (it.img ? '<img src="' + esc(big) + '" alt="" onerror="this.onerror=null;this.src=\'' + esc(it.img) + '\'">' : '<span class="none">沒有照片</span>') + '</div>' +
-      '<div class="cap"><div class="n">' + esc(it.n) + '</div>' + (ui.page === 's' && it.en ? '<div class="en">' + esc(it.en) + '</div>' : '') + (ui.page === 's' ? '<div class="n lbp">' + priceHtml(it) + '</div>' : '') + (src ? '<div class="src">' + esc(src) + '</div>' : '') + '<div class="nav"><button data-a="lb-go" data-d="-1"' + (i === 0 ? ' disabled' : '') + '>上一道</button><button data-a="lb-go" data-d="1"' + (i === s.items.length - 1 ? ' disabled' : '') + '>下一道</button></div></div></div>';
+      '<div class="cap"><div class="n">' + esc(it.n) + '</div>' + (ui.page === 's' && it.en ? '<div class="en">' + esc(it.en) + '</div>' : '') + (ui.page === 's' ? '<div class="n lbp">' + priceHtml(it) + '</div>' : '') + (src ? '<div class="src">' + esc(src) + '</div>' : '') + '<div class="nav"><button data-a="lb-go" data-d="-1"' + (i === 0 ? ' disabled' : '') + '>上一道</button><button data-a="lb-go" data-d="1"' + (i === s.items.length - 1 ? ' disabled' : '') + '>下一道</button></div>' +
+      (ui.page === 's' ? '' : tooLate(it) ? '<div class="src">要提前訂，明天來不及</div>' : '<button class="lbpk' + (dishOn(s.no, i) ? ' on' : '') + '" data-a="dish" data-no="' + s.no + '" data-i="' + i + '" aria-pressed="' + dishOn(s.no, i) + '">' + (dishOn(s.no, i) ? '已選這道（再按一次取消）' : '想吃這道') + '</button>') + '</div></div>';
   }
   function renderMapOv() {
     var box = $('#mapov');
     if (!ui.mapOv) { box.innerHTML = ''; return; }
     var s = byNo(ui.mapOv), d = distKm(s);
     box.innerHTML = '<div class="mov" role="dialog" aria-label="地圖"><div class="top"><b class="grow">' + esc(s.name) + (d != null ? '<span class="small muted">　離家 ' + kmText(d) + '（直線）</span>' : '') + '</b><button class="fb" data-a="mapov-close">關閉</button></div><div id="movMap"></div></div>';
-    buildMap('movMap', s.no, false);
+    buildMap('movMap', s.no);
   }
   function render(keep) {
     var y = window.scrollY;
     $('#app').innerHTML = ui.page === 's' ? renderS() : renderFront();
-    renderModal(); renderLb(); renderMapOv();
-    if (ui.page === 'front' && st.get('mode', 'list') === 'map') initMap();
+    renderModal(); renderLb(); renderMapOv(); renderPick();
     window.scrollTo(0, keep ? y : 0);
   }
   function copy(text, btn) {
@@ -661,25 +749,25 @@ textarea.inp{width:100%;min-height:64px}
     if (t.tagName === 'SELECT' || t.tagName === 'INPUT' || t.tagName === 'TEXTAREA') return;
     if (t.tagName === 'A' && t.getAttribute('href') === '#') ev.preventDefault();
     if (a !== 's-wipe') ui.wipe = false;
-    if (a !== 'imp-del') ui.delArm = null;
+    if (a !== 'imp-del' && a !== 'dimp-del') ui.delArm = null;
     switch (a) {
       case 'vote': setVote(no, t.dataset.d); render(true); break;
+      case 'dish': if (!tooLate(byNo(no).items[i])) toggleDish(no, i); render(true); break;
+      case 'pick-open': ui.pick = no; renderPick(); break;
+      case 'pick-close': ui.pick = null; renderPick(); break;
       case 'copy-send': {
         var txt = buildMsg(), fail = function () { ui.modal = 'send'; renderModal(); };
-        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { t.textContent = '已複製，去 LINE 貼給 S'; setTimeout(function () { t.textContent = '複製傳賴'; }, 5000); }, fail);
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { t.textContent = '已複製，去 LINE 貼給我'; setTimeout(function () { t.textContent = '複製'; }, 5000); }, fail);
         else fail();
         break;
       }
       case 'close': ui.modal = null; renderModal(); break;
-      case 'filter': st.set('filter', t.dataset.v); render(); break;
-      case 'mode': st.set('mode', t.dataset.v); ui.focus = null; render(); break;
-      case 'map-focus': st.set('mode', 'map'); ui.focus = no; render(); break;
       case 'zoom': ui.lb = { no: no, i: i }; renderLb(); break;
       case 'lb-go': ui.lb.i = Math.max(0, Math.min(byNo(ui.lb.no).items.length - 1, ui.lb.i + +t.dataset.d)); renderLb(); break;
       case 'lb-close': ui.lb = null; renderLb(); break;
       case 'map-ov': ui.mapOv = no; renderMapOv(); break;
       case 'mapov-close': ui.mapOv = null; renderMapOv(); break;
-      case 'map-go': if (ui.mapOv) { ui.mapOv = null; renderMapOv(); goTo('s' + no); break; } st.set('mode', 'list'); if (st.get('filter', 'all') === 'mine' && myV()[no] !== 'y') st.set('filter', 'all'); ui.focus = null; render(); goTo('c' + no); break;
+      case 'map-go': ui.mapOv = null; renderMapOv(); goTo((ui.page === 's' ? 's' : 'c') + no); break;
       case 's-open': ui.page = 's'; st.set('page', 's'); render(); break;
       case 's-close': ui.page = 'front'; st.set('page', 'front'); render(); break;
       case 's-tab': ui.sTab = t.dataset.v; st.set('stab', ui.sTab); render(true); break;
@@ -689,7 +777,10 @@ textarea.inp{width:100%;min-height:64px}
       case 's-go': ui.sTab = 'list'; st.set('stab', 'list'); ui.sOpen = no; render(); goTo('s' + no); break;
       case 's-imp-tog': ui.showImp = !ui.showImp; ui.impMsg = ''; render(true); break;
       case 's-imp': { var got = importText(($('#impText') || {}).value || ''); ui.impMsg = got.length ? '讀到：' + got.join('、') : '沒讀到挑選碼，請整段貼上（含最後「挑選碼：」那一行）'; render(true); break; }
-      case 'imp-del': if (ui.delArm === t.dataset.k) { var I = st.get('imp', {}); delete I[t.dataset.k]; st.set('imp', I); ui.delArm = null; } else ui.delArm = t.dataset.k; render(true); break;
+      case 's-dimp-tog': ui.showDimp = !ui.showDimp; ui.dimpMsg = ''; render(true); break;
+      case 's-dimp': { var gd = importDish(($('#dimpText') || {}).value || ''); ui.dimpMsg = gd.length ? '讀到：' + gd.join('、') : '沒讀到選菜碼，請整段貼上（含最後「選菜碼：」那一行）'; render(true); break; }
+      case 'dimp-del': if (ui.delArm === 'd' + t.dataset.k) { var DI = st.get('dimp', {}); delete DI[t.dataset.k]; st.set('dimp', DI); ui.delArm = null; } else ui.delArm = 'd' + t.dataset.k; render(true); break;
+      case 'imp-del':if (ui.delArm === t.dataset.k) { var I = st.get('imp', {}); delete I[t.dataset.k]; st.set('imp', I); ui.delArm = null; } else ui.delArm = t.dataset.k; render(true); break;
       case 'rules': ui.rules = !ui.rules; render(true); break;
       case 'r-st': setRec(no, function (r) { r.st = t.dataset.v; r.log.push({ t: Date.now(), s: t.dataset.v }); }); render(true); break;
       case 'r-q': setRec(no, function (r) { var k = t.dataset.k; r.a[k] = r.a[k] === t.dataset.v ? '' : t.dataset.v; }); render(true); break;
@@ -706,7 +797,7 @@ textarea.inp{width:100%;min-height:64px}
       case 'ord': ui.ord[no] = !ui.ord[no]; render(true); break;
       case 'rev': ui.rev[no] = !ui.rev[no]; render(true); break;
       case 'hrs': ui.hrs[no] = !ui.hrs[no]; render(true); break;
-      case 'copy-pick': copy(pickupMsg(byNo(no)), t); break;
+      case 'copy-pick': copy(t.dataset.k === 'en' ? pickupEn(byNo(no)) : pickupMsg(byNo(no)), t); break;
       case 'en-tog': ui.en[no] = !ui.en[no]; render(true); break;
       case 'copy-en': copy(enLines(byNo(no)).map(function (l) { return l[0]; }).join('\n'), t); break;
       case 's-wipe': if (ui.wipe) { st.wipe(); ui.wipe = false; ui.sOpen = null; render(); } else { ui.wipe = true; render(true); } break;
@@ -719,6 +810,7 @@ textarea.inp{width:100%;min-height:64px}
     else if (a === 'r-time') setRec(no, function (r) { r.time = t.value; });
     else if (a === 'r-amt') setRec(no, function (r) { r.amt = t.value ? +t.value : ''; });
     else if (a === 'r-note') setRec(no, function (r) { r.note = t.value; });
+    else if (a === 'r-nm') setRec(no, function (r) { r.nm = t.value.trim(); });
     else return false;
     return true;
   }
@@ -726,7 +818,6 @@ textarea.inp{width:100%;min-height:64px}
   document.addEventListener('change', function (ev) {
     var t = ev.target, a = t.dataset && t.dataset.a, no = t.dataset && +t.dataset.no;
     if (!a) return;
-    if (a === 'sort') { st.set('sort', t.value); render(); return; }
     if (a === 'day') {
       var d3 = days().slice(), k = +t.dataset.k; d3[k] = t.value;
       var d0 = parseDay(d3[0]);
@@ -738,7 +829,7 @@ textarea.inp{width:100%;min-height:64px}
   });
   document.addEventListener('keydown', function (ev) {
     if (ev.key !== 'Escape') return;
-    if (ui.lb) { ui.lb = null; renderLb(); } else if (ui.mapOv) { ui.mapOv = null; renderMapOv(); } else if (ui.modal) { ui.modal = null; renderModal(); }
+    if (ui.lb) { ui.lb = null; renderLb(); } else if (ui.mapOv) { ui.mapOv = null; renderMapOv(); } else if (ui.pick) { ui.pick = null; renderPick(); } else if (ui.modal) { ui.modal = null; renderModal(); }
   });
   render();
 })();
