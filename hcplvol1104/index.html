@@ -62,11 +62,13 @@
   .arrow small{display:block;font-size:19px;}
   .chain{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:8px 0 16px;}
   .chain .box{cursor:default;}
-  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-  .step{border:1px solid var(--line);padding:12px 16px;min-height:150px;}
-  .step .no{font-size:30px;font-weight:700;color:var(--deep);line-height:1.1;}
-  .step .what{font-size:24px;font-weight:700;line-height:1.35;margin:4px 0 6px;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .step{border:1px solid var(--line);padding:8px 14px;}
+  .step .no{font-size:26px;font-weight:700;color:var(--deep);line-height:1.1;}
+  .step .what{font-size:23px;font-weight:700;line-height:1.3;margin:2px 0 4px;}
   .step .where{font-size:19px;color:var(--g);line-height:1.4;}
+  a.lnk{display:inline-block;font-size:19px;color:var(--deep);text-decoration:none;border-bottom:1px solid var(--deep);margin-top:6px;line-height:1.4;}
+  a.lnk:hover{color:var(--k);border-color:var(--k);}
   .timeline{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;}
   .tl{border-top:5px solid var(--green);padding-top:10px;}
   .tl .when{font-size:21px;font-weight:700;line-height:1.3;}
@@ -196,19 +198,18 @@
     <h1 class="ptitle">設定：系統從空的開始，先設什麼（九步）</h1>
     <div class="rule"></div>
     <div class="steps">
-      <div class="step"><div class="no">1</div><div class="what">建後台帳號</div><div class="where">帳號與權限管理。各館承辦建成地點管理者，授權地點可先不選</div></div>
-      <div class="step"><div class="no">2</div><div class="what">調系統參數、通知範本</div><div class="where">館別與系統參數；公告與通知管理。不調就用預設值；建組別要帶預設、排班會寄信</div></div>
-      <div class="step"><div class="no">3</div><div class="what">建組別</div><div class="where">志工管理 → 組別管理。年度時數門檻預設 144，只顯示達成率</div></div>
-      <div class="step"><div class="no">4</div><div class="what">建服務地點</div><div class="where">館別與系統參數 → 服務地點。勾管理者＝帳號的授權地點，同一筆</div></div>
-      <div class="step"><div class="no">5</div><div class="what">各地點建時段範本</div><div class="where">排班與時段管理 → 時段範本。起訖、計算時數、五個出勤規則；一個範本一張 QR</div></div>
-      <div class="step"><div class="no">6</div><div class="what">設休館日</div><div class="where">休館日／假日設定。文化局設全館預設，各地點再加</div></div>
-      <div class="step"><div class="no">7</div><div class="what">匯入志工名單</div><div class="where">志工管理 → 匯入；或新進志工審查通過。證號換成讀者識別</div></div>
-      <div class="step"><div class="no">8</div><div class="what">排班並發布</div><div class="where">排班與時段管理 → 新增場次 → 發布。草稿志工看不到；固定班用批次匯入</div></div>
-      <div class="step"><div class="no">9</div><div class="what">印 QR、開簽到站</div><div class="where">現場簽到工具。QR 固定不變；開站時這台電腦的後台登出</div></div>
+      <div class="step"><div class="no">1</div><div class="what">建後台帳號</div><div class="where">各館承辦建成地點管理者，授權地點可先不選</div><a class="lnk" href="https://angelag0.github.io/hcplvol/admin.html#/accounts" target="volback" rel="noopener">開後台：帳號與權限管理</a></div>
+      <div class="step"><div class="no">2</div><div class="what">調系統參數、通知範本</div><div class="where">不調就用預設值；建組別要帶預設、排班會寄信</div><a class="lnk" href="https://angelag0.github.io/hcplvol/admin.html#/settings" target="volback" rel="noopener">開後台：館別與系統參數</a> <a class="lnk" href="https://angelag0.github.io/hcplvol/admin.html#/notices" target="volback" rel="noopener">公告與通知管理</a></div>
+      <div class="step"><div class="no">3</div><div class="what">建組別</div><div class="where">年度時數門檻預設 144，只顯示達成率</div><a class="lnk" href="https://angelag0.github.io/hcplvol/admin.html#/volunteers" target="volback" rel="noopener">開後台：志工管理 → 組別管理</a></div>
+      <div class="step"><div class="no">4</div><div class="what">建服務地點</div><div class="where">勾管理者＝帳號的授權地點，同一筆</div><a class="lnk" href="https://angelag0.github.io/hcplvol/admin.html#/settings" target="volback" rel="noopener">開後台：館別與系統參數 → 服務地點</a></div>
+      <div class="step"><div class="no">5</div><div class="what">各地點建時段範本</div><div class="where">起訖、計算時數、五個出勤規則；一個範本一張 QR</div><a class="lnk" href="https://angelag0.github.io/hcplvol/admin.html#/scheduling" target="volback" rel="noopener">開後台：排班與時段管理 → 時段範本</a></div>
+      <div class="step"><div class="no">6</div><div class="what">設休館日</div><div class="where">文化局設全館預設，各地點再加</div><a class="lnk" href="https://angelag0.github.io/hcplvol/admin.html#/holidays" target="volback" rel="noopener">開後台：休館日／假日設定</a></div>
+      <div class="step"><div class="no">7</div><div class="what">匯入志工名單</div><div class="where">或新進志工審查通過；證號換成讀者識別</div><a class="lnk" href="https://angelag0.github.io/hcplvol/admin.html#/volunteers" target="volback" rel="noopener">開後台：志工管理 → 匯入</a> <a class="lnk" href="https://angelag0.github.io/hcplvol/admin.html#/applications" target="volback" rel="noopener">新進志工審查</a></div>
+      <div class="step"><div class="no">8</div><div class="what">排班並發布</div><div class="where">草稿志工看不到；固定班用批次匯入</div><a class="lnk" href="https://angelag0.github.io/hcplvol/admin.html#/scheduling" target="volback" rel="noopener">開後台：排班與時段管理 → 新增場次</a></div>
+      <div class="step"><div class="no">9</div><div class="what">印 QR、開簽到站</div><div class="where">QR 固定不變；開站時這台電腦的後台登出</div><a class="lnk" href="https://angelag0.github.io/hcplvol/admin.html#/checkin" target="volback" rel="noopener">開後台：現場簽到工具</a></div>
     </div>
     <div class="bottom btns" style="justify-content:flex-end;">
       <a class="open ghost" href="spec.html#1.0.4" target="spec">規格書 1.0.4 從零開始的設定順序</a>
-      <a class="open" href="https://angelag0.github.io/hcplvol/admin.html" target="volback" rel="noopener">原型：後台</a>
     </div>
   </section>
 
@@ -243,19 +244,18 @@
     <h1 class="ptitle">一位志工的一個月：七站</h1>
     <div class="rule"></div>
     <div class="timeline">
-      <div class="tl"><div class="when">25 日前</div><div class="do">班表報名：報下個月還有名額的場次</div><div class="sys">系統依序檢核九項，第一項沒過就擋並顯示原因；成立寄信</div></div>
-      <div class="tl"><div class="when">26 日到月底</div><div class="do">顯示「報名已截止」</div><div class="sys">管理者補排、發空缺班徵求；次月開始缺額再開放</div></div>
-      <div class="tl"><div class="when">每次到班</div><div class="do">手機登入直達現場簽到退，掃 QR；離開再掃</div><div class="sys">第一筆簽到、最後一筆簽退；時數照這一場的規則算</div></div>
-      <div class="tl"><div class="when">不會用手機</div><div class="do">館內簽到站刷志工證條碼</div><div class="sys">同一種出勤紀錄，只有「簽到方式」欄不同</div></div>
-      <div class="tl"><div class="when">忘了簽退</div><div class="do">我的出勤紀錄 → 申請補登</div><div class="sys">地點管理者補登，時間送總管理者確認；不再異常就自動撤銷記點</div></div>
-      <div class="tl"><div class="when">臨時有事</div><div class="do">3 天前自己取消；不到 3 天請假、指定代理人</div><div class="sys">代理人同意 → 地點管理者核准 → 班表換人；長假第二關文化局</div></div>
-      <div class="tl"><div class="when">月底</div><div class="do">服務時數看達成率；違規記點看失效日</div><div class="sys">文化局匯出月報，存成歷史報表</div></div>
+      <div class="tl"><div class="when">25 日前</div><div class="do">班表報名：報下個月還有名額的場次</div><div class="sys">系統依序檢核九項，第一項沒過就擋並顯示原因；成立寄信</div><a class="lnk" href="https://angelag0.github.io/hcplvol/#/schedule" target="volfront" rel="noopener">開前台：班表報名</a></div>
+      <div class="tl"><div class="when">26 日到月底</div><div class="do">顯示「報名已截止」</div><div class="sys">管理者補排、發空缺班徵求；次月開始缺額再開放</div><a class="lnk" href="https://angelag0.github.io/hcplvol/admin.html#/scheduling" target="volback" rel="noopener">開後台：排班 → 空缺班</a></div>
+      <div class="tl"><div class="when">每次到班</div><div class="do">手機登入直達現場簽到退，掃 QR；離開再掃</div><div class="sys">第一筆簽到、最後一筆簽退；時數照這一場的規則算</div><a class="lnk" href="https://angelag0.github.io/hcplvol/#/checkin" target="volfront" rel="noopener">開前台：現場簽到退</a></div>
+      <div class="tl"><div class="when">不會用手機</div><div class="do">館內簽到站刷志工證條碼</div><div class="sys">同一種出勤紀錄，只有「簽到方式」欄不同</div><a class="lnk" href="https://angelag0.github.io/hcplvol/#/station?loc=L1" target="volstation" rel="noopener">開前台：館內簽到站</a></div>
+      <div class="tl"><div class="when">忘了簽退</div><div class="do">我的出勤紀錄 → 申請補登</div><div class="sys">地點管理者補登，時間送總管理者確認；不再異常就自動撤銷記點</div><a class="lnk" href="https://angelag0.github.io/hcplvol/#/attendance" target="volfront" rel="noopener">開前台：我的出勤紀錄</a></div>
+      <div class="tl"><div class="when">臨時有事</div><div class="do">3 天前自己取消；不到 3 天請假、指定代理人</div><div class="sys">代理人同意 → 地點管理者核准 → 班表換人；長假第二關文化局</div><a class="lnk" href="https://angelag0.github.io/hcplvol/#/leave" target="volfront" rel="noopener">開前台：請假／代班</a></div>
+      <div class="tl"><div class="when">月底</div><div class="do">服務時數看達成率；違規記點看失效日</div><div class="sys">文化局匯出月報，存成歷史報表</div><a class="lnk" href="https://angelag0.github.io/hcplvol/#/hours" target="volfront" rel="noopener">開前台：服務時數</a> <a class="lnk" href="https://angelag0.github.io/hcplvol/#/violations" target="volfront" rel="noopener">我的違規記點</a></div>
     </div>
-    <div class="note">登入後主選單固定八項：我的儀表板、班表報名、現場簽到退、我的出勤紀錄、請假／代班、服務時數、活動報名、我的違規記點。教育訓練在活動報名，受訓時數另計、不併入服務時數。</div>
+    <div class="note">前台的連結要先在原型按一次「登入」才進得了那一頁。登入後主選單固定八項：我的儀表板、班表報名、現場簽到退、我的出勤紀錄、請假／代班、服務時數、活動報名、我的違規記點。教育訓練在活動報名，受訓時數另計。</div>
     <div class="bottom btns" style="justify-content:flex-end;">
       <a class="open ghost" href="spec.html#1.0.5" target="spec">規格書 1.0.5 一位志工的一個月</a>
-      <a class="open" href="https://angelag0.github.io/hcplvol/" target="volfront" rel="noopener">原型：前台</a>
-      <a class="open" href="https://angelag0.github.io/hcplvol/#/station?loc=L1" target="volstation" rel="noopener">原型：館內簽到站</a>
+      <a class="open" href="https://angelag0.github.io/hcplvol/" target="volfront" rel="noopener">原型：前台（先按登入）</a>
     </div>
   </section>
 
