@@ -403,7 +403,7 @@
 
   function isDoc(){ return document.body.classList.contains('doc'); }
 
-  function show(i){
+  function show(i, replace){
     if(i < 0){ i = 0; }
     if(i > slides.length - 1){ i = slides.length - 1; }
     cur = i;
@@ -415,7 +415,7 @@
     quick.style.display = (cur === 0 && !isDoc()) ? 'none' : 'flex';
     var h = '#p' + (cur + 1);
     if(!isDoc() && location.hash !== h){
-      if(history.replaceState){ history.replaceState(null, '', h); }
+      if(replace && history.replaceState){ history.replaceState(null, '', h); }
       else{ location.hash = h; }
     }
   }
@@ -471,8 +471,8 @@
   window.addEventListener('hashchange', fromHash);
   window.addEventListener('error', function(e){ document.documentElement.setAttribute('data-error', String(e.message || e)); });
   fit();
-  if(/(^|[?&])doc=1/.test(location.search)){ setDoc(true); show(0); }
-  else if(!fromHash()){ show(0); }
+  if(/(^|[?&])doc=1/.test(location.search)){ setDoc(true); show(0, true); }
+  else if(!fromHash()){ show(0, true); }
 
   if(/(^|[?&])selftest=1/.test(location.search)){
     var over = [];
