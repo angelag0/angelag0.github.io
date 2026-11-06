@@ -23,7 +23,9 @@
       monthlyDeadlineDay: 25,
       monthlyMaxSlots: 12,
       ipRanges: ['203.0.113.0/24'],
-      qrLanOnly: false
+      qrLanOnly: false,
+      wifiName: 'HCPL-Free',
+      wifiNote: '密碼請洽一樓服務台'
     }, {
       id: 'L2',
       unitId: 'U2',
@@ -191,7 +193,7 @@
       no: 'HC-0131',
       name: '張秀英',
       unitId: 'U1',
-      groupIds: ['G4'],
+      groupIds: ['G3', 'G4'],
       locationIds: ['L1'],
       status: '在職',
       joinYear: 2022,
@@ -354,7 +356,8 @@
       unitMinutes: 60,
       latestCheckin: '10:00',
       openMinutes: 30,
-      closeMinutes: 30
+      closeMinutes: 30,
+      openGroupIds: []
     }, {
       id: 'T2',
       locationId: 'L1',
@@ -366,7 +369,8 @@
       unitMinutes: 60,
       latestCheckin: '',
       openMinutes: 30,
-      closeMinutes: 30
+      closeMinutes: 30,
+      openGroupIds: []
     }, {
       id: 'T3',
       locationId: 'L1',
@@ -378,7 +382,8 @@
       unitMinutes: 30,
       latestCheckin: '',
       openMinutes: 30,
-      closeMinutes: 30
+      closeMinutes: 30,
+      openGroupIds: []
     }, {
       id: 'T4',
       locationId: 'L1',
@@ -390,7 +395,8 @@
       unitMinutes: 60,
       latestCheckin: '',
       openMinutes: 30,
-      closeMinutes: 30
+      closeMinutes: 30,
+      openGroupIds: ['G1']
     }, {
       id: 'T21',
       locationId: 'L2',
@@ -932,6 +938,18 @@
       createdAt: '2026-09-22 20:40',
       isLong: false,
       late: true
+    }, {
+      id: 'LV05',
+      volunteerId: 'V003',
+      slotIds: ['S105'],
+      from: '2026-10-15',
+      to: '2026-10-15',
+      reason: '眼科回診',
+      proxyId: 'V001',
+      status: '待代理人回覆',
+      createdAt: '2026-10-13 21:05',
+      isLong: false,
+      late: true
     }],
     substitutions: [{
       id: 'SB01',
@@ -1120,9 +1138,9 @@
       id: 'N04',
       date: '2026-09-25',
       tag: '公告',
-      title: '故事志工十一月排班開放登記',
-      body: '請故事志工於 10 月 25 日前完成十一月排班登記。',
-      scope: '故事志工',
+      title: '閱覽組十一月排班開放登記',
+      body: '請閱覽組志工於 10 月 25 日前完成十一月排班登記。',
+      scope: '閱覽組',
       pinned: false
     }],
     notifications: [{
@@ -1158,7 +1176,7 @@
       kind: '人工',
       event: '公告通知',
       target: '分組',
-      to: '故事志工 共 18 人',
+      to: '閱覽組 共 5 人',
       subject: '十一月排班開放登記',
       status: '部分失敗',
       failed: ['張秀英（未留 Email）']
@@ -1233,14 +1251,15 @@
       role: '報表檢視',
       unit: '文化局',
       locationIds: [],
-      email: ''
+      email: 'hongren@example.com'
     }, {
       id: 'AD5',
       name: '張家豪',
       role: '地點管理者',
       unit: '文化局',
       locationIds: ['L2'],
-      email: 'jiahao@example.com'
+      email: 'jiahao@example.com',
+      passwordSet: false
     }, {
       id: 'AD6',
       name: '黃淑惠',
@@ -1272,7 +1291,7 @@
       by: '陳怡安'
     }]
   };
-  var KEY = 'hcpl-volunteer-demo-v5';
+  var KEY = 'hcpl-volunteer-demo-v6';
   function toMin(t) {
     if (!t) {
       return 0;
@@ -1292,16 +1311,23 @@
   var HCV = {
     TODAY: TODAY,
     load: function () {
+      var st = null;
       try {
         var raw = window.localStorage.getItem(KEY);
         if (raw) {
           var s = JSON.parse(raw);
           if (s && s.today === TODAY && s.volunteers) {
-            return s;
+            st = s;
           }
         }
       } catch (e) {}
-      return clone(SEED);
+      st = st || clone(SEED);
+      st.violations.forEach(function (r) {
+        if (!r.expires) {
+          r.expires = HCV.pointExpiry(st, r);
+        }
+      });
+      return st;
     },
     save: function (state) {
       try {
@@ -1393,10 +1419,32 @@
         return a.role === '地點管理者' && !a.disabled && a.locationIds.indexOf(locationId) >= 0;
       });
     },
-    templatesOf: function (state, locationId) {
+    templatesOf: function (state, locationId, activeOnly) {
       return state.slotTemplates.filter(function (t) {
-        return t.locationId === locationId;
+        return t.locationId === locationId && (!activeOnly || !t.disabled);
       });
+    },
+    addMonths: function (dateStr, n) {
+      var p = dateStr.split('-');
+      var y = Number(p[0]),
+        m = Number(p[1]) - 1 + n,
+        d = Number(p[2]);
+      y += Math.floor(m / 12);
+      m = (m % 12 + 12) % 12;
+      var last = new Date(y, m + 1, 0).getDate();
+      var dd = Math.min(d, last);
+      return y + '-' + (m < 9 ? '0' : '') + (m + 1) + '-' + (dd < 10 ? '0' : '') + dd;
+    },
+    addDays: function (dateStr, n) {
+      var p = dateStr.split('-');
+      var d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]) + n);
+      return d.getFullYear() + '-' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() < 10 ? '0' : '') + d.getDate();
+    },
+    longLeaveFrom: function (state, from) {
+      return HCV.addDays(HCV.addMonths(from, state.params && state.params.longLeaveMonths || 1), -1);
+    },
+    isLongLeave: function (state, from, to) {
+      return !!(from && to && to >= HCV.longLeaveFrom(state, from));
     },
     rule: function (state, slot) {
       var t = HCV.byId(state.slotTemplates, slot.templateId) || {};
@@ -1464,6 +1512,9 @@
       };
     },
     pointExpiry: function (state, r) {
+      if (r.expires) {
+        return r.expires;
+      }
       var n = state.params && state.params.violationRetentionMonths || 3;
       var p = r.date.split('-');
       var d = new Date(Number(p[0]), Number(p[1]) - 1 + n, Number(p[2]));
