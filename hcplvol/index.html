@@ -1000,8 +1000,23 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     }
   };
   function loginFailTool() {
-    return '<button data-act="login-fail">模擬登入失敗一次（密碼錯誤）</button>' + '<p style="margin:0 0 6px">以登入區填的帳號算一次失敗；連續 ' + esc(S.params.volunteerLockFails) + ' 次就鎖定 ' + esc(S.params.volunteerLockMinutes) + ' 分鐘。</p>';
+    return '<button data-act="login-fail">模擬登入失敗一次（密碼錯誤）</button>' + '<p style="margin:0 0 6px">以登入區填的帳號算一次失敗；連續 ' + esc(S.params.volunteerLockFails) + ' 次就鎖定 ' + esc(S.params.volunteerLockMinutes) + ' 分鐘。</p>' + '<button data-act="login-deny" data-k="card">模擬借閱證無法使用（第一關）</button>' + '<button data-act="login-deny" data-k="type">模擬讀者類型不能登入（第一關）</button>' + '<button data-act="login-deny" data-k="vol">模擬查無志工資格（第二關）</button>';
   }
+  var LOGIN_DENY = {
+    card: '您的借閱證目前無法使用，請洽各館服務台',
+    type: '您的借閱證類型無法登入本平臺，請洽所屬服務地點承辦人',
+    vol: '查無志工資格，請洽所屬服務地點承辦人'
+  };
+  ACTS['login-deny'] = function (el) {
+    document.getElementById('toolPanel').classList.add('hide');
+    lgAcct();
+    LOGIN.msg = LOGIN_DENY[el.getAttribute('data-k')] || '';
+    render();
+    var f = document.getElementById('lgId');
+    if (f) {
+      f.focus();
+    }
+  };
   ACTS.login = function () {
     var acct = lgAcct(),
       left = lgLockLeft(acct);
@@ -1124,8 +1139,12 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     return '' + '<section class="hero"><div class="wrap hero-in">' + deco + '<h1><span class="b">志工服務</span><br><span class="k">管理平臺</span></h1>' + decoB + '</div></section>' + '<div class="wrap"><div class="grid g2" style="margin-top:40px">' + '<div class="card">' + '<div class="card-h">系統公告' + '<span><button class="arrow" data-act="ann-prev" aria-label="上一則">‹</button> ' + '<button class="arrow" data-act="ann-next" aria-label="下一則">›</button></span></div>' + '<div style="margin-top:18px">' + annBox + '</div>' + '<div class="btn-row"><a class="btn btn-ghost" href="#/news">所有公告</a></div>' + '</div>' + '<div class="card login-card">' + '<div class="card-h">立即登入</div>' + '<div style="color:var(--brick);font-weight:800;margin-top:16px;border-left:4px solid var(--brick);padding-left:12px">志工服務管理平臺登入</div>' + '<div class="field"><label for="lgId"><span class="req">*</span>帳號</label>' + '<input class="inp" id="lgId" type="text" autocomplete="username" placeholder="請輸入身分證字號" value="' + esc(LOGIN.id) + '"' + (LOGIN.msg ? ' aria-describedby="lgMsg"' : '') + '></div>' + '<div class="field"><label for="lgPw"><span class="req">*</span>密碼</label>' + '<div class="pw-box"><input class="inp" id="lgPw" type="password" autocomplete="current-password" placeholder="請輸入密碼">' + '<button type="button" class="ic-btn pw-eye" data-act="pw-toggle" aria-label="顯示密碼" title="顯示密碼">' + IC.eye + '</button></div></div>' + '<div class="field"><label for="lgCap"><span class="req">*</span>驗證碼</label>' + '<div class="cap-row">' + '<input class="inp" id="lgCap" type="text" inputmode="numeric" autocomplete="off" placeholder="請輸入驗證碼">' + '<div class="cap-box">' + '<span id="capImg" style="flex:0 0 118px;text-align:center;font-family:Georgia,serif;font-size:1.4rem;letter-spacing:.2em;' + 'background:#f1ece7;border-radius:12px;padding:8px 0">' + esc(capText()) + '</span>' + '<button type="button" class="ic-btn" data-act="cap-refresh" aria-label="重新整理驗證碼" title="重新整理驗證碼">' + IC.refresh + '</button>' + '<button type="button" class="ic-btn" data-act="cap-sound" aria-label="語音播放驗證碼" title="語音播放驗證碼">' + IC.sound + '</button>' + '</div></div>' + '<div style="margin-top:8px"><a class="linkish" href="https://webpac.hchcc.gov.tw" target="_blank" rel="noopener" title="前往新竹縣公共圖書館館藏查詢系統辦理（另開新視窗）">忘記密碼</a></div></div>' + '<ul class="login-rules">' + '<li>帳號請輸入身分證字號</li>' + '<li>密碼請輸入館藏查詢系統的自訂密碼（本平臺不另設密碼），預設密碼不得用於本平臺</li>' + '<li>若連續登入失敗 ' + esc(S.params.volunteerLockFails) + ' 次，將鎖定 ' + esc(S.params.volunteerLockMinutes) + ' 分鐘無法登入</li>' + '<li>登入後須具志工資格才能使用；查無資格請洽所屬服務地點承辦人</li>' + '<li>尚未申辦本縣公共圖書館個人借閱證者，請點選下方「網路辦證」</li>' + '</ul>' + loginTip + (LOGIN.msg ? '<div class="err" role="alert" id="lgMsg">' + esc(LOGIN.msg) + '</div>' : '') + '<div class="btn-row">' + '<button class="btn btn-primary" data-act="login" style="flex:1">會員登入</button>' + '<a class="btn btn-ghost" href="https://webpac.hchcc.gov.tw" target="_blank" rel="noopener" style="flex:1">網路辦證</a>' + '</div>' + '<div class="hint">尚未擔任志工？歡迎<a class="linkish" href="#/apply">線上填寫志工申請</a>。</div>' + '</div>' + '</div></div>';
   };
   function visAnns() {
+    var mine = UI.logged ? HCV.groupNames(S, me()).split('、') : [];
     return S.announcements.filter(function (a) {
-      return !a.offline;
+      if (a.offline) {
+        return false;
+      }
+      return !a.scope || a.scope === '全體' || mine.indexOf(a.scope) >= 0;
     });
   }
   var ANN_DEFAULT_IMG = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'>" + "<rect width='640' height='360' fill='#fbe9eb'/>" + "<circle cx='565' cy='55' r='115' fill='#f9dfe2'/><circle cx='60' cy='325' r='95' fill='#f9dfe2'/>" + "<path d='M320 118c-46-26-112-30-168-16v168c56-14 122-10 168 16z' fill='#fff' stroke='#e79aa1' stroke-width='6' stroke-linejoin='round'/>" + "<path d='M320 118c46-26 112-30 168-16v168c-56-14-122-10-168 16z' fill='#fff' stroke='#e79aa1' stroke-width='6' stroke-linejoin='round'/>" + "<path d='M320 118v168' stroke='#e79aa1' stroke-width='6'/>" + "<path d='M184 140c36-8 76-6 108 8M184 170c36-8 76-6 108 8M184 200c36-8 76-6 108 8M184 230c36-8 76-6 108 8' stroke='#f6c6cb' stroke-width='5' fill='none' stroke-linecap='round'/>" + "<path d='M348 148c32-14 72-16 108-8M348 178c32-14 72-16 108-8M348 208c32-14 72-16 108-8M348 238c32-14 72-16 108-8' stroke='#f6c6cb' stroke-width='5' fill='none' stroke-linecap='round'/>" + "<path d='M142 280c62-14 132-10 178 18 46-28 116-32 178-18' stroke='#f0838b' stroke-width='8' fill='none' stroke-linecap='round'/>" + "<circle cx='470' cy='86' r='9' fill='#fdd469'/><circle cx='496' cy='86' r='9' fill='#ef858c'/>" + "</svg>");
@@ -1256,6 +1275,12 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     })[0];
     if (already) {
       document.getElementById('apErr').innerHTML = '<div class="err" role="alert">您已是本平臺志工，要加入其他組別請洽服務地點管理者。</div>';
+      return;
+    }
+    if (APPLY_DENY[applyState.verify]) {
+      document.getElementById('apErr').innerHTML = '<div class="err" role="alert">' + esc(APPLY_DENY[applyState.verify]) + '</div>';
+      rgErr('apCard', applyState.verify === 'nocard' ? '查無此借閱證號。' : '');
+      document.getElementById('apCard').focus();
       return;
     }
     var locId = v('apLoc'),
@@ -2206,6 +2231,23 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     })[0] || enr[0];
     return '<button data-act="qr-open">用手機相機掃現場 QR Code（打開網址）' + (UI.logged ? '' : '，還沒登入') + '</button>' + (mine ? '<button data-act="act-scan" data-id="' + esc(mine.id) + '">用手機相機掃活動 QR Code（' + esc(mine.title) + '）' + (UI.logged ? '' : '，還沒登入') + '</button>' : '') + (UI.logged ? '' : loginFailTool());
   };
+  TOOLCTX.apply = function () {
+    var cur = applyState.verify || 'ok';
+    function b(k, t) {
+      return '<button data-act="apply-verify" data-k="' + k + '"' + (cur === k ? ' aria-pressed="true" style="font-weight:700"' : '') + '>' + t + '</button>';
+    }
+    return '<p style="margin:0 0 6px">送出申請時，借閱證驗證的結果：</p>' + b('ok', '通過（預設）') + b('nocard', '查無此證') + b('card', '借閱證無法使用') + b('type', '讀者類型不符');
+  };
+  var APPLY_DENY = {
+    nocard: '查無這個借閱證號，請確認輸入是否正確；尚未辦證請先至館藏查詢系統網路辦證。',
+    card: '您的借閱證目前無法使用，請洽各館服務台。',
+    type: '您的借閱證類型無法申請志工，請洽所屬服務地點承辦人。'
+  };
+  ACTS['apply-verify'] = function (el) {
+    applyState.verify = el.getAttribute('data-k');
+    document.getElementById('toolPanel').classList.add('hide');
+    render();
+  };
   TOOLCTX.checkinScen = function (a, t) {
     if (a && a.checkIn && !a.checkOut) {
       var oKeys = canScanNow() ? ['normal', 'early', 'otherslot', 'lateout', 'nolan'] : ['normal', 'early', 'lateout'];
@@ -2726,10 +2768,21 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     var f = document.getElementById('atFrom'),
       t = document.getElementById('atTo'),
       s = document.getElementById('atStatus');
-    attState.from = f ? f.value : '';
-    attState.to = t ? t.value : '';
+    var from = f ? f.value : '',
+      to = t ? t.value : '';
+    var bad = from && to && to < from ? '迄日不得早於起日。' : from && to && HCV.addMonths(from, 12) < to ? '查詢範圍最多一年，請縮短起訖日。' : '';
+    attState.msg = bad;
+    if (bad) {
+      render();
+      var g = document.getElementById('atTo');
+      if (g) {
+        g.focus();
+      }
+      return;
+    }
+    attState.from = from;
+    attState.to = to;
     attState.status = s ? s.value : '全部';
-    attState.msg = '';
     render();
   };
   ACTS['att-reset'] = function () {
@@ -3177,7 +3230,7 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     var mates = sameUnitMates().map(function (v) {
       return '<option value="' + esc(v.id) + '">' + esc(v.name + '（' + HCV.groupNames(S, v) + '）') + '</option>';
     }).join('');
-    return '<div style="margin-top:18px;border-top:1px dashed #ddd0c6;padding-top:4px">' + reqNote() + '<div class="field" style="margin-top:12px"><label><span class="req">*</span>要找人代的班</label><select class="inp" id="sbSlot">' + (slotOpts || '<option value="">目前沒有可代班的班別</option>') + '</select></div>' + '<div class="field"><label><span class="req">*</span>徵求方式</label><select class="inp" id="sbMode">' + '<option value="公開徵求">公開徵求（通知代班範圍內當天沒排班的志工）</option>' + '<option value="指定人選">指定人選</option></select></div>' + '<div class="field"><label>指定對象（選擇「指定人選」時適用）</label><select class="inp" id="sbTo">' + mates + '</select></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="sub-send">送出</button>' + '<button class="btn btn-ghost" data-act="sub-open">取消</button></div></div>';
+    return '<div style="margin-top:18px;border-top:1px dashed #ddd0c6;padding-top:4px">' + reqNote() + '<div class="field" style="margin-top:12px"><label for="sbSlot"><span class="req">*</span>要找人代的班</label><select class="inp" id="sbSlot" aria-describedby="sbSlotErr">' + (slotOpts || '<option value="">目前沒有可代班的班別</option>') + '</select><div id="sbSlotErr"></div></div>' + '<div class="field"><label><span class="req">*</span>徵求方式</label><select class="inp" id="sbMode">' + '<option value="公開徵求">公開徵求（通知代班範圍內當天沒排班的志工）</option>' + '<option value="指定人選">指定人選</option></select></div>' + '<div class="field"><label>指定對象（選擇「指定人選」時適用）</label><select class="inp" id="sbTo">' + mates + '</select></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="sub-send">送出</button>' + '<button class="btn btn-ghost" data-act="sub-open">取消</button></div></div>';
   }
   ACTS['leave-tab'] = function (el) {
     leaveState.tab = el.getAttribute('data-v');
@@ -3388,6 +3441,14 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     }
     var s = byId(S.slots, sl);
     var mode = document.getElementById('sbMode').value;
+    var dup = mode === '公開徵求' && S.substitutions.some(function (x) {
+      return x.slotId === sl && x.fromVolunteerId === S.currentVolunteerId && x.mode === '公開徵求' && x.status !== '已取消';
+    });
+    rgErr('sbSlot', dup ? '這一班已經發起過公開徵求，要再發通知請洽服務地點管理者。' : '');
+    if (dup) {
+      document.getElementById('sbSlot').focus();
+      return;
+    }
     var to = document.getElementById('sbTo').value;
     var targets = mode === '公開徵求' && s ? subTargets(s) : [];
     S.substitutions.push({
@@ -3751,12 +3812,22 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
   var profMsg = '';
   PAGES.profile = function () {
     var m = me();
-    return head('個人資料', '姓名與證號由圖書館系統帶入；可自行維護聯絡方式') + '<div class="wrap"><div class="grid g2">' + '<div class="card"><div class="card-h">基本資料</div>' + '<div class="field"><label>姓名</label><input class="inp" type="text" value="' + esc(m.name) + '" readonly></div>' + '<div class="field"><label>志工編號</label><input class="inp" type="text" value="' + esc(m.no || '—') + '" readonly></div>' + '<div class="field"><label>所屬大組</label><input class="inp" type="text" value="' + esc(myUnitName()) + '" readonly></div>' + '<div class="field"><label>組別</label><input class="inp" type="text" value="' + esc(HCV.groupNames(S, m)) + '" readonly></div>' + '<div class="field"><label>服務地點</label><input class="inp" type="text" value="' + esc(m.locationIds.map(locName).join('、')) + '" readonly></div>' + '<div class="field"><label>志工資格狀態</label><input class="inp" type="text" value="' + esc(m.status) + '" readonly></div>' + '</div>' + '<div class="card"><div class="card-h">聯絡方式</div>' + (profMsg ? '<div class="ok-box">' + esc(profMsg) + '</div>' : '') + reqNote() + '<div class="field"><label><span class="req">*</span>聯絡電話</label><input class="inp" id="pfPhone" type="text" value="' + esc(m.phone) + '"></div>' + '<div class="field"><label>電子郵件</label><input class="inp" id="pfMail" type="text" value="' + esc(m.email) + '" placeholder="未留 Email 將收不到系統通知"></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="prof-save">儲存</button></div>' + '<div class="inline-note">系統通知一律以 Email 發送，請確認信箱正確，以免漏接排班、請假與代班的通知。</div>' + '<div class="hint">姓名寫錯了，請洽所屬服務地點承辦人更正；借閱證號不能更改。</div>' + '</div>' + '</div></div>';
+    return head('個人資料', '姓名與證號由圖書館系統帶入；可自行維護聯絡方式') + '<div class="wrap"><div class="grid g2">' + '<div class="card"><div class="card-h">基本資料</div>' + '<div class="field"><label>姓名</label><input class="inp" type="text" value="' + esc(m.name) + '" readonly></div>' + '<div class="field"><label>志工編號</label><input class="inp" type="text" value="' + esc(m.no || '—') + '" readonly></div>' + '<div class="field"><label>所屬大組</label><input class="inp" type="text" value="' + esc(myUnitName()) + '" readonly></div>' + '<div class="field"><label>組別</label><input class="inp" type="text" value="' + esc(HCV.groupNames(S, m)) + '" readonly></div>' + '<div class="field"><label>服務地點</label><input class="inp" type="text" value="' + esc(m.locationIds.map(locName).join('、')) + '" readonly></div>' + '<div class="field"><label>志工資格狀態</label><input class="inp" type="text" value="' + esc(m.status) + '" readonly></div>' + '</div>' + '<div class="card"><div class="card-h">聯絡方式</div>' + (profMsg ? '<div class="ok-box">' + esc(profMsg) + '</div>' : '') + reqNote() + '<div class="field"><label for="pfPhone"><span class="req">*</span>聯絡電話</label><input class="inp" id="pfPhone" type="text" inputmode="tel" value="' + esc(m.phone) + '" aria-describedby="pfPhoneErr"><div id="pfPhoneErr"></div></div>' + '<div class="field"><label for="pfMail">電子郵件</label><input class="inp" id="pfMail" type="text" value="' + esc(m.email) + '" placeholder="未留 Email 將收不到系統通知" aria-describedby="pfMailErr"><div id="pfMailErr"></div></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="prof-save">儲存</button></div>' + '<div class="inline-note">系統通知一律以 Email 發送，請確認信箱正確，以免漏接排班、請假與代班的通知。</div>' + '<div class="hint">姓名寫錯了，請洽所屬服務地點承辦人更正；借閱證號不能更改。</div>' + '</div>' + '</div></div>';
   };
   ACTS['prof-save'] = function () {
     var m = me();
-    m.phone = document.getElementById('pfPhone').value.trim();
-    m.email = document.getElementById('pfMail').value.trim();
+    var phone = document.getElementById('pfPhone').value.trim(),
+      mail = document.getElementById('pfMail').value.trim();
+    var e1 = !phone ? '請輸入聯絡電話。' : /^[0-9-]+$/.test(phone) ? '' : '聯絡電話只能填數字與連字號。';
+    var e2 = mail && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail) ? '電子郵件格式不正確，請檢查 @ 前後有沒有打錯。' : '';
+    rgErr('pfPhone', e1);
+    rgErr('pfMail', e2);
+    if (e1 || e2) {
+      document.getElementById(e1 ? 'pfPhone' : 'pfMail').focus();
+      return;
+    }
+    m.phone = phone;
+    m.email = mail;
     save();
     profMsg = '聯絡方式已更新。';
     render();

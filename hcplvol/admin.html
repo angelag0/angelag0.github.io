@@ -1727,7 +1727,9 @@ PAGES.dashboard = function () {
   })) + statCard('待審核請假', pendingLeaves().length + ' <small>件</small>', isSuper() && hqLeaves().length ? '另有長假待文化局簽核 ' + hqLeaves().length + ' 件' : '代理人已同意、等待審核', jump('leave', {
     tab: '待管理者審核'
   })) + statCard('本月出勤異常', ab.length + ' <small>件</small>', '待決定是否發給時數 ' + pendingWalkin().length + ' 件', jump('attendance', {
-    tab: '異常'
+    tab: '異常',
+    from: HCV.TODAY.slice(0, 8) + '01',
+    to: HCV.TODAY
   })) + '</div>';
   var rows = [];
   function todo(kind, text, page, filters, btn) {
@@ -2017,6 +2019,15 @@ ACTIONS.volSave = function (el) {
     toast('電子郵件格式不正確');
     return;
   }
+  var ph = val('#vdPhone');
+  if (!ph) {
+    fieldErr('vdPhone', '請輸入聯絡電話');
+    return;
+  }
+  if (!/^[0-9-]+$/.test(ph)) {
+    fieldErr('vdPhone', '聯絡電話只能填數字與連字號');
+    return;
+  }
   var b4 = {
     name: v.name,
     no: v.no || '',
@@ -2079,7 +2090,20 @@ ACTIONS.volSuspend = function (el) {
     title: '設定停權：' + v.name,
     okText: '確認停權',
     reason: '停權原因（必填，會留存紀錄）',
-    body: '<p>停權期間該志工仍可登入查詢個人紀錄，但不能報名排班、代班與活動。</p>' + '<div class="fld"><label>停權起訖</label><div class="btnrow">' + '<input type="date" id="suspFrom" value="' + HCV.TODAY + '">' + '<input type="date" id="suspTo" value="2026-12-31"></div></div>',
+    body: '<p>停權期間該志工仍可登入查詢個人紀錄，但不能報名排班、代班與活動。</p>' + '<div class="fld"><label>停權起訖</label><div class="btnrow">' + '<input type="date" id="suspFrom" value="' + HCV.TODAY + '">' + '<input type="date" id="suspTo" value="' + HCV.TODAY.slice(0, 4) + '-12-31"></div></div>',
+    check: function () {
+      var f0 = val('#suspFrom') || HCV.TODAY,
+        t0 = val('#suspTo');
+      if (!t0) {
+        toast('請填停權迄日');
+        return false;
+      }
+      if (t0 < f0) {
+        toast('停權迄日不得早於起日');
+        return false;
+      }
+      return true;
+    },
     onOk: function (reason) {
       var f = val('#suspFrom') || HCV.TODAY,
         t = val('#suspTo');
@@ -2147,7 +2171,7 @@ ACTIONS.volImportRun = function () {
     t: '姓名'
   }, {
     t: '原因'
-  }], [['第 18 列', '（空白）', '姓名為必填'], ['第 31 列', '許庭語', '以借閱證號向館藏查詢系統確認，查無此讀者'], ['第 40 列', '鄭雅玲', '組別「導覽組」前面要寫大組（例：總圖／導覽組）']], '', '匯入失敗的列') + '<div class="btnrow" style="margin-top:8px"><button class="btn btn--sm" data-act="demo" data-msg="已下載失敗的那幾列（Excel，只含有問題的列，最後一欄是原因）">下載失敗的那幾列</button>' + '<span class="note" style="align-self:center">改好之後直接上傳這個檔；整份重傳也可以，已匯入的人會變成更新，不會重複建立。</span></div>';
+  }], [['第 18 列', '（空白）', '姓名為必填'], ['第 31 列', '許庭語', '以借閱證號向館藏查詢系統確認，查無此讀者'], ['第 40 列', '鄭雅玲', '組別「導覽組」前面要寫大組（例：總圖／導覽組）'], ['第 42 列', '林育安', '組別「總圖／說故事組」不存在，請先到組別管理新增']], '', '匯入失敗的列') + '<div class="btnrow" style="margin-top:8px"><button class="btn btn--sm" data-act="demo" data-msg="已下載失敗的那幾列（Excel，只含有問題的列，最後一欄是原因）">下載失敗的那幾列</button>' + '<span class="note" style="align-self:center">改好之後直接上傳這個檔；整份重傳也可以，已匯入的人會變成更新，不會重複建立。</span></div>';
   log('匯入志工名單', '新增 38 筆、更新 3 筆、失敗 3 筆');
   save();
   toast('匯入完成：新增 38 筆、更新 3 筆、失敗 3 筆');
@@ -2211,6 +2235,14 @@ ACTIONS.groupAdd = function () {
   var name = val('#ngName');
   if (!name) {
     toast('請填組別名稱');
+    return;
+  }
+  var ngUnit = val('#ngUnit'),
+    un = HCV.byId(S.units, ngUnit);
+  if (S.groups.some(function (g) {
+    return g.unitId === ngUnit && g.name === name;
+  })) {
+    toast((un ? un.name : '這個大組') + ' 已有「' + name + '」這個組別');
     return;
   }
   S.groups.push({
@@ -7666,8 +7698,8 @@ ACTIONS.holCreate = function () {
       return;
     }
     n = HCV.diffDays(a, b2);
-    if (n > 60) {
-      toast('一次最多設定 60 天');
+    if (n >= 60) {
+      toast('一次最多設定 60 天（含起迄日）');
       return;
     }
     for (i = 0; i <= n; i++) {
@@ -7994,6 +8026,10 @@ ACTIONS.anSave = function (el) {
   }
   if (!bodyText) {
     toast('請填公告內文');
+    return;
+  }
+  if (val('#anTo') && val('#anFrom') && val('#anTo') < val('#anFrom')) {
+    toast('發布迄日不得早於起日');
     return;
   }
   var n = id ? HCV.byId(S.announcements, id) : {
