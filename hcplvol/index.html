@@ -167,6 +167,17 @@ textarea.inp{min-height:110px;resize:vertical}
 .req-note{margin-top:14px;font-size:.92rem;color:var(--muted)}
 .req-note span{color:var(--brick)}
 
+fieldset.fs{border:0;padding:0;margin-left:0;margin-right:0;min-width:0}
+fieldset.fs > legend{display:block;font-weight:800;margin-bottom:8px;padding:0}
+
+.consent{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}
+.consent input{width:20px;height:20px;margin:0}
+.consent > label{font-weight:700;margin-bottom:0}
+button.linkish{border:0;padding:0;font:inherit;font-weight:700}
+
+.pop-long{max-width:640px;max-height:calc(100vh - 40px);overflow-y:auto}
+.pop-text{margin-top:14px;white-space:pre-wrap;line-height:1.8}
+
 .bar{height:14px;border-radius:999px;background:var(--pink-soft);overflow:hidden;margin-top:14px}
 .bar > i{display:block;height:100%;background:var(--brick);border-radius:999px}
 .card{min-width:0}
@@ -941,7 +952,70 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     go('#/');
     render();
   };
+  var LOGIN = {
+    fails: {},
+    msg: '',
+    id: ''
+  };
+  function lgAcct() {
+    var e = document.getElementById('lgId');
+    LOGIN.id = e ? e.value.trim() : LOGIN.id;
+    return LOGIN.id.toUpperCase();
+  }
+  function lgLockLeft(acct) {
+    var x = LOGIN.fails[acct];
+    return x && x.until && x.until > Date.now() ? Math.ceil((x.until - Date.now()) / 60000) : 0;
+  }
+  function lgLockMsg(min) {
+    return '登入失敗次數過多，請於 ' + min + ' 分鐘後再試';
+  }
+  ACTS['login-fail'] = function () {
+    document.getElementById('toolPanel').classList.add('hide');
+    var acct = lgAcct(),
+      p = S.params,
+      left = lgLockLeft(acct);
+    if (left) {
+      LOGIN.msg = lgLockMsg(left);
+      render();
+      return;
+    }
+    var x = LOGIN.fails[acct] || {
+      n: 0
+    };
+    if (x.until) {
+      x = {
+        n: 0
+      };
+    }
+    x.n += 1;
+    if (x.n >= p.volunteerLockFails) {
+      x.until = Date.now() + p.volunteerLockMinutes * 60000;
+    }
+    LOGIN.fails[acct] = x;
+    LOGIN.msg = x.until ? lgLockMsg(p.volunteerLockMinutes) : '帳號或密碼錯誤，請再試一次';
+    render();
+    var f = document.getElementById('lgPw');
+    if (f) {
+      f.focus();
+    }
+  };
+  function loginFailTool() {
+    return '<button data-act="login-fail">模擬登入失敗一次（密碼錯誤）</button>' + '<p style="margin:0 0 6px">以登入區填的帳號算一次失敗；連續 ' + esc(S.params.volunteerLockFails) + ' 次就鎖定 ' + esc(S.params.volunteerLockMinutes) + ' 分鐘。</p>';
+  }
   ACTS.login = function () {
+    var acct = lgAcct(),
+      left = lgLockLeft(acct);
+    if (left) {
+      LOGIN.msg = lgLockMsg(left);
+      render();
+      var f = document.getElementById('lgId');
+      if (f) {
+        f.focus();
+      }
+      return;
+    }
+    delete LOGIN.fails[acct];
+    LOGIN.msg = '';
     UI.logged = true;
     uiSave();
     if (UI.pendingQr) {
@@ -1047,7 +1121,7 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     var decoB = '<div class="deco b"><span class="l"></span><i style="background:#ef858c"></i><i style="background:#fdd469"></i>' + '<i style="background:#7fc7c0"></i><i style="background:#9ab7e0"></i></div>';
     var annBox = a ? annImg(a) + '<div class="ann-title"><a href="#/news/' + esc(a.id) + '">' + esc(a.title) + '</a></div>' + '<div class="ann-body">' + esc(a.body) + '</div>' + '<div class="ann-date">' + esc(a.date) + '</div>' : '<div class="ann-body">目前沒有公告。</div>';
     var loginTip = q.qrLogin ? '<div class="hint strong">您掃的是現場簽到退的 QR Code，登入後會接著完成這一次簽到退。</div>' : q.actLogin ? '<div class="hint strong">您掃的是活動報到的 QR Code，登入後會接著完成報到。</div>' : q.needLogin ? '<div class="err">請先登入後再使用該功能。</div>' : '';
-    return '' + '<section class="hero"><div class="wrap hero-in">' + deco + '<h1><span class="b">志工服務</span><br><span class="k">管理平臺</span></h1>' + decoB + '</div></section>' + '<div class="wrap"><div class="grid g2" style="margin-top:40px">' + '<div class="card">' + '<div class="card-h">系統公告' + '<span><button class="arrow" data-act="ann-prev" aria-label="上一則">‹</button> ' + '<button class="arrow" data-act="ann-next" aria-label="下一則">›</button></span></div>' + '<div style="margin-top:18px">' + annBox + '</div>' + '<div class="btn-row"><a class="btn btn-ghost" href="#/news">所有公告</a></div>' + '</div>' + '<div class="card login-card">' + '<div class="card-h">立即登入</div>' + '<div style="color:var(--brick);font-weight:800;margin-top:16px;border-left:4px solid var(--brick);padding-left:12px">志工服務管理平臺登入</div>' + '<div class="field"><label for="lgId"><span class="req">*</span>帳號</label>' + '<input class="inp" id="lgId" type="text" autocomplete="username" placeholder="請輸入身分證字號"></div>' + '<div class="field"><label for="lgPw"><span class="req">*</span>密碼</label>' + '<div class="pw-box"><input class="inp" id="lgPw" type="password" autocomplete="current-password" placeholder="請輸入密碼">' + '<button type="button" class="ic-btn pw-eye" data-act="pw-toggle" aria-label="顯示密碼" title="顯示密碼">' + IC.eye + '</button></div></div>' + '<div class="field"><label for="lgCap"><span class="req">*</span>驗證碼</label>' + '<div class="cap-row">' + '<input class="inp" id="lgCap" type="text" inputmode="numeric" autocomplete="off" placeholder="請輸入驗證碼">' + '<div class="cap-box">' + '<span id="capImg" style="flex:0 0 118px;text-align:center;font-family:Georgia,serif;font-size:1.4rem;letter-spacing:.2em;' + 'background:#f1ece7;border-radius:12px;padding:8px 0">' + esc(capText()) + '</span>' + '<button type="button" class="ic-btn" data-act="cap-refresh" aria-label="重新整理驗證碼" title="重新整理驗證碼">' + IC.refresh + '</button>' + '<button type="button" class="ic-btn" data-act="cap-sound" aria-label="語音播放驗證碼" title="語音播放驗證碼">' + IC.sound + '</button>' + '</div></div>' + '<div style="margin-top:8px"><a class="linkish" href="https://webpac.hchcc.gov.tw" target="_blank" rel="noopener" title="前往新竹縣公共圖書館館藏查詢系統辦理（另開新視窗）">忘記密碼</a></div></div>' + '<ul class="login-rules">' + '<li>帳號請輸入身分證字號</li>' + '<li>密碼請輸入館藏查詢系統的自訂密碼（本平臺不另設密碼），預設密碼不得用於本平臺</li>' + '<li>若連續登入失敗 3 次，將鎖定 30 分鐘無法登入</li>' + '<li>登入後須具志工資格才能使用；查無資格請洽所屬服務地點承辦人</li>' + '<li>尚未申辦本縣公共圖書館個人借閱證者，請點選下方「網路辦證」</li>' + '</ul>' + loginTip + '<div class="btn-row">' + '<button class="btn btn-primary" data-act="login" style="flex:1">會員登入</button>' + '<a class="btn btn-ghost" href="https://webpac.hchcc.gov.tw" target="_blank" rel="noopener" style="flex:1">網路辦證</a>' + '</div>' + '<div class="hint">尚未擔任志工？歡迎<a class="linkish" href="#/apply">線上填寫志工申請</a>。</div>' + '</div>' + '</div></div>';
+    return '' + '<section class="hero"><div class="wrap hero-in">' + deco + '<h1><span class="b">志工服務</span><br><span class="k">管理平臺</span></h1>' + decoB + '</div></section>' + '<div class="wrap"><div class="grid g2" style="margin-top:40px">' + '<div class="card">' + '<div class="card-h">系統公告' + '<span><button class="arrow" data-act="ann-prev" aria-label="上一則">‹</button> ' + '<button class="arrow" data-act="ann-next" aria-label="下一則">›</button></span></div>' + '<div style="margin-top:18px">' + annBox + '</div>' + '<div class="btn-row"><a class="btn btn-ghost" href="#/news">所有公告</a></div>' + '</div>' + '<div class="card login-card">' + '<div class="card-h">立即登入</div>' + '<div style="color:var(--brick);font-weight:800;margin-top:16px;border-left:4px solid var(--brick);padding-left:12px">志工服務管理平臺登入</div>' + '<div class="field"><label for="lgId"><span class="req">*</span>帳號</label>' + '<input class="inp" id="lgId" type="text" autocomplete="username" placeholder="請輸入身分證字號" value="' + esc(LOGIN.id) + '"' + (LOGIN.msg ? ' aria-describedby="lgMsg"' : '') + '></div>' + '<div class="field"><label for="lgPw"><span class="req">*</span>密碼</label>' + '<div class="pw-box"><input class="inp" id="lgPw" type="password" autocomplete="current-password" placeholder="請輸入密碼">' + '<button type="button" class="ic-btn pw-eye" data-act="pw-toggle" aria-label="顯示密碼" title="顯示密碼">' + IC.eye + '</button></div></div>' + '<div class="field"><label for="lgCap"><span class="req">*</span>驗證碼</label>' + '<div class="cap-row">' + '<input class="inp" id="lgCap" type="text" inputmode="numeric" autocomplete="off" placeholder="請輸入驗證碼">' + '<div class="cap-box">' + '<span id="capImg" style="flex:0 0 118px;text-align:center;font-family:Georgia,serif;font-size:1.4rem;letter-spacing:.2em;' + 'background:#f1ece7;border-radius:12px;padding:8px 0">' + esc(capText()) + '</span>' + '<button type="button" class="ic-btn" data-act="cap-refresh" aria-label="重新整理驗證碼" title="重新整理驗證碼">' + IC.refresh + '</button>' + '<button type="button" class="ic-btn" data-act="cap-sound" aria-label="語音播放驗證碼" title="語音播放驗證碼">' + IC.sound + '</button>' + '</div></div>' + '<div style="margin-top:8px"><a class="linkish" href="https://webpac.hchcc.gov.tw" target="_blank" rel="noopener" title="前往新竹縣公共圖書館館藏查詢系統辦理（另開新視窗）">忘記密碼</a></div></div>' + '<ul class="login-rules">' + '<li>帳號請輸入身分證字號</li>' + '<li>密碼請輸入館藏查詢系統的自訂密碼（本平臺不另設密碼），預設密碼不得用於本平臺</li>' + '<li>若連續登入失敗 ' + esc(S.params.volunteerLockFails) + ' 次，將鎖定 ' + esc(S.params.volunteerLockMinutes) + ' 分鐘無法登入</li>' + '<li>登入後須具志工資格才能使用；查無資格請洽所屬服務地點承辦人</li>' + '<li>尚未申辦本縣公共圖書館個人借閱證者，請點選下方「網路辦證」</li>' + '</ul>' + loginTip + (LOGIN.msg ? '<div class="err" role="alert" id="lgMsg">' + esc(LOGIN.msg) + '</div>' : '') + '<div class="btn-row">' + '<button class="btn btn-primary" data-act="login" style="flex:1">會員登入</button>' + '<a class="btn btn-ghost" href="https://webpac.hchcc.gov.tw" target="_blank" rel="noopener" style="flex:1">網路辦證</a>' + '</div>' + '<div class="hint">尚未擔任志工？歡迎<a class="linkish" href="#/apply">線上填寫志工申請</a>。</div>' + '</div>' + '</div></div>';
   };
   function visAnns() {
     return S.announcements.filter(function (a) {
@@ -1125,17 +1199,22 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     queryMsg: '',
     stage: ''
   };
+  function apField(id, label, ph) {
+    return '<div class="field"><label for="' + id + '"><span class="req">*</span>' + esc(label) + '</label>' + '<input class="inp" id="' + id + '" type="text" placeholder="' + esc(ph) + '" aria-required="true" aria-describedby="' + id + 'Err"><div id="' + id + 'Err"></div></div>';
+  }
   PAGES.apply = function () {
-    var locs = S.locations.map(function (l) {
-      return '<option>' + esc(l.name) + '</option>';
+    var locs = S.locations.filter(function (l) {
+      return !l.disabled;
+    }).map(function (l) {
+      return '<option value="' + esc(l.id) + '">' + esc(l.name) + '</option>';
     }).join('');
     var groups = S.groups.map(function (g) {
-      return '<label class="chk"><input type="checkbox"> ' + esc(byId(S.units, g.unitId).name + '　' + g.name) + '</label>';
+      return '<label class="chk"><input type="checkbox" class="apG" value="' + esc(g.id) + '"> ' + esc(byId(S.units, g.unitId).name + '　' + g.name) + '</label>';
     }).join('');
     var week = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'].map(function (d) {
       return '<label class="chk"><input type="checkbox"> ' + d + '</label>';
     }).join('');
-    var form = applyState.done ? '<div class="ok-box">申請已送出，申請編號 ' + esc(applyState.no) + '。<br>' + '後續審核進度將以 Email 通知，您也可以在右邊以借閱證號與身分證字號末四碼查詢。</div>' + '<div class="btn-row"><button class="btn btn-ghost" data-act="apply-again">再填一份</button></div>' : reqNote() + '<div class="field-row">' + '<div class="field"><label><span class="req">*</span>姓名</label><input class="inp" id="apName" type="text" placeholder="請輸入姓名"></div>' + '<div class="field"><label><span class="req">*</span>借閱證號</label><input class="inp" id="apCard" type="text" placeholder="例如 A00030112"></div>' + '</div>' + '<div class="field-row">' + '<div class="field"><label><span class="req">*</span>身分證字號</label><input class="inp" type="text" placeholder="請輸入身分證字號"></div>' + '<div class="field"><label><span class="req">*</span>聯絡電話</label><input class="inp" type="text" placeholder="請輸入聯絡電話"></div>' + '</div>' + '<div class="field"><label><span class="req">*</span>電子郵件</label><input class="inp" type="text" placeholder="通知信會寄到這個信箱"></div>' + '<div class="field"><label><span class="req">*</span>申請服務地點</label><select class="inp">' + locs + '</select></div>' + '<div class="field"><label><span class="req">*</span>申請組別（可複選）</label><div>' + groups + '</div></div>' + '<div class="field"><label>可服務時段</label><div>' + week + '</div></div>' + '<div class="inline-note">尚未申辦本縣公共圖書館個人借閱證者，請先至館藏查詢系統辦理網路辦證，再回本頁填寫申請。</div>' + '<div id="apErr"></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="apply-send">送出申請</button></div>';
+    var form = applyState.done ? '<div class="ok-box">申請已送出，申請編號 ' + esc(applyState.no) + '。<br>' + '後續審核進度將以 Email 通知，您也可以在右邊以借閱證號與身分證字號末四碼查詢。</div>' + '<div class="btn-row"><button class="btn btn-ghost" data-act="apply-again">再填一份</button></div>' : reqNote() + '<div class="field-row">' + apField('apName', '姓名', '請輸入姓名') + apField('apCard', '借閱證號', '例如 A00030112') + '</div>' + '<div class="field-row">' + apField('apIdNo', '身分證字號', '請輸入身分證字號') + apField('apPhone', '聯絡電話', '請輸入聯絡電話') + '</div>' + apField('apMail', '電子郵件', '通知信會寄到這個信箱') + '<div class="field"><label for="apLoc"><span class="req">*</span>申請服務地點</label><select class="inp" id="apLoc" aria-required="true">' + locs + '</select></div>' + '<fieldset class="field fs" id="apGroups" aria-describedby="apGroupsErr"><legend><span class="req">*</span>申請組別（可複選）</legend><div>' + groups + '</div><div id="apGroupsErr"></div></fieldset>' + '<fieldset class="field fs"><legend>可服務時段</legend><div>' + week + '</div></fieldset>' + '<div class="inline-note">尚未申辦本縣公共圖書館個人借閱證者，請先至館藏查詢系統辦理網路辦證，再回本頁填寫申請。</div>' + '<div id="apErr"></div>' + '<div class="field consent">' + '<input type="checkbox" id="apConsent" aria-required="true" aria-labelledby="apConsentLbl apPrivacyBtn" aria-describedby="apConsentErr">' + '<label for="apConsent" id="apConsentLbl"><span class="req">＊</span>我已閱讀並同意</label>' + '<button type="button" class="linkish" id="apPrivacyBtn" data-act="apply-privacy" aria-haspopup="dialog">〈個人資料蒐集告知事項〉</button>' + '</div>' + '<div id="apConsentErr"></div>' + '<div class="btn-row"><button class="btn btn-primary" data-act="apply-send">送出申請</button></div>';
     var stages = ['資料審核中', '待面試', '通過'];
     var qBox = applyState.stage ? '<div class="steps">' + stages.map(function (s, i) {
       var cur = stages.indexOf(applyState.stage);
@@ -1144,20 +1223,69 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     return head('志工申請', '線上填寫申請表，並可隨時查詢審核進度') + '<div class="wrap"><div class="grid g12">' + '<div class="card"><div class="card-h">志工申請表</div>' + form + '</div>' + '<div>' + '<div class="card"><div class="card-h">申請進度查詢</div>' + '<div class="field"><label>借閱證號</label><input class="inp" id="qCard" type="text" placeholder="例如 A00030112"></div>' + '<div class="field"><label>身分證字號末四碼</label><input class="inp" id="qLast4" type="text" maxlength="4" placeholder="例如 0112"></div>' + '<div class="btn-row"><button class="btn btn-primary btn-block" data-act="apply-query">查詢進度</button></div>' + (applyState.queryMsg ? '<div class="hint strong" style="margin-top:16px">' + applyState.queryMsg + '</div>' : '') + qBox + '<div class="hint">進度共三個階段：資料審核中 → 待面試 → 通過。每次異動都會以 Email 通知。</div>' + '</div>' + '<div class="card" style="margin-top:24px"><div class="card-h">申請資格</div>' + '<ul class="login-rules" style="margin-top:14px">' + '<li>須持有本縣公共圖書館個人借閱證</li>' + '<li>審核通過後，帳號輸入身分證字號、密碼用館藏查詢系統的密碼，即可登入本平臺</li>' + '<li>一人可同時申請多個組別</li>' + '</ul></div>' + '</div>' + '</div></div>';
   };
   ACTS['apply-send'] = function () {
-    var n = document.getElementById('apName'),
-      c = document.getElementById('apCard');
-    if (!n.value.trim() || !c.value.trim()) {
-      document.getElementById('apErr').innerHTML = '<div class="err">姓名與借閱證號為必填。</div>';
+    function v(id) {
+      var e = document.getElementById(id);
+      return e ? e.value.trim() : '';
+    }
+    var picked = [].slice.call(document.querySelectorAll('.apG')).filter(function (x) {
+      return x.checked;
+    }).map(function (x) {
+      return x.value;
+    });
+    var consent = document.getElementById('apConsent');
+    var mail = v('apMail');
+    var errs = [['apName', v('apName') ? '' : '請輸入姓名。'], ['apCard', v('apCard') ? '' : '請輸入借閱證號。'], ['apIdNo', v('apIdNo') ? '' : '請輸入身分證字號。'], ['apPhone', v('apPhone') ? '' : '請輸入聯絡電話。'], ['apMail', !mail ? '請輸入電子郵件，審核進度的通知信會寄到這個信箱。' : /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail) ? '' : '電子郵件格式不正確，請檢查 @ 前後有沒有打錯。'], ['apGroups', picked.length ? '' : '請至少勾選一個申請組別。'], ['apConsent', consent && consent.checked ? '' : '請先閱讀並勾選同意個人資料蒐集告知事項']];
+    var first = null;
+    errs.forEach(function (e) {
+      rgErr(e[0], e[1]);
+      if (e[1] && !first) {
+        first = e[0];
+      }
+    });
+    document.getElementById('apErr').innerHTML = '';
+    if (first) {
+      var f = first === 'apGroups' ? document.querySelector('.apG') : document.getElementById(first);
+      if (f) {
+        f.focus();
+      }
       return;
     }
-    var card = c.value.trim().toUpperCase();
+    var card = v('apCard').toUpperCase();
     var already = S.volunteers.filter(function (x) {
       return String(x.cardNo).toUpperCase() === card && (x.status === '在職' || x.status === '停權');
     })[0];
     if (already) {
-      document.getElementById('apErr').innerHTML = '<div class="err">您已是本平臺志工，要加入其他組別請洽服務地點管理者。</div>';
+      document.getElementById('apErr').innerHTML = '<div class="err" role="alert">您已是本平臺志工，要加入其他組別請洽服務地點管理者。</div>';
       return;
     }
+    var locId = v('apLoc'),
+      loc = byId(S.locations, locId),
+      idNo = v('apIdNo').toUpperCase();
+    var n = 0;
+    S.volunteers.forEach(function (x) {
+      var m = /^V(\d+)$/.exec(x.id);
+      if (m) {
+        n = Math.max(n, Number(m[1]));
+      }
+    });
+    S.volunteers.push({
+      id: 'V' + (n + 1 < 100 ? ('00' + (n + 1)).slice(-3) : n + 1),
+      no: '',
+      name: v('apName'),
+      unitId: loc ? loc.unitId : 'U1',
+      groupIds: picked,
+      locationIds: locId ? [locId] : [],
+      status: '審查中',
+      joinYear: Number(HCV.TODAY.slice(0, 4)),
+      phone: v('apPhone'),
+      email: mail,
+      cardNo: card,
+      idLast4: idNo.slice(-4),
+      applyDate: HCV.TODAY,
+      applyStage: '資料審核中',
+      consentAt: HCV.nowStamp()
+    });
+    save();
     applyState.done = true;
     applyState.no = 'AP' + String(Date.now()).slice(-6);
     render();
@@ -1167,16 +1295,43 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     applyState.no = '';
     render();
   };
-  function maskName(n) {
-    n = String(n || '');
-    if (n.length <= 1) {
-      return n;
+  ACTS['apply-privacy'] = function (el) {
+    var prev = el || document.activeElement;
+    var ov = document.createElement('div');
+    ov.className = 'pop';
+    ov.innerHTML = '<div class="pop-box pop-long" role="dialog" aria-modal="true" aria-labelledby="pvTitle" aria-describedby="pvText" tabindex="-1">' + '<h2 class="pop-title" id="pvTitle">個人資料蒐集告知事項</h2>' + '<div id="pvText" class="pop-text">' + esc(S.params.privacyNotice || '') + '</div>' + '<div class="btn-row"><button type="button" class="btn btn-primary" id="pvClose">關閉</button></div></div>';
+    document.body.appendChild(ov);
+    var box = ov.querySelector('.pop-box'),
+      btn = document.getElementById('pvClose');
+    function close() {
+      document.removeEventListener('keydown', onKey, true);
+      if (ov.parentNode) {
+        ov.parentNode.removeChild(ov);
+      }
+      if (prev && prev.focus) {
+        prev.focus();
+      }
     }
-    if (n.length === 2) {
-      return n.charAt(0) + '○';
+    function onKey(e) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        close();
+        return;
+      }
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        (document.activeElement === btn ? box : btn).focus();
+      }
     }
-    return n.charAt(0) + new Array(n.length - 1).join('○') + n.charAt(n.length - 1);
-  }
+    document.addEventListener('keydown', onKey, true);
+    btn.onclick = close;
+    ov.addEventListener('click', function (e) {
+      if (e.target === ov) {
+        close();
+      }
+    });
+    box.focus();
+  };
   ACTS['apply-query'] = function () {
     var v = (document.getElementById('qCard').value || '').trim().toUpperCase();
     var l4 = (document.getElementById('qLast4').value || '').trim();
@@ -1194,7 +1349,7 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     });
     if (hit) {
       applyState.stage = hit.applyStage;
-      applyState.queryMsg = esc(maskName(hit.name)) + '，您於 ' + esc(hit.applyDate) + ' 提出的申請，目前狀態為「' + esc(hit.applyStage) + '」。';
+      applyState.queryMsg = esc(HCV.mask(S, 'name', hit.name)) + '，您於 ' + esc(hit.applyDate) + ' 提出的申請，目前狀態為「' + esc(hit.applyStage) + '」。';
     } else {
       applyState.stage = '';
       applyState.queryMsg = '查無申請紀錄，請確認借閱證號與身分證字號末四碼是否正確。';
@@ -2049,7 +2204,7 @@ html.sim-phone .field-row{grid-template-columns:1fr;row-gap:0}
     var mine = enr.filter(function (a) {
       return !a.cancelled && now >= a.date + ' 00:00' && now <= actEnd(a);
     })[0] || enr[0];
-    return '<button data-act="qr-open">用手機相機掃現場 QR Code（打開網址）' + (UI.logged ? '' : '，還沒登入') + '</button>' + (mine ? '<button data-act="act-scan" data-id="' + esc(mine.id) + '">用手機相機掃活動 QR Code（' + esc(mine.title) + '）' + (UI.logged ? '' : '，還沒登入') + '</button>' : '');
+    return '<button data-act="qr-open">用手機相機掃現場 QR Code（打開網址）' + (UI.logged ? '' : '，還沒登入') + '</button>' + (mine ? '<button data-act="act-scan" data-id="' + esc(mine.id) + '">用手機相機掃活動 QR Code（' + esc(mine.title) + '）' + (UI.logged ? '' : '，還沒登入') + '</button>' : '') + (UI.logged ? '' : loginFailTool());
   };
   TOOLCTX.checkinScen = function (a, t) {
     if (a && a.checkIn && !a.checkOut) {

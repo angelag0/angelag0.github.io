@@ -301,7 +301,8 @@
       cardNo: 'A00030112',
       idLast4: '0112',
       applyDate: '2026-10-08',
-      applyStage: '待面試'
+      applyStage: '待面試',
+      consentAt: '2026-10-08 10:15'
     }, {
       id: 'V013',
       no: '',
@@ -316,7 +317,8 @@
       cardNo: 'A00030213',
       idLast4: '0213',
       applyDate: '2026-10-11',
-      applyStage: '資料審核中'
+      applyStage: '資料審核中',
+      consentAt: '2026-10-11 20:42'
     }, {
       id: 'V014',
       no: 'HC-0098',
@@ -343,7 +345,8 @@
       cardNo: 'A00009814',
       idLast4: '9814',
       applyDate: '2026-10-12',
-      applyStage: '待面試'
+      applyStage: '待面試',
+      consentAt: '2026-10-12 09:30'
     }],
     slotTemplates: [{
       id: 'T1',
@@ -1298,7 +1301,46 @@
       autoPointFromAttendance: true,
       violationRetentionMonths: 3,
       pointReminderText: '您目前累計 {N} 點違規記點，請準時出勤，避免影響志工資格。',
-      loginReaderTypes: ['P']
+      loginReaderTypes: ['P'],
+      piiMask: {
+        name: {
+          on: true,
+          head: 1,
+          tail: 1
+        },
+        cardNo: {
+          on: true,
+          head: 2,
+          tail: 3
+        },
+        idNo: {
+          on: true,
+          head: 2,
+          tail: 3
+        },
+        phone: {
+          on: true,
+          head: 4,
+          tail: 3
+        },
+        email: {
+          on: true,
+          head: 1,
+          tail: 0
+        }
+      },
+      adminPwMinLength: 8,
+      adminPwNeedMix: true,
+      adminLockFails: 3,
+      adminLockMinutes: 15,
+      volunteerLockFails: 3,
+      volunteerLockMinutes: 30,
+      logRetentionYears: 1,
+      attachTypes: ['PDF', 'Word', 'JPG', 'PNG'],
+      attachMaxMB: 10,
+      imageTypes: ['JPG', 'PNG', 'GIF', 'SVG'],
+      imageMaxMB: 1,
+      privacyNotice: '新竹縣政府文化局依個人資料保護法第 8 條，於蒐集您的個人資料前告知下列事項：\n' + '一、蒐集機關：新竹縣政府文化局。\n' + '二、蒐集目的：志願服務管理。\n' + '三、個人資料類別：姓名、借閱證號、身分證字號、聯絡電話、電子郵件。\n' + '四、利用期間、地區、對象與方式：志工服務期間及服務結束後，依志願服務法規定保存；僅於本平臺與新竹縣政府文化局志願服務業務範圍內使用；' + '志工服務時數依志願服務法規定提報衛生福利部（由文化局承辦人員上傳衛生福利部系統）。\n' + '五、您的權利：依個人資料保護法第 3 條，您可以向新竹縣政府文化局請求查詢或閱覽、製給複製本、補充或更正、停止蒐集處理或利用、刪除您的個人資料。\n' + '六、不提供的影響：您可以自由選擇是否提供個人資料；不提供或提供不完整時，將無法受理您的志工申請。'
     },
     readerTypes: [{
       code: 'P',
@@ -1377,28 +1419,130 @@
     }],
     reports: [{
       id: 'RP01',
+      kind: '文化局月報',
+      ver: 2,
       name: '115 年 9 月　志工服務時數月報（文化局格式）',
       period: '115-09',
       format: 'Excel',
+      filters: {},
       createdAt: '2026-10-02 10:12',
       by: '陳怡安'
     }, {
       id: 'RP02',
+      kind: '衛福部服勤',
+      ver: 1,
       name: '115 年 9 月　衛福部志工服勤時數月報表',
       period: '115-09',
       format: 'Excel',
+      filters: {},
       createdAt: '2026-10-02 10:15',
       by: '陳怡安'
     }, {
+      id: 'RP04',
+      kind: '文化局月報',
+      ver: 1,
+      name: '115 年 9 月　志工服務時數月報（文化局格式）',
+      period: '115-09',
+      format: 'Excel',
+      filters: {},
+      createdAt: '2026-10-01 16:40',
+      by: '蕭宏仁'
+    }, {
       id: 'RP03',
+      kind: '文化局年報',
+      ver: 1,
       name: '114 年度　志工服務時數年度報表（文化局格式）',
       period: '114',
       format: 'PDF',
+      filters: {},
       createdAt: '2026-01-08 10:00',
       by: '陳怡安'
     }]
   };
-  var KEY = 'hcpl-volunteer-demo-v7';
+  var KEY = 'hcpl-volunteer-demo-v8';
+  var PII_FIELDS = [{
+    key: 'name',
+    label: '姓名',
+    sample: '王淑芬'
+  }, {
+    key: 'cardNo',
+    label: '借閱證號',
+    sample: 'A00010701'
+  }, {
+    key: 'idNo',
+    label: '身分證字號',
+    sample: 'A123456789'
+  }, {
+    key: 'phone',
+    label: '聯絡電話',
+    sample: '0933-100-001'
+  }, {
+    key: 'email',
+    label: '電子郵件',
+    sample: 'shufen@example.com'
+  }];
+  var FILE_TYPES = {
+    PDF: ['pdf'],
+    Word: ['doc', 'docx'],
+    Excel: ['xls', 'xlsx'],
+    ODF: ['odt', 'ods', 'odp'],
+    JPG: ['jpg', 'jpeg'],
+    PNG: ['png'],
+    GIF: ['gif'],
+    SVG: ['svg']
+  };
+  function maskKeep(s, head, tail, isKey) {
+    var chars = String(s).split(''),
+      pos = [];
+    chars.forEach(function (c, i) {
+      if (isKey(c)) {
+        pos.push(i);
+      }
+    });
+    var n = pos.length,
+      a = Math.max(0, Number(head) || 0),
+      b = Math.max(0, Number(tail) || 0);
+    if (!n) {
+      return String(s);
+    }
+    while (a + b >= n && b > 0) {
+      b--;
+    }
+    while (a + b >= n && a > 0) {
+      a--;
+    }
+    pos.forEach(function (p, k) {
+      if (k >= a && k < n - b) {
+        chars[p] = '*';
+      }
+    });
+    return chars.join('');
+  }
+  function maskWith(field, value, head, tail) {
+    var s = value == null ? '' : String(value);
+    if (!s) {
+      return s;
+    }
+    if (field === 'name') {
+      return maskKeep(s, head, tail, function (c) {
+        return !/[\s·・]/.test(c);
+      });
+    }
+    if (field === 'email') {
+      var at = s.lastIndexOf('@');
+      if (at < 0) {
+        return maskKeep(s, head, tail, function () {
+          return true;
+        });
+      }
+      return maskKeep(s.slice(0, at), head, tail, function () {
+        return true;
+      }) + s.slice(at);
+    }
+    return maskKeep(s, head, tail, function (c) {
+      return /[0-9A-Za-z]/.test(c);
+    });
+  }
   function toMin(t) {
     if (!t) {
       return 0;
@@ -1429,6 +1573,12 @@
         }
       } catch (e) {}
       st = st || clone(SEED);
+      st.params = st.params || {};
+      Object.keys(SEED.params).forEach(function (k) {
+        if (st.params[k] === undefined) {
+          st.params[k] = clone(SEED.params[k]);
+        }
+      });
       st.violations.forEach(function (r) {
         if (!r.expires) {
           r.expires = HCV.pointExpiry(st, r);
@@ -1655,6 +1805,97 @@
     },
     nowStamp: function () {
       return TODAY + ' ' + '09:00';
+    },
+    PII_FIELDS: PII_FIELDS,
+    maskWith: maskWith,
+    maskRule: function (state, field) {
+      var m = state && state.params && state.params.piiMask || SEED.params.piiMask;
+      return m[field] || SEED.params.piiMask[field] || {
+        on: true,
+        head: 1,
+        tail: 0
+      };
+    },
+    mask: function (state, field, value) {
+      var r = HCV.maskRule(state, field);
+      return maskWith(field, value, r.head, r.tail);
+    },
+    maskOn: function (state, field) {
+      return !!HCV.maskRule(state, field).on;
+    },
+    listMask: function (state, field, value) {
+      return HCV.maskOn(state, field) ? HCV.mask(state, field, value) : value == null ? '' : String(value);
+    },
+    maskKnown: function (state, text) {
+      var s = text == null ? '' : String(text),
+        pairs = [];
+      function add(field, v) {
+        v = v == null ? '' : String(v);
+        if (v.length >= 2) {
+          pairs.push([v, HCV.mask(state, field, v)]);
+        }
+      }
+      (state.volunteers || []).forEach(function (v) {
+        add('name', v.name);
+        add('cardNo', v.cardNo);
+        add('phone', v.phone);
+        add('email', v.email);
+      });
+      (state.admins || []).forEach(function (a) {
+        add('name', a.name);
+        add('email', a.email);
+      });
+      pairs.sort(function (x, y) {
+        return y[0].length - x[0].length;
+      });
+      pairs.forEach(function (p) {
+        if (p[0] !== p[1] && s.indexOf(p[0]) >= 0) {
+          s = s.split(p[0]).join(p[1]);
+        }
+      });
+      return s;
+    },
+    FILE_TYPES: FILE_TYPES,
+    fileTypesText: function (types) {
+      return (types || []).join('、');
+    },
+    fileAccept: function (types) {
+      var out = [];
+      (types || []).forEach(function (t) {
+        (FILE_TYPES[t] || []).forEach(function (x) {
+          out.push('.' + x);
+        });
+      });
+      return out.join(',');
+    },
+    fileTypeOk: function (types, fileName) {
+      var m = /\.([^.]+)$/.exec(String(fileName || '')),
+        ext = m ? m[1].toLowerCase() : '';
+      return !!ext && (types || []).some(function (t) {
+        return (FILE_TYPES[t] || []).indexOf(ext) >= 0;
+      });
+    },
+    rocPeriod: function (p) {
+      p = String(p || '');
+      var y = Number(p.slice(0, 4)) - 1911;
+      return p.length > 4 ? y + '-' + p.slice(5, 7) : String(y);
+    },
+    periodLabel: function (code) {
+      var x = String(code || '').split('-');
+      return x.length > 1 ? x[0] + ' 年 ' + Number(x[1]) + ' 月' : x[0] + ' 年度';
+    },
+    REPORT_NAMES: {
+      '文化局月報': '志工服務時數月報（文化局格式）',
+      '文化局年報': '志工服務時數年度報表（文化局格式）',
+      '衛福部服勤': '衛福部志工服勤時數月報表',
+      '衛福部受訓': '衛福部志工教育訓練時數月報表',
+      '年度名冊': '志工服務時數名冊',
+      '跨地點時數彙整': '跨服務地點時數彙整',
+      '跨地點出勤統計': '跨服務地點出勤統計',
+      '跨地點違規統計': '跨服務地點違規統計'
+    },
+    reportName: function (kind, code) {
+      return HCV.periodLabel(code) + '　' + (HCV.REPORT_NAMES[kind] || kind);
     }
   };
   window.HCV = HCV;
