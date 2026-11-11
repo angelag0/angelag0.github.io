@@ -1857,10 +1857,17 @@ var REVEAL = {},
   REVEAL_PAGE = '';
 function piiName(v) {
   if (!HCV.maskOn(S, 'name')) {
-    return '<b data-pii="' + v.id + '">' + esc(v.name) + '</b>';
+    return '<b data-pii="' + v.id + '" data-f="name">' + esc(v.name) + '</b>';
   }
   var on = !!REVEAL[v.id];
-  return '<span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><b data-pii="' + v.id + '">' + esc(on ? v.name : HCV.listMask(S, 'name', v.name)) + '</b>' + '<button type="button" class="btn btn--sm" data-act="piiToggle" data-id="' + v.id + '" aria-label="顯示完整資料" title="顯示完整資料" aria-pressed="' + (on ? 'true' : 'false') + '">' + icon(on ? 'eyeoff' : 'eye') + '</button></span>';
+  return '<span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><b data-pii="' + v.id + '" data-f="name">' + esc(on ? v.name : HCV.listMask(S, 'name', v.name)) + '</b>' + '<button type="button" class="btn btn--sm" data-act="piiToggle" data-id="' + v.id + '" aria-label="顯示完整資料" title="顯示完整資料" aria-pressed="' + (on ? 'true' : 'false') + '">' + icon(on ? 'eyeoff' : 'eye') + '</button></span>';
+}
+function piiField(v, field) {
+  var raw = v[field] == null ? '' : String(v[field]);
+  if (!HCV.maskOn(S, field)) {
+    return esc(raw);
+  }
+  return '<span data-pii="' + v.id + '" data-f="' + field + '">' + esc(REVEAL[v.id] ? raw : HCV.listMask(S, field, raw)) + '</span>';
 }
 ACTIONS.piiToggle = function (el) {
   var v = vol(el.getAttribute('data-id'));
@@ -1876,7 +1883,9 @@ ACTIONS.piiToggle = function (el) {
     delete REVEAL[v.id];
   }
   document.querySelectorAll('[data-pii="' + v.id + '"]').forEach(function (b) {
-    b.textContent = on ? v.name : HCV.listMask(S, 'name', v.name);
+    var f = b.getAttribute('data-f') || 'name',
+      raw = v[f] == null ? '' : String(v[f]);
+    b.textContent = on ? raw : HCV.listMask(S, f, raw);
   });
   el.setAttribute('aria-pressed', on ? 'true' : 'false');
   el.innerHTML = icon(on ? 'eyeoff' : 'eye');
@@ -2155,6 +2164,8 @@ ACTIONS.volRemove = function (el) {
   });
 };
 ACTIONS.volExport = function () {
+  log('匯出志工名冊', (F.loc ? lname(F.loc) : '全部地點') + '　' + volListFiltered().length + ' 筆（含完整聯絡方式）');
+  save();
   toast('已匯出志工名冊（Excel）');
 };
 ACTIONS.volImport = function () {
@@ -2312,7 +2323,7 @@ PAGES.applications = function () {
       }
     }
     var fm = v.status === '審查中' ? formerOf(v) : null;
-    return [esc(v.name) + (fm ? '<div class="note">曾任志工' + (fm.no ? '（' + esc(fm.no) + '）' : '') + '</div>' : ''), esc(v.cardNo), pill('借閱證有效', 'ok'), esc(unitNames(v) + '／' + HCV.groupNames(S, v)), esc(v.locationIds.map(lname).join('、')), esc(v.applyDate || '—'), v.mergedInto ? statusPill('通過') + ' <span class="note">恢復原資料' + ((vol(v.mergedInto) || {}).no ? ' ' + esc(vol(v.mergedInto).no) : '') + '</span>' : statusPill(v.status === '審查中' ? v.applyStage : v.status) + (v.status === '在職' ? ' <span class="note">志工編號 ' + esc(v.no || '—') + '</span>' : ''), '<div class="btnrow">' + btns + '</div>'];
+    return [piiName(v) + (fm ? '<div class="note">曾任志工' + (fm.no ? '（' + esc(fm.no) + '）' : '') + '</div>' : ''), piiField(v, 'cardNo'), pill('借閱證有效', 'ok'), esc(unitNames(v) + '／' + HCV.groupNames(S, v)), esc(v.locationIds.map(lname).join('、')), esc(v.applyDate || '—'), v.mergedInto ? statusPill('通過') + ' <span class="note">恢復原資料' + ((vol(v.mergedInto) || {}).no ? ' ' + esc(vol(v.mergedInto).no) : '') + '</span>' : statusPill(v.status === '審查中' ? v.applyStage : v.status) + (v.status === '在職' ? ' <span class="note">志工編號 ' + esc(v.no || '—') + '</span>' : ''), '<div class="btnrow">' + btns + '</div>'];
   });
   var body = tabs([{
     v: '審查中',
