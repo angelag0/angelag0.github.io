@@ -273,11 +273,11 @@
       phone: '0933-100-010',
       email: 'wenxiong@example.com',
       cardNo: 'A00022110',
-      suspendNote: '2026-09-01 由文化局總管理者設定：連續缺勤經聯繫未改善',
+      suspendNote: '2026-09-01～2026-12-31　連續缺勤經聯繫未改善',
       suspendBy: '陳怡安'
     }, {
       id: 'V011',
-      no: 'HC-0230',
+      no: '',
       name: '曾雅琪',
       unitId: 'U2',
       groupIds: ['G9'],
@@ -660,6 +660,24 @@
       type: '自由報名',
       booked: ['V003'],
       pending: []
+    }, {
+      id: 'S118',
+      date: '2026-11-05',
+      locationId: 'L2',
+      templateId: 'T21',
+      capacity: 4,
+      type: '管理者指派',
+      booked: ['V009'],
+      pending: []
+    }, {
+      id: 'S119',
+      date: '2026-11-12',
+      locationId: 'L2',
+      templateId: 'T21',
+      capacity: 4,
+      type: '管理者指派',
+      booked: ['V009', 'V011'],
+      pending: []
     }],
     attendance: [{
       id: 'A001',
@@ -806,15 +824,15 @@
     }, {
       id: 'MR02',
       volunteerId: 'V002',
-      attendanceId: null,
-      date: '2026-10-12',
+      attendanceId: 'A006',
+      date: '2026-10-10',
       locationId: 'L1',
       templateId: 'T1',
       checkIn: '09:00',
       checkOut: '12:00',
       reason: '手機沒電，簽到與簽退都沒有完成，當天有跟組長說',
       status: '處理中',
-      createdAt: '2026-10-12 13:10'
+      createdAt: '2026-10-11 13:10'
     }],
     hourSummary: {
       V001: {
@@ -918,6 +936,7 @@
       reason: '術後休養',
       proxyId: 'V011',
       proxyMode: '指定一位代理人',
+      releasedSlotIds: ['S119'],
       status: '待文化局簽核',
       proxyRepliedAt: '2026-10-05 11:20',
       managerApprovedAt: '2026-10-06 15:00',
@@ -950,6 +969,19 @@
       createdAt: '2026-10-13 21:05',
       isLong: false,
       late: true
+    }, {
+      id: 'LV06',
+      volunteerId: 'V007',
+      slotIds: ['S114'],
+      from: '2026-10-25',
+      to: '2026-10-25',
+      reason: '家庭聚會（已改期）',
+      proxyId: 'V008',
+      status: '已撤回',
+      createdAt: '2026-10-12 10:20',
+      withdrawnAt: '2026-10-12 19:05',
+      isLong: false,
+      late: false
     }],
     substitutions: [{
       id: 'SB01',
@@ -987,17 +1019,20 @@
       id: 'VT1',
       name: '遲到（超過緩衝時間）',
       points: 1,
-      auto: true
+      auto: true,
+      builtin: true
     }, {
       id: 'VT2',
       name: '早退',
       points: 1,
-      auto: true
+      auto: true,
+      builtin: true
     }, {
       id: 'VT3',
       name: '缺勤（未請假也未到）',
       points: 2,
-      auto: true
+      auto: true,
+      builtin: true
     }, {
       id: 'VT4',
       name: '其他（由管理者說明）',
@@ -1109,6 +1144,31 @@
       capacity: 12,
       enrolled: ['V001', 'V007', 'V008'],
       targetGroupIds: []
+    }, {
+      id: 'AC05',
+      title: '新進志工職前訓練（十月梯次）',
+      kind: '教育訓練',
+      date: '2026-10-14',
+      time: '08:30–11:30',
+      hours: 3,
+      locationId: 'L1',
+      capacity: 20,
+      enrolled: ['V006', 'V011'],
+      targetGroupIds: []
+    }, {
+      id: 'AC06',
+      title: '志工聯誼茶會',
+      kind: '計時數活動',
+      date: '2026-11-07',
+      time: '14:00–16:00',
+      hours: 2,
+      locationId: 'L5',
+      capacity: 40,
+      enrolled: ['V001', 'V003'],
+      targetGroupIds: [],
+      cancelled: true,
+      cancelReason: '場地整修，改期另行公告',
+      cancelledAt: '2026-10-13 10:00'
     }],
     announcements: [{
       id: 'N01',
@@ -1117,7 +1177,11 @@
       title: '115 年度各組別服務時數門檻已公告',
       body: '本年度服務時數門檻依組別設定（一般組別為 144 小時），統計期間為 115 年 1 月 1 日至 12 月 31 日；您適用的門檻請至「服務時數」查看。受訓時數另行統計，不併入服務時數。',
       scope: '全體',
-      pinned: true
+      pinned: true,
+      attachments: [{
+        name: '115年度各組別服務時數門檻.pdf',
+        size: '182 KB'
+      }]
     }, {
       id: 'N02',
       date: '2026-10-08',
@@ -1125,7 +1189,18 @@
       title: '竹塹藝術節展場支援開始招募志工',
       body: '11 月 21 日於美術館辦理，需展場引導志工 12 名，歡迎至「活動報名」登記。',
       scope: '全體',
-      pinned: false
+      pinned: false,
+      image: {
+        name: '美術館展場.svg',
+        src: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'><rect width='640' height='360' fill='%23f3e6e1'/><rect x='60' y='70' width='160' height='200' rx='6' fill='%23fff' stroke='%23c9a99c' stroke-width='6'/><rect x='250' y='50' width='180' height='240' rx='6' fill='%23fff' stroke='%23c9a99c' stroke-width='6'/><rect x='460' y='90' width='120' height='160' rx='6' fill='%23fff' stroke='%23c9a99c' stroke-width='6'/><circle cx='140' cy='150' r='34' fill='%23e8b4a6'/><path d='M270 270 L330 170 L380 240 L410 210 L410 270Z' fill='%2397b8a8'/><rect x='480' y='120' width='80' height='100' fill='%23d9c27a'/><rect y='315' width='640' height='45' fill='%23e5d3cb'/></svg>"
+      },
+      attachments: [{
+        name: '展場引導志工招募說明.pdf',
+        size: '246 KB'
+      }, {
+        name: '美術館展場平面圖.jpg',
+        size: '1.2 MB'
+      }]
     }, {
       id: 'N03',
       date: '2026-10-01',
@@ -1222,8 +1297,40 @@
       noCheckoutRule: '標記異常、待管理者補登',
       autoPointFromAttendance: true,
       violationRetentionMonths: 3,
-      pointReminderText: '您目前累計 {N} 點違規記點，請準時出勤，避免影響志工資格。'
+      pointReminderText: '您目前累計 {N} 點違規記點，請準時出勤，避免影響志工資格。',
+      loginReaderTypes: ['P']
     },
+    readerTypes: [{
+      code: 'P',
+      name: '一般讀者'
+    }, {
+      code: 'G',
+      name: '團體讀者'
+    }, {
+      code: 'G1',
+      name: '團體讀者B'
+    }, {
+      code: 'C',
+      name: '企業單位'
+    }, {
+      code: 'LIBRARIANS',
+      name: '館員'
+    }, {
+      code: 'RRC',
+      name: '區域資源中心讀者'
+    }, {
+      code: 'school',
+      name: '閱進校園共讀書箱'
+    }, {
+      code: 'Class',
+      name: '班級辦證'
+    }, {
+      code: 'Hchcc',
+      name: '公務人員組別'
+    }, {
+      code: 'V',
+      name: '視障讀者'
+    }],
     admins: [{
       id: 'AD1',
       name: '陳怡安',
@@ -1291,7 +1398,7 @@
       by: '陳怡安'
     }]
   };
-  var KEY = 'hcpl-volunteer-demo-v6';
+  var KEY = 'hcpl-volunteer-demo-v7';
   function toMin(t) {
     if (!t) {
       return 0;
@@ -1516,9 +1623,7 @@
         return r.expires;
       }
       var n = state.params && state.params.violationRetentionMonths || 3;
-      var p = r.date.split('-');
-      var d = new Date(Number(p[0]), Number(p[1]) - 1 + n, Number(p[2]));
-      return d.getFullYear() + '-' + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1) + '-' + (d.getDate() < 10 ? '0' : '') + d.getDate();
+      return HCV.addMonths(r.date, n);
     },
     pointExpired: function (state, r) {
       return HCV.pointExpiry(state, r) <= state.today;
