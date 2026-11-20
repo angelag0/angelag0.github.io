@@ -34,7 +34,6 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;}
 input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink);}
 h1,h2,h3,h4{margin:0;font-weight:700;}
 
-
 .layout{display:flex;min-height:100vh;}
 .side{
   width:248px;flex:0 0 248px;background:var(--side);color:#fff;
@@ -46,7 +45,6 @@ h1,h2,h3,h4{margin:0;font-weight:700;}
   display:flex;align-items:center;gap:16px;padding:10px 24px;position:sticky;top:0;z-index:30;flex-wrap:wrap;
 }
 .content{padding:24px;flex:1;}
-
 
 .side__brand{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.14);}
 .side__org{font-size:13px;color:#e4d6d0;letter-spacing:.04em;}
@@ -62,7 +60,6 @@ h1,h2,h3,h4{margin:0;font-weight:700;}
   font-weight:700;padding:1px 8px;line-height:1.6;}
 .side__foot{padding:16px 18px 26px;color:#c9b4ac;font-size:12.5px;line-height:1.7;}
 
-
 .crumb{color:var(--muted);font-size:14px;}
 .crumb b{color:var(--ink);font-size:18px;font-weight:700;display:block;line-height:1.35;}
 .top__right{margin-left:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;}
@@ -72,7 +69,6 @@ h1,h2,h3,h4{margin:0;font-weight:700;}
 .who span{display:block;font-size:12.5px;color:var(--muted);}
 .rolepill{display:inline-block;background:#f3ece9;color:#6b4c40;border-radius:999px;padding:2px 10px;font-size:12.5px;}
 .burger{display:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;}
-
 
 .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:18px;}
 .card__h{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
@@ -201,7 +197,6 @@ body.lock{overflow:hidden;}
 .warn{background:#fbeceb;border:1px solid #f0d5d2;color:#8d2a24;border-radius:10px;padding:10px 14px;font-size:14px;}
 .okbox{background:#eef6f2;border:1px solid #cfe4db;color:#1f6b55;border-radius:10px;padding:10px 14px;font-size:14px;}
 
-
 .chart .row{display:grid;grid-template-columns:minmax(90px,150px) 1fr 100px;gap:10px;align-items:center;margin-bottom:8px;font-size:14px;}
 .chart .row .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);}
 .mini{display:block;min-width:76px;}
@@ -230,7 +225,12 @@ body.lock{overflow:hidden;}
 .subtabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;}
 .subtabs .tab{border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:13.5px;}
 .subtabs .tab[data-on]{border-color:var(--salmon);background:#fdeef0;color:var(--brick);}
-.pager{display:flex;gap:6px;align-items:center;justify-content:flex-end;margin-top:10px;font-size:14px;color:var(--muted);}
+.pager{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:center;margin-top:12px;font-size:14px;color:var(--muted);}
+.pager__size{display:inline-flex;gap:6px;align-items:center;}
+.pager__size select{width:auto;}
+.pager__nums{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center;}
+.pgn{min-width:34px;}
+.pgn[data-on]{border-color:var(--salmon);background:#fdeef0;color:var(--brick);}
 
 select.need{border-color:#dba9a3;background:#fdf5f4;}
 
@@ -805,7 +805,52 @@ function statusPill(st) {
   }
   return pill(st, 'info');
 }
+var PAGE_SIZES = [10, 20, 50],
+  PAGE_SIZE_DEFAULT = 20;
 function table(cols, rows, emptyText, caption) {
+  if (!rows.length) {
+    return tableAll(cols, rows, emptyText, caption);
+  }
+  var pg = pageSlice(cols.map(function (c) {
+    return c.t;
+  }).join('|') + '|' + (caption || emptyText || ''), rows);
+  return tableAll(cols, pg.rows, emptyText, caption) + pg.bar;
+}
+function pageSlice(key, list) {
+  F.pg = F.pg || {};
+  F.pp = F.pp || {};
+  var size = Number(F.pp[key]) || PAGE_SIZE_DEFAULT;
+  var pages = Math.max(1, Math.ceil(list.length / size));
+  var p = Math.min(Math.max(1, Number(F.pg[key]) || 1), pages);
+  return {
+    rows: list.slice((p - 1) * size, p * size),
+    bar: pager(key, list.length, p, pages, size)
+  };
+}
+function pageNums(p, pages) {
+  var out = [],
+    last = 0;
+  for (var i = 1; i <= pages; i++) {
+    if (i === 1 || i === pages || Math.abs(i - p) <= 1) {
+      if (last && i - last > 1) {
+        out.push(0);
+      }
+      out.push(i);
+      last = i;
+    }
+  }
+  return out;
+}
+function pager(key, total, p, pages, size) {
+  var k = ' data-key="' + esc(key) + '"';
+  var nums = pageNums(p, pages).map(function (n) {
+    return n ? '<button type="button" class="btn btn--sm pgn" data-act="pgGo"' + k + ' data-n="' + n + '"' + (n === p ? ' data-on aria-current="page"' : '') + ' aria-label="第 ' + n + ' 頁">' + n + '</button>' : '<span aria-hidden="true">…</span>';
+  }).join('');
+  return '<nav class="pager" aria-label="分頁">' + '<span>共 ' + total + ' 筆</span>' + '<label class="pager__size">每頁 <select data-change="pgSize"' + k + ' aria-label="每頁筆數">' + PAGE_SIZES.map(function (n) {
+    return '<option value="' + n + '"' + (n === size ? ' selected' : '') + '>' + n + '</option>';
+  }).join('') + '</select> 筆</label>' + '<span class="pager__nums">' + '<button type="button" class="btn btn--sm" data-act="pgGo"' + k + ' data-n="' + (p - 1) + '"' + (p <= 1 ? ' disabled' : '') + '>上一頁</button>' + nums + '<button type="button" class="btn btn--sm" data-act="pgGo"' + k + ' data-n="' + (p + 1) + '"' + (p >= pages ? ' disabled' : '') + '>下一頁</button>' + '</span></nav>';
+}
+function tableAll(cols, rows, emptyText, caption) {
   if (!rows.length) {
     return '<div class="empty">' + esc(emptyText || '目前沒有資料') + '</div>';
   }
@@ -1329,6 +1374,7 @@ function renderSetPw() {
   document.getElementById('content').innerHTML = '<div style="max-width:520px;margin:0 auto">' + card('設定密碼', body) + '</div>';
   window.scrollTo(0, 0);
 }
+var PG_SIG = '';
 function render() {
   document.body.classList.remove('bare');
   if (PW) {
@@ -1350,6 +1396,13 @@ function render() {
   }
   renderSide();
   renderTop();
+  var sig = page + JSON.stringify(F, function (k, v) {
+    return k === 'pg' ? undefined : v;
+  });
+  if (sig !== PG_SIG) {
+    F.pg = {};
+    PG_SIG = sig;
+  }
   var fn = PAGES[page];
   document.getElementById('content').innerHTML = fn ? fn() : '<div class="empty">找不到這個頁面</div>';
   window.scrollTo(0, 0);
@@ -1463,6 +1516,16 @@ ACTIONS.tab = function (el) {
   F[el.getAttribute('data-key')] = el.getAttribute('data-val');
   render();
 };
+ACTIONS.pgGo = function (el) {
+  F.pg = F.pg || {};
+  F.pg[el.getAttribute('data-key')] = Number(el.getAttribute('data-n'));
+  render();
+};
+ACTIONS.pgSize = function (el) {
+  F.pp = F.pp || {};
+  F.pp[el.getAttribute('data-key')] = Number(el.value);
+  render();
+};
 ACTIONS.sort = function (el) {
   var k = el.getAttribute('data-key');
   if (F.sortKey === k) {
@@ -1547,7 +1610,6 @@ document.addEventListener('input', function (e) {
   var di = e.target.getAttribute && e.target.getAttribute('data-input');
   if (di) {
     F[di] = e.target.value;
-    F.adPage = 1;
     render();
     var again = document.querySelector('[data-input="' + di + '"]');
     if (again) {
@@ -2176,7 +2238,7 @@ ACTIONS.volImportRun = function () {
   if (!box) {
     return;
   }
-  box.innerHTML = '<div class="sect">匯入結果</div>' + '<div class="okbox">新增 38 筆、更新 3 筆、失敗 3 筆。<br>' + '新增的 38 筆中，33 筆有填志工編號、5 筆沒有填（維持空白）；更新的 3 筆是已在志工名冊的人（同一個借閱證號），組別、服務地點與聯絡方式照檔案內容更新。' + '失敗的資料不會寫入，修正後可重新匯入。</div>' + table([{
+  box.innerHTML = '<div class="sect">匯入結果</div>' + '<div class="okbox">新增 38 筆、更新 3 筆、失敗 3 筆。<br>' + '新增的 38 筆中，33 筆有填志工編號、5 筆沒有填（維持空白）；更新的 3 筆是已在志工名冊的人（同一個借閱證號），組別、服務地點與聯絡方式照檔案內容更新。' + '失敗的資料不會寫入，修正後可重新匯入。</div>' + tableAll([{
     t: '列'
   }, {
     t: '姓名'
@@ -2192,7 +2254,7 @@ ACTIONS.volGroups = function () {
     var gs = S.groups.filter(function (g) {
       return g.unitId === u.id;
     });
-    return '<div class="sect">' + esc(u.name) + '</div>' + table([{
+    return '<div class="sect">' + esc(u.name) + '</div>' + tableAll([{
       t: '組別'
     }, {
       t: '組長'
@@ -2210,7 +2272,7 @@ ACTIONS.volGroups = function () {
       var n = S.volunteers.filter(function (v) {
         return v.groupIds.indexOf(g.id) >= 0 && v.status !== '離職';
       }).length;
-      return [esc(g.name), '<input type="text" class="gl" data-id="' + g.id + '" value="' + esc(g.leader) + '" style="width:90px">', '<input type="text" class="gp" data-id="' + g.id + '" value="' + esc(g.leaderPhone) + '" style="width:130px">', '<input type="number" class="gh" data-id="' + g.id + '" value="' + (g.annualRequiredHours != null ? g.annualRequiredHours : S.params.annualHoursDefault) + '" min="0" step="0.5" style="width:90px">', n, '<button class="btn btn--sm btn--danger" data-act="groupDel" data-id="' + g.id + '">刪除</button>'];
+      return ['<b>' + esc(g.name) + '</b>', '<input type="text" class="gl" data-id="' + g.id + '" value="' + esc(g.leader) + '" style="width:90px">', '<input type="text" class="gp" data-id="' + g.id + '" value="' + esc(g.leaderPhone) + '" style="width:130px">', '<input type="number" class="gh" data-id="' + g.id + '" value="' + (g.annualRequiredHours != null ? g.annualRequiredHours : S.params.annualHoursDefault) + '" min="0" step="0.5" style="width:90px">', n, '<button class="btn btn--sm btn--danger" data-act="groupDel" data-id="' + g.id + '">刪除</button>'];
     }), '');
   }).join('') + '<p class="hint" style="margin-top:10px">年度服務時數門檻依組別設定（文化局總管理者一次建好）；只影響志工端與報表的「是否達標」顯示，沒有任何強制效果。' + '同時屬於多個組別的志工，以較高的門檻計算達成率。</p>' + '<div class="sect">新增組別</div>' + '<div class="filters">' + '<div class="fld"><label>所屬大組</label><select id="ngUnit">' + S.units.map(function (u) {
     return '<option value="' + u.id + '">' + esc(u.name) + '</option>';
@@ -2572,7 +2634,7 @@ ACTIONS.publishMonth = function () {
   confirmBox({
     title: '發布本月草稿：' + L.name + '　' + rocYm(F.month.slice(0, 4), F.month.slice(5, 7)),
     okText: '確認發布',
-    body: '<p>以下 ' + list.length + ' 個草稿場次會一次發布，發布後志工端的班表報名就看得到；已指派的志工這時收到排班完成通知信。</p>' + table([{
+    body: '<p>以下 ' + list.length + ' 個草稿場次會一次發布，發布後志工端的班表報名就看得到；已指派的志工這時收到排班完成通知信。</p>' + tableAll([{
       t: '日期'
     }, {
       t: '服務時段'
@@ -3584,7 +3646,7 @@ function impBody(L) {
   var nm = nextMonthStr(HCV.TODAY.slice(0, 7)),
     nFrom = nm + '-01',
     nTo = nm + '-' + pad(monthInfo(nm).last);
-  var h = '<p class="hint">固定班是長期的管理者指派，不是另一種排班方式：用 Excel 一次把志工指派到一段期間內每週固定的時段。' + '欄位：志工編號或借閱證號（沒有志工編號的志工填借閱證號）、星期、服務時段名稱（這個地點的）、生效起日、生效迄日。' + '系統先比對志工編號，再比對借閱證號，都查不到的那一列不寫入。上傳後先顯示預覽，按「確認匯入」才寫入；' + '那幾天還沒有場次就依服務時段新建一個草稿場次（排班方式為管理者指派），已有場次就直接排入。</p>' + '<div class="sect">範本的欄位與填寫範例</div>' + table([{
+  var h = '<p class="hint">固定班是長期的管理者指派，不是另一種排班方式：用 Excel 一次把志工指派到一段期間內每週固定的時段。' + '欄位：志工編號或借閱證號（沒有志工編號的志工填借閱證號）、星期、服務時段名稱（這個地點的）、生效起日、生效迄日。' + '系統先比對志工編號，再比對借閱證號，都查不到的那一列不寫入。上傳後先顯示預覽，按「確認匯入」才寫入；' + '那幾天還沒有場次就依服務時段新建一個草稿場次（排班方式為管理者指派），已有場次就直接排入。</p>' + '<div class="sect">範本的欄位與填寫範例</div>' + tableAll([{
     t: '志工編號或借閱證號'
   }, {
     t: '星期'
@@ -3603,7 +3665,7 @@ function impBody(L) {
     return n + Math.max(1, b.dates.length);
   }, 0);
   var total = c.ok.length + badN;
-  return h + '<div class="sect">匯入預覽（還沒寫入）</div>' + '<div class="' + (badN ? 'warn' : 'okbox') + '">共 ' + total + ' 筆，可寫入 ' + c.ok.length + ' 筆、有問題 ' + badN + ' 筆。有問題的那幾列不會寫入。</div>' + (c.bad.length ? table([{
+  return h + '<div class="sect">匯入預覽（還沒寫入）</div>' + '<div class="' + (badN ? 'warn' : 'okbox') + '">共 ' + total + ' 筆，可寫入 ' + c.ok.length + ' 筆、有問題 ' + badN + ' 筆。有問題的那幾列不會寫入。</div>' + (c.bad.length ? tableAll([{
     t: '列'
   }, {
     t: '志工編號或借閱證號'
@@ -4398,7 +4460,7 @@ PAGES.violations = function () {
       } else if (r.note && !expired) {
         btns = '<span class="note">' + esc(r.note) + '</span>';
       }
-      return [esc(vname(r.volunteerId)) + (F.vioHl === r.id ? ' ' + pill('這一筆', 'wait') : ''), esc(HCV.dateLabel(r.date)), esc(vtName(r.typeId)), '<b>' + r.points + '</b>', esc(r.source), expired ? pill('已失效', 'info') : statusPill(r.status), r.status === '有效' ? esc(HCV.pointExpiry(S, r)) : '—', esc(r.by), btns];
+      return [esc(vname(r.volunteerId)) + (F.vioHl === r.id ? ' ' + pill('這一筆', 'wait') : ''), esc(HCV.dateLabel(r.date)), esc(vtName(r.typeId)), String(r.points), esc(r.source), expired ? pill('已失效', 'info') : statusPill(r.status), r.status === '有效' ? esc(HCV.pointExpiry(S, r)) : '—', esc(r.by), btns];
     });
     body += table([{
       t: '志工'
@@ -4438,7 +4500,7 @@ PAGES.violations = function () {
       if (isSuper()) {
         btns = v.status === '停權' ? '<button class="btn btn--sm btn--ok" data-act="volUnsuspend" data-id="' + v.id + '">解除停權</button>' : v.status === '在職' ? '<button class="btn btn--sm btn--danger" data-act="volSuspend" data-id="' + v.id + '">設定停權</button>' : '';
       }
-      return [esc(v.no || '—'), esc(v.name), esc(v.locationIds.map(lname).join('、')), '<b style="color:' + (activePts(v.id) ? 'var(--red)' : 'inherit') + '">' + activePts(v.id) + '</b>', esc(recent ? recent.date + '　' + vtName(recent.typeId) + (HCV.pointExpired(S, recent) ? '（已失效）' : '') : '—'), statusPill(v.status), btns];
+      return [esc(v.no || '—'), '<b>' + esc(v.name) + '</b>', esc(v.locationIds.map(lname).join('、')), activePts(v.id) ? '<b style="color:var(--red)">' + activePts(v.id) + '</b>' : '0', esc(recent ? recent.date + '　' + vtName(recent.typeId) + (HCV.pointExpired(S, recent) ? '（已失效）' : '') : '—'), statusPill(v.status), btns];
     });
     body += table([{
       t: '志工編號'
@@ -4804,7 +4866,7 @@ ACTIONS.actRoster = function (el) {
       hint: '只列在職、還沒報名' + (a.targetGroupIds.length ? '、屬於限定組別' : '') + '的志工；加入後一樣寄報名成功通知信'
     }) + '</div><button class="btn" data-act="actAdd" data-id="' + a.id + '">加入</button></div>';
   }
-  openDrawer('報名名單　' + a.title, '<p class="hint">報名 ' + a.enrolled.length + ' 人／名額 ' + a.capacity + ' 人' + (a.cancelled ? '　' + pill('已取消', 'bad') : '') + '</p>' + table([{
+  openDrawer('報名名單　' + a.title, '<p class="hint">報名 ' + a.enrolled.length + ' 人／名額 ' + a.capacity + ' 人' + (a.cancelled ? '　' + pill('已取消', 'bad') : '') + '</p>' + tableAll([{
     t: '姓名'
   }, {
     t: '組別'
@@ -6239,7 +6301,7 @@ function repBuild(k, range) {
     notes.push('有服務地點尚未指定對應的值勤欄位，該地點的時數暫不列入日常值勤欄位，可於「館別與系統參數」設定。');
   }
   return {
-    table: table(cols, rows, '這個條件沒有資料'),
+    table: tableAll(cols, rows, '這個條件沒有資料'),
     chart: chart,
     notes: notes
   };
@@ -6392,7 +6454,8 @@ function repHistory() {
   if (!F.repOpen) {
     F.repOpen = {};
   }
-  var rows = gs.map(function (g, i) {
+  var pg = pageSlice('repHist', gs);
+  var rows = pg.rows.map(function (g, i) {
     var r = g.latest,
       n = g.versions.length,
       vtxt = n > 1 ? '第 ' + repVer(r) + ' 版' : '';
@@ -6410,7 +6473,7 @@ function repHistory() {
   }).join('');
   return '<div class="tbwrap wrap"><table class="tb" id="repHist"><caption class="vh">歷史報表</caption><thead><tr>' + ['報表名稱', '期間', '格式', '產生時間', '產生者', '操作'].map(function (t) {
     return '<th scope="col">' + t + '</th>';
-  }).join('') + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+  }).join('') + '</tr></thead><tbody>' + rows + '</tbody></table></div>' + pg.bar;
 }
 ACTIONS.repOlder = function (el) {
   var k = el.getAttribute('data-k'),
@@ -6865,7 +6928,7 @@ PAGES.hqreports = function () {
       t: '受訓時數',
       num: true
     }]);
-    html += card('各服務地點各月服務時數', table(cols, rows, '') + '<p class="hint" style="margin-top:10px">受訓時數另列一欄，不併入服勤合計；沒有時數的月份留白。</p>');
+    html += card('各服務地點各月服務時數', tableAll(cols, rows, '') + '<p class="hint" style="margin-top:10px">受訓時數另列一欄，不併入服勤合計；沒有時數的月份留白。</p>');
     var colTotal = {},
       unmappedTotal = 0;
     S.locations.forEach(function (l) {
@@ -6884,7 +6947,7 @@ PAGES.hqreports = function () {
     });
     colRow.push('<b>' + esc(halfText(sumCols)) + '</b>');
     colRow.push(esc(halfText(trainSum)));
-    html += card('日常值勤欄位合計（' + rocY(y) + ' 年度）', table(S.reportColumns.map(function (c) {
+    html += card('日常值勤欄位合計（' + rocY(y) + ' 年度）', tableAll(S.reportColumns.map(function (c) {
       return {
         t: c,
         num: true
@@ -6907,7 +6970,7 @@ PAGES.hqreports = function () {
       var pct = st.active ? Math.round(st.reached / st.active * 100) : 0;
       return [esc(l.name), st.active + ' 人', esc(halfText(st.year)), esc(halfText(avg)), '<span class="bar mini"><i style="width:' + Math.min(100, pct) + '%"' + (pct >= 100 ? ' data-ok' : '') + '></i></span>' + '<span class="note">' + pct + ' %</span>', st.susp ? st.susp + ' 人' : '—'];
     });
-    html += card('各服務地點概況', table([{
+    html += card('各服務地點概況', tableAll([{
       t: '服務地點'
     }, {
       t: '在職志工'
@@ -6938,7 +7001,7 @@ PAGES.hqreports = function () {
         return c[k] ? String(c[k]) : '—';
       }));
     });
-    html += card('各服務地點出勤統計（' + rocY(y) + ' 年度）', table([{
+    html += card('各服務地點出勤統計（' + rocY(y) + ' 年度）', tableAll([{
       t: '服務地點'
     }, {
       t: '出勤筆數',
@@ -6982,7 +7045,7 @@ PAGES.hqreports = function () {
       }).length;
       return [esc(t.name), t.points + ' 點', n ? String(n) : '—'];
     });
-    html += card('各服務地點違規統計（' + rocY(y) + ' 年度）', table([{
+    html += card('各服務地點違規統計（' + rocY(y) + ' 年度）', tableAll([{
       t: '服務地點'
     }, {
       t: '有效記點件數',
@@ -6995,7 +7058,7 @@ PAGES.hqreports = function () {
       num: true
     }, {
       t: '停權中志工'
-    }], rows5, '') + '<div class="sect">依違規類型</div>' + table([{
+    }], rows5, '') + '<div class="sect">依違規類型</div>' + tableAll([{
       t: '違規類型'
     }, {
       t: '建議點數',
@@ -7224,7 +7287,7 @@ function piiExample(key, on, head, tail) {
     return x.key === key;
   })[0];
   var ex = HCV.maskWith(key, f.sample, head, tail);
-  return esc(f.sample) + ' → <b>' + esc(ex) + '</b>' + (on ? '' : '<br><span class="note">清單上不遮；操作紀錄照這個寫法</span>');
+  return esc(f.sample) + ' → ' + esc(ex) + (on ? '' : '<br><span class="note">清單上不遮；操作紀錄照這個寫法</span>');
 }
 function setPiiMask() {
   var rows = HCV.PII_FIELDS.map(function (f) {
@@ -7232,7 +7295,7 @@ function setPiiMask() {
       id = 'pmPii_' + f.key;
     return ['<b>' + esc(f.label) + '</b>' + (f.key === 'email' ? '<br><span class="note">只算 @ 前面</span>' : ''), '<label class="note" style="white-space:nowrap"><input type="checkbox" id="' + id + 'On" data-pii-f="' + f.key + '"' + (r.on ? ' checked' : '') + ' aria-label="' + esc(f.label + '：清單上遮罩') + '"> 遮罩</label>', '<input type="number" id="' + id + 'Head" data-pii-f="' + f.key + '" value="' + r.head + '" min="0" step="1" style="width:76px" aria-label="' + esc(f.label + '：前面顯示幾碼') + '" aria-describedby="' + id + 'HeadErr">' + errHtml(id + 'Head'), '<input type="number" id="' + id + 'Tail" data-pii-f="' + f.key + '" value="' + r.tail + '" min="0" step="1" style="width:76px" aria-label="' + esc(f.label + '：後面顯示幾碼') + '" aria-describedby="' + id + 'TailErr">' + errHtml(id + 'Tail'), '<span id="' + id + 'Ex" aria-live="polite">' + piiExample(f.key, r.on, r.head, r.tail) + '</span>'];
   });
-  return '<div class="sect">個資遮罩</div>' + table([{
+  return '<div class="sect">個資遮罩</div>' + tableAll([{
     t: '欄位'
   }, {
     t: '清單上遮罩'
@@ -8328,14 +8391,6 @@ function adminScopeText(a) {
   }
   return '全部服務地點';
 }
-function pageOf(list, key, size) {
-  var pages = Math.max(1, Math.ceil(list.length / size));
-  var p = Math.min(Math.max(1, Number(F[key]) || 1), pages);
-  return {
-    rows: list.slice((p - 1) * size, p * size),
-    bar: pages > 1 ? '<div class="pager">共 ' + list.length + ' 筆　第 ' + p + '／' + pages + ' 頁' + '<button class="btn btn--sm" data-act="tab" data-key="' + key + '" data-val="' + (p - 1) + '"' + (p <= 1 ? ' disabled' : '') + '>上一頁</button>' + '<button class="btn btn--sm" data-act="tab" data-key="' + key + '" data-val="' + (p + 1) + '"' + (p >= pages ? ' disabled' : '') + '>下一頁</button></div>' : '<div class="pager">共 ' + list.length + ' 筆</div>'
-  };
-}
 PAGES.accounts = function () {
   F.tab = F.tab || '後台帳號';
   var body = tabs(['後台帳號', '操作紀錄'], 'tab');
@@ -8361,8 +8416,7 @@ PAGES.accounts = function () {
     }
     return true;
   });
-  var pg = pageOf(list, 'adPage', 10);
-  var rows = pg.rows.map(function (a) {
+  var rows = list.map(function (a) {
     var btns = '<button class="btn btn--sm" data-act="adEdit" data-id="' + a.id + '">編輯</button>';
     if (a.id === ME.id) {
       btns += ' <span class="note">目前登入中</span>';
@@ -8396,7 +8450,7 @@ PAGES.accounts = function () {
     t: '狀態'
   }, {
     t: '操作'
-  }], rows, '沒有符合條件的帳號') + pg.bar + '</div>' + '<p class="hint" style="margin-top:12px">後台帳號不開放給志工，志工一律使用志工端。密碼不由管理者設定：新增帳號後系統寄「設定密碼」信到該帳號的 Email，本人點信中連結自己設定；還沒設定的標「尚未設定密碼」，可以重寄。' + '停用後立即無法登入，該帳號過去留下的操作紀錄全部保留。</p>' + '<div class="sect">角色權限對照</div>' + '<button type="button" class="more" data-act="adMatrix">' + (F.adMatrix ? '收合角色權限對照' : '展開角色權限對照') + '</button>' + (F.adMatrix ? table([{
+  }], rows, '沒有符合條件的帳號') + '</div>' + '<p class="hint" style="margin-top:12px">後台帳號不開放給志工，志工一律使用志工端。密碼不由管理者設定：新增帳號後系統寄「設定密碼」信到該帳號的 Email，本人點信中連結自己設定；還沒設定的標「尚未設定密碼」，可以重寄。' + '停用後立即無法登入，該帳號過去留下的操作紀錄全部保留。</p>' + '<div class="sect">角色權限對照</div>' + '<button type="button" class="more" data-act="adMatrix">' + (F.adMatrix ? '收合角色權限對照' : '展開角色權限對照') + '</button>' + (F.adMatrix ? tableAll([{
     t: '功能'
   }, {
     t: '服務地點管理者'
@@ -8443,7 +8497,6 @@ function actLogList() {
   }).sort(function (a, b) {
     return a.time < b.time ? 1 : a.time > b.time ? -1 : 0;
   });
-  var pg = pageOf(list, 'lgPage', 20);
   return '<div class="filters">' + dateFld('起日', 'lgFrom', F.lgFrom) + dateFld('迄日', 'lgTo', F.lgTo) + selectFld('操作者', 'lgBy', [{
     v: '',
     t: '全部'
@@ -8458,9 +8511,9 @@ function actLogList() {
     t: '動作'
   }, {
     t: '內容'
-  }], pg.rows.map(function (o) {
-    return [esc(o.time), esc(o.by), '<b>' + esc(o.action) + '</b>', esc(o.detail)];
-  }), '沒有符合條件的操作紀錄', '操作紀錄') + pg.bar + '<p class="hint" style="margin-top:12px">排班調整、出勤補登與編修、違規開立與撤銷、參數變更、帳號異動等每一個寫入動作，' + '都會記下操作者、時間與異動內容供稽核查詢。登入、登出與登入失敗也記在這裡；在志工清單按眼睛圖示顯示個資，記為「檢視個資」並寫明看了哪位志工。<br>' + '內容裡的姓名、借閱證號、身分證字號、聯絡電話、電子郵件一律照系統參數「個資遮罩」的碼數遮過才寫入。操作紀錄保留 ' + S.params.logRetentionYears + ' 年，滿期自動刪除。</p>';
+  }], list.map(function (o) {
+    return [esc(o.time), esc(o.by), esc(o.action), esc(o.detail)];
+  }), '沒有符合條件的操作紀錄', '操作紀錄') + '<p class="hint" style="margin-top:12px">排班調整、出勤補登與編修、違規開立與撤銷、參數變更、帳號異動等每一個寫入動作，' + '都會記下操作者、時間與異動內容供稽核查詢。登入、登出與登入失敗也記在這裡；在志工清單按眼睛圖示顯示個資，記為「檢視個資」並寫明看了哪位志工。<br>' + '內容裡的姓名、借閱證號、身分證字號、聯絡電話、電子郵件一律照系統參數「個資遮罩」的碼數遮過才寫入。操作紀錄保留 ' + S.params.logRetentionYears + ' 年，滿期自動刪除。</p>';
 }
 function adForm(a) {
   return '<div class="filters">' + '<div class="fld"><label>姓名</label><input type="text" id="adName" value="' + esc(a ? a.name : '') + '"></div>' + '<div class="fld"><label for="adUnit">單位</label><input type="text" id="adUnit" maxlength="20" value="' + esc(a ? a.unit : '文化局') + '" aria-describedby="adUnitHint">' + '<span class="note" id="adUnitHint">20 字內，可寫到地點或小組</span></div>' + '<div class="fld fld--wide"><label>Email（必填；設定密碼信與待處理通知寄到這裡，不能與其他帳號重複）</label><input type="email" id="adMail" value="' + esc(a && a.email ? a.email : '') + '"></div>' + '</div>' + '<div class="fld" style="margin-top:10px"><label>角色</label><select id="adRole" data-change="adRole">' + ROLES.map(function (r) {
