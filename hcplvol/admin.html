@@ -2057,7 +2057,7 @@ function openVolDrawer(id) {
   }).join('<br>') : '無') + '</dd></dl>';
   var foot = '<button class="btn btn--pri" data-act="volSave" data-id="' + id + '">儲存</button>';
   if (isSuper()) {
-    if (v.status === '停權') {
+    if (v.status === '停權' || suspPlanned(v)) {
       foot += '<button class="btn btn--ok" data-act="volUnsuspend" data-id="' + id + '">解除停權</button>';
     } else if (v.status === '在職') {
       foot += '<button class="btn btn--danger" data-act="volSuspend" data-id="' + id + '">設定停權</button>';
@@ -2178,17 +2178,66 @@ ACTIONS.volSuspend = function (el) {
     onOk: function (reason) {
       var f = val('#suspFrom') || HCV.TODAY,
         t = val('#suspTo');
-      v.status = '停權';
+      if (f <= HCV.TODAY) {
+        v.status = '停權';
+      }
+      v.suspendFrom = f;
+      v.suspendTo = t;
       v.suspendNote = f + '～' + t + '　' + reason;
       v.suspendBy = ME.name;
+      var n = releaseProxyDuties(v, {
+        from: f,
+        to: t
+      }, '在停權期間');
       log('設定停權', pn(v.name) + '（' + reason + '）');
       save();
       closeDrawer();
       render();
-      toast('已將 ' + v.name + ' 設為停權');
+      toast(f <= HCV.TODAY ? '已將 ' + v.name + ' 設為停權' : '已設定 ' + v.name + ' 自 ' + f + ' 起停權');
+      leftSlotsBox('停權期間還有 ' + v.name + ' 的班', v, HCV.bookedSlotsBetween(S, v.id, f, t), n);
     }
   });
 };
+function leftSlotsBox(title, v, slots, n) {
+  if (!slots.length && !n) {
+    return;
+  }
+  infoBox(slots.length ? title : '已退回指定 ' + v.name + ' 的單', (slots.length ? '<p>系統不會自動移除下面這 ' + slots.length + ' 個班。請到「排班與時段管理」的月曆點開場次，在 ' + esc(v.name) + ' 旁按「移除」，再找人遞補；沒有移除的班，到時沒簽到會記為缺勤。</p>' + '<ul style="margin:4px 0 8px;padding-left:20px">' + slots.map(function (s) {
+    return '<li>' + esc(slotText(s)) + '</li>';
+  }).join('') + '</ul>' : '') + (n ? '<p class="note">另外有 ' + n + ' 張別人指定 ' + esc(v.name) + ' 當代理人或代班、還在等他回覆的單，已經退回：請假單退回申請人，代班改為公開徵求。</p>' : ''));
+}
+function releaseProxyDuties(v, range, why) {
+  var n = 0;
+  (S.leaves || []).forEach(function (lv) {
+    if (lv.proxyId !== v.id || lv.status !== '待代理人回覆') {
+      return;
+    }
+    if (range && !(range.from <= lv.to && lv.from <= range.to)) {
+      return;
+    }
+    lv.status = '代理人婉拒';
+    lv.proxyRepliedAt = stamp();
+    mailTo(vname(lv.volunteerId), '代理人 ' + v.name + ' ' + why + '，您的請假單已退回，原排班不變，請重新指定代理人', '請假結果');
+    n++;
+  });
+  (S.substitutions || []).forEach(function (sb) {
+    if (sb.toVolunteerId !== v.id || sb.status !== '待對方回覆') {
+      return;
+    }
+    var s = slotOf(sb.slotId);
+    if (range && !(s && range.from <= s.date && s.date <= range.to)) {
+      return;
+    }
+    sb.mode = '公開徵求';
+    sb.toVolunteerId = null;
+    sb.status = '徵求中';
+    n++;
+  });
+  return n;
+}
+function suspPlanned(v) {
+  return v.status === '在職' && !!v.suspendFrom && v.suspendFrom > HCV.TODAY;
+}
 ACTIONS.volUnsuspend = function (el) {
   var v = vol(el.getAttribute('data-id'));
   confirmBox({
@@ -2200,6 +2249,8 @@ ACTIONS.volUnsuspend = function (el) {
       v.status = '在職';
       v.suspendNote = '';
       v.suspendBy = '';
+      v.suspendFrom = '';
+      v.suspendTo = '';
       log('解除停權', pn(v.name) + '（' + reason + '）');
       save();
       closeDrawer();
@@ -2217,11 +2268,13 @@ ACTIONS.volRemove = function (el) {
     body: '<p>除名後該志工不能再使用本平臺各項功能，歷史出勤與時數紀錄全部保留，報表照樣計算。</p>',
     onOk: function (reason) {
       v.status = '離職';
+      var n = releaseProxyDuties(v, null, '已不是在職志工');
       log('除名', pn(v.name) + '（' + reason + '）');
       save();
       closeDrawer();
       render();
       toast('已將 ' + v.name + ' 除名');
+      leftSlotsBox(v.name + ' 之後還有排班', v, HCV.bookedSlotsBetween(S, v.id, HCV.TODAY, ''), n);
     }
   });
 };
@@ -3256,7 +3309,7 @@ function assignCandidates(s) {
     if (v.status !== '在職' || v.locationIds.indexOf(s.locationId) < 0 || s.booked.indexOf(v.id) >= 0) {
       return false;
     }
-    if (!HCV.groupAllowed(s, v) || HCV.onLongLeave(S, v.id, s.date)) {
+    if (!HCV.groupAllowed(s, v) || HCV.onLongLeave(S, v.id, s.date) || HCV.suspendedOn(v, s.date)) {
       return false;
     }
     return !volSlotsOn(s.date, v.id).some(function (x) {
@@ -3400,6 +3453,10 @@ ACTIONS.signupOk = function (el) {
     toast('名額已滿');
     return;
   }
+  if (HCV.suspendedOn(vol(vid), s.date)) {
+    toast(vname(vid) + ' 在這一天是停權期間，不能核可，請按「婉拒」');
+    return;
+  }
   s.pending = s.pending.filter(function (x) {
     return x !== vid;
   });
@@ -3440,7 +3497,7 @@ ACTIONS.vacancyNotify = function (el) {
   var n = (S.vacancyNotify[s.id] || 0) + 1;
   S.vacancyNotify[s.id] = n;
   var targets = S.volunteers.filter(function (v) {
-    return v.status === '在職' && HCV.inSubstituteScope(S, v, s.locationId) && HCV.groupAllowed(s, v) && !HCV.onLongLeave(S, v.id, s.date) && !volSlotsOn(s.date, v.id).length;
+    return v.status === '在職' && HCV.inSubstituteScope(S, v, s.locationId) && HCV.groupAllowed(s, v) && !HCV.onLongLeave(S, v.id, s.date) && !HCV.suspendedOn(v, s.date) && !volSlotsOn(s.date, v.id).length;
   });
   s.recruiting = true;
   S.notifications.unshift({
@@ -3605,6 +3662,8 @@ function impCheck(L, rows) {
         why = '該日為休館日';
       } else if (HCV.onLongLeave(S, v.id, dd)) {
         why = '該志工此日在長假期間';
+      } else if (HCV.suspendedOn(v, dd)) {
+        why = '該志工此日在停權期間';
       } else if (s && s.booked.indexOf(v.id) >= 0) {
         why = '';
       } else if (volSlotsOn(dd, v.id).some(function (x) {
@@ -4498,7 +4557,7 @@ PAGES.violations = function () {
       })[0];
       var btns = '';
       if (isSuper()) {
-        btns = v.status === '停權' ? '<button class="btn btn--sm btn--ok" data-act="volUnsuspend" data-id="' + v.id + '">解除停權</button>' : v.status === '在職' ? '<button class="btn btn--sm btn--danger" data-act="volSuspend" data-id="' + v.id + '">設定停權</button>' : '';
+        btns = v.status === '停權' || suspPlanned(v) ? '<button class="btn btn--sm btn--ok" data-act="volUnsuspend" data-id="' + v.id + '">解除停權</button>' : v.status === '在職' ? '<button class="btn btn--sm btn--danger" data-act="volSuspend" data-id="' + v.id + '">設定停權</button>' : '';
       }
       return [esc(v.no || '—'), '<b>' + esc(v.name) + '</b>', esc(v.locationIds.map(lname).join('、')), activePts(v.id) ? '<b style="color:var(--red)">' + activePts(v.id) + '</b>' : '0', esc(recent ? recent.date + '　' + vtName(recent.typeId) + (HCV.pointExpired(S, recent) ? '（已失效）' : '') : '—'), statusPill(v.status), btns];
     });
@@ -5406,7 +5465,7 @@ PAGES.leave = function () {
     } else if (F.tab === '待文化局簽核' && isSuper()) {
       btns += ' <button class="btn btn--sm btn--ok" data-act="leaveApprove" data-id="' + lv.id + '">簽核通過</button>' + ' <button class="btn btn--sm btn--danger" data-act="leaveReject" data-id="' + lv.id + '">駁回</button>';
     }
-    return [esc(lv.id), esc(vname(lv.volunteerId)), esc(lv.from + (lv.to !== lv.from ? '～' + lv.to : '') + '（' + leaveDays(lv) + ' 天）'), esc(lv.reason), esc(vname(lv.proxyId)) + (lv.proxyRepliedAt ? '<br><span class="note">同意於 ' + esc(lv.proxyRepliedAt) + '</span>' : ''), marks || '—', statusPill(lv.status), btns];
+    return [esc(lv.id), esc(vname(lv.volunteerId)), esc(lv.from + (lv.to !== lv.from ? '～' + lv.to : '') + '（' + leaveDays(lv) + ' 天）'), esc(lv.reason), esc(vname(lv.proxyId)) + (lv.proxyRepliedAt ? '<br><span class="note">同意於 ' + esc(lv.proxyRepliedAt) + '</span>' : '') + (proxyGone(lv) ? '<br>' + pill(proxyGone(lv), 'bad') : ''), marks || '—', statusPill(lv.status), btns];
   });
   var hint = '';
   if (F.tab === '待代理人回覆') {
@@ -5494,6 +5553,9 @@ function proxyBlock(lv, s) {
   if (p.status !== '在職') {
     return '代理人不是在職志工';
   }
+  if (HCV.suspendedOn(p, s.date)) {
+    return '代理人此日在停權期間';
+  }
   var r = rule(s);
   var clash = volSlotsOn(s.date, p.id).filter(function (x) {
     var a = rule(x);
@@ -5573,12 +5635,30 @@ ACTIONS.leaveDetail = function (el) {
   var g = grp(v.groupIds[0]);
   var body = '<dl class="dl">' + '<dt>申請人</dt><dd>' + esc(v.name) + '　' + esc(unitNames(v) + '／' + HCV.groupNames(S, v)) + '</dd>' + '<dt>請假期間</dt><dd>' + esc(lv.from + '～' + lv.to) + '（' + leaveDays(lv) + ' 天）</dd>' + '<dt>影響班別</dt><dd>' + (lv.isLong ? '<div class="note" style="margin-bottom:4px">代理方式：' + esc(lv.proxyMode === '轉為空缺班' ? '期間的班轉為空缺班，由管理者安排' : '指定一位代理人；代理人接不了的班轉為空缺') + '</div>' + longLeaveSplitHtml(lv) : lv.slotIds.length ? lv.slotIds.map(function (sid) {
     return esc(slotText(slotOf(sid)));
-  }).join('<br>') : '—') + '</dd>' + (lv.withdrawnAt ? '<dt>撤回時間</dt><dd>' + esc(lv.withdrawnAt) + '（志工撤回，原排班不變）</dd>' : '') + '<dt>請假類型</dt><dd>' + esc(lv.leaveType || (lv.isLong ? '長假' : '事假')) + '</dd>' + '<dt>事由</dt><dd>' + esc(lv.reason) + '</dd>' + '<dt>代理人</dt><dd>' + (lv.proxyId ? esc(vname(lv.proxyId)) + (lv.proxyRepliedAt ? '　' + pill('已同意 ' + lv.proxyRepliedAt, 'ok') : '　' + pill('尚未回覆', 'wait')) : '不指定（轉為空缺班）') + '</dd>' + '<dt>申請時間</dt><dd>' + esc(lv.createdAt) + '</dd>' + '<dt>標記</dt><dd>' + (lv.isLong ? pill('長假（' + S.params.longLeaveMonths + ' 個月以上，需文化局簽核）', 'wait') + ' ' : '') + (lv.late ? pill('臨時請假（未達提前 ' + S.params.leaveAdvanceDays + ' 天）', 'wait') : '') + (!lv.isLong && !lv.late ? '—' : '') + '</dd>' + '<dt>狀態</dt><dd>' + statusPill(lv.status) + '</dd>' + (lv.managerApprovedAt ? '<dt>地點管理者</dt><dd>已核准 ' + esc(lv.managerApprovedAt) + '</dd>' : '') + (lv.decisionNote ? '<dt>審核意見</dt><dd>' + esc(lv.decisionNote) + '</dd>' : '') + '</dl>' + '<p class="hint" style="margin-top:14px">所屬組別組長：' + esc(g ? g.name + '　' + g.leader + '　' + g.leaderPhone : '—') + '</p>';
+  }).join('<br>') : '—') + '</dd>' + (lv.withdrawnAt ? '<dt>撤回時間</dt><dd>' + esc(lv.withdrawnAt) + '（志工撤回，原排班不變）</dd>' : '') + '<dt>請假類型</dt><dd>' + esc(lv.leaveType || (lv.isLong ? '長假' : '事假')) + '</dd>' + '<dt>事由</dt><dd>' + esc(lv.reason) + '</dd>' + '<dt>代理人</dt><dd>' + (lv.proxyId ? esc(vname(lv.proxyId)) + (lv.proxyRepliedAt ? '　' + pill('已同意 ' + lv.proxyRepliedAt, 'ok') : '　' + pill('尚未回覆', 'wait')) : '不指定（轉為空缺班）') + (proxyGone(lv) && !lv.isLong && ['待管理者審核', '待文化局簽核'].indexOf(lv.status) >= 0 ? '<div class="warn" style="margin-top:6px">' + esc(proxyGone(lv)) + '，這張請假單請按「駁回」退回申請人重新申請。</div>' : '') + '</dd>' + '<dt>申請時間</dt><dd>' + esc(lv.createdAt) + '</dd>' + '<dt>標記</dt><dd>' + (lv.isLong ? pill('長假（' + S.params.longLeaveMonths + ' 個月以上，需文化局簽核）', 'wait') + ' ' : '') + (lv.late ? pill('臨時請假（未達提前 ' + S.params.leaveAdvanceDays + ' 天）', 'wait') : '') + (!lv.isLong && !lv.late ? '—' : '') + '</dd>' + '<dt>狀態</dt><dd>' + statusPill(lv.status) + '</dd>' + (lv.managerApprovedAt ? '<dt>地點管理者</dt><dd>已核准 ' + esc(lv.managerApprovedAt) + '</dd>' : '') + (lv.decisionNote ? '<dt>審核意見</dt><dd>' + esc(lv.decisionNote) + '</dd>' : '') + '</dl>' + '<p class="hint" style="margin-top:14px">所屬組別組長：' + esc(g ? g.name + '　' + g.leader + '　' + g.leaderPhone : '—') + '</p>';
   openDrawer('請假明細　' + lv.id, body, '<button class="btn" data-act="closeDrawer">關閉</button>');
 };
+function proxyGone(lv) {
+  var p = lv && lv.proxyId ? vol(lv.proxyId) : null;
+  if (!p) {
+    return '';
+  }
+  if (p.status === '離職') {
+    return '代理人已經不是在職狀態';
+  }
+  var r = HCV.suspendRange(p);
+  if (p.status === '停權' || r && r.from <= lv.to && lv.from <= r.to) {
+    return '代理人在請假期間停權';
+  }
+  return '';
+}
 ACTIONS.leaveApprove = function (el) {
   var lv = HCV.byId(S.leaves, el.getAttribute('data-id'));
   if (!leaveCanDecide(lv)) {
+    return;
+  }
+  if (!lv.isLong && proxyGone(lv)) {
+    toast(proxyGone(lv) + '，不能核准，請按「駁回」');
     return;
   }
   var toHq = lv.isLong && lv.status === '待管理者審核';
@@ -5698,7 +5778,7 @@ ACTIONS.leaveApprove = function (el) {
 };
 function subCandidates(from, s) {
   return S.volunteers.filter(function (v) {
-    return v.status === '在職' && v.id !== from.id && (!s || HCV.inSubstituteScope(S, v, s.locationId)) && (!s || !volSlotsOn(s.date, v.id).length) && (!s || !HCV.onLongLeave(S, v.id, s.date));
+    return v.status === '在職' && v.id !== from.id && (!s || HCV.inSubstituteScope(S, v, s.locationId)) && (!s || !volSlotsOn(s.date, v.id).length) && (!s || !HCV.onLongLeave(S, v.id, s.date)) && (!s || !HCV.suspendedOn(v, s.date));
   });
 }
 ACTIONS.leaveReject = function (el) {
@@ -8315,8 +8395,8 @@ function noticeLog() {
   }
   var rows = list.map(function (m) {
     var btns = '';
-    if (m.status !== '成功') {
-      btns = '<button class="btn btn--sm" data-act="ntFailed" data-id="' + m.id + '">失敗名單</button>' + '<button class="btn btn--sm btn--ok" data-act="ntResend" data-id="' + m.id + '">重發</button>';
+    if (m.status !== '成功' || m.failed && m.failed.length) {
+      btns = '<button class="btn btn--sm" data-act="ntFailed" data-id="' + m.id + '">失敗名單</button>';
     }
     return [esc(m.time), pill(m.kind, m.kind === '人工' ? 'tag' : 'info'), esc(m.event), esc(m.target) + '<br><span class="note">' + esc(m.to) + '</span>', esc(m.subject), statusPill(m.status), '<div class="btnrow">' + btns + '</div>'];
   });
@@ -8340,33 +8420,84 @@ function noticeLog() {
     t: '結果'
   }, {
     t: '操作'
-  }], rows, '沒有符合條件的發送紀錄') + '<p class="hint" style="margin-top:12px">通道只有 Email。寄送失敗的紀錄會保留供查詢，可個別重發；' + '沒有留 Email 的志工請改以電話或現場布達。</p>';
+  }], rows, '沒有符合條件的發送紀錄') + '<p class="hint" style="margin-top:12px">通道只有 Email。寄不到的收件人留在這一筆的失敗名單裡，可在失敗名單重發；' + '重發寄回原本這一筆，不另外新增紀錄。沒有留 Email 的志工請先到志工管理補上 Email 再重發，或改以電話或現場布達。</p>';
+}
+function ntRecipients(m) {
+  return (m.failed || []).map(function (x) {
+    var mm = /^(.*)（(.*)）$/.exec(x) || [x, x, '寄送失敗'];
+    return {
+      name: mm[1],
+      reason: mm[2],
+      done: (m.delivered || []).indexOf(mm[1]) >= 0,
+      ok: ntCanResend(mm[1])
+    };
+  });
+}
+function ntCanResend(name) {
+  var v = S.volunteers.filter(function (x) {
+    return x.name === name;
+  })[0];
+  if (v) {
+    return !!v.email && v.status !== '離職';
+  }
+  var a = (S.admins || []).filter(function (x) {
+    return x.name === name;
+  })[0];
+  return !!(a && a.email && !a.disabled);
 }
 ACTIONS.ntFailed = function (el) {
   var m = HCV.byId(S.notifications, el.getAttribute('data-id'));
-  var failed = m.failed && m.failed.length ? m.failed : ['（沒有留存個別失敗名單）'];
-  openDrawer('寄送失敗名單', '<dl class="dl"><dt>發送時間</dt><dd>' + esc(m.time) + '</dd>' + '<dt>主旨</dt><dd>' + esc(m.subject) + '</dd>' + '<dt>對象</dt><dd>' + esc(m.to) + '</dd>' + '<dt>結果</dt><dd>' + statusPill(m.status) + '</dd></dl>' + '<div class="sect">寄不到的收件人</div>' + failed.map(function (x) {
-    return '<p class="note">' + esc(x) + '</p>';
-  }).join(''), '<button class="btn btn--pri" data-act="ntResend" data-id="' + m.id + '">重發</button>' + '<button class="btn" data-act="closeDrawer">關閉</button>');
+  var rs = ntRecipients(m);
+  var left = rs.filter(function (r) {
+    return !r.done;
+  });
+  var sendable = left.filter(function (r) {
+    return r.ok;
+  });
+  var rsd = m.resends || [];
+  var foot = '';
+  if (rs.length && !left.length) {
+    foot = '<span class="note" style="align-self:center">寄不到的人都已經重發寄達</span>';
+  } else if (left.length && !sendable.length) {
+    foot = '<button class="btn btn--pri" disabled aria-describedby="ntWhy">重發</button>' + '<span class="note" id="ntWhy" style="align-self:center">請先到志工管理修改資料</span>';
+  } else if (left.length) {
+    foot = '<button class="btn btn--pri" data-act="ntResend" data-id="' + m.id + '">重發</button>';
+  }
+  openDrawer('寄送失敗名單', '<dl class="dl"><dt>發送時間</dt><dd>' + esc(m.time) + '</dd>' + '<dt>主旨</dt><dd>' + esc(m.subject) + '</dd>' + '<dt>對象</dt><dd>' + esc(m.to) + '</dd>' + '<dt>結果</dt><dd>' + statusPill(m.status) + '</dd>' + '<dt>重發</dt><dd>' + (rsd.length ? '重發過 ' + rsd.length + ' 次，最後一次 ' + esc(rsd[rsd.length - 1].time) : '還沒有重發過') + '</dd></dl>' + '<div class="sect">寄送失敗的收件人</div>' + (rs.length ? tableAll([{
+    t: '姓名'
+  }, {
+    t: '原因'
+  }, {
+    t: '狀態'
+  }], rs.map(function (r) {
+    return [esc(r.name), esc(r.reason), r.done ? pill('重發後已寄達', 'ok') : pill('寄不到', 'bad')];
+  }), '', '寄送失敗的收件人') : '<p class="note">沒有留存個別失敗名單</p>'), foot + '<button class="btn" data-act="closeDrawer">關閉</button>');
 };
 ACTIONS.ntResend = function (el) {
   var m = HCV.byId(S.notifications, el.getAttribute('data-id'));
-  S.notifications.unshift({
-    id: 'M' + (S.notifications.length + 1),
-    time: stamp(),
-    kind: m.kind,
-    event: m.event,
-    target: m.target,
-    to: m.to,
-    subject: m.subject + '（重發）',
-    status: m.status,
-    failed: m.failed
+  var left = ntRecipients(m).filter(function (r) {
+    return !r.done;
   });
-  log('重發通知', m.subject);
+  var ok = left.filter(function (r) {
+    return r.ok;
+  });
+  if (!ok.length) {
+    return;
+  }
+  m.delivered = (m.delivered || []).concat(ok.map(function (r) {
+    return r.name;
+  }));
+  m.resends = (m.resends || []).concat([{
+    time: stamp(),
+    tried: left.length,
+    ok: ok.length
+  }]);
+  var still = left.length - ok.length;
+  m.status = !still ? '成功' : m.status !== '失敗' || m.delivered.length ? '部分失敗' : '失敗';
   save();
-  closeDrawer();
   render();
-  toast(m.status === '成功' ? '已重發' : '已重發；沒有留 Email 的收件人仍然寄不到');
+  ACTIONS.ntFailed(el);
+  toast(!still ? '已重發，' + ok.length + ' 位都寄到了' : '已重發；還有 ' + still + ' 位寄不到，請先到志工管理修改資料');
 };
 var ROLES = ['總管理者', '地點管理者', '報表檢視'];
 var ROLE_MATRIX = [['排班與時段維護（含本地點的服務時段）', '本地點', '全部地點', '—'], ['批次匯入固定班（長期指派）', '本地點', '全部地點', '—'], ['服務地點設定（含管理者、排班設定、停用）', '\u2718', '\u2714', '—'], ['開啟館內簽到站', '本地點', '全部地點', '—'], ['新進志工審查', '本地點', '全部地點', '—'], ['志工資料維護（組別、聯絡方式）', '本地點', '全部地點', '—'], ['組別的年度時數門檻', '\u2718', '\u2714', '—'], ['請假與代班審核、手動指定代理人', '本地點', '全部地點', '—'], ['長假第二關簽核', '\u2718', '\u2714', '—'], ['出勤紀錄檢視', '本地點', '全部地點', '—'], ['出勤補登、處理志工的補登申請（須填原因）', '本地點（補登的時間由總管理者確認）', '全部地點', '—'], ['修改簽到退時間', '\u2718（只能提出編修申請）', '\u2714', '—'], ['違規記點新增與調整', '本地點', '全部地點', '—'], ['停權與除名（須填原因）', '\u2718', '\u2714', '—'], ['休館日與假日設定', '本地點', '全部地點預設', '—'], ['活動開設與管理', '本地點', '全部地點', '—'], ['現場簽到工具（QR 與借閱證）', '本地點', '全部地點', '—'], ['公告發布與通知發送', '本地點', '全部地點', '—'], ['報表產出與匯出', '申請授權後查閱本地點', '\u2714（全部地點）', '\u2714（檢視與匯出）'], ['館別與系統參數', '\u2718', '\u2714', '—'], ['帳號與權限管理', '\u2718', '\u2714', '—'], ['看得到的資料範圍', '本服務地點', '全部服務地點', '全部服務地點（唯讀）']];

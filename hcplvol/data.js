@@ -273,6 +273,8 @@
       phone: '0933-100-010',
       email: 'wenxiong@example.com',
       cardNo: 'A00022110',
+      suspendFrom: '2026-09-01',
+      suspendTo: '2026-12-31',
       suspendNote: '2026-09-01～2026-12-31　連續缺勤經聯繫未改善',
       suspendBy: '陳怡安'
     }, {
@@ -1663,6 +1665,34 @@
     onLongLeave: function (state, volunteerId, date) {
       return (state.leaves || []).some(function (lv) {
         return lv.volunteerId === volunteerId && lv.isLong && lv.status === '已核准' && lv.from <= date && date <= lv.to;
+      });
+    },
+    suspendRange: function (v) {
+      if (!v) {
+        return null;
+      }
+      if (v.suspendFrom && v.suspendTo) {
+        return {
+          from: v.suspendFrom,
+          to: v.suspendTo
+        };
+      }
+      var m = String(v.suspendNote || '').match(/^\s*(\d{4}-\d{2}-\d{2})\D+?(\d{4}-\d{2}-\d{2})/);
+      return m ? {
+        from: m[1],
+        to: m[2]
+      } : null;
+    },
+    suspendedOn: function (v, date) {
+      var r = HCV.suspendRange(v);
+      return !!(r && r.from <= date && date <= r.to);
+    },
+    bookedSlotsBetween: function (state, volunteerId, from, to) {
+      var start = from > state.today ? from : state.today;
+      return state.slots.filter(function (s) {
+        return s.booked.indexOf(volunteerId) >= 0 && s.date >= start && (!to || s.date <= to);
+      }).sort(function (a, b) {
+        return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
       });
     },
     groupAllowed: function (slot, v) {
