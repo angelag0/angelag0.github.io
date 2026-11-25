@@ -34,6 +34,7 @@ button{font-family:inherit;font-size:inherit;cursor:pointer;}
 input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink);}
 h1,h2,h3,h4{margin:0;font-weight:700;}
 
+
 .layout{display:flex;min-height:100vh;}
 .side{
   width:248px;flex:0 0 248px;background:var(--side);color:#fff;
@@ -45,6 +46,7 @@ h1,h2,h3,h4{margin:0;font-weight:700;}
   display:flex;align-items:center;gap:16px;padding:10px 24px;position:sticky;top:0;z-index:30;flex-wrap:wrap;
 }
 .content{padding:24px;flex:1;}
+
 
 .side__brand{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.14);}
 .side__org{font-size:13px;color:#e4d6d0;letter-spacing:.04em;}
@@ -60,6 +62,7 @@ h1,h2,h3,h4{margin:0;font-weight:700;}
   font-weight:700;padding:1px 8px;line-height:1.6;}
 .side__foot{padding:16px 18px 26px;color:#c9b4ac;font-size:12.5px;line-height:1.7;}
 
+
 .crumb{color:var(--muted);font-size:14px;}
 .crumb b{color:var(--ink);font-size:18px;font-weight:700;display:block;line-height:1.35;}
 .top__right{margin-left:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;}
@@ -69,6 +72,7 @@ h1,h2,h3,h4{margin:0;font-weight:700;}
 .who span{display:block;font-size:12.5px;color:var(--muted);}
 .rolepill{display:inline-block;background:#f3ece9;color:#6b4c40;border-radius:999px;padding:2px 10px;font-size:12.5px;}
 .burger{display:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;}
+
 
 .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:18px;}
 .card__h{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
@@ -197,6 +201,7 @@ body.lock{overflow:hidden;}
 .warn{background:#fbeceb;border:1px solid #f0d5d2;color:#8d2a24;border-radius:10px;padding:10px 14px;font-size:14px;}
 .okbox{background:#eef6f2;border:1px solid #cfe4db;color:#1f6b55;border-radius:10px;padding:10px 14px;font-size:14px;}
 
+
 .chart .row{display:grid;grid-template-columns:minmax(90px,150px) 1fr 100px;gap:10px;align-items:center;margin-bottom:8px;font-size:14px;}
 .chart .row .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);}
 .mini{display:block;min-width:76px;}
@@ -321,8 +326,33 @@ function derive() {
     S.activityCheckins = {};
   }
   if (!S.reportGrants) {
-    S.reportGrants = [];
+    S.reportGrants = [{
+      id: 'RG1',
+      adminId: 'AD6',
+      name: '黃淑惠',
+      status: '已授權',
+      at: '2026-10-01 10:20',
+      reason: '每月核對本館志工時數',
+      grantedBy: '陳怡安',
+      grantedAt: '2026-10-01 14:05'
+    }, {
+      id: 'RG2',
+      adminId: 'AD3',
+      name: '吳佩珊',
+      status: '申請中',
+      at: '2026-10-13 10:15',
+      reason: '每月核對本館志工時數'
+    }];
   }
+  S.reportGrants.forEach(function (g) {
+    if (g.status === '待授權') {
+      g.status = '申請中';
+    }
+    if (g.status === '已婉拒') {
+      g.status = '未授權';
+      g.last = '婉拒';
+    }
+  });
   if (!S.actLog) {
     S.actLog = [{
       id: 'OP03',
@@ -1813,6 +1843,12 @@ PAGES.dashboard = function () {
       todo('簽到退編修申請', (a ? vname(a.volunteerId) + '　' + a.date + '　' + a.slotName : '') + '（由 ' + r.by + ' 提出）', 'attendance', {
         tab: '編修申請'
       }, '前往確認');
+    });
+    pendingGrants().forEach(function (g) {
+      var a = HCV.byId(S.admins, g.adminId);
+      todo('報表查閱申請', g.name + (a && a.locationIds.length ? '（' + a.locationIds.map(lname).join('、') + '）' : '') + '　' + g.at.slice(0, 10) + ' 申請', 'accounts', {
+        adRep: '申請中'
+      }, '前往審核');
     });
   }
   pendingSignups().forEach(function (s) {
@@ -6386,10 +6422,25 @@ function repBuild(k, range) {
     notes: notes
   };
 }
-function repGrant() {
+function grantOf(adminId) {
   return S.reportGrants.filter(function (g) {
-    return g.adminId === ME.id;
+    return g.adminId === adminId;
   })[0] || null;
+}
+function grantStatus(a) {
+  if (a.role !== '地點管理者') {
+    return '';
+  }
+  var g = grantOf(a.id);
+  return g ? g.status : '未授權';
+}
+function repGrant() {
+  return grantOf(ME.id);
+}
+function pendingGrants() {
+  return S.reportGrants.filter(function (g) {
+    return g.status === '申請中';
+  });
 }
 PAGES.reports = function () {
   if (isLocal()) {
@@ -6398,7 +6449,8 @@ PAGES.reports = function () {
       var mine = myLocs().map(function (l) {
         return l.name;
       }).join('、');
-      return card('時數報表與匯出', '<div class="hint hint--box">報表由文化局統一產出。服務地點管理者需經文化局授權後，才能查閱與匯出 ' + esc(mine) + ' 的時數報表。</div>' + (g && g.status === '待授權' ? '<div class="okbox" style="margin-top:12px">已於 ' + esc(g.at) + ' 提出申請，等待文化局授權。</div>' : g && g.status === '已婉拒' ? '<div class="warn" style="margin-top:12px">前次申請未獲授權：' + esc(g.note || '') + '。可重新提出申請。</div>' : '') + '<div class="btnrow" style="margin-top:14px"><button class="btn btn--pri" data-act="repApply"' + (g && g.status === '待授權' ? ' disabled' : '') + '>申請查閱授權</button></div>');
+      var st = g ? g.status : '未授權';
+      return card('時數報表與匯出', '<div class="hint hint--box">報表由文化局統一產出。服務地點管理者需經文化局授權後，才能查閱與匯出 ' + esc(mine || '（尚未指定服務地點）') + ' 的時數報表。</div>' + (st === '申請中' ? '<div class="okbox" style="margin-top:12px" id="repWait">已於 ' + esc(g.at) + ' 提出申請，等待文化局授權。</div>' : g && g.last === '婉拒' ? '<div class="warn" style="margin-top:12px">前次申請未獲授權：' + esc(g.note || '') + '。可重新提出申請。</div>' : g && g.last === '取消' ? '<div class="warn" style="margin-top:12px">報表查閱授權已於 ' + esc(g.lastAt || '') + ' 取消，需要時可以重新申請。</div>' : '') + '<div class="btnrow" style="margin-top:14px"><button class="btn btn--pri" data-act="repApply"' + (st === '申請中' ? ' disabled aria-describedby="repWait"' : '') + '>申請查閱授權</button></div>');
     }
   }
   if (!F.q) {
@@ -6448,27 +6500,6 @@ PAGES.reports = function () {
     }).join(''), exportBtns);
   } else {
     html += card('報表預覽', '<div class="empty">選好條件後按「產生報表」，這裡才會計算並顯示預覽。</div>');
-  }
-  if (isSuper()) {
-    var pend = S.reportGrants.filter(function (x) {
-      return x.status === '待授權';
-    });
-    if (pend.length) {
-      html += card('服務地點管理者的查閱申請', table([{
-        t: '申請時間'
-      }, {
-        t: '申請人'
-      }, {
-        t: '服務地點'
-      }, {
-        t: '用途'
-      }, {
-        t: '操作'
-      }], pend.map(function (x) {
-        var ad = HCV.byId(S.admins, x.adminId);
-        return [esc(x.at), esc(x.name), esc(ad ? ad.locationIds.map(lname).join('、') : '—'), esc(x.reason || ''), '<div class="btnrow"><button class="btn btn--sm btn--ok" data-act="repGrantOk" data-id="' + x.id + '">授權</button>' + '<button class="btn btn--sm btn--danger" data-act="repGrantNo" data-id="' + x.id + '">婉拒</button></div>'];
-      }), ''));
-    }
   }
   html += card('歷史報表', repHistory() + '<p class="hint" style="margin-top:10px">每一版都保存產生當下的內容，不會因為資料後來被補登或編修而改變。' + '報表種類、期間、格式與篩選條件都相同時再匯出一次會多存一版，清單只列最新一版；按「較早的版本」看之前每一版，每一版都可以下載。</p>');
   return html;
@@ -6678,48 +6709,99 @@ ACTIONS.repApply = function () {
       S.reportGrants = S.reportGrants.filter(function (g) {
         return g.adminId !== ME.id;
       });
-      S.reportGrants.push({
-        id: 'RG' + (S.reportGrants.length + 1),
+      var g = {
+        id: nextId('RG', S.reportGrants),
         adminId: ME.id,
         name: ME.name,
         at: stamp(),
-        status: '待授權',
+        status: '申請中',
         reason: r
-      });
+      };
+      S.reportGrants.push(g);
       log('申請報表查閱授權', pn(ME.name) + '（' + r + '）');
+      mailAdmins(S.admins.filter(function (a) {
+        return a.role === '總管理者' && !a.disabled;
+      }), '待處理：報表查閱申請　' + ME.name + ' ' + g.at.slice(0, 10), '管理者待處理通知');
       save();
       render();
       toast('已送出申請，等待文化局授權');
     }
   });
 };
-ACTIONS.repGrantOk = function (el) {
-  var g = HCV.byId(S.reportGrants, el.getAttribute('data-id'));
+ACTIONS.repReview = function (el) {
+  var a = HCV.byId(S.admins, el.getAttribute('data-id'));
+  var g = grantOf(a.id);
+  if (!g || g.status !== '申請中') {
+    return;
+  }
+  choiceBox({
+    title: '審核報表查閱申請',
+    body: '<dl class="dl">' + '<dt>申請人</dt><dd>' + esc(a.name) + '（' + esc(a.unit) + '）</dd>' + '<dt>授權後可看</dt><dd>' + esc(a.locationIds.length ? a.locationIds.map(lname).join('、') + ' 的時數報表' : '尚未指定服務地點，授權後也看不到任何地點的報表') + '</dd>' + '<dt>申請時間</dt><dd>' + esc(g.at) + '</dd>' + '<dt>申請用途</dt><dd>' + esc(g.reason || '') + '</dd></dl>',
+    choices: [{
+      t: '婉拒',
+      fn: function () {
+        repReject(a, g);
+      }
+    }, {
+      t: '授權',
+      pri: true,
+      fn: function () {
+        repGrantNow(a, g, true);
+      }
+    }]
+  });
+};
+function repGrantNow(a, g, viaReview) {
+  var had = g && g.status === '申請中';
+  if (!g) {
+    g = {
+      id: nextId('RG', S.reportGrants),
+      adminId: a.id,
+      name: a.name
+    };
+    S.reportGrants.push(g);
+  }
   g.status = '已授權';
   g.grantedBy = ME.name;
   g.grantedAt = stamp();
-  log('授權報表查閱', pn(g.name));
-  save();
-  render();
-  toast('已授權 ' + g.name + ' 查閱本地點報表');
-};
-ACTIONS.repGrantNo = function (el) {
-  var g = HCV.byId(S.reportGrants, el.getAttribute('data-id'));
+  g.last = '';
+  g.note = '';
+  log('授權報表查閱', pn(a.name) + (viaReview ? '（審核申請）' : '（帳號設定直接授權）'));
+  if (had) {
+    mailAdmins([a], '報表查閱申請結果：已授權', '管理者待處理通知');
+  }
+  if (viaReview) {
+    save();
+    render();
+    toast('已授權 ' + a.name + ' 查閱與匯出報表，並通知申請人');
+  }
+}
+function repReject(a, g) {
   confirmBox({
-    title: '婉拒查閱申請',
+    title: '婉拒報表查閱申請',
     okText: '婉拒',
-    reason: '原因（必填，會回覆申請人）',
-    body: '<p>' + esc(g.name) + '　' + esc(g.at) + '</p>',
+    reason: '原因（必填，會寄給申請人，也會顯示在他的報表頁）',
+    body: '<p>' + esc(a.name) + '　' + esc(g.at) + ' 申請</p>',
     onOk: function (r) {
-      g.status = '已婉拒';
+      g.status = '未授權';
+      g.last = '婉拒';
+      g.lastAt = stamp();
       g.note = r;
-      log('婉拒報表查閱申請', pn(g.name) + '（' + r + '）');
+      log('婉拒報表查閱申請', pn(a.name) + '（' + r + '）');
+      mailAdmins([a], '報表查閱申請結果：未獲授權（' + r + '）', '管理者待處理通知');
       save();
       render();
-      toast('已婉拒並回覆申請人');
+      toast('已婉拒並通知申請人');
     }
   });
-};
+}
+function repRevoke(a, g) {
+  g.status = '未授權';
+  g.last = '取消';
+  g.lastAt = stamp();
+  g.note = '';
+  log('取消報表查閱授權', pn(a.name));
+}
 function locStats(l) {
   var m = HCV.TODAY.slice(0, 7);
   var vols = S.volunteers.filter(function (v) {
@@ -8345,7 +8427,7 @@ var TM_USE = {
   '新活動': '新活動開放報名時寄給符合限定組別的在職志工',
   '違規記點': '記點開立、調整、撤銷（含系統自動撤銷）',
   '申請進度': '志工申請送出、推進到待面試、通過、未通過（未通過不寫原因）',
-  '管理者待處理通知': '寄給管理者帳號：新的志工申請、待核可報名、代理人已同意待審、轉為空缺班的長假待審、長假待文化局簽核、長假核准後轉為空缺待安排的班、補登申請、簽到退編修申請、報表查閱授權'
+  '管理者待處理通知': '寄給管理者帳號：新的志工申請、待核可報名、代理人已同意待審、轉為空缺班的長假待審、長假待文化局簽核、長假核准後轉為空缺待安排的班、補登申請、簽到退編修申請、報表查閱申請與審核結果'
 };
 function noticeTemplates() {
   var list = S.notifyTemplates;
@@ -8513,6 +8595,13 @@ function matrixCell(x) {
   }
   return esc(x);
 }
+function repCell(a) {
+  var st = grantStatus(a);
+  if (!st) {
+    return esc('全部服務地點');
+  }
+  return pill(st, st === '已授權' ? 'ok' : st === '申請中' ? 'wait' : 'tag');
+}
 function adminScopeText(a) {
   if (a.role === '地點管理者') {
     return a.locationIds.length ? a.locationIds.map(lname).join('、') : '尚未指定';
@@ -8545,10 +8634,16 @@ PAGES.accounts = function () {
     if (F.adStat === '尚未設定密碼' && a.passwordSet !== false) {
       return false;
     }
+    if (F.adRep && grantStatus(a) !== F.adRep) {
+      return false;
+    }
     return true;
   });
   var rows = list.map(function (a) {
     var btns = '<button class="btn btn--sm" data-act="adEdit" data-id="' + a.id + '">編輯</button>';
+    if (grantStatus(a) === '申請中') {
+      btns += ' <button class="btn btn--sm btn--pri" data-act="repReview" data-id="' + a.id + '">審核申請</button>';
+    }
     if (a.id === ME.id) {
       btns += ' <span class="note">目前登入中</span>';
     } else if (a.disabled) {
@@ -8559,7 +8654,7 @@ PAGES.accounts = function () {
     if (a.passwordSet === false && !a.disabled) {
       btns += ' <button class="btn btn--sm" data-act="adResend" data-id="' + a.id + '">重寄設定密碼信</button>';
     }
-    return ['<b>' + esc(a.name) + '</b>', esc(a.unit), esc(a.email || '—'), pill(a.role, a.role === '總管理者' ? 'ok' : 'tag'), a.role === '地點管理者' && !a.locationIds.length ? pill('尚未指定', 'wait') : esc(adminScopeText(a)), (a.disabled ? pill('停用', 'bad') : pill('啟用中', 'ok')) + (a.passwordSet === false ? ' ' + pill('尚未設定密碼', 'wait') : ''), '<div class="btnrow">' + btns + '</div>'];
+    return ['<b>' + esc(a.name) + '</b>', esc(a.unit), esc(a.email || '—'), pill(a.role, a.role === '總管理者' ? 'ok' : 'tag'), a.role === '地點管理者' && !a.locationIds.length ? pill('尚未指定', 'wait') : esc(adminScopeText(a)), repCell(a), (a.disabled ? pill('停用', 'bad') : pill('啟用中', 'ok')) + (a.passwordSet === false ? ' ' + pill('尚未設定密碼', 'wait') : ''), '<div class="btnrow">' + btns + '</div>'];
   });
   body += '<div class="filters">' + '<div class="fld fld--wide"><label>搜尋（姓名、Email、單位）</label><input type="search" id="adQ" data-input="adQ" value="' + esc(F.adQ || '') + '" placeholder="輸入即過濾"></div>' + selectFld('角色', 'adRoleF', [{
     v: '',
@@ -8567,7 +8662,10 @@ PAGES.accounts = function () {
   }].concat(ROLES), F.adRoleF || '') + selectFld('狀態', 'adStat', [{
     v: '',
     t: '全部狀態'
-  }, '啟用中', '停用', '尚未設定密碼'], F.adStat || '') + '</div>' + '<div id="adTable">' + table([{
+  }, '啟用中', '停用', '尚未設定密碼'], F.adStat || '') + selectFld('報表查閱授權', 'adRep', [{
+    v: '',
+    t: '全部'
+  }, '未授權', '申請中', '已授權'], F.adRep || '') + '</div>' + '<div id="adTable">' + table([{
     t: '姓名'
   }, {
     t: '單位'
@@ -8578,10 +8676,12 @@ PAGES.accounts = function () {
   }, {
     t: '授權服務地點'
   }, {
+    t: '報表查閱授權'
+  }, {
     t: '狀態'
   }, {
     t: '操作'
-  }], rows, '沒有符合條件的帳號') + '</div>' + '<p class="hint" style="margin-top:12px">後台帳號不開放給志工，志工一律使用志工端。密碼不由管理者設定：新增帳號後系統寄「設定密碼」信到該帳號的 Email，本人點信中連結自己設定；還沒設定的標「尚未設定密碼」，可以重寄。' + '停用後立即無法登入，該帳號過去留下的操作紀錄全部保留。</p>' + '<div class="sect">角色權限對照</div>' + '<button type="button" class="more" data-act="adMatrix">' + (F.adMatrix ? '收合角色權限對照' : '展開角色權限對照') + '</button>' + (F.adMatrix ? tableAll([{
+  }], rows, '沒有符合條件的帳號') + '</div>' + '<p class="hint" style="margin-top:12px">後台帳號不開放給志工，志工一律使用志工端。密碼不由管理者設定：新增帳號後系統寄「設定密碼」信到該帳號的 Email，本人點信中連結自己設定；還沒設定的標「尚未設定密碼」，可以重寄。' + '停用後立即無法登入，該帳號過去留下的操作紀錄全部保留。<br>' + '服務地點管理者要有「報表查閱授權」才看得到時數報表，範圍就是他的授權服務地點。他在時數報表頁送出申請後，這裡標「申請中」並多一顆「審核申請」；總管理者也可以在「編輯」裡直接勾選授權或取消勾選，不必等申請。授權不設期限。</p>' + '<div class="sect">角色權限對照</div>' + '<button type="button" class="more" data-act="adMatrix">' + (F.adMatrix ? '收合角色權限對照' : '展開角色權限對照') + '</button>' + (F.adMatrix ? tableAll([{
     t: '功能'
   }, {
     t: '服務地點管理者'
@@ -8649,9 +8749,14 @@ function actLogList() {
 function adForm(a) {
   return '<div class="filters">' + '<div class="fld"><label>姓名</label><input type="text" id="adName" value="' + esc(a ? a.name : '') + '"></div>' + '<div class="fld"><label for="adUnit">單位</label><input type="text" id="adUnit" maxlength="20" value="' + esc(a ? a.unit : '文化局') + '" aria-describedby="adUnitHint">' + '<span class="note" id="adUnitHint">20 字內，可寫到地點或小組</span></div>' + '<div class="fld fld--wide"><label>Email（必填；設定密碼信與待處理通知寄到這裡，不能與其他帳號重複）</label><input type="email" id="adMail" value="' + esc(a && a.email ? a.email : '') + '"></div>' + '</div>' + '<div class="fld" style="margin-top:10px"><label>角色</label><select id="adRole" data-change="adRole">' + ROLES.map(function (r) {
     return '<option' + (a && a.role === r ? ' selected' : '') + '>' + r + '</option>';
-  }).join('') + '</select></div>' + '<div id="adLocBox" style="margin-top:12px;display:' + (!a || a.role === '地點管理者' ? '' : 'none') + '">' + '<div class="sect">授權服務地點（可複選）</div><div class="pickbox">' + S.locations.map(function (l) {
+  }).join('') + '</select></div>' + '<div id="adLocBox" style="margin-top:12px;display:' + (a && a.role === '地點管理者' ? '' : 'none') + '">' + '<div class="sect">授權服務地點（可複選）</div><div class="pickbox">' + S.locations.map(function (l) {
     return '<label><input type="checkbox" class="adL" value="' + l.id + '"' + (a && a.locationIds.indexOf(l.id) >= 0 ? ' checked' : '') + '> ' + esc(l.name + '　' + unit(l.unitId).name) + '</label>';
-  }).join('') + '</div></div>' + '<p class="hint" style="margin-top:12px">授權服務地點決定這個帳號看得到哪些資料，也就是「館別與系統參數」裡那個地點的管理者，兩邊改一邊另一邊跟著變；一人可管多個地點。' + '總管理者與報表檢視為全部地點，不需勾選。服務地點還沒建時可以先不勾，之後在「館別與系統參數」編輯地點時勾選管理者即可。<br>' + '儲存後系統寄設定密碼信到這個 Email，本畫面不設定密碼；忘記密碼在後台登入頁輸入 Email 收重設信。</p>';
+  }).join('') + '</div>' + adRepBox(a) + '</div>' + '<p class="hint" style="margin-top:12px">授權服務地點決定這個帳號看得到哪些資料，也就是「館別與系統參數」裡那個地點的管理者，兩邊改一邊另一邊跟著變；一人可管多個地點。' + '總管理者與報表檢視為全部地點，不需勾選。服務地點還沒建時可以先不勾，之後在「館別與系統參數」編輯地點時勾選管理者即可。<br>' + '儲存後系統寄設定密碼信到這個 Email，本畫面不設定密碼；忘記密碼在後台登入頁輸入 Email 收重設信。</p>';
+}
+function adRepBox(a) {
+  var g = a ? grantOf(a.id) : null;
+  var st = a && a.role === '地點管理者' ? grantStatus(a) : '未授權';
+  return '<div class="sect">報表查閱授權</div><div class="pickbox">' + '<label><input type="checkbox" id="adRep"' + (st === '已授權' ? ' checked' : '') + (st === '申請中' ? ' aria-describedby="adRepNote"' : '') + '> 可查閱與匯出上面這些服務地點的時數報表</label></div>' + (st === '申請中' ? '<p class="note" id="adRepNote">' + esc(a.name) + ' 已於 ' + esc(g.at) + ' 申請，用途：' + esc(g.reason || '') + '。勾選後儲存就是授權，並通知申請人；要婉拒請在清單按「審核申請」。</p>' : '');
 }
 ACTIONS.adRole = function (el) {
   var box = document.getElementById('adLocBox');
@@ -8705,6 +8810,17 @@ ACTIONS.adSave = function (el) {
   a.locationIds = locs;
   if (!id) {
     S.admins.push(a);
+  }
+  if (role === '地點管理者') {
+    var rb = document.getElementById('adRep');
+    var rg = grantOf(a.id);
+    var rst = rg ? rg.status : '未授權';
+    if (rb && rb.checked && rst !== '已授權') {
+      repGrantNow(a, rg, false);
+    }
+    if (rb && !rb.checked && rst === '已授權') {
+      repRevoke(a, rg);
+    }
   }
   if (!id) {
     PW_LAST = mail;
