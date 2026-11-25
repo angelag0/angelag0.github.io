@@ -292,6 +292,7 @@
       volunteerLockFails: 3,                   // 志工端連續登入失敗幾次鎖定
       volunteerLockMinutes: 30,                // 志工端鎖定幾分鐘
       logRetentionYears: 1,                    // 操作紀錄保留期限（年），滿期自動刪除
+      mohReportKeepMonths: 1,                  // 衛福部報表保存期限（月）：衛福部兩份含完整身分證字號，每一版產生後滿期自動刪除（2026-11-25）
 
       /* 上傳檔案：類型寫成 HCV.FILE_TYPES 的鍵；上限單位 MB */
       attachTypes: ['PDF', 'Word', 'JPG', 'PNG'],   // 公告附件可上傳的類型
@@ -341,10 +342,12 @@
        同一份＝報表種類（kind）＋期間（period）＋格式（format）＋篩選條件（filters：loc 服務地點、group 組別、slot 時段、leave 請假／代班情形；空白＝全部）都相同；
        再匯出一次就多存一版（ver 加 1），清單只列最新一版，較早的版本收在那一列展開（2026-11-11）。
        period 一律民國年月（115-09）或民國年（114）；name 照報表種類命名（HCV.reportName）。
-       RP01、RP04 示範同一份報表有兩版 */
+       RP01、RP04 示範同一份報表有兩版。
+       衛福部兩份（衛福部服勤、衛福部受訓）含完整身分證字號，每一版存一個 keepUntil＝產生日加系統參數「衛福部報表保存期限」個月，
+       到那天自動刪除；改參數只影響之後產生的版本（2026-11-25） */
     reports: [
       { id: 'RP01', kind: '文化局月報', ver: 2, name: '115 年 9 月　志工服務時數月報（文化局格式）', period: '115-09', format: 'Excel', filters: {}, createdAt: '2026-10-02 10:12', by: '陳怡安' },
-      { id: 'RP02', kind: '衛福部服勤', ver: 1, name: '115 年 9 月　衛福部志工服勤時數月報表', period: '115-09', format: 'Excel', filters: {}, createdAt: '2026-10-02 10:15', by: '陳怡安' },
+      { id: 'RP02', kind: '衛福部服勤', ver: 1, name: '115 年 9 月　衛福部志工服勤時數月報表', period: '115-09', format: 'Excel', filters: {}, createdAt: '2026-10-02 10:15', by: '陳怡安', keepUntil: '2026-11-02' },
       { id: 'RP04', kind: '文化局月報', ver: 1, name: '115 年 9 月　志工服務時數月報（文化局格式）', period: '115-09', format: 'Excel', filters: {}, createdAt: '2026-10-01 16:40', by: '蕭宏仁' },
       { id: 'RP03', kind: '文化局年報', ver: 1, name: '114 年度　志工服務時數年度報表（文化局格式）', period: '114', format: 'PDF', filters: {}, createdAt: '2026-01-08 10:00', by: '陳怡安' }
     ]

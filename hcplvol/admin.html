@@ -333,6 +333,11 @@ function derive() {
     if (g.status === '待授權') { g.status = '申請中'; }
     if (g.status === '已婉拒') { g.status = '未授權'; g.last = '婉拒'; }
   });
+  /* 衛福部兩份歷史報表的保存期限（B-10 第 14 點⑤、B-14 帳號安全）：舊的暫存資料沒有這個參數與刪除日，補上 */
+  if (S.params.mohReportKeepMonths == null) { S.params.mohReportKeepMonths = 1; }
+  S.reports.forEach(function (r) {
+    if (isMohKind(r.kind) && !r.keepUntil) { r.keepUntil = HCV.addMonths(String(r.createdAt).slice(0, 10), S.params.mohReportKeepMonths); }
+  });
   if (!S.actLog) {
     S.actLog = [
       { id: 'OP03', time: '2026-10-13 16:42', by: '林雅雯', action: '申請編修簽到退時間', detail: '王*芬 10/03 上午場' },
@@ -4370,7 +4375,16 @@ function repGroups() {
     return { key: k, versions: vs, latest: vs[vs.length - 1] };
   }).sort(function (a, b) { return a.latest.createdAt < b.latest.createdAt ? 1 : (a.latest.createdAt > b.latest.createdAt ? -1 : 0); });
 }
+/* 衛福部兩份含完整身分證字號：每一版存刪除日（keepUntil＝產生日加系統參數「衛福部報表保存期限」個月），到那天自動刪除。
+   正式系統由每日排程刪；原型在打開報表頁時把已到刪除日的版本拿掉 */
+function isMohKind(kind) { return String(kind || '').indexOf('衛福部') === 0; }
+function repPurge() {
+  var gone = S.reports.filter(function (r) { return r.keepUntil && r.keepUntil <= HCV.TODAY; });
+  if (gone.length) { S.reports = S.reports.filter(function (r) { return gone.indexOf(r) < 0; }); save(); }
+}
+function repKeepNote(r) { return r.keepUntil ? '將於 ' + r.keepUntil + ' 自動刪除' : ''; }
 function repHistory() {
+  repPurge();
   var gs = repGroups();
   if (!gs.length) { return '<div class="empty">還沒有保存過的報表</div>'; }
   if (!F.repOpen) { F.repOpen = {}; }
@@ -4379,7 +4393,8 @@ function repHistory() {
     var r = g.latest, n = g.versions.length, vtxt = n > 1 ? '第 ' + repVer(r) + ' 版' : '';
     var sid = 'repOld' + i, open = !!F.repOpen[g.key], ft = repFilterText(r.filters);
     var tr = '<tr><td>' + esc(r.name) + (vtxt ? '　<span class="note">' + vtxt + '</span>' : '') +
-      (ft ? '<br><span class="note">篩選條件：' + esc(ft) + '</span>' : '') + '</td>' +
+      (ft ? '<br><span class="note">篩選條件：' + esc(ft) + '</span>' : '') +
+      (r.keepUntil ? '<br><span class="note">' + esc(repKeepNote(r)) + '</span>' : '') + '</td>' +
       '<td>' + esc(r.period) + '</td><td>' + esc(r.format) + '</td><td>' + esc(r.createdAt) + '</td><td>' + esc(r.by) + '</td>' +
       '<td><div class="btnrow"><button type="button" class="btn btn--sm" data-act="repDownload" data-id="' + r.id + '" aria-label="' + esc('下載 ' + r.name + (vtxt ? ' ' + vtxt : '') + '（' + r.format + '）') + '">下載</button>' +
       (n > 1 ? '<button type="button" class="btn btn--sm" data-act="repOlder" data-k="' + esc(g.key) + '" aria-expanded="' + open + '" aria-controls="' + sid + '">較早的版本（' + (n - 1) + '）</button>' : '') +
@@ -4390,7 +4405,7 @@ function repHistory() {
         '<table class="tb"><caption class="vh">' + esc(r.name + '（' + r.format + '）的較早版本') + '</caption>' +
         '<thead><tr><th scope="col">版次</th><th scope="col">產生時間</th><th scope="col">產生者</th><th scope="col">操作</th></tr></thead><tbody>' +
         older.map(function (o) {
-          return '<tr><td>第 ' + repVer(o) + ' 版</td><td>' + esc(o.createdAt) + '</td><td>' + esc(o.by) + '</td>' +
+          return '<tr><td>第 ' + repVer(o) + ' 版</td><td>' + esc(o.createdAt) + (o.keepUntil ? '<br><span class="note">' + esc(repKeepNote(o)) + '</span>' : '') + '</td><td>' + esc(o.by) + '</td>' +
             '<td><button type="button" class="btn btn--sm" data-act="repDownload" data-id="' + o.id + '" aria-label="' + esc('下載 ' + o.name + ' 第 ' + repVer(o) + ' 版（' + o.format + '）') + '">下載</button></td></tr>';
         }).join('') + '</tbody></table></td></tr>';
     }
@@ -4417,6 +4432,8 @@ function repSaveVersion(kind, code, fmt, filters) {
   var ver = same.reduce(function (m, r) { return Math.max(m, repVer(r)); }, 0) + 1;
   rec = { id: nextId('RP', S.reports), kind: kind, ver: ver, name: HCV.reportName(kind, code), period: code,
     format: fmt, filters: rec.filters, createdAt: stamp(), by: ME.name };
+  /* 刪除日在產生當下算好存起來，之後改保存期限不回頭改（跟違規記點失效日同一種做法） */
+  if (isMohKind(kind)) { rec.keepUntil = HCV.addMonths(HCV.TODAY, S.params.mohReportKeepMonths || 1); }
   S.reports.unshift(rec);
   return rec;
 }
@@ -4463,6 +4480,8 @@ ACTIONS.repExport = function (el) {
 ACTIONS.repDownload = function (el) {
   var r = HCV.byId(S.reports, el.getAttribute('data-id'));
   var many = r && S.reports.some(function (x) { return x !== r && repSameKey(x) === repSameKey(r); });
+  /* 衛福部兩份含完整身分證字號，下載也記一筆操作紀錄（匯出時已記「匯出報表」） */
+  if (r && isMohKind(r.kind)) { log('下載衛福部報表', r.name + '（' + r.format + (many ? '，第 ' + repVer(r) + ' 版' : '') + '）'); save(); }
   toast('已下載：' + (r ? r.name + (many ? ' 第 ' + repVer(r) + ' 版' : '') + '（' + r.format + '）' : '報表'));
 };
 ACTIONS.repApply = function () {
@@ -4629,7 +4648,7 @@ PAGES.hqdash = function () {
       var r = HCV.maskRule(S, f.key); return f.label + ' ' + HCV.maskWith(f.key, f.sample, r.head, r.tail) + (r.on ? '' : '（清單上不遮）');
     }).join('、')) + '</dd>' +
     '<dt>帳號安全</dt><dd>後台' + esc(pwRuleText()) + '；後台連續失敗 ' + p.adminLockFails + ' 次鎖 ' + p.adminLockMinutes + ' 分鐘、志工端 ' +
-      p.volunteerLockFails + ' 次鎖 ' + p.volunteerLockMinutes + ' 分鐘；操作紀錄保留 ' + p.logRetentionYears + ' 年</dd>' +
+      p.volunteerLockFails + ' 次鎖 ' + p.volunteerLockMinutes + ' 分鐘；操作紀錄保留 ' + p.logRetentionYears + ' 年；衛福部報表保存 ' + p.mohReportKeepMonths + ' 個月</dd>' +
     '</dl>',
     '<button class="btn" ' + jump('settings', {}) + '>前往設定</button>');
   return html;
@@ -5072,15 +5091,18 @@ function setParams() {
     '<div class="grid g3">' +
     paramNumber('pmPwMin', '後台密碼最短長度（碼）', p.adminPwMinLength, '設定密碼頁與忘記密碼後的重設頁照這個檢核', 1) +
     paramSelect('pmPwMix', '後台密碼須同時含英文與數字', ['開啟', '關閉'], p.adminPwNeedMix ? '開啟' : '關閉') +
-    paramNumber('pmLogKeep', '操作紀錄保留期限（年）', p.logRetentionYears, '滿期自動刪除', 1) +
+    '<div aria-hidden="true"></div>' +
     paramNumber('pmAdLockN', '後台連續登入失敗幾次鎖定（次）', p.adminLockFails, '', 1) +
     paramNumber('pmAdLockM', '後台鎖定幾分鐘', p.adminLockMinutes, '', 1) +
     '<div aria-hidden="true"></div>' +
     paramNumber('pmVoLockN', '志工端連續登入失敗幾次鎖定（次）', p.volunteerLockFails, '', 1) +
     paramNumber('pmVoLockM', '志工端鎖定幾分鐘', p.volunteerLockMinutes, '志工端登入頁的說明照這兩個值顯示', 1) +
+    '<div aria-hidden="true"></div>' +
+    paramNumber('pmLogKeep', '操作紀錄保留期限（年）', p.logRetentionYears, '滿期自動刪除', 1) +
+    paramNumber('pmMohKeep', '衛福部報表保存期限（月）', p.mohReportKeepMonths, '衛福部兩份報表含完整身分證字號，每一版產生後滿期自動刪除', 1) +
     '</div>' +
     '<p class="hint" style="margin-top:6px">後台帳號沒有預設密碼：新增帳號一律寄設定密碼信，本人自己設定。改密碼規則只影響之後設定的密碼。' +
-    '志工端的密碼是館藏查詢系統的密碼，本平臺只管連續登入失敗的鎖定。</p>' +
+    '志工端的密碼是館藏查詢系統的密碼，本平臺只管連續登入失敗的鎖定。改衛福部報表保存期限只影響之後匯出的版本，已存的照原本的刪除日。</p>' +
 
     '<div class="sect">上傳檔案</div>' +
     '<div class="grid g2">' +
@@ -5126,7 +5148,8 @@ ACTIONS.paramSave = function () {
     adminPwMinLength: posNum('pmPwMin', 6, '請填 6 以上的整數'),
     adminLockFails: posNum('pmAdLockN', 1, '請填 1 以上的整數'), adminLockMinutes: posNum('pmAdLockM', 1, '請填 1 以上的整數'),
     volunteerLockFails: posNum('pmVoLockN', 1, '請填 1 以上的整數'), volunteerLockMinutes: posNum('pmVoLockM', 1, '請填 1 以上的整數'),
-    logRetentionYears: posNum('pmLogKeep', 1, '請填 1 以上的整數')
+    logRetentionYears: posNum('pmLogKeep', 1, '請填 1 以上的整數'),
+    mohReportKeepMonths: posNum('pmMohKeep', 1, '請填 1 以上的整數')
   };
   var atT = multi('.pmAtT'), imT = multi('.pmImT');
   errs.push(['pmAtT', atT.length ? '' : '至少要勾一種附件類型']);
@@ -5191,7 +5214,8 @@ function paramChanges(p, pii, sec, atT, atMB, imT, imMB, notice) {
     }
   });
   var lab = { adminPwMinLength: '後台密碼最短長度', adminLockFails: '後台失敗鎖定次數', adminLockMinutes: '後台鎖定分鐘',
-    volunteerLockFails: '志工端失敗鎖定次數', volunteerLockMinutes: '志工端鎖定分鐘', logRetentionYears: '操作紀錄保留年數' };
+    volunteerLockFails: '志工端失敗鎖定次數', volunteerLockMinutes: '志工端鎖定分鐘', logRetentionYears: '操作紀錄保留年數',
+    mohReportKeepMonths: '衛福部報表保存月數' };
   Object.keys(sec).forEach(function (k) { if (p[k] !== sec[k]) { out.push(lab[k] + '改為 ' + sec[k]); } });
   var mix = val('#pmPwMix') === '開啟';
   if (!!p.adminPwNeedMix !== mix) { out.push('後台密碼須含英文與數字改為 ' + onoff(mix)); }
