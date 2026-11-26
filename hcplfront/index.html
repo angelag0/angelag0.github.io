@@ -1,0 +1,1345 @@
+<!doctype html>
+<html lang="zh-Hant" class="no-js">
+  <head>
+    <meta name="robots" content="noindex" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>最新活動資訊 - 新竹縣公共圖書館活動報名系統</title>
+    <!-- 切版樣式（原檔，不改） -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link href="images/favicon.png" rel="icon" type="image/x-icon" />
+    <style>
+      /* ============================================================
+         原型自加的樣式（切版 style.css 一行都沒動）
+         1. 報名紀錄查詢連結
+         2. 狀態角標：共用底 + A 書頁色塊 / B 館章 / C 書籤，三款各一段
+            正式套版時，只取共用底與選定那一款的區段，把 .styleX 前綴拿掉
+         3. 原型工具（右下角，只在原型裡，正式網站不要）
+         色碼全部是 CIS 標準色；連結用切版主色 #226455
+         ============================================================ */
+      :root {
+        --cis-black: #000000; /* 文字黑 */
+        --cis-gray: #66645d; /* 科技灰 */
+        --cis-white: #ffffff; /* 春桐白 */
+        --cis-red: #ef858c; /* 燃夏紅 */
+        --cis-yellow: #fdd469; /* 秋實黃 */
+        --cis-green: #4fbaa1; /* 福冬綠 */
+        --site-green: #226455; /* 切版主色：搜尋鈕、麵包屑、分頁 */
+      }
+
+      /* ---------- 1. 頁名列與報名紀錄查詢 ---------- */
+      .titleRow {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px 24px;
+      }
+      .recordLink {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 2px;
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: 1.5;
+        color: var(--site-green);
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 6px;
+        border-radius: 4px;
+        outline: transparent solid 2px;
+      }
+      .recordLink:hover {
+        color: var(--site-green);
+        text-decoration-thickness: 2px;
+      }
+      .recordLink:focus-visible {
+        outline: 3px dashed #c40000;
+        outline-offset: 2px;
+      }
+      .recordLink svg {
+        flex: none;
+        width: 22px;
+        height: 22px;
+      }
+      .recordLink .rlArrow {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* ---------- 2. 狀態角標：共用底 ---------- */
+      /* 狀態靠三樣分辨：字、圖示、顏色。顏色只是第三道，色弱也讀得出來 */
+      .listAlbum .actBadge {
+        position: absolute;
+        line-height: 1.25;
+        font-weight: 700;
+        color: var(--ab-fg);
+        pointer-events: none;
+      }
+      .actBadge[data-state="full"] {
+        --ab-bg: var(--cis-gray);
+        --ab-fg: var(--cis-white);
+      }
+      .actBadge[data-state="joined"] {
+        --ab-bg: var(--cis-green);
+        --ab-fg: var(--cis-black);
+      }
+      .actBadge[data-state="wait"] {
+        --ab-bg: var(--cis-yellow);
+        --ab-fg: var(--cis-black);
+      }
+      .actBadge .abBody {
+        display: flex;
+        align-items: center;
+      }
+      .actBadge .abIcon {
+        flex: none;
+        width: 1.1em;
+        height: 1.1em;
+      }
+      .actBadge .abWave {
+        display: none;
+      }
+      .listAlbum .actBadge[hidden],
+      .listAlbum .sr-only[hidden] {
+        display: none !important;
+      }
+      .listAlbum li a.cardLink .pic img {
+        transition: filter 0.3s ease, opacity 0.3s ease;
+      }
+
+      /* ---------- A 書頁色塊 ----------
+         CIS 輔助圖案的「色塊模組」（書頁），比例照規範、滿版貼齊照片底邊；
+         頁尾黃色那道波浪是同一個模組，同一畫面只用這一種。
+         狀態字放在書頁翻起的那一角。額滿：照片轉灰。 */
+      .styleA .actBadge {
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+      .styleA .actBadge .abWave {
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1000 / 120;
+        margin-bottom: -1px;
+        fill: var(--ab-bg);
+      }
+      .styleA .actBadge::after {
+        content: "";
+        display: block;
+        height: 10px;
+        background: var(--ab-bg);
+      }
+      .styleA .actBadge .abBody {
+        position: absolute;
+        right: 14px;
+        bottom: 9px;
+        gap: 6px;
+        font-size: 1.25rem;
+        letter-spacing: 0.1em;
+      }
+      .styleA .pic:has(.actBadge[data-state="full"]) img {
+        filter: grayscale(1);
+      }
+
+      /* ---------- B 館章 ----------
+         一枚圓章蓋在照片右上，像借還書時蓋的章。三種狀態同大小、同位置。
+         額滿：章換燃夏紅，照片轉灰，只留章的顏色。 */
+      .styleB .actBadge {
+        top: 12px;
+        right: 12px;
+        width: 100px;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: var(--ab-bg);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transform: rotate(-10deg);
+        transition: transform 0.3s ease;
+      }
+      .styleB .actBadge::before {
+        content: "";
+        position: absolute;
+        inset: 5px;
+        border: 2px solid currentColor;
+        border-radius: 50%;
+      }
+      .styleB .actBadge .abBody {
+        flex-direction: column;
+        gap: 1px;
+        font-size: 1.0625rem;
+        letter-spacing: 0.08em;
+      }
+      .styleB .actBadge .abIcon {
+        width: 1.35em;
+        height: 1.35em;
+      }
+      .styleB .actBadge[data-state="full"] {
+        --ab-bg: var(--cis-red);
+        --ab-fg: var(--cis-black);
+      }
+      .styleB .pic:has(.actBadge[data-state="full"]) img {
+        filter: grayscale(1);
+      }
+      .styleB .listAlbum li:hover .actBadge,
+      .styleB .listAlbum a.cardLink:focus-visible .actBadge {
+        transform: rotate(-3deg) scale(1.05);
+      }
+
+      /* ---------- C 書籤 ----------
+         一條書籤從照片上緣垂下，直排寫狀態，尾端剪成燕尾。
+         額滿：書籤換科技灰，照片淡掉。 */
+      .styleC .actBadge {
+        top: 0;
+        left: 16px;
+        filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.28));
+      }
+      .styleC .actBadge .abBody {
+        writing-mode: vertical-rl;
+        gap: 6px;
+        padding: 12px 9px 24px;
+        background: var(--ab-bg);
+        font-size: 1.0625rem;
+        letter-spacing: 0.2em;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 11px), 0 100%);
+        transition: padding 0.3s ease;
+      }
+      .styleC .actBadge .abIcon {
+        width: 1.15em;
+        height: 1.15em;
+      }
+      .styleC .pic:has(.actBadge[data-state="full"]) img {
+        opacity: 0.45;
+      }
+      .styleC .listAlbum li:hover .actBadge .abBody,
+      .styleC .listAlbum a.cardLink:focus-visible .actBadge .abBody {
+        padding-bottom: 32px;
+      }
+
+      /* 角標跟著卡片寬度：四欄（大於 1300）、四欄偏窄、三欄與兩欄、手機一欄 */
+      @media screen and (max-width: 1300px) {
+        .styleA .actBadge::after {
+          height: 14px;
+        }
+        .styleA .actBadge .abBody {
+          font-size: 1.125rem;
+        }
+        .styleB .actBadge {
+          width: 92px;
+        }
+        .styleB .actBadge .abBody,
+        .styleC .actBadge .abBody {
+          font-size: 1rem;
+        }
+      }
+      @media screen and (max-width: 991px) {
+        .styleA .actBadge .abBody {
+          bottom: 8px;
+          font-size: 1.0625rem;
+        }
+        .styleB .actBadge {
+          top: 10px;
+          right: 10px;
+          width: 80px;
+        }
+        .styleB .actBadge::before {
+          inset: 4px;
+        }
+        .styleB .actBadge .abBody {
+          font-size: 0.9375rem;
+        }
+        .styleC .actBadge {
+          left: 12px;
+        }
+        .styleC .actBadge .abBody {
+          padding: 10px 8px 20px;
+          font-size: 0.9375rem;
+        }
+      }
+      @media screen and (max-width: 575px) {
+        .styleA .actBadge .abBody {
+          font-size: 1.25rem;
+        }
+        .styleB .actBadge {
+          width: 96px;
+        }
+        .styleB .actBadge .abBody,
+        .styleC .actBadge .abBody {
+          font-size: 1.0625rem;
+        }
+        .styleC .actBadge .abBody {
+          padding: 12px 9px 24px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .listAlbum .actBadge,
+        .listAlbum .actBadge .abBody,
+        .listAlbum li a.cardLink .pic img {
+          transition: none;
+        }
+      }
+
+      /* ---------- 3. 原型工具（右下角，正式網站不要） ---------- */
+      body {
+        padding-bottom: 80px;
+      }
+      #scrollTop {
+        bottom: 84px;
+      }
+      .protoTool {
+        position: fixed;
+        z-index: 54;
+        right: 20px;
+        bottom: 20px;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: flex-end;
+        gap: 10px;
+        font-size: 1rem;
+        line-height: 1.5;
+        letter-spacing: 0.04em;
+      }
+      .protoTool button {
+        margin: 0;
+        border: 0;
+        font: inherit;
+        cursor: pointer;
+        outline: transparent solid 2px;
+      }
+      .protoTool button:focus-visible {
+        outline: 3px dashed var(--cis-yellow);
+        outline-offset: 2px;
+      }
+      .protoTool .ptToggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        width: auto;
+        min-height: 44px;
+        padding: 8px 18px;
+        border-radius: 999px;
+        background: #1c1c1c;
+        color: #ffffff;
+        font-weight: 700;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+      }
+      .protoTool .ptToggle:hover {
+        background: #333333;
+      }
+      .ptToggle .ptNow {
+        color: #cfcfcf;
+        font-weight: 500;
+      }
+      .ptPanel {
+        width: min(360px, calc(100vw - 24px));
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+        padding: 14px 16px 16px;
+        background: #1c1c1c;
+        color: #ffffff;
+        border-radius: 18px;
+        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.32);
+      }
+      .ptPanel[hidden] {
+        display: none;
+      }
+      .ptHead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .ptHead .ptTitle {
+        margin: 0;
+        font-size: 1.0625rem;
+        font-weight: 700;
+      }
+      .protoTool .ptClose {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: #ffffff;
+      }
+      .protoTool .ptClose:hover {
+        background: #333333;
+      }
+      .ptClose svg {
+        width: 18px;
+        height: 18px;
+      }
+      .ptLegend {
+        display: block;
+        margin: 10px 0 6px;
+        color: #cfcfcf;
+        font-size: 0.875rem;
+      }
+      .ptStyles {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .protoTool .ptStyles button {
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        column-gap: 10px;
+        align-items: start;
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #2a2a2a;
+        color: #ffffff;
+        line-height: 1.4;
+        text-align: left;
+        white-space: normal;
+      }
+      .protoTool .ptStyles button:hover {
+        background: #3a3a3a;
+      }
+      .ptStyles .pbGlyph {
+        margin-top: 1px;
+      }
+      .ptStyles .ptName {
+        font-weight: 700;
+      }
+      .ptStyles .ptDesc {
+        grid-column: 2;
+        margin-top: 3px;
+        color: #cfcfcf;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+      .protoTool .ptStyles button[aria-pressed="true"] {
+        background: #ffffff;
+        color: #000000;
+      }
+      .protoTool .ptStyles button[aria-pressed="true"] .ptDesc {
+        color: #3a3a3a;
+      }
+      .ptWho {
+        display: flex;
+        gap: 2px;
+        padding: 3px;
+        background: #333333;
+        border-radius: 10px;
+      }
+      .protoTool .ptWho button {
+        flex: 1 1 0;
+        min-height: 40px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        background: transparent;
+        color: #e6e6e6;
+        font-weight: 600;
+      }
+      .protoTool .ptWho button:hover {
+        background: #474747;
+        color: #ffffff;
+      }
+      .protoTool .ptWho button[aria-pressed="true"] {
+        background: #ffffff;
+        color: #000000;
+      }
+      .ptHint {
+        margin: 8px 0 0;
+        color: #cfcfcf;
+        font-size: 0.875rem;
+      }
+      .pbGlyph {
+        flex: none;
+        width: 24px;
+        height: 18px;
+        fill: currentColor;
+      }
+      @media screen and (max-width: 767px) {
+        body {
+          padding-bottom: 68px;
+        }
+        #scrollTop {
+          bottom: 66px;
+        }
+        .protoTool {
+          right: 12px;
+          bottom: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body class="styleA">
+    <!-- 圖示（角標三種狀態、書頁色塊、報名紀錄、切換列縮圖） -->
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+      <symbol id="ic-full" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+          <circle cx="12" cy="12" r="9.3" />
+          <path d="M7.6 12h8.8" />
+        </g>
+      </symbol>
+      <symbol id="ic-joined" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9.3" />
+          <path d="M7.7 12.3l2.9 2.9 5.7-6" />
+        </g>
+      </symbol>
+      <symbol id="ic-wait" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9.3" />
+          <path d="M12 7.2v5.1l3.3 2" />
+        </g>
+      </symbol>
+      <!-- CIS 色塊模組（書頁）：照視覺規範 P113 描出的輪廓，寬高比 1000:120 不可改 -->
+      <symbol id="ab-wave" viewBox="0 0 1000 120">
+        <path d="M0,112 C33,116 67,116 100,112 C160,105 260,80 338,80 C390,80 450,92 496,120 C530,40 590,1 702,1 C790,2 900,10 1000,0 L1000,120 L0,120 Z" />
+      </symbol>
+      <symbol id="ic-record" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="4.5" width="14" height="17" rx="2" />
+          <path d="M9 4.5v-1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1" />
+          <path d="M8.5 10.5h7M8.5 14h7M8.5 17.5h4" />
+        </g>
+      </symbol>
+      <symbol id="ic-arrow" viewBox="0 0 24 24">
+        <path d="M9 5.5l6.5 6.5L9 18.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+      </symbol>
+      <symbol id="ic-close" viewBox="0 0 24 24">
+        <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+      </symbol>
+      <symbol id="g-a" viewBox="0 0 24 18">
+        <path d="M0 10.6C3 10.9 6 8 9 8c1.6 0 2.6 1 3.4 3C13.4 6 15.6 4 19 4h5v14H0z" />
+      </symbol>
+      <symbol id="g-b" viewBox="0 0 24 18">
+        <circle cx="12" cy="9" r="8.2" />
+      </symbol>
+      <symbol id="g-c" viewBox="0 0 24 18">
+        <path d="M8 0h8v18l-4-3.4L8 18z" />
+      </symbol>
+    </svg>
+
+    <!-- wrapper Start -->
+    <div class="wrapper">
+      <!-- 直接跳主內容區 -->
+      <a class="goCenter" href="#aC">按Enter到主內容區</a>
+
+      <!-- header Start -->
+      <header>
+        <a class="accessKeyItem" href="#aU" id="aU" accesskey="U" aria-label="功能區塊">:::</a>
+        <div class="headTop">
+          <div class="container">
+            <button type="button" id="mobileMainMenuBtn">主選單按鈕</button>
+            <h1>
+              <a href="index.html"><img src="images/logo.png" alt="新竹縣公共圖書館" /></a>
+            </h1>
+            <!-- navigation Start -->
+            <nav class="topNav" role="navigation" aria-label="頁首功能列">
+              <!-- navList Start -->
+              <div class="navList">
+                <ul>
+                  <li><a href="#">網站導覽</a></li>
+                  <li><a href="#">回首頁</a></li>
+                  <li><a href="#">新竹縣政府文化局</a></li>
+                </ul>
+              </div>
+              <!-- navList End -->
+              <div class="subNavList">
+                <div class="topSearch sliderFn">
+                  <button type="button" id="topSearchBtn">網站搜尋</button>
+                </div>
+              </div>
+            </nav>
+            <!-- navigation End -->
+            <!-- Search Start -->
+            <button type="button" id="mobileSearchBtn" aria-label="搜尋按鈕"></button>
+            <div class="webSearch" role="search">
+              <div class="webSearchContent">
+                <div class="formList">
+                  <label for="topSearchInput" class="srOnly">搜尋</label>
+                  <select name="topSearch" id="topSearch">
+                    <option value="" selected>館藏查詢</option>
+                    <option value="">圖書</option>
+                  </select>
+                  <input name="topSearchInput" id="topSearchInput" type="text" placeholder="請輸入文字" accesskey="S" aria-label="搜尋網站內容" />
+                  <button type="button" class="btnPrimary">查詢</button>
+                </div>
+              </div>
+            </div>
+            <!-- Search End -->
+          </div>
+        </div>
+        <!-- noscript -->
+        <noscript>
+          您的瀏覽器不支援JavaScript語法，JavaScript語法並不影響內容的陳述。您可使用按鍵盤上的Ctrl鍵+ (+)鍵放大/(-)鍵縮小來改變字型大小；回到上一頁可使用瀏覽器提供的 Alt+左方向鍵(←) 快速鍵功能；列印可使用瀏覽器提供的(Ctrl+P)功能。您的瀏覽器，不支援script語法，若您的瀏覽器無法支援請點選此超連結
+          <a href="#">網站導覽</a>
+        </noscript>
+        <!-- menu Start -->
+        <div class="mainMenu">
+          <div class="container">
+            <nav class="menu" role="navigation" aria-label="主選單">
+              <ul>
+                <li>
+                  <a href="#">最新消息</a>
+                </li>
+                <li>
+                  <a href="#">認識圖書館</a>
+                  <ul>
+                    <li><a href="#">認識圖書館</a></li>
+                    <li><a href="#">圖書館介紹</a></li>
+                    <li><a href="#">館藏發展政策</a></li>
+                    <li><a href="#">閱讀政策白皮書</a></li>
+                    <li><a href="#">新竹縣公共圖書館logo</a></li>
+                    <li><a href="#">館員制服</a></li>
+                    <li><a href="#">借閱證</a></li>
+                    <li><a href="#">新竹縣立總圖書館</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">館藏查詢</a>
+                </li>
+                <li>
+                  <a href="#">借閱證申請</a>
+                  <ul>
+                    <li><a href="#">借閱證申請</a></li>
+                    <li><a href="#">新辦證申請</a></li>
+                    <li>
+                      <a href="http://www.google.com">辦證說明</a>
+                      <ul>
+                        <li>
+                          <a href="http://www.google.com">第三層選單有下層</a>
+                          <ul>
+                            <li><a href="#">第四層選單</a></li>
+                            <li><a href="#">第四層選單</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="http://www.google.com">第三層選單有連結</a>
+                        </li>
+                        <li><a href="#">第三層選單</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">閱讀獎勵</a>
+                  <ul>
+                    <li><a href="#">樂讀獎勵</a></li>
+                    <li>
+                      <a href="#">成人集點活動</a>
+                      <ul>
+                        <li><a href="#">第三層選單</a></li>
+                        <li>
+                          <a href="#">第三層選單</a>
+                          <ul>
+                            <li>
+                              <a href="http://www.google.com">第四層選單有下層</a>
+                              <ul>
+                                <li><a href="#">第五層選單</a></li>
+                                <li><a href="#">第五層選單</a></li>
+                              </ul>
+                            </li>
+                            <li>
+                              <a href="http://www.google.com">第四層選單有連結</a>
+                            </li>
+                            <li><a href="#">第四層選單</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="#">第三層選單</a></li>
+                        <li><a href="#">第三層選單</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#">兒童集點活動</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">便民服務</a>
+                  <ul>
+                    <li><a href="#">服務介紹</a></li>
+                    <li>
+                      <a href="#">閱覽須知</a>
+                      <ul>
+                        <li>
+                          <a href="http://www.google.com">第三層選單有下層</a>
+                          <ul>
+                            <li><a href="#">第四層選單</a></li>
+                            <li><a href="#">第四層選單</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="http://www.google.com">第三層選單有連結</a>
+                        </li>
+                        <li><a href="#">第三層選單</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#">常見問答</a></li>
+                    <li><a href="#">表單下載</a></li>
+                    <li><a href="#">意見信箱</a></li>
+                    <li><a href="#">各館遺失物公告</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">志工園地</a>
+                  <ul>
+                    <li><a href="#">志工園地 </a></li>
+                    <li><a href="#">館內志工</a></li>
+                    <li><a href="#">故事志工</a></li>
+                    <li><a href="#">學生志工</a></li>
+                    <li><a href="#">活動花絮</a></li>
+                    <li><a href="#">表單下載</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">閱讀推廣</a>
+                  <ul>
+                    <li><a href="#">每月說故事活動 </a></li>
+                    <li><a href="#">本土語言閱讀推廣活動 </a></li>
+                    <li><a href="#">閱讀日活動 </a></li>
+                    <li><a href="#">嬰幼兒閱讀活動 </a></li>
+                    <li><a href="#">社區營造閱讀平台 </a></li>
+                    <li><a href="#">公共圖書館分齡分眾服務網 </a></li>
+                    <li><a href="#">藝文活動資訊 </a></li>
+                    <li><a href="#">好書交換日 </a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">電子資源</a>
+                </li>
+                <li>
+                  <a href="#">行動書車</a>
+                  <ul>
+                    <li><a href="#">文化局書車 </a></li>
+                    <li><a href="#">竹東館書車 </a></li>
+                    <li><a href="#">五峰館書車 </a></li>
+                    <li><a href="#">尖石館書車 </a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">新竹縣樂讀卡</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- menu End -->
+      </header>
+      <!-- header End -->
+
+      <!-- main Start -->
+      <main>
+        <a class="accessKeyItem" href="#aC" id="aC" accesskey="C" aria-label="主要內容區">:::</a>
+        <div class="innerPage">
+          <div class="container">
+            <!-- 主內容區 Start -->
+            <div class="mainContentBox">
+              <!-- breadcrumb Start -->
+              <nav class="breadcrumb" role="navigation" aria-label="麵包屑">
+                <ul>
+                  <li><a href="#">首頁</a></li>
+                  <li aria-current="page">活動報名</li>
+                </ul>
+              </nav>
+              <!-- breadcrumb End -->
+
+              <!-- 新增：頁名列右側放報名紀錄查詢（登入讀者到 lp4 報名紀錄查詢；訪客先到 login 會員登入） -->
+              <div class="titleRow">
+                <h2 class="pageTitle">最新活動資訊</h2>
+                <a class="recordLink" id="recordLink" href="lp4.html">
+                  <svg aria-hidden="true" focusable="false"><use href="#ic-record" /></svg>
+                  <span>報名紀錄查詢</span>
+                  <svg class="rlArrow" aria-hidden="true" focusable="false"><use href="#ic-arrow" /></svg>
+                </a>
+              </div>
+
+              <div class="mainContent">
+                <!-- 列表控制列 (篩選與搜尋) -->
+                <div class="listControls">
+                  <div class="filterBox" role="group" aria-labelledby="filterGroupLabel">
+                    <label for="actSelect" class="filterLabel">篩選</label>
+                    <div class="selectWrap">
+                      <select id="actSelect" class="filterSelect">
+                        <option value="">活動類別</option>
+                        <option value="">一般活動</option>
+                        <option value="">閱讀推廣</option>
+                        <option value="">親子活動</option>
+                        <option value="">研習課程</option>
+                        <option value="">藝文展覽</option>
+                      </select>
+                    </div>
+                    <div class="selectWrap">
+                      <select id="branchSelect" class="filterSelect">
+                        <option value="">文化局圖書館</option>
+                        <option value="">竹東分館</option>
+                        <option value="">關西分館</option>
+                        <option value="">新埔分館</option>
+                        <option value="">新豐分館</option>
+                        <option value="">竹北分館</option>
+                        <option value="">湖口分館</option>
+                        <option value="">芎林分館</option>
+                        <option value="">橫山分館</option>
+                        <option value="">北埔分館</option>
+                        <option value="">寶山分館</option>
+                        <option value="">峨眉分館</option>
+                        <option value="">五峰分館</option>
+                        <option value="">尖石分館</option>
+                        <option value="">總館</option>
+                      </select>
+                    </div>
+                    <!-- 活動日期 -->
+                    <div class="dateWrap">
+                      <label for="actDate" class="sr-only">活動日期</label>
+                      <input type="date" id="actDate" class="filterDate" title="活動日期" />
+                    </div>
+                  </div>
+
+                  <form class="searchBox" action="">
+                    <label for="keywordInput" class="sr-only">關鍵字搜尋</label>
+                    <div class="searchInputWrap">
+                      <!-- 搜尋放大鏡 Icon -->
+                      <svg class="searchIcon" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      </svg>
+                      <input type="text" id="keywordInput" class="searchInput" placeholder="關鍵字搜尋..." />
+                    </div>
+                    <button type="submit" class="searchBtn">搜尋</button>
+                  </form>
+                </div>
+
+                <!-- 內容 Start -->
+                <!-- 角標：原本的 .fullOverlay 換成 .actBadge（data-state：full 已額滿／joined 已報名／wait 備取中），
+                     sr-only 狀態文字照留。已報名、備取中只有登入讀者看得到，原型用 data-login-only 標記 -->
+                <div class="listAlbum">
+                  <ul>
+                    <li>
+                      <a href="#" class="cardLink">
+                        <div class="pic">
+                          <img src="images/card_pic1.jpg" alt="" />
+                          <div class="actBadge" data-state="full" aria-hidden="true">
+                            <svg class="abWave" viewBox="0 0 1000 120" preserveAspectRatio="xMidYMid meet" focusable="false"><use href="#ab-wave" width="1000" height="120" /></svg>
+                            <span class="abBody"><svg class="abIcon" viewBox="0 0 24 24" focusable="false"><use href="#ic-full" /></svg><span class="abText">已額滿</span></span>
+                          </div>
+                          <span class="sr-only">狀態：已額滿</span>
+                        </div>
+                        <div class="infoBox">
+                          <h3 class="title">【新埔館活動】新埔鎮圖書館114年5月10日〔我媽媽〕故事活動剪影，家長帶著小朋友一起玩樂。</h3>
+                          <div class="timeList">
+                            <div class="timeItem">
+                              <span class="label">活動時間：</span>
+                              <time datetime="2026-01-24">2026.01.24</time>
+                            </div>
+                            <div class="timeItem">
+                              <span class="label">報名時間：</span>
+                              <span> <time datetime="2026-01-01">2026.01.01</time>-<time datetime="2026-01-20">2026.01.20</time> </span>
+                            </div>
+                          </div>
+                          <div class="tagBox">
+                            <span class="tag">其他活動</span>
+                            <span class="tag">新埔分館</span>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#" class="cardLink">
+                        <div class="pic">
+                          <img src="images/card_pic2.jpg" alt="" />
+                          <div class="actBadge" data-state="joined" data-login-only aria-hidden="true">
+                            <svg class="abWave" viewBox="0 0 1000 120" preserveAspectRatio="xMidYMid meet" focusable="false"><use href="#ab-wave" width="1000" height="120" /></svg>
+                            <span class="abBody"><svg class="abIcon" viewBox="0 0 24 24" focusable="false"><use href="#ic-joined" /></svg><span class="abText">已報名</span></span>
+                          </div>
+                          <span class="sr-only" data-login-only>狀態：已報名</span>
+                        </div>
+                        <div class="infoBox">
+                          <h3 class="title">【新埔館活動】新埔鎮圖書館114年4月20日〔地瓜打嗝了〕故事活動剪影，家長帶著小朋友一起玩樂。</h3>
+                          <div class="timeList">
+                            <div class="timeItem">
+                              <span class="label">活動時間：</span>
+                              <time datetime="2026-01-24">2026.01.24</time>
+                            </div>
+                            <div class="timeItem">
+                              <span class="label">報名時間：</span>
+                              <span> <time datetime="2026-01-01">2026.01.01</time>-<time datetime="2026-01-20">2026.01.20</time> </span>
+                            </div>
+                          </div>
+                          <div class="tagBox">
+                            <span class="tag">電影欣賞</span>
+                            <span class="tag">新埔分館</span>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#" class="cardLink">
+                        <div class="pic">
+                          <img src="images/card_pic3.jpg" alt="" />
+                          <div class="actBadge" data-state="wait" data-login-only aria-hidden="true">
+                            <svg class="abWave" viewBox="0 0 1000 120" preserveAspectRatio="xMidYMid meet" focusable="false"><use href="#ab-wave" width="1000" height="120" /></svg>
+                            <span class="abBody"><svg class="abIcon" viewBox="0 0 24 24" focusable="false"><use href="#ic-wait" /></svg><span class="abText">備取中</span></span>
+                          </div>
+                          <span class="sr-only" data-login-only>狀態：備取中</span>
+                        </div>
+                        <div class="infoBox">
+                          <h3 class="title">【新埔館公告】新埔鎮鎮圖書館114.4.6新書Listen!找到了!世界各地的樂器、巨大機場等上架了，喜歡閱讀的鄉親有空可以來圖書館看書或借閱，也歡迎家長帶小朋友一起來。</h3>
+                          <div class="timeList">
+                            <div class="timeItem">
+                              <span class="label">活動時間：</span>
+                              <time datetime="2026-01-24">2026.01.24</time>
+                            </div>
+                            <div class="timeItem">
+                              <span class="label">報名時間：</span>
+                              <span> <time datetime="2026-01-01">2026.01.01</time>-<time datetime="2026-01-20">2026.01.20</time> </span>
+                            </div>
+                          </div>
+                          <div class="tagBox">
+                            <span class="tag">其他活動</span>
+                            <span class="tag">新埔分館</span>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#" class="cardLink">
+                        <div class="pic">
+                          <img src="images/card_pic4.jpg" alt="" />
+                        </div>
+                        <div class="infoBox">
+                          <h3 class="title">【新埔館活動】新埔鎮圖書館114年3月30日〔豬小弟的甜甜圈店〕故事活動剪影，家長帶著小朋友一起玩樂。</h3>
+                          <div class="timeList">
+                            <div class="timeItem">
+                              <span class="label">活動時間：</span>
+                              <time datetime="2026-01-24">2026.01.24</time>
+                            </div>
+                            <div class="timeItem">
+                              <span class="label">報名時間：</span>
+                              <span> <time datetime="2026-01-01">2026.01.01</time>-<time datetime="2026-01-20">2026.01.20</time> </span>
+                            </div>
+                          </div>
+                          <div class="tagBox">
+                            <span class="tag">其他活動</span>
+                            <span class="tag">新埔分館</span>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#" class="cardLink">
+                        <div class="pic">
+                          <img src="images/card_pic1.jpg" alt="" />
+                        </div>
+                        <div class="infoBox">
+                          <h3 class="title">【新埔館活動】新埔鎮圖書館114年5月10日〔我媽媽〕故事活動剪影，家長帶著小朋友一起玩樂。</h3>
+                          <div class="timeList">
+                            <div class="timeItem">
+                              <span class="label">活動時間：</span>
+                              <time datetime="2026-01-24">2026.01.24</time>
+                            </div>
+                            <div class="timeItem">
+                              <span class="label">報名時間：</span>
+                              <span> <time datetime="2026-01-01">2026.01.01</time>-<time datetime="2026-01-20">2026.01.20</time> </span>
+                            </div>
+                          </div>
+                          <div class="tagBox">
+                            <span class="tag">其他活動</span>
+                            <span class="tag">新埔分館</span>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#" class="cardLink">
+                        <div class="pic">
+                          <img src="images/card_pic2.jpg" alt="" />
+                          <div class="actBadge" data-state="full" aria-hidden="true">
+                            <svg class="abWave" viewBox="0 0 1000 120" preserveAspectRatio="xMidYMid meet" focusable="false"><use href="#ab-wave" width="1000" height="120" /></svg>
+                            <span class="abBody"><svg class="abIcon" viewBox="0 0 24 24" focusable="false"><use href="#ic-full" /></svg><span class="abText">已額滿</span></span>
+                          </div>
+                          <span class="sr-only">狀態：已額滿</span>
+                        </div>
+                        <div class="infoBox">
+                          <h3 class="title">【新埔館活動】新埔鎮圖書館114年4月20日〔地瓜打嗝了〕故事活動剪影，家長帶著小朋友一起玩樂。</h3>
+                          <div class="timeList">
+                            <div class="timeItem">
+                              <span class="label">活動時間：</span>
+                              <time datetime="2026-01-24">2026.01.24</time>
+                            </div>
+                            <div class="timeItem">
+                              <span class="label">報名時間：</span>
+                              <span> <time datetime="2026-01-01">2026.01.01</time>-<time datetime="2026-01-20">2026.01.20</time> </span>
+                            </div>
+                          </div>
+                          <div class="tagBox">
+                            <span class="tag">電影欣賞</span>
+                            <span class="tag">新埔分館</span>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#" class="cardLink">
+                        <div class="pic">
+                          <img src="images/card_pic3.jpg" alt="" />
+                          <div class="actBadge" data-state="full" aria-hidden="true">
+                            <svg class="abWave" viewBox="0 0 1000 120" preserveAspectRatio="xMidYMid meet" focusable="false"><use href="#ab-wave" width="1000" height="120" /></svg>
+                            <span class="abBody"><svg class="abIcon" viewBox="0 0 24 24" focusable="false"><use href="#ic-full" /></svg><span class="abText">已額滿</span></span>
+                          </div>
+                          <span class="sr-only">狀態：已額滿</span>
+                        </div>
+                        <div class="infoBox">
+                          <h3 class="title">【新埔館公告】新埔鎮鎮圖書館114.4.6新書Listen!找到了!世界各地的樂器、巨大機場等上架了，喜歡閱讀的鄉親有空可以來圖書館看書或借閱，也歡迎家長帶小朋友一起來。</h3>
+                          <div class="timeList">
+                            <div class="timeItem">
+                              <span class="label">活動時間：</span>
+                              <time datetime="2026-01-24">2026.01.24</time>
+                            </div>
+                            <div class="timeItem">
+                              <span class="label">報名時間：</span>
+                              <span> <time datetime="2026-01-01">2026.01.01</time>-<time datetime="2026-01-20">2026.01.20</time> </span>
+                            </div>
+                          </div>
+                          <div class="tagBox">
+                            <span class="tag">其他活動</span>
+                            <span class="tag">新埔分館</span>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#" class="cardLink">
+                        <div class="pic">
+                          <img src="images/card_pic4.jpg" alt="" />
+                        </div>
+                        <div class="infoBox">
+                          <h3 class="title">【新埔館活動】新埔鎮圖書館114年3月30日〔豬小弟的甜甜圈店〕故事活動剪影，家長帶著小朋友一起玩樂。</h3>
+                          <div class="timeList">
+                            <div class="timeItem">
+                              <span class="label">活動時間：</span>
+                              <time datetime="2026-01-24">2026.01.24</time>
+                            </div>
+                            <div class="timeItem">
+                              <span class="label">報名時間：</span>
+                              <span> <time datetime="2026-01-01">2026.01.01</time>-<time datetime="2026-01-20">2026.01.20</time> </span>
+                            </div>
+                          </div>
+                          <div class="tagBox">
+                            <span class="tag">其他活動</span>
+                            <span class="tag">新埔分館</span>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <!-- 內容 End -->
+
+                <!-- pagination Start -->
+                <div class="pagination">
+                  <form action="">
+                    <div class="formInline">
+                      共<span>308</span>筆資料，第<span>1/18</span>頁，<label for="petSelect">每頁顯示</label>
+                      <select name="" id="petSelect">
+                        <option value="">10</option>
+                        <option value="">20</option>
+                        <option value="">30</option>
+                        <option value="">40</option>
+                      </select>
+                      筆<button type="submit" class="btnPrimary btnSubmit">確定</button>
+                    </div>
+                  </form>
+                  <ul class="page">
+                    <li class="firstArrow"><a href="#" title="第一頁">第一頁 </a></li>
+                    <li class="prevArrow"><a href="#" title="回上一頁">回上一頁 </a></li>
+                    <li class="active"><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li class="nextArrow"><a href="#" title="下一頁">下一頁 </a></li>
+                    <li class="lastArrow">
+                      <a href="#" title="最後一頁">最後一頁 </a>
+                    </li>
+                  </ul>
+                </div>
+                <!-- pagination End -->
+              </div>
+            </div>
+            <!-- 主內容區 End -->
+          </div>
+        </div>
+      </main>
+      <!-- main End -->
+
+      <!-- fatFooter Start -->
+      <div class="fatFooter">
+        <div class="container">
+          <button type="button" aria-expanded="true" id="fatFooterBtn" aria-label="開關頁尾網站導覽"></button>
+          <nav aria-label="頁尾網站導覽">
+            <ul>
+              <li>
+                <a href="#">最新消息</a>
+              </li>
+              <li>
+                <a href="#">認識圖書館</a>
+                <ul>
+                  <li><a href="#">認識圖書館</a></li>
+                  <li><a href="#">圖書館介紹</a></li>
+                  <li><a href="#">館藏發展政策</a></li>
+                  <li><a href="#">閱讀政策白皮書</a></li>
+                  <li><a href="#">新竹縣公共圖書館logo</a></li>
+                  <li><a href="#">館員制服</a></li>
+                  <li><a href="#">借閱證</a></li>
+                  <li><a href="#">新竹縣立總圖書館</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">館藏查詢</a>
+              </li>
+              <li>
+                <a href="#">借閱證申請</a>
+                <ul>
+                  <li><a href="#">借閱證申請</a></li>
+                  <li><a href="#">新辦證申請</a></li>
+                  <li><a href="#">辦證說明</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">閱讀獎勵</a>
+                <ul>
+                  <li><a href="#">樂讀獎勵</a></li>
+                  <li><a href="#">成人集點活動</a></li>
+                  <li><a href="#">兒童集點活動</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">便民服務</a>
+                <ul>
+                  <li><a href="#">服務介紹</a></li>
+                  <li><a href="#">閱覽須知</a></li>
+                  <li><a href="#">常見問答</a></li>
+                  <li><a href="#">表單下載</a></li>
+                  <li><a href="#">意見信箱</a></li>
+                  <li><a href="#">各館遺失物公告</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">志工園地</a>
+                <ul>
+                  <li><a href="#">志工園地 </a></li>
+                  <li><a href="#">館內志工</a></li>
+                  <li><a href="#">故事志工</a></li>
+                  <li><a href="#">學生志工</a></li>
+                  <li><a href="#">活動花絮</a></li>
+                  <li><a href="#">表單下載</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">閱讀推廣</a>
+                <ul>
+                  <li><a href="#">每月說故事活動 </a></li>
+                  <li><a href="#">本土語言閱讀推廣活動 </a></li>
+                  <li><a href="#">閱讀日活動 </a></li>
+                  <li><a href="#">嬰幼兒閱讀活動 </a></li>
+                  <li><a href="#">社區營造閱讀平台 </a></li>
+                  <li><a href="#">公共圖書館分齡分眾服務網 </a></li>
+                  <li><a href="#">藝文活動資訊 </a></li>
+                  <li><a href="#">好書交換日 </a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">電子資源</a>
+              </li>
+              <li>
+                <a href="#">行動書車</a>
+                <ul>
+                  <li><a href="#">文化局書車 </a></li>
+                  <li><a href="#">竹東館書車 </a></li>
+                  <li><a href="#">五峰館書車 </a></li>
+                  <li><a href="#">尖石館書車 </a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">新竹縣樂讀卡</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <!-- fatFooter End -->
+      <!-- footer Start-->
+      <footer>
+        <a class="accessKeyItem" href="#aZ" id="aZ" accesskey="Z" aria-label="頁尾區">:::</a>
+        <div class="container">
+          <div class="infoBox">
+            <div class="footerLogo">
+              <a href="index.html"><img src="images/footer_logo.png" alt="新竹縣公共圖書館" /></a>
+            </div>
+            <ul class="footerLink">
+              <li><a href="#">隱私權政策</a></li>
+              <li><a href="#">網站安全政策</a></li>
+              <li><a href="#">政府網站資料開放宣告</a></li>
+            </ul>
+
+            <ul class="footerInfo">
+              <li>
+                通訊地址：302099 新竹縣竹北市縣政九路146號 電話：03-551-0201
+                <div class="update">更新日期：<span>2026-05-08</span></div>
+              </li>
+            </ul>
+            <p class="copyright">Copyright © 2019 Library of Cultural Affairs Bureau, Hsinchu County. All rights reserved.</p>
+          </div>
+          <div class="infoBox">
+            <div class="footerIcon">
+              <a target="_blank" href="#">
+                <img src="images/basic/accessibility_aa.jpg" alt="通過AA檢測等級無障礙網頁檢測" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <!-- wrapper End -->
+
+    <!-- 回到頂部 Start -->
+    <button type="button" id="scrollTop" aria-label="回到頂部">TOP</button>
+    <!-- 回到頂部 End -->
+
+    <!-- 原型工具（右下角，正式網站不要）：鍵盤 1、2、3 也能切款式 -->
+    <div class="protoTool" id="protoTool">
+      <button type="button" class="ptToggle" id="ptToggle" aria-expanded="false" aria-controls="ptPanel">原型工具<span class="ptNow" id="ptNow">A 書頁色塊</span></button>
+      <div class="ptPanel" id="ptPanel" role="region" aria-label="原型工具" hidden>
+        <div class="ptHead">
+          <p class="ptTitle">原型工具</p>
+          <button type="button" class="ptClose" id="ptClose" aria-label="收合原型工具"><svg aria-hidden="true" focusable="false"><use href="#ic-close" /></svg></button>
+        </div>
+        <div role="group" aria-labelledby="ptStyleLbl">
+          <span class="ptLegend" id="ptStyleLbl">角標款式</span>
+          <div class="ptStyles">
+            <button type="button" data-set-style="a" aria-pressed="true"><svg class="pbGlyph" aria-hidden="true" focusable="false"><use href="#g-a" /></svg><span class="ptName">A 書頁色塊</span><span class="ptDesc">本館 CIS 的書頁色塊鋪在照片底部，狀態寫在書頁翻起的那一角；額滿的照片轉灰。</span></button>
+            <button type="button" data-set-style="b" aria-pressed="false"><svg class="pbGlyph" aria-hidden="true" focusable="false"><use href="#g-b" /></svg><span class="ptName">B 館章</span><span class="ptDesc">像借還書時蓋的圓章，蓋在照片右上；額滿的照片轉灰，只留章的顏色。</span></button>
+            <button type="button" data-set-style="c" aria-pressed="false"><svg class="pbGlyph" aria-hidden="true" focusable="false"><use href="#g-c" /></svg><span class="ptName">C 書籤</span><span class="ptDesc">像夾在書裡的書籤，從照片上緣垂下、直排寫狀態；額滿的照片淡掉。</span></button>
+          </div>
+        </div>
+        <div role="group" aria-labelledby="ptWhoLbl">
+          <span class="ptLegend" id="ptWhoLbl">誰在看</span>
+          <div class="ptWho">
+            <button type="button" data-set-who="guest" aria-pressed="false">訪客</button>
+            <button type="button" data-set-who="reader" aria-pressed="true">登入讀者</button>
+          </div>
+          <p class="ptHint" id="ptHint">已報名、備取中只有登入讀者看得到。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- fancyBox -->
+    <script src="vendor/fancybox/fancybox.umd.js"></script>
+    <script src="vendor/fancybox/l10n/zh_TW.umd.js"></script>
+    <!-- Swiper -->
+    <script src="vendor/swiper/swiper-bundle.min.js"></script>
+
+    <!-- js -->
+    <script src="js/main.js"></script>
+    <script src="js/customize.js"></script>
+
+    <!-- 原型工具（正式網站不要） -->
+    <script>
+      (function () {
+        var root = document.documentElement;
+        window.addEventListener('error', function (e) {
+          root.setAttribute('data-error', String(e && e.message ? e.message : e));
+        });
+
+        var NAME = { a: 'A 書頁色塊', b: 'B 館章', c: 'C 書籤' };
+        var HINT = {
+          reader: '已報名、備取中只有登入讀者看得到。',
+          guest: '訪客只會看到「已額滿」；已報名、備取中要登入才看得到。'
+        };
+        var RECORD_HREF = {
+          reader: 'lp4.html',
+          guest: 'login.html'
+        };
+        var cur = { style: 'a', who: 'reader' };
+        var toggle = document.getElementById('ptToggle');
+        var panel = document.getElementById('ptPanel');
+
+        function each(sel, fn) {
+          Array.prototype.forEach.call(document.querySelectorAll(sel), fn);
+        }
+
+        function render() {
+          var body = document.body;
+          body.classList.remove('styleA', 'styleB', 'styleC');
+          body.classList.add('style' + cur.style.toUpperCase());
+          var guest = cur.who === 'guest';
+          each('[data-login-only]', function (el) {
+            el.hidden = guest;
+          });
+          each('[data-set-style]', function (btn) {
+            btn.setAttribute('aria-pressed', String(btn.getAttribute('data-set-style') === cur.style));
+          });
+          each('[data-set-who]', function (btn) {
+            btn.setAttribute('aria-pressed', String(btn.getAttribute('data-set-who') === cur.who));
+          });
+          var link = document.getElementById('recordLink');
+          if (link) link.setAttribute('href', RECORD_HREF[cur.who]);
+          var now = document.getElementById('ptNow');
+          if (now) now.textContent = NAME[cur.style];
+          var hint = document.getElementById('ptHint');
+          if (hint) hint.textContent = HINT[cur.who];
+        }
+
+        function setOpen(open, focusBack) {
+          panel.hidden = !open;
+          toggle.setAttribute('aria-expanded', String(open));
+          if (open) {
+            var first = panel.querySelector('[data-set-style][aria-pressed="true"]');
+            if (first) first.focus();
+          } else if (focusBack) {
+            toggle.focus();
+          }
+        }
+
+        toggle.addEventListener('click', function () {
+          setOpen(panel.hidden, false);
+        });
+        document.getElementById('ptClose').addEventListener('click', function () {
+          setOpen(false, true);
+        });
+
+        document.addEventListener('click', function (e) {
+          var t = e.target && e.target.closest ? e.target.closest('[data-set-style],[data-set-who]') : null;
+          if (!t) return;
+          if (t.hasAttribute('data-set-style')) cur.style = t.getAttribute('data-set-style');
+          else cur.who = t.getAttribute('data-set-who');
+          render();
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !panel.hidden) {
+            setOpen(false, true);
+            return;
+          }
+          if (e.altKey || e.ctrlKey || e.metaKey) return;
+          var tag = (e.target && e.target.tagName) || '';
+          if (/^(INPUT|SELECT|TEXTAREA)$/.test(tag)) return;
+          var map = { 1: 'a', 2: 'b', 3: 'c' };
+          if (map[e.key]) {
+            cur.style = map[e.key];
+            render();
+          }
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>

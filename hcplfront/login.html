@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="zh-Hant" class="no-js">
+  <head>
+    <meta name="robots" content="noindex" />
+    <!-- 使用 noindex 禁止 Google 搜尋建立索引，套版時請工程師刪掉這行 -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>新竹縣公共圖書館</title>
+    <!-- style css -->
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- <link rel="stylesheet" href="css/blue.css" /> -->
+    <!-- favicon -->
+    <link href="images/favicon.png" rel="icon" type="image/x-icon" />
+  </head>
+  <body>
+    <!-- wrapper Start -->
+    <div class="wrapper">
+      <!-- 直接跳主內容區 -->
+      <a class="goCenter" href="#aC">按Enter到主內容區</a>
+
+      <!-- header Start -->
+      <header>
+        <a class="accessKeyItem" href="#aU" id="aU" accesskey="U" aria-label="功能區塊">:::</a>
+        <div class="headTop">
+          <div class="container">
+            <button type="button" id="mobileMainMenuBtn">主選單按鈕</button>
+            <h1>
+              <a href="index.html"><img src="images/logo.png" alt="新竹縣公共圖書館" /></a>
+            </h1>
+            <!-- navigation Start -->
+            <nav class="topNav" role="navigation" aria-label="頁首功能列">
+              <!-- navList Start -->
+              <div class="navList">
+                <ul>
+                  <li><a href="#">網站導覽</a></li>
+                  <li><a href="#">回首頁</a></li>
+                  <li><a href="#">新竹縣政府文化局</a></li>
+                </ul>
+              </div>
+              <!-- navList End -->
+              <div class="subNavList">
+                <div class="topSearch sliderFn">
+                  <button type="button" id="topSearchBtn">網站搜尋</button>
+                </div>
+              </div>
+            </nav>
+            <!-- navigation End -->
+            <!-- Search Start -->
+            <button type="button" id="mobileSearchBtn" aria-label="搜尋按鈕"></button>
+            <div class="webSearch" role="search">
+              <div class="webSearchContent">
+                <div class="formList">
+                  <label for="topSearchInput" class="srOnly">搜尋</label>
+                  <select name="topSearch" id="topSearch">
+                    <option value="" selected>館藏查詢</option>
+                    <option value="">圖書</option>
+                  </select>
+                  <input name="topSearchInput" id="topSearchInput" type="text" placeholder="請輸入文字" accesskey="S" aria-label="搜尋網站內容" />
+                  <button type="button" class="btnPrimary">查詢</button>
+                  <!-- <button type="button">進階搜尋</button> -->
+                </div>
+                <!-- <div class="hotKeyword">
+                  <ul>
+                    <li><a href="#">熱門熱門</a></li>
+                    <li><a href="#">查詢</a></li>
+                    <li><a href="#">字詞三</a></li>
+                  </ul>
+                </div> -->
+              </div>
+            </div>
+            <!-- Search End -->
+          </div>
+        </div>
+        <!-- noscript -->
+        <noscript>
+          您的瀏覽器不支援JavaScript語法，JavaScript語法並不影響內容的陳述。您可使用按鍵盤上的Ctrl鍵+ (+)鍵放大/(-)鍵縮小來改變字型大小；回到上一頁可使用瀏覽器提供的 Alt+左方向鍵(←) 快速鍵功能；列印可使用瀏覽器提供的(Ctrl+P)功能。您的瀏覽器，不支援script語法，若您的瀏覽器無法支援請點選此超連結
+          <a href="#">網站導覽</a>
+        </noscript>
+        <!-- menu Start -->
+        <!-- data-close-btn 提供手機主選單關閉按鈕抓取用-->
+        <div class="mainMenu">
+          <div class="container">
+            <nav class="menu" role="navigation" aria-label="主選單">
+              <ul>
+                <li>
+                  <a href="#">最新消息</a>
+                </li>
+                <li>
+                  <a href="#">認識圖書館</a>
+                  <ul>
+                    <li><a href="#">認識圖書館</a></li>
+                    <li><a href="#">圖書館介紹</a></li>
+                    <li><a href="#">館藏發展政策</a></li>
+                    <li><a href="#">閱讀政策白皮書</a></li>
+                    <li><a href="#">新竹縣公共圖書館logo</a></li>
+                    <li><a href="#">館員制服</a></li>
+                    <li><a href="#">借閱證</a></li>
+                    <li><a href="#">新竹縣立總圖書館</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">館藏查詢</a>
+                </li>
+                <li>
+                  <a href="#">借閱證申請</a>
+                  <ul>
+                    <li><a href="#">借閱證申請</a></li>
+                    <li><a href="#">新辦證申請</a></li>
+                    <li>
+                      <a href="http://www.google.com">辦證說明</a>
+                      <ul>
+                        <li>
+                          <a href="http://www.google.com">第三層選單有下層</a>
+                          <ul>
+                            <li><a href="#">第四層選單</a></li>
+                            <li><a href="#">第四層選單</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="http://www.google.com">第三層選單有連結</a>
+                        </li>
+                        <li><a href="#">第三層選單</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">閱讀獎勵</a>
+                  <ul>
+                    <li><a href="#">樂讀獎勵</a></li>
+                    <li>
+                      <a href="#">成人集點活動</a>
+                      <ul>
+                        <li><a href="#">第三層選單</a></li>
+                        <li>
+                          <a href="#">第三層選單</a>
+                          <ul>
+                            <li>
+                              <a href="http://www.google.com">第四層選單有下層</a>
+                              <ul>
+                                <li><a href="#">第五層選單</a></li>
+                                <li><a href="#">第五層選單</a></li>
+                              </ul>
+                            </li>
+                            <li>
+                              <a href="http://www.google.com">第四層選單有連結</a>
+                            </li>
+                            <li><a href="#">第四層選單</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="#">第三層選單</a></li>
+                        <li><a href="#">第三層選單</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#">兒童集點活動</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">便民服務</a>
+                  <ul>
+                    <li><a href="#">服務介紹</a></li>
+                    <li>
+                      <a href="#">閱覽須知</a>
+                      <ul>
+                        <li>
+                          <a href="http://www.google.com">第三層選單有下層</a>
+                          <ul>
+                            <li><a href="#">第四層選單</a></li>
+                            <li><a href="#">第四層選單</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="http://www.google.com">第三層選單有連結</a>
+                        </li>
+                        <li><a href="#">第三層選單</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#">常見問答</a></li>
+                    <li><a href="#">表單下載</a></li>
+                    <li><a href="#">意見信箱</a></li>
+                    <li><a href="#">各館遺失物公告</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">志工園地</a>
+                  <ul>
+                    <li><a href="#">志工園地 </a></li>
+                    <li><a href="#">館內志工</a></li>
+                    <li><a href="#">故事志工</a></li>
+                    <li><a href="#">學生志工</a></li>
+                    <li><a href="#">活動花絮</a></li>
+                    <li><a href="#">表單下載</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">閱讀推廣</a>
+                  <ul>
+                    <li><a href="#">每月說故事活動 </a></li>
+                    <li><a href="#">本土語言閱讀推廣活動 </a></li>
+                    <li><a href="#">閱讀日活動 </a></li>
+                    <li><a href="#">嬰幼兒閱讀活動 </a></li>
+                    <li><a href="#">社區營造閱讀平台 </a></li>
+                    <li><a href="#">公共圖書館分齡分眾服務網 </a></li>
+                    <li><a href="#">藝文活動資訊 </a></li>
+                    <li><a href="#">好書交換日 </a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">電子資源</a>
+                </li>
+                <li>
+                  <a href="#">行動書車</a>
+                  <ul>
+                    <li><a href="#">文化局書車 </a></li>
+                    <li><a href="#">竹東館書車 </a></li>
+                    <li><a href="#">五峰館書車 </a></li>
+                    <li><a href="#">尖石館書車 </a></li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">新竹縣樂讀卡</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- menu End -->
+      </header>
+      <!-- header End -->
+
+      <!-- main Start -->
+      <main>
+        <a class="accessKeyItem" href="#aC" id="aC" accesskey="C" aria-label="主要內容區">:::</a>
+        <div class="innerPage">
+          <div class="container">
+            <!-- 主內容區 Start -->
+            <div class="mainContentBox">
+              <div class="mainContent">
+                <!-- login Start -->
+                <div class="loginCard">
+                  <h2 class="loginTitle">會員登入</h2>
+
+                  <form action="">
+                    <div class="formBox">
+                      <div class="gridBox">
+                        <!-- 帳號 -->
+                        <div class="formList inline">
+                          <label class="formListTitle" for="account">帳號</label>
+                          <div class="formContent">
+                            <div class="inputBox">
+                              <input type="text" name="account" id="account" placeholder="請輸入借閱證號或身分證字號" required aria-required="true" />
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- 密碼 -->
+                        <div class="formList inline">
+                          <label class="formListTitle" for="password">密碼</label>
+                          <div class="formContent">
+                            <div class="inputBox passwordBox">
+                              <div class="inputBox">
+                                <input type="password" name="password" id="formItem90" placeholder="請輸入密碼" required />
+                                <button type="button" class="formEyes" data-show="顯示密碼" data-hide="隱藏密碼" aria-label="顯示密碼"></button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- 驗證碼 -->
+                        <div class="formList inline captchaList">
+                          <label class="formListTitle" for="captchaCode">驗證碼</label>
+                          <div class="formContent captchaContent">
+                            <div class="inputBox">
+                              <input type="text" name="captchaCode" id="captchaCode" placeholder="請輸入驗證碼" required aria-required="true" />
+                            </div>
+                            <div class="captchaGroup">
+                              <!-- 驗證碼圖片需加上 alt 說明文字 -->
+                              <img src="images/basic/captcha.gif" class="captchaImg" alt="圖形驗證碼，內容為51515" tabindex="0" />
+                              <!-- 重新整理按鈕 -->
+                              <button type="button" class="btnIcon btnRefresh" aria-label="重新整理圖形驗證碼" title="重新整理驗證碼">
+                                <img src="images/icon_refresh.png" alt="" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- 登入按鈕 -->
+                        <div class="formBtnBox">
+                          <button type="submit" class="btnSubmit">登入</button>
+                        </div>
+
+                        <!-- 分隔線 -->
+                        <div class="loginDivider">
+                          <span>無法登入</span>
+                        </div>
+
+                        <!-- 底部連結按鈕 -->
+                        <div class="actionBtnBox">
+                          <!-- 若為連結請使用 a 標籤 -->
+                          <a href="#" class="btnSecondary">忘記密碼</a>
+                          <a href="#" class="btnSecondary">網路辦證</a>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <!-- login End -->
+              </div>
+            </div>
+            <!-- 主內容區 End -->
+          </div>
+        </div>
+      </main>
+      <!-- main End -->
+
+      <!-- footer Start-->
+      <!-- fatFooter Start -->
+      <div class="fatFooter">
+        <div class="container">
+          <button type="button" aria-expanded="true" id="fatFooterBtn" aria-label="開關頁尾網站導覽"></button>
+          <nav aria-label="頁尾網站導覽">
+            <ul>
+              <li>
+                <a href="#">最新消息</a>
+              </li>
+              <li>
+                <a href="#">認識圖書館</a>
+                <ul>
+                  <li><a href="#">認識圖書館</a></li>
+                  <li><a href="#">圖書館介紹</a></li>
+                  <li><a href="#">館藏發展政策</a></li>
+                  <li><a href="#">閱讀政策白皮書</a></li>
+                  <li><a href="#">新竹縣公共圖書館logo</a></li>
+                  <li><a href="#">館員制服</a></li>
+                  <li><a href="#">借閱證</a></li>
+                  <li><a href="#">新竹縣立總圖書館</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">館藏查詢</a>
+              </li>
+              <li>
+                <a href="#">借閱證申請</a>
+                <ul>
+                  <li><a href="#">借閱證申請</a></li>
+                  <li><a href="#">新辦證申請</a></li>
+                  <li><a href="#">辦證說明</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">閱讀獎勵</a>
+                <ul>
+                  <li><a href="#">樂讀獎勵</a></li>
+                  <li><a href="#">成人集點活動</a></li>
+                  <li><a href="#">兒童集點活動</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">便民服務</a>
+                <ul>
+                  <li><a href="#">服務介紹</a></li>
+                  <li><a href="#">閱覽須知</a></li>
+                  <li><a href="#">常見問答</a></li>
+                  <li><a href="#">表單下載</a></li>
+                  <li><a href="#">意見信箱</a></li>
+                  <li><a href="#">各館遺失物公告</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">志工園地</a>
+                <ul>
+                  <li><a href="#">志工園地 </a></li>
+                  <li><a href="#">館內志工</a></li>
+                  <li><a href="#">故事志工</a></li>
+                  <li><a href="#">學生志工</a></li>
+                  <li><a href="#">活動花絮</a></li>
+                  <li><a href="#">表單下載</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">閱讀推廣</a>
+                <ul>
+                  <li><a href="#">每月說故事活動 </a></li>
+                  <li><a href="#">本土語言閱讀推廣活動 </a></li>
+                  <li><a href="#">閱讀日活動 </a></li>
+                  <li><a href="#">嬰幼兒閱讀活動 </a></li>
+                  <li><a href="#">社區營造閱讀平台 </a></li>
+                  <li><a href="#">公共圖書館分齡分眾服務網 </a></li>
+                  <li><a href="#">藝文活動資訊 </a></li>
+                  <li><a href="#">好書交換日 </a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">電子資源</a>
+              </li>
+              <li>
+                <a href="#">行動書車</a>
+                <ul>
+                  <li><a href="#">文化局書車 </a></li>
+                  <li><a href="#">竹東館書車 </a></li>
+                  <li><a href="#">五峰館書車 </a></li>
+                  <li><a href="#">尖石館書車 </a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">新竹縣樂讀卡</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <!-- fatFooter End -->
+      <!-- footer Start-->
+      <footer>
+        <a class="accessKeyItem" href="#aZ" id="aZ" accesskey="Z" aria-label="頁尾區">:::</a>
+        <div class="container">
+          <div class="infoBox">
+            <div class="footerLogo">
+              <a href="index.html"><img src="images/footer_logo.png" alt="新竹縣公共圖書館" /></a>
+            </div>
+            <ul class="footerLink">
+              <li><a href="#">隱私權政策</a></li>
+              <li><a href="#">網站安全政策</a></li>
+              <li><a href="#">政府網站資料開放宣告</a></li>
+            </ul>
+
+            <ul class="footerInfo">
+              <li>
+                通訊地址：302099 新竹縣竹北市縣政九路146號 電話：03-551-0201
+                <div class="update">更新日期：<span>2026-05-08</span></div>
+              </li>
+            </ul>
+            <p class="copyright">Copyright © 2019 Library of Cultural Affairs Bureau, Hsinchu County. All rights reserved.</p>
+          </div>
+          <div class="infoBox">
+            <div class="footerIcon">
+              <a target="_blank" href="#">
+                <img src="images/basic/accessibility_aa.jpg" alt="通過AA檢測等級無障礙網頁檢測" />
+              </a>
+              <!-- <a target="_blank" href="#">
+                <img src="images/basic/egov.png" alt="我的e政府" />
+              </a> -->
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <!-- wrapper End -->
+
+    <!-- 回到頂部 Start -->
+    <button type="button" id="scrollTop" aria-label="回到頂部">TOP</button>
+    <!-- 回到頂部 End -->
+
+    <!-- fancyBox -->
+    <script src="vendor/fancybox/fancybox.umd.js"></script>
+    <script src="vendor/fancybox/l10n/zh_TW.umd.js"></script>
+    <!-- Swiper -->
+    <script src="vendor/swiper/swiper-bundle.min.js"></script>
+
+    <!-- js -->
+    <script src="js/main.js"></script>
+    <script src="js/customize.js"></script>
+  </body>
+</html>
