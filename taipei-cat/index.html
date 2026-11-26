@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>台北帶貓：寵物友善餐廳</title>
+<link rel="stylesheet" href="lib/leaflet.css">
+<style>
+:root{--ink:#1f2a33;--mute:#6b7680;--line:#dfe4e8;--line2:#f0f2f4;--bg:#f6f7f8;--card:#fff;--ok:#1d7a4a;--no:#b23a3a;--keep:#e8f3ec;--drop:#f5e9e9;--tag:#eef1f4;--hit:#fff3c4;--pri:#2b6cb0}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:13px/1.45 system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;display:flex;flex-direction:column}
+header{padding:6px 12px 4px;flex:none}
+h1{font-size:16px;margin:0;display:inline}
+.sub{color:var(--mute);font-size:12px;margin-left:8px}
+.panel{padding:6px 12px;background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;flex:none}
+.panel label{display:inline-flex;gap:4px;align-items:center;white-space:nowrap}
+.panel select,.panel input[type=number],.panel input[type=search]{font:inherit;padding:2px 5px;border:1px solid var(--line);border-radius:4px}
+.count{color:var(--mute);margin-left:auto}
+.fpanel{display:none;flex:none;background:var(--card);border-bottom:1px solid var(--line);padding:6px 12px;max-height:45vh;overflow:auto;font-size:12px}
+body.fopen .fpanel{display:block}
+.frow{display:flex;align-items:flex-start;gap:8px;padding:3px 0}
+.flabel{width:84px;flex:none;padding-top:3px;font-weight:700;color:var(--mute)}
+.fopts{flex:1;display:flex;flex-wrap:wrap;gap:4px}
+.fopts button{font-size:12px;min-height:22px}
+.fopts button.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.fopts .n{color:var(--mute);margin-left:3px;font-weight:400}
+.fopts button.on .n{color:#dfe8f5}
+.main{flex:1;min-height:0;display:flex}
+.listpane{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--card)}
+.mappane{width:40%;min-width:300px;border-left:1px solid var(--line);display:none;position:relative}
+body.mapon .mappane{display:block}
+body.mapfull .mappane{position:fixed;inset:0;width:auto;z-index:999;border:0}
+#map{position:absolute;inset:0;background:#e9ecef}
+.mapbtns{position:absolute;top:10px;right:10px;z-index:900;display:flex;gap:4px}
+.mapbtns button{background:#fff}
+.scroll{flex:1;min-height:0;overflow:auto;scrollbar-gutter:stable}
+.head,.row{display:grid;align-items:center;gap:0 8px;padding:0 10px;grid-template-columns:200px 38px minmax(140px,1fr) 36px 44px 80px 70px 44px 100px 150px 150px}
+body.mapon .head,body.mapon .row{grid-template-columns:minmax(160px,1fr) 38px 36px 44px 80px 70px 44px 100px 150px 150px}
+body.mapon .c-sells{display:none}
+.head{height:28px;font-weight:700;color:var(--mute);background:var(--line2);border-bottom:1px solid var(--line);flex:none;position:sticky;top:0;z-index:1;overflow-y:hidden;scrollbar-gutter:stable}
+.row{min-height:30px;border-bottom:1px solid var(--line2)}
+.row>*,.head>*{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row:hover{background:#f7f8f9}
+.row.keep{background:var(--keep)} .row.drop{background:var(--drop);color:var(--mute)}
+.name{font-weight:700;color:var(--ink);text-decoration:none}
+.name:hover{color:var(--pri);text-decoration:underline}
+.tags{display:flex;gap:4px}
+.tags>*{flex:none}
+.tag{background:var(--tag);border-radius:4px;padding:0 6px;font-size:12px;line-height:20px}
+.tag.ok{background:#e3f1e8;color:var(--ok)} .tag.no{background:#f7e4e4;color:var(--no)} .tag.hit{background:var(--hit)}
+.acts{display:flex;gap:3px;justify-content:flex-end;overflow:visible}
+button,a.btn{font:inherit;font-size:12px;min-height:22px;padding:0 6px;border:1px solid var(--line);background:#fff;border-radius:4px;cursor:pointer;color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
+button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+a.btn.pri{background:var(--pri);color:#fff;border-color:var(--pri)}
+.foot{flex:none;background:var(--card);border-top:1px solid var(--line);padding:6px 12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dim{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:16px 8px;z-index:1000}
+.dim.open{display:flex}
+.dlg{background:#fff;border-radius:4px;max-width:760px;width:100%;padding:14px 16px;font-size:13px}
+.dlg h2{font-size:18px;margin:0 0 8px}
+.dlg dl{display:grid;grid-template-columns:88px 1fr;gap:5px 10px;margin:8px 0}
+.dlg dt{color:var(--mute)} .dlg dd{margin:0}
+.dlg .tags{flex-wrap:wrap}
+.clue{margin:2px 0;padding:3px 8px;background:#fbfbf4;border-radius:4px}
+.clue b{background:var(--hit)}
+.clue .src{color:var(--mute);font-size:12px;margin-right:6px}
+.q{margin:3px 0;padding:3px 8px;background:#f4f6f8;border-radius:4px}
+.small{color:var(--mute);font-size:12px}
+.dacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;position:sticky;bottom:0;background:#fff;padding-top:8px}
+.dacts button,.dacts a.btn{min-height:30px;padding:0 12px}
+.leaflet-popup-content{font-size:13px}
+@media (max-width:900px){
+  body{font-size:16px}
+  .sub{display:block;margin:2px 0 0}
+  .panel label{min-height:36px}
+  .head{display:none}
+  .row{grid-template-columns:1fr;grid-template-rows:repeat(5,auto);align-content:start;row-gap:4px;padding:10px 12px;min-height:0}
+  .row>*{white-space:normal}
+  .row .c-dist,.row .c-rating,.row .c-reviews,.row .c-price,.row .c-lowmin,.row .c-svcfee,.row .c-sat{display:none}
+  .row .c-info{display:block;color:var(--mute);font-size:14px}
+  .c-tags{display:flex;flex-wrap:wrap;gap:4px;max-height:52px;overflow:hidden}
+  .c-sells{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:14px;color:#39444d}
+  .acts{justify-content:flex-start;flex-wrap:wrap}
+  .acts>*{flex:1 1 0;min-height:40px}
+  button,a.btn{font-size:15px}
+  body.mapon .listpane{display:none}
+  body.mapon .mappane{display:block;width:100%;min-width:0;border:0}
+  .dlg dl{grid-template-columns:1fr}
+}
+@media (min-width:901px){.row .c-info{display:none}}
+</style>
+</head>
+<body>
+<header><nav style="float:right;font-size:13px"><a href="index.html">餐廳</a>　<a href="sights.html">景點</a></nav><h1>台北帶貓：寵物友善餐廳</h1><span class="sub">留著的 1866 家裡週六 11 到 13 整段有開的 13 家。線索＝咕狗摘要、咕狗給的 5 則評論、咕狗全部評論（背景逐家搜，13 家搜完）裡的「寵物」「毛孩」，原句在「詳細」。「狗可入內」這類是咕狗簡介的寵物標示（只有狗的寫法）。距離從妳家直線算。</span></header>
+<div class="panel">
+<button id="fToggle">篩選 ▾</button>
+<label>搜尋 <input type="search" id="fQ" placeholder="店名、賣什麼、地址" style="width:150px"></label>
+<label>排序 <select id="fSort"><option value="score">線索多</option><option value="km">離家近</option><option value="rating">評分高</option><option value="reviews">評論多</option><option value="price">價位低</option><option value="lowmin">低消低</option></select></label>
+<label><input type="checkbox" id="fHideDrop"> 藏起「不要」的</label>
+<label><input type="checkbox" id="fOnlyKeep"> 只看「留」的</label>
+<button id="fClear">清掉篩選</button>
+<button id="mapToggle">打開地圖</button>
+<span class="count" id="count"></span>
+</div>
+<div class="fpanel" id="fpanel"></div>
+<div class="main">
+<div class="listpane">
+<div class="head"><span>店名</span><span>區</span><span class="c-sells">賣什麼</span><span>評分</span><span>評論</span><span>價位</span><span>低消</span><span>服務費</span><span>週六</span><span>注意</span><span></span></div>
+<div class="scroll" id="list"></div>
+</div>
+<div class="mappane"><div id="map"></div><div class="mapbtns"><button id="mapFull">滿版</button><button id="mapClose">收起</button></div></div>
+</div>
+<div class="foot">
+<span id="tally"></span>
+<button id="copyKeep">複製「留」的清單</button>
+<button id="copyDrop">複製「不要」的清單</button>
+<span class="small">按了留或不要會記在這台電腦的瀏覽器裡</span>
+</div>
+<div class="dim" id="dim"><div class="dlg" id="dlg"></div></div>
+<script src="lib/leaflet.js"></script>
+<script>
+let HOME=null;try{const m=location.hash.match(/home=(-?d+.d+),(-?d+.d+)/);if(m)HOME={lat:+m[1],lng:+m[2]};}catch(e){}
+const CENTER=HOME||{lat:25.04,lng:121.545};
+const ROWS=[{"id":"ChIJ6cQWAfmrQjQRA1muTgNaxgU","name":"June Burger 啾漢堡店｜寵物友善","district":"信義區","rating":4.7,"reviews":616,"lat":25.039121299999998,"lng":121.57931829999998,"km":2.8,"url":"https://maps.google.com/?cid=416118985829800195&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"https://www.facebook.com/juneburger82/","tel":"02 2346 0898","addr":"110臺北市信義區大仁里林口街82號","type":"早午餐餐廳","hours":["週一　休息","週二　08:00 – 14:00","週三　08:00 – 14:00","週四　08:00 – 14:00","週五　08:00 – 14:00","週六　08:00 – 14:00","週日　08:00 – 14:00"],"off":["一"],"satText":"週六　08:00 – 14:00","dog":["允許狗狗入內","允許帶狗進入戶外區域","狗狗友善"],"park":[],"nice":["環境舒適","休閒"],"svcTags":[],"hz":[],"scanned":true,"scanHits":8,"scanRaw":37,"clues":[{"src":"評論搜「寵物」","text":"餐廳喝到蜂蜜水，這種小地方店家都很精心安排，已經讓人值得再訪。 最開心的是店家對寵物非常友善，主動提供蛋跟水，家犬瞬間吃完 感謝店家給我們這麼開心滿足的用餐經驗"},{"src":"評論搜「寵物」","text":"近期最讚的寵物友善早餐店、早午餐店！ 100分的1000分！！！ 門口就貼有寵物友善的標章"},{"src":"評論搜「毛孩」","text":"假日的早午餐，突然想到這家信義區小有名氣的寵物友善漢堡店；店家容許帶著自己的毛孩一起用餐，且可以不牽繩讓毛孩自由走動，還會"},{"src":"評論搜「毛孩」","text":"漢堡很好吃，寵物友善，可以帶毛孩來 訂單類型 內用 餐點類型 早午餐 平均每人消費金額 $2"},{"src":"評論搜「毛孩」","text":"已經再訪好幾次的餐廳，能帶毛孩出門一起用餐就是開心！ 餐點好吃。老闆親切。環境乾淨。 "},{"src":"評論搜「貓」","text":"近期最讚的寵物友善早餐店、早午餐店！ 100分的1000分！！！ 門口就貼有寵物友善的標章"},{"src":"評論搜「貓」","text":"炸魚漢堡超好吃 魚排跟塔塔醬都很讚 而且寵物友善 還給貓貓好吃的雞肉乾乾 雖然當下太緊張沒吃 店員姐姐還幫打包 回家之後"},{"src":"評論搜「貓」","text":"漢堡跟三明治都好吃 是家寵物有善餐廳，所以會遇到帶貓狗的客人 空間有限，假日人多會需要候位，也會有人帶位"},{"src":"咕狗摘要","text":"含花生牛肉堡和威基基海灘堡，搭配酥脆的薯條和風味十足的三明治。他們特別提到這裡對寵物非常友善，店員會主動提供狗狗飲用水、炒蛋和專屬坐墊。評論也提到店家的服務熱情"},{"src":"咕狗摘要","text":"提供狗狗飲用水、炒蛋和專屬坐墊。評論也提到店家的服務熱情周到，並稱讚店員對顧客和寵物都非常親切。  "},{"src":"咕狗給的 5 則評論","text":"點了3個餐，吃起來才舒服。 以下為個人食後心得，純分享，僅供參考。 環境：似乎是寵物友善餐廳，用餐時有客人帶著狗一起。環境算乾淨。 服務：只能付現金；餐點做好了"},{"src":"咕狗給的 5 則評論","text":"要自己回收，但想著要讓座給下一組客人，就急著離開忘記了，對店家非常不好意思 ｜ 寵物友善ㄅ級棒 還會送寵物吃的炒蛋～ 店員也都對狗狗非常友善，完全無壓力 雖然店"},{"src":"咕狗給的 5 則評論","text":"座給下一組客人，就急著離開忘記了，對店家非常不好意思 ｜ 寵物友善ㄅ級棒 還會送寵物吃的炒蛋～ 店員也都對狗狗非常友善，完全無壓力 雖然店內小小，但整體舒適暖心"}],"score":38,"price":"$200–400","priceNum":200,"priceLevel":"PRICE_LEVEL_MODERATE","lowmin":"","lowminNote":"","lowminQ":[],"svcfee":"免服務費","svcfeeNote":"不收服務費","svcfeeQ":[{"src":"評論","age":"3 年前","text":"…199｜墨西哥辣瀑布瑪茲瑞拉雞腿堡 $209｜薯餅 $35｜荷包蛋 $15 不收服務費 ⁡ 假日來生意蠻好的～這天有稍微候位一下～ 溫馨可愛的小店座位稍微擠一點 …"},{"src":"評論","age":"2 年前","text":"餐點不錯 沒收取服務費 所以也沒服務可言 標榜自助式菜單座位取餐，但也不會告知東西在哪、要自己來 要被…"},{"src":"評論","age":"5 年前","text":"…整潔，雖然跟廚房連接卻沒有絲毫油煙味很厲害 店員服務真的非常好(稀有品系等級)卻沒收服務費!!!! 唯一可惜是只有營業到下午兩點TAT 美式辣味雞三明治($119)可以加…"}],"hzQ":[],"cuisine":"美式・早餐早午餐店・主打早午餐","sells":"板烤吐司、June式早午餐、英式經典早午餐、牛肉漢堡、炸雞漢堡、鱈魚堡、炸魚薯條、舒肥雞肉沙拉","svc":{"dineIn":true,"takeout":true,"delivery":true},"near":[{"name":"廣慈博愛園區北側綠帶","km":0.25}],"summary":"顧客表示這家咖啡廳提供美味又令人滿足的漢堡，其中受歡迎的品項包含花生牛肉堡和威基基海灘堡，搭配酥脆的薯條和風味十足的三明治。他們特別提到這裡對寵物非常友善，店員會主動提供狗狗飲用水、炒蛋和專屬坐墊。評論也提到店家的服務熱情周到，並稱讚店員對顧客和寵物都非常親切。  ","nat":"美式","form":"早餐早午餐店","main":"早午餐","ratingB":"4.7","reviewB":"500-999則","priceB":"$200–400","svcKeys":["可內用","可外帶","可外送"],"invKey":"免用統一發票","lowminKey":"沒提到","hzKeys":["都沒提到"],"svcfeeKey":"明講不收","veg":"","text":"june burger 啾漢堡店｜寵物友善\n早午餐餐廳\n廣慈博愛園區北側綠帶\n板烤吐司、june式早午餐、英式經典早午餐、牛肉漢堡、炸雞漢堡、鱈魚堡、炸魚薯條、舒肥雞肉沙拉\n\n板烤吐司、+$65套餐、+$120套餐、吐司加料升級、點心、特調粉紅派對、紐奧良放克派對、牛肉漢堡、英式經典早午餐、舒肥雞肉沙拉、客製專屬自己的早午餐:加點配料、紐約客大早餐、布魯斯大早餐、june式早午餐 啾粉最愛 top 3、#板烤吐司 | 里肌、培根、#板烤吐司 | 蔬食友善、附 生菜 薯條、jb全日早午餐、花生起司牛肉堡、鱈魚堡、炸魚薯條、蜂蜜起司脆脆雞腿堡、經典 培根 牛肉 堡、莎莎洋蔥起司雞腿堡、羅勒豬排、熱紅茶、花生牛肉堡、經典美式、玫瑰鹽蛋舒肥雞沙拉、威基基花生雞腿堡、威基基卡啦雞腿堡、奶油炒蛋、洋蔥起司牛肉堡、炸雞漢堡、起司瀑布漢堡\n信義區\n110臺北市信義區大仁里林口街82號"},{"id":"ChIJZ5vfxPOvQjQRQ4l-DizRSXk","name":"凹屋珈琲｜早午餐","district":"士林區","rating":4.8,"reviews":591,"lat":25.093396000000002,"lng":121.52655,"km":5.9,"url":"https://maps.google.com/?cid=8739746539041098051&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"https://instagram.com/awoo_kohii","tel":"0975 878 675","addr":"111臺北市士林區福林里中山北路五段505巷44弄2號","type":"咖啡館","hours":["週一　09:30 – 18:00","週二　09:30 – 18:00","週三　09:30 – 18:00","週四　09:30 – 18:00","週五　09:30 – 18:00","週六　10:00 – 17:30","週日　10:00 – 17:30"],"off":[],"satText":"週六　10:00 – 17:30","dog":["允許狗狗入內"],"park":["停車位很多","收費停車場"],"nice":["安靜","環境舒適","休閒"],"svcTags":[],"hz":[],"scanned":true,"scanHits":7,"scanRaw":50,"clues":[{"src":"評論搜「寵物」","text":"好，搭配提供的沾醬很好吃，櫃檯人員也很親切，現場還有狗狗認養，一樓座位區也可以帶寵物一同入店用餐，是寵物友善的早午餐店 訂單類型 內用 餐點類型 早午餐 平均每"},{"src":"評論搜「寵物」","text":"近 走路不到一分鐘 真的太方便太友善了 咖啡好喝、點心也好吃 （但都忘記拍照） 寵物友善對人更友善 座位有插頭 不限時使用空間 一定要大力推推推～ 訂單類型 內"},{"src":"評論搜「寵物」","text":"餐點或飲料。 早午餐都蠻好吃的，雞肉很軟嫩又香。生菜給的很多，但沙拉醬有點偏少 寵物友善！店員對狗狗都很親切，還招待我們狗狗吃地瓜 餐點：5 服務：5 氣氛：5"},{"src":"評論搜「毛孩」","text":"下午奔著犬家人_浪浪毛孩送養會，特地從桃園龍潭趕過來，為感謝「凹屋珈啡」闆娘對浪浪們的大愛，點一份B"},{"src":"評論搜「毛孩」","text":"拿鐵超好喝，蛋糕也非常好吃！毛孩來還有飲料招待呢～ 訂單類型 內用 餐點類型 其他 平均每人消費金額 $1-"},{"src":"評論搜「毛孩」","text":"最愛桂花咖啡，更愛店主給毛孩的愛心，超讚的一家店呦 餐點：5 服務：5 氣氛：5 "},{"src":"評論搜「貓」","text":"舒適的感覺,也許是因為老闆娘人很親切吧,說話溫柔和善,而且還是愛狗愛貓人士，也是寵物友善咖啡廳喔。 咖啡很好喝,美式、拿鐵、培茶拿鐵、抹茶拿鐵都喝過, 蛋糕也很"},{"src":"咕狗摘要","text":"點，像是蘋果派和檸檬千層蛋糕。他們特別提到這裡舒適放鬆的氛圍，許多人也喜歡店家對寵物友善的政策和親切的店員。評論提到，這家店地點便利，鄰近捷運站，而且價格也很合"},{"src":"咕狗給的 5 則評論","text":"好，搭配提供的沾醬很好吃，櫃檯人員也很親切，現場還有狗狗認養，一樓座位區也可以帶寵物一同入店用餐，是寵物友善的早午餐店 ｜ 因為想找聚會空間而來到這裡 沒想到 "},{"src":"咕狗給的 5 則評論","text":"好吃，櫃檯人員也很親切，現場還有狗狗認養，一樓座位區也可以帶寵物一同入店用餐，是寵物友善的早午餐店 ｜ 因為想找聚會空間而來到這裡 沒想到 距離捷運站這麼近 走"},{"src":"咕狗給的 5 則評論","text":"近 走路不到一分鐘 真的太方便太友善了 咖啡好喝、點心也好吃 （但都忘記拍照） 寵物友善對人更友善 座位有插頭 不限時使用空間 一定要大力推推推～ ｜ 下午奔著"}],"score":33,"price":"$200–400","priceNum":200,"priceLevel":"PRICE_LEVEL_MODERATE","lowmin":"每人一份餐點或一杯飲料","lowminNote":"每人一份餐點或一杯飲料，不收服務費","lowminQ":[{"src":"評論","age":"8 個月前","text":"在捷運士林站一號出口出來往回走，在三角窗的位子，平日下午造訪不用等，座位數也還算多，適合悠閒用餐聊天的好地方，低消一份餐點或飲料。 早午餐都蠻好吃的，雞肉很軟嫩又香。生菜給的很多，但沙拉醬有點偏少 寵物友善！店員對狗狗都很親切，還招待我們狗狗吃地瓜…"},{"src":"評論","age":"9 個月前","text":"…一樓滿了，沒想到還有地下室！ 原本想吃配合菊花展的千層蛋糕，可惜當天沒有了，於是點了一個菠菜鮭魚鹹派，上面的菜吃起來很不像菠菜 好像沒有低消，對於我這種只是要在捷運站附近短暫等人，卻沒地方去的人來說蠻不錯的。 訂單類型 內用 平均每人消費金額 $1-200 餐點：4 服務：5 氣…"},{"src":"評論","age":"7 個月前","text":"捷運站附近的咖啡廳 低消一人一品項，沒有一成服務費 甜點、早午餐餐盤、鹹食、茶、咖啡 內有廁所 餐點等待時間有點久，飲料跟食物等了半小時才來 蒜味雞肉起士可頌味道很…"},{"src":"評論","age":"3 年前","text":"三訪！經過時常常客滿，建議可以先預約位子，店內的低消是一杯飲品或一份餐點，咖啡很香醇好喝，今天喝黑糖拿鐵，喝過焙茶拿鐵、桂花釀拿鐵，熱得比冰的更香，推薦!! 老闆說9/6會上熱壓吐司，非常期待…"},{"src":"評論","age":"1 週前","text":"…的人潮較多需要等待，但是可以理解很感謝店員妹妹耐心的服務 當天有遇到一組客人有小朋友，看到服務人員有提醒2-3次需有低消，哇 那組客人直接說 小朋友不用，店是不他們開的？ 價格合理，也沒有另外收服務費，是良心且可以再訪的店家 餐點：5 服務：5 氣氛：5  …"},{"src":"評論","age":"1 個月前","text":"…個月前 被它的門口吸引，一個充滿貓咪影子的早午餐咖啡館，不限時間，週末高朋滿座。 一個人的好處，沒位置如果願意跟人併桌，也可以找到好位置。 低消:一份餐點或一杯飲料。 訂單類型 內用 平均每人消費金額 $1-200 餐點：5 服務：5 氣氛：5 +6 "}],"svcfee":"免服務費","svcfeeNote":"不收服務費","svcfeeQ":[{"src":"評論","age":"7 個月前","text":"捷運站附近的咖啡廳 低消一人一品項，沒有一成服務費 甜點、早午餐餐盤、鹹食、茶、咖啡 內有廁所 餐點等待時間有點久，飲料跟食物等了…"},{"src":"評論","age":"1 週前","text":"…2-3次需有低消，哇 那組客人直接說 小朋友不用，店是不他們開的？ 價格合理，也沒有另外收服務費，是良心且可以再訪的店家 餐點：5 服務：5 氣氛：5 "}],"hzQ":[],"cuisine":"歐式・咖啡廳・主打早午餐","sells":"凹屋餐盤、鹹派、可頌、檸檬塔、千層蛋糕、熱壓吐司、紅酒番茄燉牛肉、單品咖啡","svc":{"dineIn":true,"takeout":true,"delivery":true},"near":[{"name":"士林官邸公園","km":0.35},{"name":"士林官邸公園","km":0.41},{"name":"西式庭園","km":0.45}],"summary":"顧客表示這家咖啡廳提供美味的咖啡，特別是拿鐵和黑糖咖啡，還有可口的早午餐盤和甜點，像是蘋果派和檸檬千層蛋糕。他們特別提到這裡舒適放鬆的氛圍，許多人也喜歡店家對寵物友善的政策和親切的店員。評論提到，這家店地點便利，鄰近捷運站，而且價格也很合理。  ","nat":"歐式","form":"咖啡廳","main":"早午餐","ratingB":"4.8","reviewB":"500-999則","priceB":"$200–400","svcKeys":["可內用","可外帶","可外送"],"invKey":"會開統一發票","lowminKey":"任一品項","hzKeys":["都沒提到"],"svcfeeKey":"明講不收","veg":"","text":"凹屋珈琲｜早午餐\n咖啡館\n士林官邸公園 士林官邸公園 西式庭園\n凹屋餐盤、鹹派、可頌、檸檬塔、千層蛋糕、熱壓吐司、紅酒番茄燉牛肉、單品咖啡\n\n凹屋餐盤、可頌croissant、鹹派quiche、today special、早午餐 brunch、可頌 (croissant)、鹹派 (quiche)、凹屋餐盤 (awoo plate)、沙拉 salad、單品 (single origin)、咖啡拿鐵 (cafe latte)、牛奶 (milk)、茶 (tea)、熱壓吐司 (hot pressed sandwich)、甜點 (dessert)、檸檬塔、焙茶拿鐵、菠菜鮭魚鹹派、抹茶紅豆生乳捲&紅茶拿鐵、黑糖拿鐵、紅心芭樂美式、crepe cake with lemon cream、提拉米蘇、鮮奶茶及、紅酒番茄燉牛肉、巧克力千層蛋糕、藍莓塔、生菜 沙拉 搭配 麵包、檸檬奶油千層、燕麥拿鐵、桂花咖啡、red bean with butter croissant、奶酥、抹茶紅豆生乳捲&檸檬塔、千層蛋糕佐檸檬奶油\n士林區\n111臺北市士林區福林里中山北路五段505巷44弄2號"},{"id":"ChIJwzB7KQCpQjQR2CeEmwTZq38","name":"HIHI COFFEE","district":"萬華區","rating":4.9,"reviews":48,"lat":25.0421563,"lng":121.50584970000001,"km":4.8,"url":"https://maps.google.com/?cid=9199685277646596056&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"https://www.instagram.com/hihicoffee88/","tel":"","addr":"108臺北市萬華區西門里西寧南路88-1號1樓","type":"早午餐餐廳","hours":["週一　08:30 – 21:00","週二　08:30 – 21:00","週三　08:30 – 21:00","週四　08:30 – 21:00","週五　08:30 – 00:00","週六　08:30 – 00:00","週日　08:30 – 21:00"],"off":[],"satText":"週六　08:30 – 00:00","dog":["允許狗狗入內","允許帶狗進入戶外區域","狗狗友善"],"park":[],"nice":["環境舒適","休閒"],"svcTags":[],"hz":[],"scanned":true,"scanHits":4,"scanRaw":6,"clues":[{"src":"評論搜「寵物」","text":"寵物環境友善 有插座可充電 咖啡好喝 義大利麵也不錯 整體來說值得推薦 餐點類型"},{"src":"評論搜「寵物」","text":"寵物友善，可以攜帶毛小孩入內，不用裝籠。店家服務熱情，餐點選擇多元，推薦早午餐。"},{"src":"評論搜「寵物」","text":"寵物友善、熱紅茶好喝 "},{"src":"評論搜「毛孩」","text":"咖啡廳 但店內餐點竟是咖喱飯サプライズ 咖喱香氣很棒，太好吃了 聽說還有店犬喜歡毛孩的你一定要來 可惜這次沒遇到～ 真的是一家被咖啡廳耽誤的咖喱飯 訂單類型 內"},{"src":"咕狗摘要","text":"，到了晚上會搖身一變成為有現場表演的小酒吧。店員親切又周到的服務、提供插座，以及寵物友善的環境亦受到好評。  "}],"score":18,"price":"$200–400","priceNum":200,"priceLevel":"PRICE_LEVEL_MODERATE","lowmin":"","lowminNote":"","lowminQ":[],"svcfee":"","svcfeeNote":"","svcfeeQ":[],"hzQ":[],"cuisine":"多國混合・咖啡廳・主打咖哩","sells":"咖哩飯、日式燉牛肉飯、雞腿白醬燉飯、炸物拼盤、炸雞、冰拿鐵、長島冰茶、蛋糕","svc":{"dineIn":true,"takeout":true,"delivery":null},"near":[{"name":"二二八和平公園拱橋水池","km":0.86}],"summary":"顧客表示這家咖啡廳的美味咖哩飯和炸雞，以及多種咖啡和其他飲品都深受喜愛。他們特別提到這裡舒適放鬆的氛圍，到了晚上會搖身一變成為有現場表演的小酒吧。店員親切又周到的服務、提供插座，以及寵物友善的環境亦受到好評。  ","nat":"多國混合","form":"咖啡廳","main":"咖哩","ratingB":"4.9","reviewB":"40-49則","priceB":"$200–400","svcKeys":["可內用","可外帶"],"invKey":"會開統一發票","lowminKey":"沒提到","hzKeys":["都沒提到"],"svcfeeKey":"沒提到","veg":"","text":"hihi coffee\n早午餐餐廳\n二二八和平公園拱橋水池\n咖哩飯、日式燉牛肉飯、雞腿白醬燉飯、炸物拼盤、炸雞、冰拿鐵、長島冰茶、蛋糕\n\n冰拿鐵咖啡、長島 冰茶、炸物拼盤、日 式 燉 牛肉 飯、雞腿白醬燉飯\n萬華區\n108臺北市萬華區西門里西寧南路88-1號1樓"},{"id":"ChIJ56AeSwipQjQRhQBJwUbA5HU","name":"月半窩咖啡cafe","district":"中正區","rating":4.9,"reviews":29,"lat":25.0401983,"lng":121.52609600000001,"km":2.8,"url":"https://maps.google.com/?cid=8495126207250628741&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"https://www.ponwo.tw/","tel":"02 2341 1117","addr":"100臺北市中正區文北里銅山街1號","type":"食品專賣店","hours":["週一　休息","週二　11:00 – 18:00","週三　11:00 – 21:00","週四　11:00 – 21:00","週五　11:00 – 21:00","週六　11:00 – 21:00","週日　11:00 – 21:00"],"off":["一"],"satText":"週六　11:00 – 21:00","dog":["狗狗友善"],"park":[],"nice":[],"svcTags":[],"hz":[],"scanned":true,"scanHits":3,"scanRaw":3,"clues":[{"src":"評論搜「寵物」","text":"餐點美味超級寵物友善，空間很舒適的地方！推薦吃麵+柚子氣泡飲也很好喝～抹茶飲也讚讚，重點是："},{"src":"評論搜「寵物」","text":"咖啡好喝、餐點好吃～ 場地讓人覺得很放鬆很舒服 超級療癒的店狗超級推薦 而且還是寵物友善咖啡廳～大加分 感謝朋友找到這間這麼棒的店，值得再訪～ 訂單類型 內用 "},{"src":"評論搜「寵物」","text":"之前來上課才知道這個空間的，氣氛悠閒咖啡&食物好吃，還有寵物友善可落地 訂單類型 內用 餐點類型 早午餐 平均每人消費金額 $200-4"},{"src":"咕狗摘要","text":"及多種飲品，包含茶和調酒。他們特別提到這裡溫暖、明亮且舒適的氛圍，並指出這是一個寵物友善的空間，設有充足的座位和插座。評論也提到店員親切且細心，提供專業的服務。"},{"src":"咕狗給的 5 則評論","text":"餐點美味超級寵物友善，空間很舒適的地方！推薦吃麵+柚子氣泡飲也很好喝～抹茶飲也讚讚，重點是："},{"src":"咕狗給的 5 則評論","text":"推薦吃麵+柚子氣泡飲也很好喝～抹茶飲也讚讚，重點是：店家每個人都超級愛動物，根本寵物樂園，喜歡必須大推 ｜ 週日晚上，多數店家多半都已打烊~沒想到在靜謐的巷子口"},{"src":"咕狗給的 5 則評論","text":"咖啡好喝、餐點好吃～ 場地讓人覺得很放鬆很舒服 超級療癒的店狗超級推薦 而且還是寵物友善咖啡廳～大加分 感謝朋友找到這間這麼棒的店，值得再訪～ ｜ 整間店以亮眼"}],"score":17,"price":"$200–400","priceNum":200,"priceLevel":"PRICE_LEVEL_MODERATE","lowmin":"每人一杯飲品或一份套餐","lowminNote":"每人一杯飲品或一份套餐，限時兩小時，超時每人再加點","lowminQ":[{"src":"菜單照片（電腦辨識）","age":"","text":"内用知 House Rules 1.内用低消每人一杯饮品或一份套餐。 For dine-in, please order at least one drink or one set meal per person. 2.限時雨小時·超過雨小時，每人需再加點低消。 Seating time is limited to 2hours.If you d like to stay longer, weki…"}],"svcfee":"免服務費","svcfeeNote":"不收服務費（菜單上寫的）","svcfeeQ":[{"src":"菜單照片（電腦辨識）","age":"","text":"…nyourfurryfriends in the open space. 10.不收服務費還是會服務你，請不吝於给小費支持~ We don’tcharge a servi…"}],"hzQ":[],"cuisine":"看不出來・咖啡廳・主打咖啡・茶飲","sells":"麵、瓜仔肉麵、蔥油拌麵、菇菇拌麵、墨西哥烤餅","svc":{"dineIn":true,"takeout":true,"delivery":null},"near":[{"name":"光華池","km":0.7},{"name":"自由廣場牌樓","km":0.95}],"summary":"顧客表示這家咖啡廳提供美味的咖啡、可口的餐點，以及多種飲品，包含茶和調酒。他們特別提到這裡溫暖、明亮且舒適的氛圍，並指出這是一個寵物友善的空間，設有充足的座位和插座。評論也提到店員親切且細心，提供專業的服務。  ","nat":"看不出來","form":"咖啡廳","main":"咖啡・茶飲","ratingB":"4.9","reviewB":"20-29則","priceB":"$200–400","svcKeys":["可內用","可外帶"],"invKey":"會開統一發票","lowminKey":"任一品項","hzKeys":["都沒提到"],"svcfeeKey":"明講不收","veg":"","text":"月半窩咖啡cafe\n食品專賣店\n光華池 自由廣場牌樓\n麵、瓜仔肉麵、蔥油拌麵、菇菇拌麵、墨西哥烤餅\n\n\n中正區\n100臺北市中正區文北里銅山街1號"},{"id":"ChIJSWJDv_SrQjQR5qvn_mwEjwU","name":"三亞米（週三休，最後點菜16:30，售完提早打烊）早午餐/咖啡/手作甜點","district":"信義區","rating":4.8,"reviews":525,"lat":25.0375865,"lng":121.57549829999999,"km":2.5,"url":"https://maps.google.com/?cid=400543758038838246&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"","tel":"02 2346 0002","addr":"11075臺北市信義區國業里松德路119號1樓","type":"早午餐餐廳","hours":["週一　08:30 – 17:00","週二　08:30 – 17:00","週三　休息","週四　08:30 – 17:00","週五　08:30 – 17:00","週六　08:30 – 17:00","週日　08:30 – 17:00"],"off":["三"],"satText":"週六　08:30 – 17:00","dog":["允許狗狗入內"],"park":["收費停車場"],"nice":["環境舒適","休閒"],"svcTags":["不外送"],"hz":[],"scanned":true,"scanHits":3,"scanRaw":4,"clues":[{"src":"評論搜「寵物」","text":"這裡自在愜意的氛圍。 小提醒： 1.請注意營業時間，晚上皆沒有營業。 2.可攜帶寵物，但需放於寵物籃內或繫繩。 3.點「健康特餐」加點飲料可折抵$20。 4.外"},{"src":"評論搜「寵物」","text":"用。 焦糖海鹽瑪奇朵，順口溫和 鐵觀音鮮奶茶（是無糖的)灑上食用級桂花增添香氣 寵物友善 訂單類型 內用 餐點類型 早午餐 平均每人消費金額 $1-200 餐點"},{"src":"評論搜「寵物」","text":"寵物友善、服務人員態度超好、餐點不錯吃 推薦  1 "}],"score":13,"price":"$200–400","priceNum":200,"priceLevel":"PRICE_LEVEL_MODERATE","lowmin":"每人 $100","lowminNote":"每人 $100，低消不限飲品，客滿限時 90 分鐘","lowminQ":[{"src":"評論","age":"5 年前","text":"…山站 營業時間：8:30-17:00；週六、日9:00-18:00；週三公休 用餐方式：單點 用餐時間：若現場客滿，限時90分 服務費：無 低消：$100/人 支付：現金信用卡行動支付 鹹食 蔬菜起司嫩蛋： 鮮奶吐司塗上花生醬（喜歡吃原味的也可請老闆不要加）夾著嫩蛋…"},{"src":"評論","age":"1 年前","text":"…每個食材都很新鮮、味道也很好！生菜沙拉搭配酸溜溜的紅酒醋醬很開胃；可頌熱呼呼的也有嚼勁；自製的花生醬很香濃我超愛；薯泥綿密有松露的味道。 低消【是，100元】；用餐時間【客滿90分鐘】；點餐方式【人工】；支付方式【現金】；報支【是，收據】 設施 停車場【否】；座位【是，約20個】…"},{"src":"評論","age":"1 年前","text":"謝謝千儀給我們這麼詳細的五星好評很感動 對於飲料容量的部分，因為我們低消不是飲品，所以價格上不會再更低或是更小杯（為了營運成本的考量）但是我們使用很好的茶（台灣百年老店、德國有機茶）跟牛奶、新鮮的果汁等等，如果覺…"}],"svcfee":"免服務費","svcfeeNote":"不收服務費","svcfeeQ":[{"src":"評論","age":"1 年前","text":"…網美早午餐都400元起跳的台北市，翩然降臨的天使之店，餐點平均120～180元，免服務費，完全是佛心價格， 吃完一盤超滿足超好吃的花生醬牛肉漢堡之後又意猶未盡的再點一盤…"},{"src":"評論","age":"5 年前","text":"…:00-18:00；週三公休 用餐方式：單點 用餐時間：若現場客滿，限時90分 服務費：無 低消：$100/人 支付：現金信用卡行動支付 鹹食 蔬菜起司嫩…"},{"src":"評論","age":"1 年前","text":"…那樣工作？》的第一章覺得很有趣，後來就去買了電子書看完，真是一本好書！ 服務 服務費【否】餐具、衛生紙、飲用水、置物籃可自取；速度【快速】例假日，早午餐，點餐完成後約5…"}],"hzQ":[],"cuisine":"美式・早餐早午餐店・主打早午餐","sells":"手打牛肉漢堡、可頌三明治、牛排三明治、咖哩、松露薯泥、提拉米蘇、冷萃咖啡","svc":{"dineIn":true,"takeout":true,"delivery":false},"near":[{"name":"廣慈博愛園區北側綠帶","km":0.67}],"summary":"顧客表示這家咖啡廳提供新鮮又健康的餐點，他們特別提到酥脆的可頌、搭配自製花生醬的美味三明治，以及獨特的松露馬鈴薯泥。評論也提到餐點價格合理，環境乾淨舒適。有使用者分享，店員非常親切、細心，並提供優質的服務。  ","nat":"美式","form":"早餐早午餐店","main":"早午餐","ratingB":"4.8","reviewB":"500-999則","priceB":"$200–400","svcKeys":["可內用","可外帶","不外送"],"invKey":"免用統一發票","lowminKey":"金額","hzKeys":["都沒提到"],"svcfeeKey":"明講不收","veg":"","text":"三亞米（週三休，最後點菜16:30，售完提早打烊）早午餐/咖啡/手作甜點\n早午餐餐廳\n廣慈博愛園區北側綠帶\n手打牛肉漢堡、可頌三明治、牛排三明治、咖哩、松露薯泥、提拉米蘇、冷萃咖啡\n\nmenu、手打牛肉排、鮪魚蘋果可頌、手打牛肉漢堡、冷 萃 咖啡、熱拿鐵、日月潭紅玉鮮奶茶、冰滴咖啡、蘋果肉桂磅蛋糕、茄汁牛肉丸、海鹽焦糖拿鐵、香橙冰美式、香蕉 花生 堅果 吐司、可 頌 花生 醬、雞腿肉、蘋果 起 司 厚 蛋 三明治、歐姆 蛋 可 頌 早 午餐、牛排三明治、柳橙汁、手 作 提拉米蘇 蛋糕\n信義區\n11075臺北市信義區國業里松德路119號1樓"},{"id":"ChIJP8sWFbKvQjQRnF9VLvhI-UM","name":"芙塔咖啡館FRUTTA CAFE 義式全時早午餐","district":"士林區","rating":4.8,"reviews":260,"lat":25.0926215,"lng":121.52590269999999,"km":5.8,"url":"https://maps.google.com/?cid=4898026300508561308&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"https://www.fruttacafes.com/","tel":"02 2883 0666","addr":"111臺北市士林區福德里文林路332號","type":"餐廳","hours":["週一　10:00 – 19:00","週二　10:00 – 19:00","週三　10:00 – 19:00","週四　10:00 – 19:00","週五　10:00 – 19:00","週六　10:00 – 19:00","週日　10:00 – 19:00"],"off":[],"satText":"週六　10:00 – 19:00","dog":["允許狗狗入內","允許帶狗進入戶外區域"],"park":["收費停車場","收費室內停車場"],"nice":["環境舒適","休閒","適合團體聚會"],"svcTags":[],"hz":[],"scanned":true,"scanHits":3,"scanRaw":7,"clues":[{"src":"評論搜「寵物」","text":"第一次來到這間餐廳，寵物友善先給個讚 再來飲品跟餐點的部分也令我非常驚艷 尤其是甜菜根拿鐵！單喝甜菜"},{"src":"評論搜「寵物」","text":"士林寵物友善咖啡廳 超推！ 咖啡 義大利麵 甜點 都好好吃 不只長得漂亮 還非常好吃"},{"src":"評論搜「寵物」","text":"Pizza好吃，餐廳寵物友善，萬聖節活動找貼紙還有小禮物 … +2 "}],"score":13,"price":"$400–600","priceNum":400,"priceLevel":"PRICE_LEVEL_MODERATE","lowmin":"每人任一品項","lowminNote":"每人任一品項，6 歲以下或 110 公分以下孩童免；假日限時 3 小時","lowminQ":[{"src":"菜單照片（電腦辨識）","age":"","text":"…$900瓶 香氣：濃郁的柑橘、葡萄柚丶水梨、熱带水果 風味：伴隨些許的物氣息，酸度清新丶略带點物味 FRUTTA CAFE ［生活公約］ ·低消每人任一品项（6以下或身高110公分以下孩童除外） ·平日用餐不限時／假日限時3小時（自訂位時間起算），未客满不限時 ·预座位保留10分鐘，…"}],"svcfee":"+10%","svcfeeNote":"另收 10% 服務費（菜單上寫的）","svcfeeQ":[{"src":"菜單照片（電腦辨識）","age":"","text":"…時間起算），未客满不限時 ·预座位保留10分鐘，逾時將取消释出給現場候位 ·内用服務費10% ［小毛孩友善公約] ·請全程牵或寵物推車、寵物袋 ·较活澄或憋不住請穿戴尿布，…"}],"hzQ":[],"cuisine":"義式・咖啡廳・主打義大利麵・燉飯","sells":"蒜香蛤蜊義大利麵、墨魚汁燉飯佐香煎中卷、煙燻鮭魚奶油義大利麵、芝麻葉生火腿披薩、早午餐盤、牛舌沙拉、水果拿鐵、西西里咖啡","svc":{"dineIn":true,"takeout":true,"delivery":true},"near":[{"name":"士林官邸公園","km":0.36},{"name":"西式庭園","km":0.5},{"name":"士林官邸公園","km":0.51}],"summary":"\"裝潢有特色，座位舒服，氣氛感足，有街機可以玩~~餐點，飲料都有水準！！\" \"三樓也有共享空間，給需要辦公的客人一個不錯的環境，是個聚會聚餐的好地方。\" \"朋友反應牛舌沙拉的牛舌太老不好吃；我點明太子鮭魚義大利麵好吃。\" ","nat":"義式","form":"咖啡廳","main":"義大利麵・燉飯","ratingB":"4.8","reviewB":"200-499則","priceB":"$400–600","svcKeys":["可內用","可外帶","可外送"],"invKey":"會開統一發票","lowminKey":"任一品項","hzKeys":["都沒提到"],"svcfeeKey":"有收","veg":"","text":"芙塔咖啡館frutta cafe 義式全時早午餐\n餐廳\n士林官邸公園 西式庭園 士林官邸公園\n蒜香蛤蜊義大利麵、墨魚汁燉飯佐香煎中卷、煙燻鮭魚奶油義大利麵、芝麻葉生火腿披薩、早午餐盤、牛舌沙拉、水果拿鐵、西西里咖啡\n\n10月份菜單、早午餐盤、義大利麵 燉飯、濃縮咖啡、水果拿鐵、比薩、水果氣泡飲、義式濃縮、水果 咖啡、蒜炒蛤蜊義大利麵、墨魚汁燉飯佐香煎中卷、藍莓 鮮奶 咖啡、西西里 咖啡、牛舌沙拉、起司雙拼、乳酪蛋糕、芝麻葉生火腿披薩、煙燻鮭魚奶油義大利麵、蒜香蛤蜊義大利麵、熱可可、奧利奧蛋糕\n士林區\n111臺北市士林區福德里文林路332號"},{"id":"ChIJfW1zmqarQjQRHIU0YTIjp18","name":"蘋果肉桂 Café & Bistro","district":"信義區","rating":4.6,"reviews":1157,"lat":25.037399300000004,"lng":121.57764329999998,"km":2.7,"url":"https://maps.google.com/?cid=6892516454000002332&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"https://instagram.com/applecinnamon2013?igshid=OGQ5ZDc2ODk2ZA%3D%3D&utm_source=qr","tel":"02 2727 0304","addr":"110臺北市信義區國業里松山路540巷3弄4號","type":"咖啡館","hours":["週一　12:00 – 20:50","週二　12:00 – 20:50","週三　12:00 – 20:50","週四　12:00 – 20:50","週五　12:00 – 20:50","週六　11:00 – 20:50","週日　11:00 – 20:50"],"off":[],"satText":"週六　11:00 – 20:50","dog":[],"park":[],"nice":[],"svcTags":["不外送"],"hz":["有菸味"],"scanned":true,"scanHits":3,"scanRaw":10,"clues":[{"src":"評論搜「寵物」","text":"費，餐具和水自取 沒有「全素」餐點，方便素仍有微量蔥蒜 提供wi-fi 和插座 寵物友善 可電話or小盒子私訊訂位 可刷卡 環境⭐⭐⭐⭐ 服務⭐⭐⭐⭐ 餐點⭐⭐"},{"src":"評論搜「寵物」","text":"，在膩了之前就吃完，上桌冰冰的吃很讚！ 唐揚雞：就是好吃的炸雞，醬給得很大方。 寵物友善100分，當天還幫我們喬了一個狗狗會比較舒服的位置。 建議騎摩托車或搭公"},{"src":"評論搜「寵物」","text":"時 我覺得超充足 甚至可以辦公一下或是吃完飯順便跟朋友喝個下午茶 然後問過店員 寵物可落地唷 想看更多美食"}],"score":12,"price":"$200–400","priceNum":200,"priceLevel":"PRICE_LEVEL_MODERATE","lowmin":"每人一份飲品或餐點","lowminNote":"每人一份飲品或餐點，薯條甜點不算，客滿限時三小時","lowminQ":[{"src":"評論","age":"","text":"蘋果派，還有布朗尼、司康、瑪芬、生乳塔等各式肉桂甜點 除了甜點，還有脆薯、沙拉、拼盤、義大利麵、咖哩，選擇很多 每人低消為一份飲品or餐點（薯條、甜點不算） 客滿限時三小時"}],"svcfee":"免服務費","svcfeeNote":"不收服務費","svcfeeQ":[{"src":"評論","age":"7 個月前","text":"…很多 每人低消為一份飲品or餐點（薯條、甜點不算） 客滿限時三小時 無服務費，餐具和水自取 沒有「全素」餐點，方便素仍有微量蔥蒜 提供wi-fi …"},{"src":"評論","age":"1 年前","text":"…蘋果肉桂的咖喱味道很特別外面吃不到 雖然還是希望白飯可以煮好一點畢竟是咖喱 店內沒有服務費 有提供飲用水 沒有滿人的話不限時 滿人還是可以坐3小時！ 很適合朋友聚餐聊天 …"},{"src":"評論","age":"6 年前","text":"… 無太多加分效果。 氣氛、環境舒適寬敞, 無論甜點或鹹食都很有水準, 價位不貴、不收服務費、無限時, 真的是信義區不可多得的好店, 一定會回訪 +3  …"},{"src":"評論","age":"2 年前","text":"…tro 位在巷弄的工業風餐廳，因座位不多建議提前先訂位，店內採自助的所以也沒有收服務費´ↂ⃙⃙⃚∀ↂ⃙⃙⃚`。鹹食或是甜點表現都不錯，整體來說覺得CP值滿高的，且氣氛…"}],"hzQ":[{"kind":"smell","src":"評論（搜菸、蟑螂）","age":"1 年前","text":"…很多、店內很空，留了電話等一小時左右，結果還是沒來電，而位置依然是空的，甚至看到店員出來抽菸原本蠻期待的耶 … 服務：1 "}],"cuisine":"美式・咖啡廳・主打甜點","sells":"蘋果派、咖哩飯、炒蛋可頌、義大利麵","svc":{"dineIn":true,"takeout":true,"delivery":false},"near":[{"name":"廣慈博愛園區北側綠帶","km":0.47}],"summary":"","nat":"美式","form":"咖啡廳","main":"甜點","ratingB":"4.6","reviewB":"1,000則以上","priceB":"$200–400","svcKeys":["可內用","可外帶","不外送"],"invKey":"會開統一發票","lowminKey":"任一品項","hzKeys":["有菸味"],"svcfeeKey":"明講不收","veg":"","text":"蘋果肉桂 café & bistro\n咖啡館\n廣慈博愛園區北側綠帶\n蘋果派、咖哩飯、炒蛋可頌、義大利麵\n\ncoffee、小東西、經典甜點、蛋糕類的小傢伙、snacks、curry、spaghetti、classic、special、beer、tea、juice、milk & milk tea、milkshake、all day brunch | 全天候早午餐、肉桂薯條、肉桂捲、沒有名字的甜點、培根 太陽 蛋 咖哩 飯、高苣沙拉、apple crumble with ice cream、mushroom scrambled eggs croissant、tiramisu、美式薯條、冰火肉桂脆薯、抹茶、拿鐵咖啡、香草 冰淇淋、冰淇淋肉桂蘋果派、韓式泡菜豬肉義大利麵、核桃布朗尼、明太子鮮蝦魷魚義大利麵、燕麥奶拿鐵、咖哩 培根 太陽 蛋、海鮮義大利麵\n信義區\n110臺北市信義區國業里松山路540巷3弄4號"},{"id":"ChIJmzHGRyqpQjQRQ01ws-aHUK4","name":"biga gabi","district":"中正區","rating":4.6,"reviews":111,"lat":25.039389,"lng":121.53097,"km":2.4,"url":"https://maps.google.com/?cid=12560688785659022659&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"https://www.instagram.com/bigagabi.tw/","tel":"02 3393 1655","addr":"100臺北市中正區幸市里臨沂街45巷21-4號","type":"咖啡館","hours":["週一　休息","週二　休息","週三　10:00 – 16:00","週四　10:00 – 16:00","週五　10:00 – 16:00","週六　11:00 – 18:00","週日　11:00 – 18:00"],"off":["一","二"],"satText":"週六　11:00 – 18:00","dog":[],"park":[],"nice":[],"svcTags":["不外送"],"hz":[],"scanned":true,"scanHits":2,"scanRaw":2,"clues":[{"src":"評論搜「寵物」","text":"好喜歡這家可愛又隱密的咖啡廳！這裡寵物友善，老闆們都很友善喜歡聊天 咖啡，簡餐，跟可頌都超精緻好吃。每週都會帶我狗"},{"src":"評論搜「寵物」","text":"接著一口，冰淇淋般的口感，入口很滑順，真的好吃。 這是間真材實料又好吃的店，也是寵物友善的店，餐點都好吃。 有用心在餐點上，服務也週到，下次還會再來！ 訂單類型"}],"score":8,"price":"$400–600","priceNum":400,"priceLevel":"PRICE_LEVEL_MODERATE","lowmin":"每人 $100（假日 $200）","lowminNote":"每人 $100（假日 $200），客滿限時 90 分鐘","lowminQ":[{"src":"菜單照片（電腦辨識）","age":"","text":"I内用】最低消費金额為莓人 如遇客满则用餐限時為90分鐘；禁止带外食 禁止商業及任何影響其他用餐客人之拍摄行為 餐點饮品皆現點現做，请耐心等候，感激不 biga [For Here] Minimum order of NTs100 per person. Dining time isgomins.Notime limit if table isst…"},{"src":"菜單照片（電腦辨識）","age":"","text":"…位及预订飮 $20 Usage Fee per Socket (no fee if order over $350 per person) Min Order per Person 】 $100 for Weekdays;$200 for Holidays [每一個插座使用费$20】每位消费满$3…"},{"src":"菜單照片（電腦辨識）","age":"","text":"…ining time is 90 mins. No time limit if table is still available. I每一位最低消費金额】平日$100假日$200 餐點/甜點；為確保用餐品質，恕不接待7人以上團 $200 Cleaning Feeper Outside F…"}],"svcfee":"免服務費","svcfeeNote":"不收服務費","svcfeeQ":[{"src":"評論","age":"","text":"進像餛飩的麵條Ravioli 不用服務費，餐點會附一杯Expresso 這真的太酷了！ 飯後來一杯Expresso在歐洲…"}],"hzQ":[],"cuisine":"義式・咖啡廳・主打義大利麵・燉飯","sells":"義大利麵、青醬雞肉麵、提拉米蘇、開心果冰淇淋、火腿披薩、烤雞口袋餅、可頌、卡布奇諾","svc":{"dineIn":true,"takeout":true,"delivery":false},"near":[{"name":"大安森林公園","km":0.72},{"name":"大安森林公園生態池","km":0.95}],"summary":"","nat":"義式","form":"咖啡廳","main":"義大利麵・燉飯","ratingB":"4.6","reviewB":"100-199則","priceB":"$400–600","svcKeys":["可內用","可外帶","不外送"],"invKey":"免用統一發票","lowminKey":"金額","hzKeys":["都沒提到"],"svcfeeKey":"明講不收","veg":"","text":"biga gabi\n咖啡館\n大安森林公園 大安森林公園生態池\n義大利麵、青醬雞肉麵、提拉米蘇、開心果冰淇淋、火腿披薩、烤雞口袋餅、可頌、卡布奇諾\n\n飲 · drink、餐 · meal、甜 · dessert、caffè speciale 特製咖啡、pasta 經典醬 義大利麵、提拉米蘇、可頌、開心果冰淇淋、熱卡布奇諾、水果茶、濃縮咖啡、義大利冰淇淋、青醬雞肉麵、櫛 瓜 雞肉 口袋 餅、火腿披薩、胭脂豬肉丸 番茄紅醬 長直麵、熱拿鐵、烤雞口袋餅、義式三明治、巧克力丹麥、熱咖啡、fish cake pasta w pesto sauce、affogato\n中正區\n100臺北市中正區幸市里臨沂街45巷21-4號"},{"id":"ChIJZSmDlfypQjQRLs6by98ZEIs","name":"晨宅","district":"中正區","rating":4.7,"reviews":331,"lat":25.0361317,"lng":121.52723189999999,"km":2.9,"url":"https://maps.google.com/?cid=10020537619883740718&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"https://www.instagram.com/chen.jhai?igsh=b3psZXNmMmRkNmE2","tel":"0979 713 711","addr":"100臺北市中正區文祥里杭州南路一段131巷35-1號","type":"早午餐餐廳","hours":["週一　09:00 – 15:00","週二　09:00 – 15:30","週三　休息","週四　09:00 – 15:30","週五　09:00 – 15:30","週六　09:00 – 16:00","週日　09:00 – 16:00"],"off":["三"],"satText":"週六　09:00 – 16:00","dog":[],"park":[],"nice":[],"svcTags":["不外送"],"hz":[],"scanned":true,"scanHits":2,"scanRaw":2,"clues":[{"src":"評論搜「寵物」","text":"好吃！餐點份量大，低消是每人一個品相非常佛心，適合沒辦法吃太多想分食的朋友！也是寵物友善店家！ 我們點了Honey早午餐，裡面每樣東西都非常好吃！最驚艷的是法式"},{"src":"評論搜「寵物」","text":"端午節和家人一起來用餐！很喜歡店內氣氛，寵物友善喔！ 餐點：5 服務：5 氣氛：5 "}],"score":8,"price":"$200–400","priceNum":200,"priceLevel":"PRICE_LEVEL_MODERATE","lowmin":"每人一份餐點或飲料","lowminNote":"每人一份餐點或飲料，用餐 1.5 小時","lowminQ":[{"src":"評論","age":"10 個月前","text":"…，竟然連美味也 務必訂位 僅收現金無發票 ⏲用餐時間1.5h，若剛好無人訂位不會特別趕人。 全部都是單點，早午餐不含湯品飲料，低消一份餐點或飲料，建議兩個女生前來一鹹一甜即可，份量超多，早上9點入座吃完，一路飽到下午3.4點,重點是全部吃光光，實在太好吃了…"}],"svcfee":"免服務費","svcfeeNote":"不收服務費","svcfeeQ":[{"src":"評論","age":"1 年前","text":"…好喝的濃湯，跟水果優格，重點是水果優格的水果超多，比扯鈴還扯。物超所值到爆炸，還沒有服務費，而且是真的會吃到有夠飽，小鳥胃可能會擔心吃不下的困擾(單押)。10分滿分的10…"},{"src":"評論","age":"1 年前","text":"…女生的笑容還是可以溫柔親切的融化你心房～假日美好的早晨就是要從這裡開始啊～ 然後不收服務費，真的是小確幸！ 接下來送上來的honey早午餐～真的可以直接榮登心頭好！吃得手…"},{"src":"評論","age":"1 年前","text":"免收服務費、綠意充滿，像是城市中的綠洲一樣的地方！店面是狹長型，座位間隔不大，但還是蠻好聊…"},{"src":"評論","age":"1 年前","text":"…棍口味比較重，很好吃！ 燻鮭魚是朋友吃的，但看起來也很不錯！ 只收現金，不收服務費，不限時的樣子。 要早點去～ 12點去有些餐點已經賣完了"}],"hzQ":[],"cuisine":"歐式・早餐早午餐店・主打早午餐","sells":"舒芙蕾鬆餅、唐揚炸雞早午餐、紅酒燉牛肉、西班牙蒜味蝦、明太子法棍、法式吐司、野菇雞腿飯","svc":{"dineIn":true,"takeout":null,"delivery":false},"near":[{"name":"大安森林公園","km":0.69},{"name":"光華池","km":0.69},{"name":"大安森林公園生態池","km":0.91},{"name":"自由廣場牌樓","km":0.98}],"summary":"","nat":"歐式","form":"早餐早午餐店","main":"早午餐","ratingB":"4.7","reviewB":"200-499則","priceB":"$200–400","svcKeys":["可內用","不外送"],"invKey":"會開統一發票","lowminKey":"任一品項","hzKeys":["都沒提到"],"svcfeeKey":"明講不收","veg":"有肉","text":"晨宅\n早午餐餐廳\n大安森林公園 光華池 大安森林公園生態池 自由廣場牌樓\n舒芙蕾鬆餅、唐揚炸雞早午餐、紅酒燉牛肉、西班牙蒜味蝦、明太子法棍、法式吐司、野菇雞腿飯\n\n飲品、早安朝食、豐盛早午餐、午安米食、舒芙蕾鬆餅、野菇雞腿伴飯、唐揚沙拉早午餐、芒果舒芙蕾、草莓舒芙蕾、時蔬紅酒燉牛肉、拿鐵咖啡、蒜味法國、抹茶歐蕾、法式歐蕾、法式 吐司、honey 早午餐、雞腿 排、西班牙蒜味蝦、明太子法棍、燻鮭魚酪梨、冰拿鐵、西班牙蒜蝦、猴頭菇飯、下午茶、鮮蝦 歐姆 蛋 早 午餐\n中正區\n100臺北市中正區文祥里杭州南路一段131巷35-1號"},{"id":"ChIJ3yqpnYepQjQRhG-bbv6Dqbs","name":"J&J CAFE / 咖啡","district":"中正區","rating":4.7,"reviews":1016,"lat":25.0422323,"lng":121.5111639,"km":4.3,"url":"https://maps.google.com/?cid=13522484484957237124&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"https://instagram.com/j.jcafe0522?igshid=hckly9krxgzd","tel":"02 2382 0558","addr":"100臺北市中正區光復里衡陽路76號","type":"咖啡館","hours":["週一　10:00 – 19:30","週二　10:00 – 19:30","週三　10:00 – 19:30","週四　10:00 – 19:30","週五　10:00 – 19:30","週六　10:00 – 19:00","週日　10:00 – 19:00"],"off":[],"satText":"週六　10:00 – 19:00","dog":[],"park":[],"nice":[],"svcTags":[],"hz":[],"scanned":true,"scanHits":2,"scanRaw":2,"clues":[{"src":"評論搜「寵物」","text":"友善的寵物餐廳 椒麻雞好吃 抹茶牛奶也好喝 目前無雷 下次還會回訪 訂單類型 內用 餐"},{"src":"評論搜「寵物」","text":"寵物友善 咖啡也好喝 CP值高 訂單類型 內用 餐點類型 其他 平均每人消費金額"}],"score":8,"price":"$200–400","priceNum":200,"priceLevel":"PRICE_LEVEL_MODERATE","lowmin":"每人 $150（或一杯飲品）","lowminNote":"每人 $150（或一杯飲品），客滿限時2小時，不收服務費","lowminQ":[{"src":"評論","age":"2 年前","text":"… 年前 環境舒適，很喜歡招牌的臉感覺很厭世 拿好菜單找好位置記住桌號自行前往櫃檯點餐，餐點會由店員送上桌，用餐完採自助式回收餐盤。 每人低消$150或一杯飲品，客滿時用餐時間限2小時。 假日午餐時間前往沒有客滿，出餐時間稍微有點慢，約等了30分鐘。 之前吃過同事給的肉桂捲，超好吃…"},{"src":"評論","age":"3 年前","text":"可以用linepay台灣pay 有提供免費Wifi 部分位置有插座 ⏰基本不限時客滿時限用餐2小時 可訂位 低消150or一杯飲料 ‍沒有服務費 位於北車附近，離西門捷運站很近，出站走6分鐘可到，蠻有質感的咖啡簡餐，進來有一種很舒服的感覺，…"},{"src":"評論","age":"2 年前","text":"112.11.11 位於老城區週邊的咖啡廳 每人低消150元或一杯飲品 客滿時用餐時間2小時 服務費、自行回收餐盤 帶外食 地中海烤雞 $270 均附起司嫩蛋｜綜合沙拉 …"},{"src":"評論","age":"4 年前","text":"…2022.05.15 = ◉簡評：肉桂捲走的是甜膩路線，罪惡感很高；另外相當欣賞那種有點厭世的商標。 建議可以吃兩個肉桂捲抵低消。 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝ 香氣 ◆◆◆◆◆◆◆◇◇◇ 口感 ◆◆◆◆◇◇◇◇◇◇ 風味 ◆◆◆◆◆◆◆◆◇◇ 糖/醬 …"},{"src":"評論","age":"4 年前","text":"…＝＝＝＝＝＝＝＝＝＝＝＝＝ 肉桂捲第47間，來到【J&J CAFE】。禮拜日中午，生意很好，幾乎是整間店坐滿；有點厭世的商標覺得很有趣；內用低消150元。 經典原味肉桂捲130 = 上桌，個頭很小，上面插個它們家那張燕是嘴臉的mark，格外有趣；遠遠就能為到肉桂跟烤麵包的香氣，…"},{"src":"評論","age":"4 年前","text":"…桂捲混在一起，反倒像是煉乳感。一直吃到最內面的肉桂捲，滿滿的肉桂香氣，甜膩揮之不去，罪惡感滿滿但是很爽快。5.5分。爽度很高，應該點兩個來湊低消。 濃韻紅茶90 = 茶味可以，確實濃郁，回甘，5分。 Instagram ID：chun.pig 訂單類型 內用 餐點類型 午…"},{"src":"評論","age":"3 年前","text":"低消$150，喝杯飲料就可以天南地北聊一下午。夏天冰沙很。 訂單類型 內用 餐點類型 其他 平均每人消費金額 $1-200 餐點：4 服務：4 …"},{"src":"評論","age":"2 年前","text":"…到檸檬塔上放著J&J Logo小卡 好可愛 哈哈 座位有2人座、4人座和長桌多人座位。 菜單有早午餐、下午茶輕食、炸物、各種飲料，很容易就過低消了…（低消$150或飲品一杯） 內用區有wifi，用餐完採自助回收。 由於座位鄰近，所以會有此起彼落的聊天聲，有些熱鬧，不會是很安靜的氛圍。 點餐時要…"},{"src":"評論","age":"4 年前","text":"優點：低消150，沒強制一定要點一杯飲料(這點非常棒)，沒客滿不會趕人，可以悠閒的聊天和做事。 缺點：餐點份量偏少且口味普通，這價格會期望能再多一點點…"}],"svcfee":"免服務費","svcfeeNote":"不收服務費","svcfeeQ":[{"src":"評論","age":"3 年前","text":"…不限時客滿時限用餐2小時 可訂位 低消150or一杯飲料 ‍沒有服務費 位於北車附近，離西門捷運站很近，出站走6分鐘可到，蠻有質感的咖啡簡餐，進來有一…"}],"hzQ":[],"cuisine":"多國混合・咖啡廳・主打早午餐","sells":"墨西哥雞腿拼盤、熱壓吐司地中海烤雞餐、泰式椒麻雞、鴨胸、香烤蘋果肉桂捲、巴斯克乳酪蛋糕、提拉米蘇、海鹽焦糖咖啡","svc":{"dineIn":true,"takeout":true,"delivery":true},"near":[{"name":"二二八和平公園拱橋水池","km":0.33},{"name":"自由廣場牌樓","km":0.9}],"summary":"","nat":"多國混合","form":"咖啡廳","main":"早午餐","ratingB":"4.7","reviewB":"1,000則以上","priceB":"$200–400","svcKeys":["可內用","可外帶","可外送"],"invKey":"會開統一發票","lowminKey":"金額","hzKeys":["都沒提到"],"svcfeeKey":"明講不收","veg":"","text":"j&j cafe / 咖啡\n咖啡館\n二二八和平公園拱橋水池 自由廣場牌樓\n墨西哥雞腿拼盤、熱壓吐司地中海烤雞餐、泰式椒麻雞、鴨胸、香烤蘋果肉桂捲、巴斯克乳酪蛋糕、提拉米蘇、海鹽焦糖咖啡\n\n義式咖啡 coffee、午晚餐 (lunch & dinner)、炸物 (snack)、甜點 (dessert)、醇奶 milk、冰沙 smoothie、熱壓吐司拼盤 hot pressed toast、沙拉 (salad)、早午餐拼盤 (brunch)、手沖咖啡 (pour over)、茶品 (tea)、墨西哥 雞腿 排 早餐 拼盤、海鹽焦糖咖啡、香烤蘋果肉桂捲、熱壓吐司地中海烤雞餐、泰式椒麻雞、鴨胸、冰拿鐵、焦糖海鹽拿鐵、冰滴咖啡、原味巴斯克乳酪、墨西哥雞腿拼盤、美式 咖啡、乳酪蛋糕、提拉米蘇 tiramisù、柚香咖啡、芝麻牛奶、iced americano with passionfruit、iced pomelo coffee、iced drip coffee\n中正區\n100臺北市中正區光復里衡陽路76號"},{"id":"ChIJwdWsnwepQjQRpWCxIHqpF6E","name":"早點黑白配Black_White_pay","district":"萬華區","rating":4.9,"reviews":129,"lat":25.0459376,"lng":121.50612559999998,"km":4.7,"url":"https://maps.google.com/?cid=11607932906570342565&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"https://www.instagram.com/black_white_pay_?igsh=MXU2YTF0amt4ZXR6cQ==&utm_source=qr","tel":"0979 330 283","addr":"108臺北市萬華區福星里漢口街二段55-1號","type":"早午餐餐廳","hours":["週一　06:30 – 15:00","週二　休息","週三　06:30 – 15:00","週四　06:30 – 15:00","週五　06:30 – 15:00","週六　06:30 – 15:00","週日　06:30 – 15:00"],"off":["二"],"satText":"週六　06:30 – 15:00","dog":["允許狗狗入內","允許帶狗進入戶外區域","狗狗友善"],"park":[],"nice":["環境舒適","休閒"],"svcTags":[],"hz":[],"scanned":true,"scanHits":1,"scanRaw":1,"clues":[{"src":"評論搜「寵物」","text":"花生培根瀑布蛋好吃！ 寵物友善的店讚 訂單類型 內用 平均每人消費金額 $1-200 "}],"score":5,"price":"$1–200","priceNum":1,"priceLevel":"PRICE_LEVEL_INEXPENSIVE","lowmin":"","lowminNote":"","lowminQ":[],"svcfee":"","svcfeeNote":"","svcfeeQ":[],"hzQ":[],"cuisine":"台式・早餐早午餐店・主打三明治・吐司","sells":"韓式炸雞歐姆蛋吐司、豬排起司蛋吐司、炸魚排三明治、起司培根蛋漢堡、花生吐司、雙醬薯條","svc":{"dineIn":true,"takeout":true,"delivery":true},"near":[{"name":"二二八和平公園拱橋水池","km":0.92}],"summary":"顧客表示這家咖啡廳美味又份量十足的三明治很受歡迎，特別是獨特的櫛瓜洋芋嫩蛋吐司，以及風味十足的黑白竹炭吐司。他們也特別提到店員親切又細心，餐點價格也很合理。 許多評論提到，由於座位有限，餐點最適合外帶。  ","nat":"台式","form":"早餐早午餐店","main":"三明治・吐司","ratingB":"4.9","reviewB":"100-199則","priceB":"$1–200","svcKeys":["可內用","可外帶","可外送"],"invKey":"免用統一發票","lowminKey":"沒提到","hzKeys":["都沒提到"],"svcfeeKey":"沒提到","veg":"","text":"早點黑白配black_white_pay\n早午餐餐廳\n二二八和平公園拱橋水池\n韓式炸雞歐姆蛋吐司、豬排起司蛋吐司、炸魚排三明治、起司培根蛋漢堡、花生吐司、雙醬薯條\n\n雙醬薯條、醬炒牛肉、韓式炸雞歐姆蛋吐司、韓式 炸雞 吐司、豬排起司蛋吐司、炸魚排三明治、嫩蛋三明治、起 司 培根 蛋 漢堡、花生吐司、charcoal toast\n萬華區\n108臺北市萬華區福星里漢口街二段55-1號"},{"id":"ChIJW6XnJp-pQjQRtWHGhsEdDs0","name":"衡衡香廚","district":"大安區","rating":5,"reviews":40,"lat":25.0254768,"lng":121.53159900000001,"km":3.2,"url":"https://maps.google.com/?cid=14775780144476217781&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"https://www.facebook.com/share/19NtpVBBix/?","tel":"0903 517 055","addr":"106臺北市大安區龍坡里泰順街9號1樓","type":"餐廳","hours":["週一　休息","週二　11:00 – 14:30, 17:00 – 20:00","週三　11:00 – 14:30, 17:00 – 20:00","週四　11:00 – 14:30, 17:00 – 20:00","週五　11:00 – 14:30, 17:00 – 20:00","週六　11:00 – 14:30, 17:00 – 20:00","週日　休息"],"off":["一","日"],"satText":"週六　11:00 – 14:30, 17:00 – 20:00","dog":[],"park":[],"nice":["環境舒適","休閒"],"svcTags":[],"hz":[],"scanned":true,"scanHits":1,"scanRaw":1,"clues":[{"src":"評論搜「寵物」","text":"友善寵物餐廳！ 推薦有機麵，麵條Q彈有勁，令人忍不住一口接一口！ 營養師推薦綠拿鐵，"}],"score":4,"price":"$200–400","priceNum":200,"priceLevel":"PRICE_LEVEL_MODERATE","lowmin":"內用每人 $250","lowminNote":"內用每人 $250","lowminQ":[{"src":"菜單照片","age":"","text":"內用每人低消$250元（g-cbc4b68489.jpg）"}],"svcfee":"免服務費","svcfeeNote":"不收服務費（菜單上寫的）","svcfeeQ":[{"src":"菜單照片（電腦辨識）","age":"","text":"…，請慢慢吃 我們希每一位來到衡衡香厨的人， 都能在這張餐桌前，好好吃一餐。 本店不收取服務費 餐點、餐具及每日茶飲請自取享用 ·因座位有限，單人消費未满$280，用餐限時6…"},{"src":"菜單照片（電腦辨識）","age":"","text":"…單人消費未满$280，用餐限時60分鐘 餐點圖片供参考，實際内容以當日供應為主 No service charge. Self-service for food, utensils, and d…"}],"hzQ":[],"cuisine":"台式・一般餐廳・主打沙拉・輕食・健康餐","sells":"櫻花蝦黑豬肉炒米粉、黑豬肉佐日式胡麻香拌麵、蔬菜蕎麥麵、鹽麴高麗三蔬、鷹嘴豆沙拉、鮮纖綠拿鐵、現打蔬果汁","svc":{"dineIn":true,"takeout":true,"delivery":null},"near":[{"name":"大安森林公園","km":0.66},{"name":"大安森林公園生態池","km":0.75},{"name":"大安森林公園","km":0.89}],"summary":"顧客表示這家咖啡廳提供健康又美味的餐點，他們特別提到風味十足的乾拌麵搭配多種新鮮蔬菜，以及滑順的綠拿鐵。店內舒適放鬆的氛圍亦受到好評，其中綠意盎然的植物和美麗的魚缸更是亮點。評論提到，店員親切又細心，經常提供有用的飲食資訊。  ","nat":"台式","form":"一般餐廳","main":"沙拉・輕食・健康餐","ratingB":"5.0","reviewB":"40-49則","priceB":"$200–400","svcKeys":["可內用","可外帶"],"invKey":"會開統一發票","lowminKey":"金額","hzKeys":["都沒提到"],"svcfeeKey":"明講不收","veg":"","text":"衡衡香廚\n餐廳\n大安森林公園 大安森林公園生態池 大安森林公園\n櫻花蝦黑豬肉炒米粉、黑豬肉佐日式胡麻香拌麵、蔬菜蕎麥麵、鹽麴高麗三蔬、鷹嘴豆沙拉、鮮纖綠拿鐵、現打蔬果汁\n\n乾拌麵 x 炒米粉、湯品、蛋白質、蔬菜、飲品、櫻花蝦黑豬肉炒米粉、黑豬肉佐日式胡麻香、蔬菜蕎麥麵、鮮纖綠拿鐵、胡椒白菜手撕雞肉湯、鹽麴高麗三蔬、鷹嘴豆 沙拉 醬、奇異果汁、現打新鮮蔬果汁、soba noodle bowl\n大安區\n106臺北市大安區龍坡里泰順街9號1樓"},{"id":"ChIJMxvKJvCpQjQREJMlvSn7fl0","name":"小雀斑togo","district":"大同區","rating":4.8,"reviews":116,"lat":25.067163599999997,"lng":121.5166469,"km":4.3,"url":"https://maps.google.com/?cid=6737098249278427920&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA","web":"https://instagram.com/freckle1115/","tel":"02 2585 5988","addr":"103臺北市大同區斯文里大龍街91巷2之2號1樓","type":"早餐店","hours":["週一　休息","週二　06:30 – 14:30","週三　06:30 – 14:30","週四　06:30 – 14:30","週五　06:30 – 14:30","週六　07:30 – 15:30","週日　07:30 – 15:30"],"off":["一"],"satText":"週六　07:30 – 15:30","dog":[],"park":[],"nice":[],"svcTags":[],"hz":[],"scanned":true,"scanHits":1,"scanRaw":1,"clues":[{"src":"評論搜「寵物」","text":"寵物友善，讚讚！好吃好喝。 餐點：5 服務：5 氣氛：5  1 "}],"score":4,"price":"$1–200","priceNum":1,"priceLevel":"PRICE_LEVEL_INEXPENSIVE","lowmin":"內用每人$100","lowminNote":"內用每人$100，只收現金","lowminQ":[{"src":"評論","age":"5 個月前","text":"內用有低消每人100，餐點份量雖然沒有很大，但是精緻好吃，吃得出店家的用心，一個女生吃兩卷都沒問題！！！之後要把其他口味也吃過一次！非常推薦！ 餐點類…"},{"src":"評論","age":"1 年前","text":"…起來有嚼勁，覺得跟薯泥很搭很有特色！ 有機會到附近還想試試看推薦的厚片ʕ •ᴥ•ʔb 老闆很親切，一切都很舒服，但是店裡位置不多喔！！ 內用低消100元，只收現金。 訂單類型 內用 餐點類型 早午餐 平均每人消費金額 $1-200 餐點：5 服務：5 氣氛：5 "},{"src":"評論","age":"1 年前","text":"厚片吐司好吃，咖啡也好喝。 內用滿涼快的，但是只有三個位置，低消一人100。 訂單類型 內用 餐點類型 午餐 平均每人消費金額 $1-200 餐點：5 服務：5 氣氛：5 吵雜程度 安靜，適合交談  按…"},{"src":"評論","age":"1 年前","text":"文青風的店，很明顯的是要和附近早餐店做出區隔，不管是裝璜，餐點內容，以及價位。內用低消100相當不低，但每項單價不凡，組合起來要破100很容易。 經營者是一對少年郎，很客氣。內用僅有狹小的4個座位，而且有60分鐘限制，外帶到對…"},{"src":"評論摘要","age":"","text":"…也特別提到店內乾淨舒適的環境，以及親切又周到的店員。 有顧客"}],"svcfee":"","svcfeeNote":"","svcfeeQ":[],"hzQ":[],"cuisine":"台式・早餐早午餐店・主打早餐","sells":"蛋餅、花生拿鐵奶酥厚片、馬鈴薯泥捲餅、咖哩、肉醬、鐵觀音、美式咖啡、可可","svc":{"dineIn":true,"takeout":true,"delivery":true},"near":[{"name":"王大閎建築劇埸","km":0.88}],"summary":"顧客表示這家咖啡廳美味又獨特的蛋捲餅，特別是綿密的馬鈴薯泥和菇菇口味，以及風味十足的拿鐵，都深受喜愛。他們也特別提到店內乾淨舒適的環境，以及親切又周到的店員。 有顧客分享，店家提供Line線上點餐的便利服務，但提醒這是一家只收現金的店家，且內用有低消限制。  ","nat":"台式","form":"早餐早午餐店","main":"早餐","ratingB":"4.8","reviewB":"100-199則","priceB":"$1–200","svcKeys":["可內用","可外帶","可外送"],"invKey":"免用統一發票","lowminKey":"金額","hzKeys":["都沒提到"],"svcfeeKey":"沒提到","veg":"","text":"小雀斑togo\n早餐店\n王大閎建築劇埸\n蛋餅、花生拿鐵奶酥厚片、馬鈴薯泥捲餅、咖哩、肉醬、鐵觀音、美式咖啡、可可\n\n花生拿鐵奶酥厚片、可可、蛋餅和熱美式\n大同區\n103臺北市大同區斯文里大龍街91巷2之2號1樓"}];
+const KEY='taipei-cat-pet-restaurants';
+let state={};try{state=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){state={}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const hl=s=>esc(s).replace(/寵物|毛小孩|毛孩/g,m=>'<b>'+m+'</b>');
+const byId=Object.fromEntries(ROWS.map(r=>[r.id,r]));
+
+let map=null,layer=null,markers={};
+function ensureMap(){
+  if(map)return;
+  try{
+    map=L.map('map').setView([CENTER.lat,CENTER.lng],13);
+    L.tileLayer('https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}',{attribution:'© 內政部國土測繪中心',maxZoom:19}).addTo(map);
+    if(HOME)L.circleMarker([HOME.lat,HOME.lng],{radius:9,color:'#1f2a33',fillColor:'#1f2a33',fillOpacity:1}).addTo(map).bindTooltip('家',{permanent:true,direction:'top'});
+    layer=L.layerGroup().addTo(map);
+  }catch(e){$('map').innerHTML='<div style="padding:12px;color:#6b7680">地圖出不來：'+esc(e.message)+'</div>';}
+}
+function setMap(on){document.body.classList.toggle('mapon',on);if(!on)document.body.classList.remove('mapfull');$('mapToggle').textContent=on?'收起地圖':'打開地圖';if(on){ensureMap();setTimeout(()=>{map&&map.invalidateSize();drawMarkers(lastRows);},60);}try{localStorage.setItem(KEY+'-map',on?'1':'')}catch(e){}}
+
+function petTag(r){
+  return '<span class="tag '+(r.scanned?(r.scanHits?'hit':''):'no')+'" title="'+(r.scanned?(r.scanHits?'咕狗全部評論裡有 '+r.scanHits+' 段原句提到寵物、毛孩':r.scanRaw?'咕狗搜到 '+r.scanRaw+' 則，但原句都是貓空、評論者名字這類，不算':'咕狗全部評論沒人提到'):'咕狗全部評論還沒搜')+'">'+(r.scanned?(r.scanHits?'評論提到 '+r.scanHits:r.scanRaw?'評論：都是雜訊':'評論沒提到'):'評論未搜')+'</span>';
+}
+function noteTags(r){
+  const T=(cls,short,full)=>'<span class="tag '+cls+'" title="'+esc(full)+'">'+esc(short)+'</span>';
+  return [
+    r.scanned?(r.scanHits?T('hit','評'+r.scanHits,'咕狗全部評論裡有 '+r.scanHits+' 段原句提到寵物、毛孩'):r.scanRaw?T('','評雜','咕狗搜到 '+r.scanRaw+' 則，但原句都是貓空、評論者名字這類，不算'):T('','評無','咕狗全部評論沒人提到')):T('no','未搜','咕狗全部評論還沒搜'),
+    ...r.dog.filter(t=>t==='狗狗友善').map(t=>T('ok','狗友','咕狗簡介：'+t)),
+    ...(r.clues.length&&!r.scanHits?[T('hit','摘','咕狗摘要或 5 則評論提到')]:[]),
+    ...r.svcTags.filter(t=>t!=='不外送').map(t=>T('',t,t)),
+    ...r.hz.map(t=>T('no',t==='有菸味'?'菸':t==='不衛生'?'髒':t,t)),
+    ...(r.nice.includes('適合團體聚會')?[T('','團','咕狗簡介：適合團體聚會')]:[]),
+    ...(r.park.length?[T('','停','咕狗簡介：'+r.park.join('、'))]:[])];
+}
+const ROWS_F={
+  sight:{label:'附近景點',opts:["廣慈博愛園區北側綠帶","士林官邸公園","西式庭園","二二八和平公園拱橋水池","光華池","自由廣場牌樓","大安森林公園","大安森林公園生態池","王大閎建築劇埸"],get:r=>r.near.map(n=>n.name)},
+  district:{label:'行政區',opts:["信義區","士林區","萬華區","中正區","大安區","大同區"],get:r=>[r.district]},
+  nat:{label:'哪國',opts:['台式','中式','日式','韓式','東南亞','印度中東','義式','美式','歐式','墨西哥拉美','多國混合','看不出來'],get:r=>[r.nat]},
+  form:{label:'型態',opts:['一般餐廳','小吃攤小店','早餐早午餐店','咖啡廳','甜點冰品店','酒吧餐酒館','吃到飽自助餐','私廚無菜單','看不出來'],get:r=>[r.form]},
+  main:{label:'吃啥',opts:['麵','飯・便當・丼飯','粥・湯品','火鍋','燒肉・燒烤','串燒・烤物','壽司・生魚片','海鮮','鐵板燒','熱炒・合菜','餃子・包子・點心','炸物','滷味・小菜','咖哩','漢堡','披薩','三明治・吐司','義大利麵・燉飯','牛排・排餐','早餐','早午餐','沙拉・輕食・健康餐','套餐・定食','甜點','冰品・豆花','麵包・糕點','咖啡・茶飲','酒・下酒菜','其他'],get:r=>[r.main]},
+  pet:{label:'寵物',opts:['評論提到','摘要或 5 則提到','簡介：狗可入內','簡介：狗限戶外','簡介：狗狗友善','評論沒提到','評論未搜'],get:r=>[...(r.scanHits?['評論提到']:[]),...(r.clues.length&&!r.scanHits?['摘要或 5 則提到']:[]),...r.dog.map(t=>'簡介：'+t.replace('允許帶狗進入戶外區域','狗限戶外').replace('允許狗狗入內','狗可入內')),...(r.scanned&&!r.scanHits?['評論沒提到']:[]),...(!r.scanned?['評論未搜']:[])]},
+  rating:{label:'咕狗評分',opts:['5.0','4.9','4.8','4.7','4.6'],get:r=>[r.ratingB],suffix:' 分'},
+  review:{label:'評論數',opts:['1,000則以上','500-999則','200-499則','100-199則','60-99則','50-59則','40-49則','30-39則','20-29則','10-19則'],get:r=>[r.reviewB]},
+  price:{label:'價位（每人）',opts:['$1–200','$200–400','$400–600','$600–800','$800–1,000','$1,000 以上','便宜（$）','中等（$$）','偏貴（$$$）','很貴（$$$$）','沒資料'],get:r=>[r.priceB]},
+  svc:{label:'內用外帶外送',opts:['可內用','可外帶','不外帶','可外送','不外送','三樣都沒有','還沒查'],get:r=>r.svcKeys},
+  inv:{label:'統一發票',opts:['會開統一發票','免用統一發票','不確定','查不到'],get:r=>[r.invKey]},
+  lowmin:{label:'低消',opts:['一杯飲品','任一品項','一份餐','金額','只有包廂','明講沒有','有但看不出是什麼','沒提到'],get:r=>[r.lowminKey]},
+  hz:{label:'有雷',opts:['可抽菸','有菸味','不衛生','都沒提到'],get:r=>r.hzKeys},
+  svcfee:{label:'服務費',opts:['有收','明講不收','說法不一','沒提到'],get:r=>[r.svcfeeKey]},
+  group:{label:'咕狗簡介',opts:['適合團體聚會','有停車資訊','安靜','環境舒適'],get:r=>[...r.nice.filter(t=>t!=='休閒'),...(r.park.length?['有停車資訊']:[])]},
+};
+const FKEY=KEY+'-filters';
+let F={};try{F=JSON.parse(localStorage.getItem(FKEY)||'{}')}catch(e){F={}}
+const saveF=()=>{try{localStorage.setItem(FKEY,JSON.stringify(F))}catch(e){}};
+const PRICE_SORT={PRICE_LEVEL_INEXPENSIVE:100,PRICE_LEVEL_MODERATE:300,PRICE_LEVEL_EXPENSIVE:700,PRICE_LEVEL_VERY_EXPENSIVE:1200};
+function passes(r,except){
+  for(const [k,d] of Object.entries(ROWS_F)){
+    if(k===except)continue;
+    const sel=F[k]||[];if(!sel.length)continue;
+    const v=d.get(r);if(!sel.some(x=>v.includes(x)))return false;
+  }
+  if($('fHideDrop').checked&&state[r.id]==='drop')return false;
+  if($('fOnlyKeep').checked&&state[r.id]!=='keep')return false;
+  const q=$('fQ').value.trim().toLowerCase();if(q&&!r.text.includes(q))return false;
+  return true;
+}
+function renderPanel(){
+  $('fpanel').innerHTML=Object.entries(ROWS_F).map(([k,d])=>{
+    const cnt={};for(const r of ROWS){if(!passes(r,k))continue;for(const v of d.get(r))cnt[v]=(cnt[v]||0)+1;}
+    const sel=F[k]||[];
+    const opts=d.opts.filter(o=>cnt[o]||sel.includes(o));
+    if(!opts.length)return '';
+    return '<div class="frow"><div class="flabel">'+d.label+'</div><div class="fopts">'
+      +'<button data-f="'+k+'" data-v="" class="'+(sel.length?'':'on')+'">全部</button>'
+      +opts.map(o=>'<button data-f="'+k+'" data-v="'+esc(o)+'" class="'+(sel.includes(o)?'on':'')+'">'+esc(o)+(d.suffix||'')+'<span class="n">'+(cnt[o]||0)+'</span></button>').join('')
+      +'</div></div>';
+  }).join('');
+}
+function filtered(){
+  const sort=$('fSort').value;
+  let out=ROWS.filter(r=>passes(r));
+  const pn=r=>r.priceNum!=null?r.priceNum:(PRICE_SORT[r.priceLevel]||99999);
+  const ln=r=>{const m=(r.lowmin||'').match(/\$([\d,]+)/);return r.lowminKey==='明講沒有'?0:r.lowminKey==='沒提到'?1:m?+m[1].replace(/,/g,''):5;};
+  out.sort((a,b)=>sort==='score'?(b.score-a.score)||(a.km-b.km):sort==='km'?a.km-b.km:sort==='rating'?(b.rating-a.rating)||(b.reviews-a.reviews):sort==='reviews'?b.reviews-a.reviews:sort==='price'?pn(a)-pn(b):ln(a)-ln(b));
+  return out;
+}
+let lastRows=[];
+function drawMarkers(rows){
+  if(!layer)return;layer.clearLayers();markers={};
+  for(const r of rows){
+    const st=state[r.id]||'';
+    const m=L.circleMarker([r.lat,r.lng],{radius:7,color:st==='drop'?'#b23a3a':st==='keep'?'#1d7a4a':'#2b6cb0',fillOpacity:.85,weight:1}).addTo(layer);
+    m.bindPopup('<b>'+esc(r.name)+'</b><br>'+esc(r.district)+'・'+r.km+' 公里・'+r.rating+' 星<br>'+esc(r.satText)+'<br><a href="#" data-detail="'+r.id+'">詳細</a>　<a href="'+esc(r.url)+'" target="_blank" rel="noopener">咕狗地圖</a>');
+    markers[r.id]=m;
+  }
+}
+function render(){
+  renderPanel();
+  const rows=filtered();lastRows=rows;
+  $('count').textContent='符合 '+rows.length+' 家';
+  $('list').innerHTML=rows.map(r=>{
+    const st=state[r.id]||'';
+    const price=r.price?r.price.replace(/ 以上$/,'+'):'';
+    const info=[r.district.replace(/區$/,''),'離家 '+r.km+' 公里',r.rating.toFixed(1)+'★ '+r.reviews.toLocaleString()+'則',price||'價位?',r.lowmin&&'低消 '+r.lowmin,r.svcfee&&r.svcfee!=='免服務費'?r.svcfee:'',r.satText].filter(Boolean).join('・');
+    return '<div class="row '+st+'" id="c-'+r.id+'">'
+      +'<a class="name" href="'+esc(r.url)+'" target="_blank" rel="noopener" title="'+esc(r.name)+'（在咕狗地圖打開）">'+esc(r.name)+'</a>'
+      +'<span class="c-dist" title="'+esc(r.district)+'・離家 '+r.km+' 公里">'+esc(r.district.replace(/區$/,''))+'</span>'
+      +'<span class="c-info">'+esc(info)+'</span>'
+      +'<span class="c-sells" title="附近景點：'+esc(r.near.map(n=>n.name+' '+Math.round(n.km*1000)+' 公尺').join('、'))+'　賣什麼：'+esc(r.sells)+'">'+esc(r.near[0].name)+' '+Math.round(r.near[0].km*1000)+'m'+(r.near.length>1?'（+'+(r.near.length-1)+'）':'')+'｜'+esc(r.sells||'沒寫')+'</span>'
+      +'<span class="c-rating">'+r.rating.toFixed(1)+'</span><span class="c-reviews">'+r.reviews.toLocaleString()+'</span>'
+      +'<span class="c-price" title="每人">'+esc(price||'沒資料')+'</span>'
+      +'<span class="c-lowmin" title="'+esc(r.lowminNote)+'">'+esc(r.lowmin)+'</span>'
+      +'<span class="c-svcfee" title="'+esc(r.svcfeeNote)+'">'+esc(r.svcfee.replace('服務費有收','有收').replace('免服務費','免').replace('服務費不一','不一'))+'</span>'
+      +'<span class="c-sat" title="'+esc(r.satText)+'">'+esc(r.satText.replace(/^週六\s*/,''))+'</span>'
+      +'<span class="tags c-tags">'+noteTags(r).join('')+'</span>'
+      +'<span class="acts"><button data-id="'+r.id+'" data-v="keep" class="'+(st==='keep'?'on':'')+'">'+(st==='keep'?'已留':'留')+'</button><button data-id="'+r.id+'" data-v="drop" class="'+(st==='drop'?'on':'')+'">不要</button><button data-detail="'+r.id+'">詳細</button><button data-map="'+r.id+'">地圖</button></span>'
+      +'</div>';
+  }).join('');
+  drawMarkers(rows);
+  const keep=ROWS.filter(r=>state[r.id]==='keep').length,drop=ROWS.filter(r=>state[r.id]==='drop').length;
+  $('tally').textContent='留 '+keep+' 家，不要 '+drop+' 家';
+}
+function detail(r){
+  const q=(arr,f)=>arr.map(x=>'<div class="q">'+esc(f?f(x):'')+esc(x.src||'')+(x.age?'・'+esc(x.age):'')+'：'+esc(x.text)+'</div>').join('');
+  const svc=r.svc?[['內用',r.svc.dineIn],['外帶',r.svc.takeout],['外送',r.svc.delivery]].map(([k,v])=>v===false?'不'+k:v===true?k:k+'沒登記').join('、')+'（咕狗登記的，去之前再跟店家確認）':'這家只查了評分那一級的資料';
+  $('dlg').innerHTML='<h2>'+esc(r.name)+'</h2><div class="tags">'+noteTags(r).join('')+'</div>'
+    +'<dl>'
+    +'<dt>寵物線索</dt><dd>'+(r.clues.length?r.clues.map(c=>'<div class="clue"><span class="src">'+esc(c.src)+'</span>…'+hl(c.text)+'…</div>').join(''):'手上的評論與摘要都沒提到<span class="small">（'+(r.scanned?'咕狗全部評論也搜過了':'咕狗全部評論還沒搜')+'）</span>')+'</dd>'
+    +(r.summary?'<dt>咕狗摘要</dt><dd class="q">'+hl(r.summary)+'</dd>':'')
+    +'<dt>附近景點</dt><dd>'+r.near.map(n=>esc(n.name)+' '+Math.round(n.km*1000)+' 公尺').join('<br>')+'<span class="small">（直線距離，1 公里內的）</span></dd>'
+    +'<dt>評分</dt><dd>'+r.rating.toFixed(1)+' 分（'+r.reviews.toLocaleString()+' 則評論）</dd>'
+    +'<dt>價位</dt><dd>'+(r.price?'每人 '+esc(r.price):'咕狗沒有資料')+'</dd>'
+    +'<dt>內用外帶外送</dt><dd>'+esc(svc)+'</dd>'
+    +'<dt>低消</dt><dd>'+(r.lowminNote?esc(r.lowminNote)+'<span class="small">（看評論與菜單照片判的，規定可能改過，去之前再問店家）</span>':'沒人提到<span class="small">（評論搜過「低消」、菜單照片也讀過，都沒寫；沒寫不等於一定沒有）</span>')+q(r.lowminQ)+'</dd>'
+    +'<dt>有雷</dt><dd>'+(r.hz.length?esc(r.hz.join('、')):'都沒提到<span class="small">（只看了手上有的評論，不是全部）</span>')+q(r.hzQ,x=>(({in:'店內可抽菸',smell:'有菸味',dirty:'不衛生'})[x.kind]||'')+'｜')+'</dd>'
+    +'<dt>服務費</dt><dd>'+(r.svcfeeNote?esc(r.svcfeeNote):'沒人提到<span class="small">（菜單照片的字、評論原句都沒寫；沒寫不等於不收）</span>')+q(r.svcfeeQ)+'</dd>'
+    +(r.cuisine?'<dt>料理</dt><dd>'+esc(r.cuisine)+'<span class="small">（看菜單與評論判的）</span></dd>':'')
+    +'<dt>賣什麼</dt><dd>'+esc(r.sells||'沒寫')+'</dd>'
+    +'<dt>咕狗簡介</dt><dd>'+esc([...r.dog,...r.nice,...r.park].join('、')||'沒有寵物、環境、停車的標示')+'</dd>'
+    +'<dt>咕狗類型</dt><dd>'+esc(r.type||'沒有資料')+'</dd>'
+    +'<dt>離家</dt><dd>'+r.km+' 公里<span class="small">（直線距離）</span></dd>'
+    +'<dt>地址</dt><dd>'+esc(r.district)+'　'+esc(r.addr)+'</dd>'
+    +'<dt>電話</dt><dd>'+(r.tel?'<a href="tel:'+esc(r.tel.replace(/\s/g,''))+'">撥號 '+esc(r.tel)+'</a>':'咕狗沒有登記')+'</dd>'
+    +'<dt>營業時間</dt><dd>'+(r.hours.length?r.hours.map(h=>'<div>'+esc(h)+'</div>').join('')+(r.off.length&&r.off.length<7?'<div>每週固定公休：週'+r.off.join('、')+'</div>':'')+'<div class="small">咕狗登記的，可能過時</div>':'咕狗沒有登記')+'</dd>'
+    +(r.web?'<dt>網站</dt><dd><a href="'+esc(r.web)+'" target="_blank" rel="noopener">打開店家網站</a></dd>':'')
+    +'</dl>'
+    +'<div class="dacts"><a class="btn pri" href="'+esc(r.url)+'" target="_blank" rel="noopener">在咕狗地圖打開</a><button data-id="'+r.id+'" data-v="keep" class="'+(state[r.id]==='keep'?'on':'')+'">留</button><button data-id="'+r.id+'" data-v="drop" class="'+(state[r.id]==='drop'?'on':'')+'">不要</button><button data-map="'+r.id+'">地圖</button><span style="flex:1"></span><button id="dclose">關閉</button></div>';
+  $('dim').classList.add('open');
+}
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a[data-detail]');if(a){e.preventDefault();detail(byId[a.dataset.detail]);return;}
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.f!=null){const k=b.dataset.f,v=b.dataset.v;if(!v)F[k]=[];else{const sel=F[k]||[];F[k]=sel.includes(v)?sel.filter(x=>x!==v):[...sel,v];}saveF();render();return;}
+  if(b.id==='fToggle'){document.body.classList.toggle('fopen');b.textContent=document.body.classList.contains('fopen')?'篩選 ▴':'篩選 ▾';return;}
+  if(b.id==='fClear'){F={};saveF();$('fQ').value='';$('fHideDrop').checked=false;$('fOnlyKeep').checked=false;render();return;}
+  if(b.dataset.id){const id=b.dataset.id,v=b.dataset.v;state[id]=state[id]===v?'':v;save();render();if($('dim').classList.contains('open'))detail(byId[id]);return;}
+  if(b.dataset.detail){detail(byId[b.dataset.detail]);return;}
+  if(b.dataset.map){$('dim').classList.remove('open');setMap(true);const r=byId[b.dataset.map];setTimeout(()=>{map.setView([r.lat,r.lng],16);if(markers[r.id])markers[r.id].openPopup();},120);return;}
+  if(b.id==='dclose'){$('dim').classList.remove('open');}
+  if(b.id==='mapToggle'){setMap(!document.body.classList.contains('mapon'));}
+  if(b.id==='mapClose'){setMap(false);}
+  if(b.id==='mapFull'){document.body.classList.toggle('mapfull');b.textContent=document.body.classList.contains('mapfull')?'縮回':'滿版';setTimeout(()=>map&&map.invalidateSize(),50);}
+});
+window.addEventListener('resize',()=>map&&map.invalidateSize());
+$('dim').addEventListener('click',e=>{if(e.target===e.currentTarget)$('dim').classList.remove('open');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('dim').classList.remove('open');if(document.body.classList.contains('mapfull'))$('mapFull').click();}});
+for(const id of ['fSort','fHideDrop','fOnlyKeep','fQ'])$(id).addEventListener('change',render);
+$('fQ').addEventListener('input',render);
+const copyList=v=>{
+  const list=ROWS.filter(r=>state[r.id]===v).map(r=>r.name+' '+r.url);
+  const text='【'+(v==='keep'?'留':'不要')+'】'+list.length+' 家\n'+list.join('\n');
+  navigator.clipboard.writeText(text).then(()=>alert('複製了 '+list.length+' 家'));
+};
+$('copyKeep').onclick=()=>copyList('keep');
+$('copyDrop').onclick=()=>copyList('drop');
+render();
+let mapPref='';try{mapPref=localStorage.getItem(KEY+'-map')||''}catch(e){}
+if(mapPref&&window.innerWidth>900)setMap(true);
+</script>
+</body>
+</html>
