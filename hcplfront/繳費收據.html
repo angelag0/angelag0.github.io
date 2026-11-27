@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta name="robots" content="noindex" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>繳費收據 - 新竹縣公共圖書館活動報名系統</title>
+    <!-- 切版樣式（原檔，不改）：只借按鈕 .btnPrimary -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link href="images/favicon.png" rel="icon" type="image/x-icon" />
+    <style>
+      /* ============================================================
+         原型自加的樣式（切版 style.css 一行都沒動）
+         版面照館方 2026-11-26 給的「新竹縣政府文化局 自行收納款項統一收據」樣本；
+         核章改三格（出納、會計、機關長官收費專用章），不要經收人（館方 2026-11-26）。
+         畫面上：上方工具列＋一張收據；列印時只印收據，A4 直式。
+         ============================================================ */
+      :root {
+        --ink: #000000;
+        --line: #000000;
+        --stamp: #c8102e;
+        --paper: #ffffff;
+        --desk: #eeeeea;
+        --site-green: #226455;
+      }
+      html,
+      body {
+        background: var(--desk);
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+      }
+
+      /* 工具列（不印） */
+      .rcptBar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        max-width: 210mm;
+        margin: 0 auto;
+        padding: 20px 16px 12px;
+        box-sizing: border-box;
+      }
+      .rcptBar a.back {
+        color: var(--site-green);
+        font-size: 1rem;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .rcptBar a.back:focus-visible,
+      .rcptBar button:focus-visible {
+        outline: 3px solid var(--site-green);
+        outline-offset: 2px;
+      }
+      .rcptBar .hint {
+        width: 100%;
+        margin: 0;
+        color: #333333;
+        font-size: 0.9375rem;
+      }
+
+      /* 紙張 */
+      .paper {
+        width: 210mm;
+        max-width: calc(100% - 32px);
+        margin: 0 auto 40px;
+        padding: 14mm 12mm;
+        box-sizing: border-box;
+        background: var(--paper);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+      }
+      .receipt {
+        position: relative;
+        padding-right: 9mm; /* 右邊直書「第一聯」 */
+        font-family: "DFKai-SB", "BiauKai", "標楷體", "Kaiti TC", serif;
+        font-size: 12pt;
+        line-height: 1.5;
+      }
+      .receipt h1 {
+        margin: 0;
+        font-size: 18pt;
+        font-weight: 400;
+        letter-spacing: 0.15em;
+        text-align: center;
+      }
+      .receipt .sub {
+        margin: 2px 0 10px;
+        font-size: 16pt;
+        letter-spacing: 0.1em;
+        text-align: center;
+      }
+      .receipt .meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 4px;
+        padding: 0 2mm 0 40mm;
+      }
+      .receipt table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+      .receipt th,
+      .receipt td {
+        border: 1px solid var(--line);
+        padding: 4px 6px;
+        font-weight: 400;
+        vertical-align: top;
+      }
+      .receipt thead th {
+        text-align: center;
+        vertical-align: middle;
+        letter-spacing: 0.3em;
+      }
+      .receipt th.digit,
+      .receipt td.digit {
+        padding: 2px 0;
+        text-align: center;
+        letter-spacing: 0;
+        font-size: 11pt;
+      }
+      .receipt td.digit {
+        vertical-align: middle;
+        font-family: "Times New Roman", serif;
+        font-size: 13pt;
+      }
+      .receipt tbody.items td {
+        height: 26mm;
+      }
+      .receipt td.words {
+        height: auto;
+        padding: 6px 8px;
+        font-size: 13pt;
+      }
+      .receipt table.stamps {
+        margin-top: -1px; /* 接在明細表下面，不疊出兩條線 */
+      }
+      .receipt .stamps th {
+        width: 14mm;
+        text-align: center;
+        vertical-align: middle;
+        letter-spacing: 0;
+        line-height: 1.3;
+      }
+      .receipt .stamps td {
+        height: 20mm;
+        vertical-align: middle;
+        text-align: center;
+      }
+      /* 印章示意：館方上傳的印章圖會放在這裡 */
+      .stampMock {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2mm 2.5mm;
+        border: 2px solid var(--stamp);
+        border-radius: 3px;
+        color: var(--stamp);
+        font-size: 10pt;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+      .copyMark {
+        position: absolute;
+        top: 30mm;
+        right: 0;
+        writing-mode: vertical-rl;
+        font-size: 11pt;
+        letter-spacing: 0.1em;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+
+      /* 手機：紙張照比例縮在畫面裡，可以左右捲動看細節 */
+      @media screen and (max-width: 840px) {
+        .paperWrap {
+          overflow-x: auto;
+          padding: 0 16px;
+        }
+        .paper {
+          max-width: none;
+        }
+      }
+
+      @page {
+        size: A4 portrait;
+        margin: 10mm;
+      }
+      @media print {
+        html,
+        body {
+          background: #ffffff;
+        }
+        .rcptBar {
+          display: none !important;
+        }
+        .paper {
+          width: auto;
+          max-width: none;
+          margin: 0;
+          padding: 0;
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="rcptBar">
+      <a class="back" href="lp4.html">回報名紀錄查詢</a>
+      <button type="button" class="btnPrimary" id="btnPrint">列印或存成 PDF</button>
+      <p class="hint">要存成 PDF：按「列印或存成 PDF」，在列印視窗的「目的地」選「另存為 PDF」。</p>
+    </div>
+
+    <div class="paperWrap">
+      <main class="paper">
+        <section class="receipt" aria-labelledby="rcptTitle">
+          <h1 id="rcptTitle">新竹縣政府文化局</h1>
+          <p class="sub">自行收納款項統一收據</p>
+          <div class="meta">
+            <span>中華民國 116 年 1 月 6 日</span>
+            <span>新縣文字第 1160001 號</span>
+          </div>
+
+          <table>
+            <caption class="sr-only">收據明細：繳款人、收入科目、金額、事由與備註</caption>
+            <colgroup>
+              <col style="width: 18%" />
+              <col style="width: 15%" />
+              <col span="8" style="width: 3.25%" />
+              <col style="width: 28%" />
+              <col style="width: 13%" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th scope="col" rowspan="2">繳款人</th>
+                <th scope="col" rowspan="2" style="letter-spacing: 0">收入科目及代號</th>
+                <th scope="colgroup" colspan="8">金額</th>
+                <th scope="col" rowspan="2">事由</th>
+                <th scope="col" rowspan="2">備註</th>
+              </tr>
+              <tr>
+                <th scope="col" class="digit">仟</th>
+                <th scope="col" class="digit">佰</th>
+                <th scope="col" class="digit">十</th>
+                <th scope="col" class="digit">萬</th>
+                <th scope="col" class="digit">仟</th>
+                <th scope="col" class="digit">佰</th>
+                <th scope="col" class="digit">十</th>
+                <th scope="col" class="digit">元</th>
+              </tr>
+            </thead>
+            <tbody class="items">
+              <tr>
+                <td>王小明</td>
+                <td>活動報名費</td>
+                <td class="digit"></td>
+                <td class="digit"></td>
+                <td class="digit"></td>
+                <td class="digit"></td>
+                <td class="digit">$</td>
+                <td class="digit">8</td>
+                <td class="digit">0</td>
+                <td class="digit">0</td>
+                <td>總圖書館「親子手作研習」（116 年 1 月 17 日）報名費，報名編號 1160106001</td>
+                <td>線上繳費<br />LINE Pay</td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr>
+                <td class="words" colspan="12">金額（大寫）：新臺幣捌佰元整</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="stamps">
+            <caption class="sr-only">核章</caption>
+            <colgroup>
+              <col style="width: 9%" />
+              <col style="width: 24.3%" />
+              <col style="width: 9%" />
+              <col style="width: 24.3%" />
+              <col style="width: 9%" />
+              <col style="width: 24.4%" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th scope="row">主辦<br />出納</th>
+                <td><span class="stampMock">出納收費專用章</span></td>
+                <th scope="row">主辦<br />會計</th>
+                <td><span class="stampMock">會計收費專用章</span></td>
+                <th scope="row">機關<br />長官</th>
+                <td><span class="stampMock">機關長官收費專用章</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="copyMark">第一聯：收據（交繳款人收執）</p>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      document.getElementById('btnPrint').addEventListener('click', function () {
+        window.print();
+      });
+    </script>
+  </body>
+</html>
